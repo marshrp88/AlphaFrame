@@ -75,6 +75,37 @@ pnpm lint       # Run linter
 - Lint-staged integration
 - Automated code quality checks
 
+## State Management: Zustand
+
+- **File:** `src/store/useAppStore.js`
+- **Purpose:** Provides a simple global state store using Zustand.
+- **Example State:** Counter with increment and reset actions.
+- **Usage:**
+  ```js
+  import useAppStore from '@/store/useAppStore';
+  const counter = useAppStore((state) => state.counter);
+  const increment = useAppStore((state) => state.increment);
+  ```
+- **Notes:**
+  - Zustand is used for global state management.
+  - State logic is kept separate from UI components.
+
+## Environment Variables
+
+- **Files:** `.env`, `.env.example`
+- **Purpose:** Store environment-specific settings (e.g., API URLs).
+- **How to use:**
+  1. Copy `.env.example` to `.env` in the project root.
+  2. Fill in your actual values (e.g., `VITE_PUBLIC_API_URL`).
+  3. Never commit `.env` with real secrets to version control.
+- **Example:**
+  ```env
+  VITE_PUBLIC_API_URL=https://api.example.com
+  ```
+- **Notes:**
+  - Vite exposes variables prefixed with `VITE_` to the client.
+  - Use `import.meta.env.VITE_PUBLIC_API_URL` in your code to access the value.
+
 ## Important Notes
 - NO TypeScript configuration
 - NO Tailwind configuration
