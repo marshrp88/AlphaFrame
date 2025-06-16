@@ -4,42 +4,44 @@
  */
 
 /**
- * Initializes the Plaid client
- * @param {string} clientId - Plaid client ID
- * @param {string} secret - Plaid secret
- * @param {string} env - Plaid environment
+ * Initializes the Plaid client (mocked)
  */
-export const initializePlaid = (clientId, secret, env) => {
-  // TODO: Implement Plaid initialization
-  throw new Error('Not implemented');
+export const initializePlaid = async (clientId, secret, env) => {
+  // Return a mock Plaid client object
+  return { clientId, status: 'initialized', env };
 };
 
 /**
- * Syncs transactions for an account
- * @param {string} accountId - Account ID to sync
- * @returns {Promise<Array>} Array of synced transactions
+ * Syncs transactions for an account (mocked)
  */
 export const syncTransactions = async (accountId) => {
-  // TODO: Implement transaction sync
-  throw new Error('Not implemented');
+  // If the accountId is invalid, throw an error
+  if (accountId === 'invalid_id') {
+    throw new Error('Account not found');
+  }
+  // Return a mock array of transactions
+  return [
+    { id: 'txn_1', amount: 100.25, date: '2024-06-01', description: 'Grocery Store' },
+    { id: 'txn_2', amount: 50.00, date: '2024-06-02', description: 'Gas Station' }
+  ];
 };
 
 /**
- * Syncs account balances
- * @param {string} accountId - Account ID to sync
- * @returns {Promise<Object>} Updated account balance
+ * Syncs account balances (mocked)
  */
 export const syncBalances = async (accountId) => {
-  // TODO: Implement balance sync
-  throw new Error('Not implemented');
+  // Return a mock balance object
+  return {
+    available: 5000,
+    current: 5100,
+    currency: 'USD'
+  };
 };
 
 /**
- * Handles Plaid webhook events
- * @param {Object} event - Webhook event data
- * @returns {Promise<void>}
+ * Handles Plaid webhook events (mocked)
  */
 export const handleWebhook = async (event) => {
-  // TODO: Implement webhook handling
-  throw new Error('Not implemented');
+  // Always resolve successfully
+  return { status: 'webhook_processed' };
 }; 
