@@ -1,61 +1,64 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { evaluateRule, executeRule, validateRule, getMatchingRules } from '../../../src/lib/services/ruleEngine';
+import { describe, it, expect } from 'vitest';
+import {
+  evaluateRule,
+  executeRule,
+  validateRule,
+  getMatchingRules,
+} from '../../src/lib/services/ruleEngine';
+
+// Mock data for tests
+const mockTransaction = {
+  id: 'txn_1',
+  amount: 150,
+  description: 'Starbucks',
+  category: 'Food',
+};
+
+const mockRule = {
+  id: 'rule_1',
+  name: 'High Spending Alert',
+  conditions: [{ field: 'amount', operator: '>', value: 100 }],
+  action: { type: 'alert', message: 'High amount purchase detected' },
+};
+
+const invalidTransaction = { id: 'txn_2' }; // Missing 'amount' field
+const invalidRule = { id: 'rule_2' }; // Missing conditions/action
 
 describe('RuleEngine Integration', () => {
-  let mockRule;
-  let mockTransaction;
-
-  beforeEach(() => {
-    mockRule = {
-      id: 'rule1',
-      name: 'High Amount Alert',
-      condition: {
-        type: 'amount',
-        operator: '>',
-        value: 1000
-      },
-      action: {
-        type: 'alert',
-        message: 'High amount transaction detected'
-      }
-    };
-
-    mockTransaction = {
-      id: 'tx1',
-      amount: 1500,
-      description: 'Large Purchase',
-      date: new Date().toISOString()
-    };
-  });
-
   it('should evaluate rule conditions correctly', async () => {
-    const result = await evaluateRule(mockRule, mockTransaction);
-    expect(result).toBe(true);
+    // Test that the async function resolves to the correct boolean
+    await expect(evaluateRule(mockRule, mockTransaction)).resolves.toBe(true);
   });
 
   it('should execute rule actions', async () => {
-    await expect(executeRule(mockRule, mockTransaction)).resolves.not.toThrow();
+    // Test that the async function resolves to the correct action object
+    await expect(executeRule(mockRule)).resolves.toEqual(mockRule.action);
   });
 
   it('should validate rule structure', async () => {
-    const isValid = await validateRule(mockRule);
-    expect(isValid).toBe(true);
-  });
-
-  it('should find matching rules for a transaction', async () => {
-    const matchingRules = await getMatchingRules(mockTransaction);
-    expect(Array.isArray(matchingRules)).toBe(true);
-    expect(matchingRules.length).toBeGreaterThan(0);
-    expect(matchingRules[0]).toHaveProperty('id');
-  });
-
-  it('should handle invalid rule structures', async () => {
-    const invalidRule = { ...mockRule, condition: null };
+    // Test that the async function correctly validates both good and bad rules
+    await expect(validateRule(mockRule)).resolves.toBe(true);
     await expect(validateRule(invalidRule)).resolves.toBe(false);
   });
 
-  it('should handle rule execution errors', async () => {
-    const invalidTransaction = { ...mockTransaction, amount: 'invalid' };
+  it('should find matching rules for a transaction', async () => {
+    const allRules = [mockRule, { ...mockRule, id: 'rule_3', conditions: [{ field: 'amount', operator: '<', value: 50 }] }];
+    
+    // CRITICAL FIX: We must `await` the result of the async function
+    const matchingRules = await getMatchingRules(mockTransaction, allRules);
+    
+    expect(matchingRules).toBeInstanceOf(Array);
+    expect(matchingRules.length).toBe(1);
+    expect(matchingRules[0]).toHaveProperty('id', 'rule_1');
+  });
+
+  it('should handle invalid rule structures gracefully', async () => {
+    // Test that `validateRule` correctly identifies an invalid rule
+    await expect(validateRule(invalidRule)).resolves.toBe(false);
+  });
+
+  it('should handle rule execution errors by rejecting', async () => {
+    // Test that `evaluateRule` rejects the promise for invalid inputs
     await expect(evaluateRule(mockRule, invalidTransaction)).rejects.toThrow();
   });
 }); 
