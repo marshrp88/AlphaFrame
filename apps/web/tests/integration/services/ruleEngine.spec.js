@@ -4,7 +4,7 @@ import {
   executeRule,
   validateRule,
   getMatchingRules,
-} from '../../src/lib/services/ruleEngine';
+} from '../../../src/lib/services/ruleEngine.js';
 
 // Mock data for tests
 const mockTransaction = {
