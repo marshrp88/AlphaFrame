@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
 import Button from './components/ui/Button'
-import useAppStore from './store/useAppStore'
+import { useAppStore } from './store/useAppStore'
 import Home from './pages/Home'
 import About from './pages/About'
+import RulesPage from './pages/RulesPage'
 import { config } from './lib/config'
 
 function HomeWithDemo() {
@@ -76,11 +77,13 @@ function App() {
       <nav style={{ marginBottom: '2rem' }}>
         <Link to="/" style={{ marginRight: '1rem' }}>Home</Link>
         <Link to="/about">About</Link>
+        <Link to="/rules">Rules</Link>
       </nav>
       {/* Route definitions */}
       <Routes>
         <Route path="/" element={<HomeWithDemo />} />
         <Route path="/about" element={<About />} />
+        <Route path="/rules" element={<RulesPage />} />
       </Routes>
     </>
   )

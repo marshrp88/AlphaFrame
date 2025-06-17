@@ -5,9 +5,14 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   test: {
-    environment: 'jsdom',
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/e2e/**',
+    ],
     globals: true,
-    setupFiles: ['./src/setupTests.js'],
+    environment: 'jsdom',
+    setupFiles: './tests/setup.js',
     coverage: {
       reporter: ['text', 'json', 'html'],
       exclude: [
