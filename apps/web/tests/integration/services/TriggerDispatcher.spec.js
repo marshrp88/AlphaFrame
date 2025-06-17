@@ -1,78 +1,132 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { queueAction, listenForEvents } from '../../../src/lib/services/TriggerDispatcher';
+import { queueAction, getActionQueue, clearActionQueue } from '../../../src/lib/services/TriggerDispatcher';
+import { dispatchAction } from '../../../src/lib/services/TriggerDispatcher';
+import { useLogStore } from '../../../src/lib/store/logStore';
+
+// Mock the logStore
+vi.mock('../../../src/lib/store/logStore', () => ({
+  useLogStore: {
+    getState: vi.fn(() => ({
+      queueAction: vi.fn()
+    }))
+  }
+}));
 
 describe('TriggerDispatcher', () => {
-  let mockLogStore;
-  let mockRuleEngineService;
+  let mockQueueAction;
 
   beforeEach(() => {
-    // Create mock logStore
-    mockLogStore = {
-      addAction: vi.fn()
-    };
-
-    // Create mock RuleEngineService
-    mockRuleEngineService = {
-      on: vi.fn()
-    };
+    clearActionQueue();
+    // Reset mocks
+    vi.clearAllMocks();
+    mockQueueAction = useLogStore.getState().queueAction;
   });
 
-  it('should format and queue an action', () => {
+  it('should queue actions for processing', () => {
     // Arrange
     const mockAction = {
-      ruleId: 'rule_123',
       type: 'TRANSFER',
-      payload: {
-        amount: 100,
-        fromAccount: 'checking',
-        toAccount: 'savings'
-      }
+      amount: 100,
+      fromAccount: 'checking',
+      toAccount: 'savings'
     };
 
     // Act
-    queueAction(mockAction, mockLogStore);
+    queueAction(mockAction);
 
     // Assert
-    expect(mockLogStore.addAction).toHaveBeenCalledWith(expect.objectContaining({
+    const queue = getActionQueue();
+    expect(queue).toHaveLength(1);
+    expect(queue[0]).toEqual(expect.objectContaining({
+      type: 'TRANSFER',
+      amount: 100,
+      fromAccount: 'checking',
+      toAccount: 'savings',
+      status: 'queued',
+      timestamp: expect.any(Number)
+    }));
+  });
+
+  it('should maintain action order in queue', () => {
+    // Arrange
+    const mockAction1 = { type: 'TRANSFER', amount: 100 };
+    const mockAction2 = { type: 'NOTIFICATION', message: 'Test' };
+
+    // Act
+    queueAction(mockAction1);
+    queueAction(mockAction2);
+
+    // Assert
+    const queue = getActionQueue();
+    expect(queue).toHaveLength(2);
+    expect(queue[0].type).toBe('TRANSFER');
+    expect(queue[1].type).toBe('NOTIFICATION');
+  });
+
+  it('should dispatch actions to the logStore', () => {
+    // Arrange
+    const mockRule = {
+      id: 'rule_123',
+      action: {
+        type: 'TRANSFER',
+        payload: {
+          fromAccount: 'checking',
+          toAccount: 'savings'
+        }
+      }
+    };
+
+    const mockTransaction = {
+      id: 'tx_456',
+      amount: 100,
+      date: '2024-03-20'
+    };
+
+    // Act
+    dispatchAction(mockRule, mockTransaction);
+
+    // Assert
+    expect(mockQueueAction).toHaveBeenCalledWith(expect.objectContaining({
       ruleId: 'rule_123',
       actionType: 'TRANSFER',
-      status: 'queued',
-      timestamp: expect.any(Number),
       payload: expect.objectContaining({
-        amount: 100,
         fromAccount: 'checking',
-        toAccount: 'savings'
+        toAccount: 'savings',
+        transactionId: 'tx_456',
+        amount: 100,
+        timestamp: expect.any(Number)
       })
     }));
   });
 
-  it('should listen for rule events and queue them', () => {
+  it('should include all required fields in the action payload', () => {
     // Arrange
-    const mockEvent = {
-      ruleId: 'rule_456',
-      type: 'NOTIFICATION',
-      payload: {
-        message: 'Test notification'
+    const mockRule = {
+      id: 'rule_789',
+      action: {
+        type: 'NOTIFICATION',
+        payload: {
+          message: 'Test notification'
+        }
       }
     };
 
+    const mockTransaction = {
+      id: 'tx_101',
+      amount: 50,
+      date: '2024-03-20'
+    };
+
     // Act
-    listenForEvents(mockRuleEngineService, mockLogStore);
-    
-    // Simulate event trigger
-    const eventCallback = mockRuleEngineService.on.mock.calls[0][1];
-    eventCallback(mockEvent);
+    dispatchAction(mockRule, mockTransaction);
 
     // Assert
-    expect(mockRuleEngineService.on).toHaveBeenCalledWith('ruleTriggered', expect.any(Function));
-    expect(mockLogStore.addAction).toHaveBeenCalledWith(expect.objectContaining({
-      ruleId: 'rule_456',
-      actionType: 'NOTIFICATION',
-      status: 'queued',
-      timestamp: expect.any(Number),
-      payload: expect.objectContaining({
-        message: 'Test notification'
-      })
-    }));
+    const [actionPayload] = mockQueueAction.mock.calls[0];
+    expect(actionPayload).toHaveProperty('ruleId');
+    expect(actionPayload).toHaveProperty('actionType');
+    expect(actionPayload).toHaveProperty('payload');
+    expect(actionPayload.payload).toHaveProperty('transactionId');
+    expect(actionPayload.payload).toHaveProperty('amount');
+    expect(actionPayload.payload).toHaveProperty('timestamp');
   });
 }); 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import useAppStore from '../../src/store/useAppStore'
+import { useAppStore } from '../../src/store/useAppStore'
 
 // Zustand uses a singleton store, so we need to reset state between tests
 const resetStore = () => {

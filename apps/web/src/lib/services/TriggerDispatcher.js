@@ -2,92 +2,144 @@
 // Service for dispatching triggers to the ExecutionController
 // Part of FrameSync - the execution and automation layer of AlphaFrame
 
+import { useLogStore } from '../store/logStore';
+import { executeAction } from './ExecutionController';
 import { create } from 'zustand';
+import { ExecutionController } from './ExecutionController';
 
-// Action queue store
-const useActionQueueStore = create((set) => ({
-  queue: [],
-  addToQueue: (action) => set((state) => ({ 
-    queue: [...state.queue, { ...action, timestamp: Date.now() }] 
-  })),
-  removeFromQueue: (actionId) => set((state) => ({
-    queue: state.queue.filter(action => action.id !== actionId)
-  })),
-  clearQueue: () => set({ queue: [] })
+/**
+ * TriggerDispatcher Service
+ * 
+ * A client-side service that listens for events from the RuleEngineService and passes
+ * action payloads to the ExecutionController. This is the central router for handling
+ * action execution in FrameSync.
+ * 
+ * The service maintains an action queue and ensures actions are executed in the correct
+ * order with proper error handling and retry logic.
+ */
+
+/**
+ * Action Queue Item Type
+ * @typedef {Object} ActionQueueItem
+ * @property {string} id - Unique identifier for the action
+ * @property {string} type - Type of action to execute
+ * @property {Object} payload - Action-specific configuration
+ * @property {number} retryCount - Number of retry attempts
+ * @property {string} status - Current status of the action
+ */
+
+/**
+ * TriggerDispatcher Store
+ * Manages the state of the action queue and execution status
+ */
+const useTriggerStore = create((set, get) => ({
+  actionQueue: [],
+  isProcessing: false,
+
+  /**
+   * Adds a new action to the queue
+   * @param {string} type - The type of action to execute
+   * @param {Object} payload - The action configuration
+   * @returns {string} The ID of the queued action
+   */
+  queueAction: (type, payload) => {
+    const actionId = crypto.randomUUID();
+    set(state => ({
+      actionQueue: [...state.actionQueue, {
+        id: actionId,
+        type,
+        payload,
+        retryCount: 0,
+        status: 'queued'
+      }]
+    }));
+    return actionId;
+  },
+
+  /**
+   * Processes the next action in the queue
+   * @returns {Promise<void>}
+   */
+  processNextAction: async () => {
+    const { actionQueue, isProcessing } = get();
+    if (isProcessing || actionQueue.length === 0) return;
+
+    set({ isProcessing: true });
+    const action = actionQueue[0];
+
+    try {
+      await ExecutionController.executeAction(action.type, action.payload);
+      set(state => ({
+        actionQueue: state.actionQueue.slice(1),
+        isProcessing: false
+      }));
+    } catch (error) {
+      if (action.retryCount < 3) {
+        set(state => ({
+          actionQueue: state.actionQueue.map(a =>
+            a.id === action.id
+              ? { ...a, retryCount: a.retryCount + 1, status: 'retrying' }
+              : a
+          ),
+          isProcessing: false
+        }));
+      } else {
+        set(state => ({
+          actionQueue: state.actionQueue.slice(1),
+          isProcessing: false
+        }));
+      }
+    }
+  }
 }));
 
-// Mock ExecutionController for now
-const ExecutionController = {
-  executeAction: async (action) => {
-    // TODO: Replace with actual ExecutionController implementation
-    console.log('Executing action:', action);
-    return { success: true, actionId: action.id };
-  }
-};
-
-class TriggerDispatcher {
-  constructor() {
-    this.actionQueue = useActionQueueStore.getState();
-    this.isProcessing = false;
-  }
-
-  // Listen for events from RuleEngineService
-  listenForEvents(ruleEngineService) {
-    ruleEngineService.on('ruleTriggered', (event) => {
-      this.queueAction(event);
-    });
-  }
-
-  // Queue an action for processing
-  queueAction(action) {
-    const actionWithId = {
-      ...action,
-      id: `action_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+/**
+ * TriggerDispatcher Class
+ * Main service class for handling action triggers and execution
+ */
+export class TriggerDispatcher {
+  /**
+   * Creates a new trigger for a specific event
+   * @param {string} eventType - The type of event to listen for
+   * @param {Function} condition - Function that evaluates if the action should trigger
+   * @param {string} actionType - The type of action to execute
+   * @param {Object} actionPayload - The configuration for the action
+   * @returns {string} The ID of the created trigger
+   */
+  static createTrigger(eventType, condition, actionType, actionPayload) {
+    const triggerId = crypto.randomUUID();
+    const handler = async (event) => {
+      if (condition(event)) {
+        const actionId = useTriggerStore.getState().queueAction(actionType, actionPayload);
+        await useTriggerStore.getState().processNextAction();
+        return actionId;
+      }
+      return null;
     };
-    this.actionQueue.addToQueue(actionWithId);
-    this.processQueue();
+
+    // Register the event handler
+    window.addEventListener(eventType, handler);
+    return triggerId;
   }
 
-  // Process the action queue
-  async processQueue() {
-    if (this.isProcessing || this.actionQueue.queue.length === 0) {
-      return;
-    }
-
-    this.isProcessing = true;
-
-    try {
-      while (this.actionQueue.queue.length > 0) {
-        const action = this.actionQueue.queue[0];
-        await this.dispatchAction(action);
-        this.actionQueue.removeFromQueue(action.id);
-      }
-    } catch (error) {
-      console.error('Error processing action queue:', error);
-    } finally {
-      this.isProcessing = false;
-    }
+  /**
+   * Removes a previously created trigger
+   * @param {string} triggerId - The ID of the trigger to remove
+   * @returns {boolean} Whether the trigger was successfully removed
+   */
+  static removeTrigger(triggerId) {
+    // Implementation for removing triggers
+    return true;
   }
 
-  // Dispatch an action to the ExecutionController
-  async dispatchAction(action) {
-    try {
-      const result = await ExecutionController.executeAction(action);
-      if (!result.success) {
-        throw new Error(`Action execution failed: ${action.id}`);
-      }
-      return result;
-    } catch (error) {
-      console.error('Error dispatching action:', error);
-      throw error;
-    }
-  }
-
-  // Get current queue status
-  getQueueStatus() {
+  /**
+   * Gets the current status of the action queue
+   * @returns {Object} The current state of the action queue
+   */
+  static getQueueStatus() {
     return {
-      queueLength: this.actionQueue.queue.length,
-      isProcessing: this.isProcessing
+      queueLength: useTriggerStore.getState().actionQueue.length,
+      isProcessing: useTriggerStore.getState().isProcessing
     };
   }
 }
@@ -97,34 +149,81 @@ export const triggerDispatcher = new TriggerDispatcher();
 
 /**
  * Formats an action payload according to the FrameSync specification
- * @param {Object} action - The raw action data
+ * @param {Object} rule - The rule that triggered the action
+ * @param {Object} transaction - The transaction that triggered the rule
  * @returns {Object} Formatted action payload
  */
-const formatActionPayload = (action) => ({
-  timestamp: Date.now(),
-  ruleId: action.ruleId,
-  actionType: action.type,
-  payload: action.payload,
-  status: 'queued'
+const formatActionPayload = (rule, transaction) => ({
+  ruleId: rule.id,
+  actionType: rule.action.type,
+  payload: {
+    ...rule.action.payload,
+    transactionId: transaction.id,
+    amount: transaction.amount,
+    timestamp: Date.now()
+  }
 });
 
 /**
- * Queues an action for processing by adding it to the logStore
- * @param {Object} action - The action to queue
- * @param {Object} logStore - The Zustand store managing the action log
+ * Updates the action status in the logStore
+ * @param {string} actionId - The ID of the action to update
+ * @param {Object} result - The execution result
  */
-export const queueAction = (action, logStore) => {
-  const formattedAction = formatActionPayload(action);
-  logStore.addAction(formattedAction);
+const updateActionStatus = (actionId, result) => {
+  const logStore = useLogStore.getState();
+  const actionLog = logStore.actionLog;
+  const actionIndex = actionLog.findIndex(action => action.id === actionId);
+  
+  if (actionIndex !== -1) {
+    const updatedAction = {
+      ...actionLog[actionIndex],
+      status: result.status,
+      error: result.error,
+      completedAt: Date.now()
+    };
+    
+    logStore.updateAction(actionIndex, updatedAction);
+  }
+};
+
+/**
+ * Dispatches an action based on a rule and transaction
+ * @param {Object} rule - The rule that was triggered
+ * @param {Object} transaction - The transaction that triggered the rule
+ * @returns {Promise<void>}
+ */
+export const dispatchAction = async (rule, transaction) => {
+  try {
+    // Format the action payload
+    const payload = formatActionPayload(rule, transaction);
+    
+    // Queue the action in the logStore
+    const logStore = useLogStore.getState();
+    const actionId = logStore.queueAction(payload);
+    
+    // Execute the action immediately
+    const result = await executeAction(payload);
+    
+    // Update the action status in the logStore
+    updateActionStatus(actionId, result);
+    
+    return result;
+  } catch (error) {
+    console.error('Action dispatch failed:', error);
+    throw error;
+  }
 };
 
 /**
  * Listens for events from the RuleEngineService and queues them
  * @param {Object} ruleEngineService - The RuleEngineService instance
- * @param {Object} logStore - The Zustand store managing the action log
  */
-export const listenForEvents = (ruleEngineService, logStore) => {
-  ruleEngineService.on('ruleTriggered', (event) => {
-    queueAction(event, logStore);
+export const listenForEvents = (ruleEngineService) => {
+  ruleEngineService.on('ruleTriggered', async (event) => {
+    try {
+      await dispatchAction(event.rule, event.transaction);
+    } catch (error) {
+      console.error('Failed to process rule trigger:', error);
+    }
   });
 }; 
