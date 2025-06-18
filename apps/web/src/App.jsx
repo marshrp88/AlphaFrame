@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
-import Button from './components/ui/Button'
+import { Button } from './components/ui/Button'
 import { useAppStore } from './store/useAppStore'
 import Home from './pages/Home'
 import About from './pages/About'

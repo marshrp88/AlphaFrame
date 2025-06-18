@@ -6,7 +6,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { Loader2 } from 'lucide-react';
 import { runSimulation } from '@/lib/services/SimulationService';
 

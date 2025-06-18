@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import Button from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { AlertCircle } from 'lucide-react';
 
