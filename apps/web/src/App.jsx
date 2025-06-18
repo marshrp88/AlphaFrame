@@ -6,6 +6,8 @@ import Home from './pages/Home'
 import About from './pages/About'
 import RulesPage from './pages/RulesPage'
 import { config } from './lib/config'
+import PrivateRoute from './components/PrivateRoute'
+import AlphaPro from './pages/AlphaPro'
 
 function HomeWithDemo() {
   // Access counter value and actions from Zustand store
@@ -78,12 +80,15 @@ function App() {
         <Link to="/" style={{ marginRight: '1rem' }}>Home</Link>
         <Link to="/about">About</Link>
         <Link to="/rules">Rules</Link>
+        <Link to="/pro" style={{ marginLeft: '1rem', color: 'purple' }}>AlphaPro</Link>
       </nav>
       {/* Route definitions */}
       <Routes>
         <Route path="/" element={<HomeWithDemo />} />
         <Route path="/about" element={<About />} />
         <Route path="/rules" element={<RulesPage />} />
+        {/* Protected AlphaPro route */}
+        <Route path="/pro" element={<PrivateRoute><AlphaPro /></PrivateRoute>} />
       </Routes>
     </>
   )

@@ -11,6 +11,7 @@ import { useUIStore } from '../store/uiStore';
 import { get } from './secureVault';
 import { canExecuteAction } from './PermissionEnforcer';
 import { useLogStore } from "@/lib/store/logStore";
+import { ActionSchema } from '../validation/schemas';
 
 const PLAID_API_BASE = 'https://api.plaid.com';
 
@@ -180,6 +181,20 @@ export class ExecutionController {
    * @throws {Error} If the action execution fails or is not permitted
    */
   static async executeAction(actionType, payload, confirmed = false) {
+    // Validate action payload using Zod
+    const parsed = ActionSchema.safeParse({ type: actionType, payload });
+    if (!parsed.success) {
+      throw new Error('Invalid action payload.');
+    }
+
+    // Check for sandbox mode
+    const { isSandboxMode } = useUIStore.getState();
+    if (isSandboxMode) {
+      // In sandbox mode, log the action and return a mocked result
+      console.log('[SANDBOX] Action execution simulated:', { actionType, payload });
+      return { success: true, sandbox: true, actionType, payload };
+    }
+
     // Check permissions
     const permissionResult = await canExecuteAction(actionType);
     if (!permissionResult.allowed) {

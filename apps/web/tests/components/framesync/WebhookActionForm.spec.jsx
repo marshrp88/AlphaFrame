@@ -1,12 +1,22 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { WebhookActionForm } from '@/components/framesync/WebhookActionForm';
+import WebhookActionForm from '@/components/framesync/WebhookActionForm';
 
 // Mock the toast
 vi.mock('@/components/ui/use-toast', () => ({
   useToast: () => ({
     toast: vi.fn()
   })
+}));
+
+vi.mock('@/components/ui/Input', () => ({
+  Input: (props) => <input {...props} />
+}));
+vi.mock('@/components/ui/Label', () => ({
+  Label: (props) => <label {...props} />
+}));
+vi.mock('@/components/ui/textarea', () => ({
+  Textarea: (props) => <textarea {...props} />
 }));
 
 describe('WebhookActionForm', () => {

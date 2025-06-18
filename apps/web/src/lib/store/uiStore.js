@@ -20,6 +20,9 @@ export const useUIStore = create((set) => ({
     onCancel: null
   },
 
+  // Sandbox mode flag
+  isSandboxMode: false, // If true, actions are simulated and not executed for real
+
   // Actions
   showConfirmationModal: (action, onConfirm, onCancel) => set({
     confirmationModal: {
@@ -37,5 +40,12 @@ export const useUIStore = create((set) => ({
       onConfirm: null,
       onCancel: null
     }
-  })
-})); 
+  }),
+
+  // Toggle sandbox mode
+  toggleSandboxMode: () => set((state) => ({ isSandboxMode: !state.isSandboxMode }))
+}));
+
+// Notes:
+// - isSandboxMode allows the app to run in a safe, non-destructive mode for testing or demos.
+// - toggleSandboxMode can be used in the UI to switch modes. 

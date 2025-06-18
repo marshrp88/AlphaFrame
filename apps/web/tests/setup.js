@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import './utils.jsx';
+import { setupTest } from './utils.jsx';
 
 // Setup global test environment
 beforeEach(() => {

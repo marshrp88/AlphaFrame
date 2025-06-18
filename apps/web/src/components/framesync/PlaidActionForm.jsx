@@ -84,6 +84,9 @@ export const PlaidActionForm = ({ initialPayload = {}, onChange }) => {
     return `${account.name} (${balance})`;
   };
 
+  // Before rendering the Select, log the options
+  console.log('PlaidActionForm account options', accounts);
+
   return (
     <div className="space-y-4">
       <div className="space-y-2">

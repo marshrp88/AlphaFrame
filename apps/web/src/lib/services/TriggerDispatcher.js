@@ -3,9 +3,8 @@
 // Part of FrameSync - the execution and automation layer of AlphaFrame
 
 import { useLogStore } from '../store/logStore';
-import { executeAction } from './ExecutionController';
-import { create } from 'zustand';
 import { ExecutionController } from './ExecutionController';
+import { create } from 'zustand';
 
 /**
  * TriggerDispatcher Service
@@ -202,7 +201,7 @@ export const dispatchAction = async (rule, transaction) => {
     const actionId = logStore.queueAction(payload);
     
     // Execute the action immediately
-    const result = await executeAction(payload);
+    const result = await ExecutionController.executeAction(payload.type, payload);
     
     // Update the action status in the logStore
     updateActionStatus(actionId, result);
