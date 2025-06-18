@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ExecutionController } from '@/lib/services/ExecutionController';
-import { ActionSchema } from '@/lib/validation/schemas';
+import { ExecutionController } from '../../../src/lib/services/ExecutionController';
+import { ActionSchema } from '../../../src/lib/validation/schemas';
 
 // Mock canExecuteAction to always allow
 vi.mock('@/lib/services/PermissionEnforcer', () => ({
@@ -16,6 +16,10 @@ vi.mock('@/lib/store/uiStore', () => ({
     })
   }
 }));
+
+it('sanity check', () => {
+  expect(1 + 1).toBe(2);
+});
 
 describe('ExecutionController (unit)', () => {
   beforeEach(() => {
