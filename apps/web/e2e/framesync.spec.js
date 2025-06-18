@@ -126,4 +126,82 @@ test.describe('FrameSync Integration', () => {
     await expect(page.getByText("Test memo")).toBeVisible({ timeout: 5000 });
     await expect(page.getByText("ADD_MEMO")).toBeVisible({ timeout: 5000 });
   });
+
+  // --- NEW: Rule Creation Edge Cases (AND/OR conditions) ---
+  test('should create a rule with multiple AND/OR conditions', async ({ page }) => {
+    // Click the "Create Rule" button
+    await page.click('button:has-text("Create Rule")');
+
+    // Fill in a complex trigger with AND/OR
+    await page.fill('[data-testid="trigger-input"]', 'checking_account_balance > 5000 AND savings_account_balance > 10000 OR credit_score > 700');
+
+    // Select Plaid transfer action
+    await page.selectOption('[data-testid="action-selector"]', 'PLAID_TRANSFER');
+    await page.fill('[data-testid="from-account"]', 'Chase Checking');
+    await page.fill('[data-testid="to-account"]', 'Vanguard Brokerage');
+    await page.fill('[data-testid="amount"]', '500');
+
+    // Save the rule
+    await page.click('button:has-text("Save Rule")');
+    await page.waitForTimeout(250);
+    // Verify success message
+    await expect(page.getByTestId("rule-toast")).toBeVisible({ timeout: 5000 });
+  });
+
+  // --- NEW: Safeguards toggle and confirmation modal logic ---
+  test('should show or skip confirmation modal based on Safeguards toggle', async ({ page }) => {
+    // Click the "Create Rule" button
+    await page.click('button:has-text("Create Rule")');
+    await page.selectOption('[data-testid="action-selector"]', 'PLAID_TRANSFER');
+    await page.fill('[data-testid="from-account"]', 'Chase Checking');
+    await page.fill('[data-testid="to-account"]', 'Vanguard Brokerage');
+    await page.fill('[data-testid="amount"]', '1000');
+
+    // Toggle Safeguards OFF (should skip confirmation)
+    await page.uncheck('[data-testid="safeguards-toggle"]');
+    await page.click('button:has-text("Save Rule")');
+    // Should NOT see confirmation modal
+    await expect(page.getByTestId('confirmation-modal')).not.toBeVisible();
+    // Should see success toast
+    await expect(page.getByTestId("rule-toast")).toBeVisible({ timeout: 5000 });
+
+    // Now try with Safeguards ON (should show confirmation)
+    await page.click('button:has-text("Create Rule")');
+    await page.selectOption('[data-testid="action-selector"]', 'PLAID_TRANSFER');
+    await page.fill('[data-testid="from-account"]', 'Chase Checking');
+    await page.fill('[data-testid="to-account"]', 'Vanguard Brokerage');
+    await page.fill('[data-testid="amount"]', '1000');
+    await page.check('[data-testid="safeguards-toggle"]');
+    await page.click('button:has-text("Save Rule")');
+    // Should see confirmation modal
+    await expect(page.getByTestId('confirmation-modal')).toBeVisible();
+    // Cancel the modal
+    await page.click('button:has-text("Cancel")');
+    // Should NOT see success toast
+    await expect(page.getByTestId("rule-toast")).not.toBeVisible();
+  });
+
+  // --- ENHANCED: Golden Path test with ActionLog UI check ---
+  test('should complete the Golden Path and verify ActionLog UI', async ({ page }) => {
+    // Click the "Create Rule" button
+    await page.click('button:has-text("Create Rule")');
+    await page.fill('[data-testid="trigger-input"]', 'checking_account_balance > 5000');
+    await page.selectOption('[data-testid="action-selector"]', 'PLAID_TRANSFER');
+    await page.fill('[data-testid="from-account"]', 'Chase Checking');
+    await page.fill('[data-testid="to-account"]', 'Vanguard Brokerage');
+    await page.fill('[data-testid="amount"]', '1000');
+    await page.check('[data-testid="run-simulation"]');
+    await expect(page.locator('[data-testid="simulation-preview"]')).toBeVisible();
+    await page.click('button:has-text("Save Rule")');
+    await page.waitForTimeout(250);
+    await expect(page.getByTestId("rule-toast")).toBeVisible({ timeout: 5000 });
+
+    // Now, go to Action Log and verify the new entry
+    await page.click('a:has-text("Action Log")');
+    await expect(page.locator('table')).toBeVisible();
+    // Check for the new rule/action in the log
+    await expect(page.getByText("PLAID_TRANSFER")).toBeVisible({ timeout: 5000 });
+    // Optionally, check for the amount or description if available
+    await expect(page.getByText("1000")).toBeVisible({ timeout: 5000 });
+  });
 }); 

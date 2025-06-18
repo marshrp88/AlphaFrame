@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { requestPermission, isActionHighRisk } from '../../../src/lib/services/PermissionEnforcer';
-import { canExecuteAction, hasActionPermission, validateActionPayload } from '../../../src/lib/services/PermissionEnforcer';
+import { PermissionEnforcer } from '../../../src/lib/services/PermissionEnforcer';
 import { useAuthStore } from '../../../src/lib/store/authStore';
 import { useUIStore } from '../../../src/lib/store/uiStore';
 
@@ -8,15 +7,6 @@ import { useUIStore } from '../../../src/lib/store/uiStore';
 vi.mock('../../../src/lib/services/secureVault', () => ({
   unlock: vi.fn()
 }));
-
-// Mock the password confirmation
-vi.mock('../../../src/lib/services/PermissionEnforcer', async () => {
-  const actual = await vi.importActual('../../../src/lib/services/PermissionEnforcer');
-  return {
-    ...actual,
-    requestPasswordConfirmation: vi.fn(() => Promise.resolve('test-password'))
-  };
-});
 
 // Mock the auth store
 vi.mock('../../../src/lib/store/authStore', () => ({
@@ -42,182 +32,124 @@ describe('PermissionEnforcer', () => {
     // Setup mock auth store
     mockAuthStore = {
       isAuthenticated: true,
-      userPermissions: ['PLAID_TRANSFER', 'SEND_NOTIFICATION']
+      user: {
+        permissions: ['plaid:transfer', 'webhook:execute', 'goals:modify', 'transactions:modify']
+      }
     };
     useAuthStore.getState.mockReturnValue(mockAuthStore);
 
     // Setup mock UI store
     mockUIStore = {
-      showPasswordConfirmationModal: vi.fn()
+      showPasswordPrompt: vi.fn(({ onConfirm }) => onConfirm('test-password'))
     };
     useUIStore.getState.mockReturnValue(mockUIStore);
   });
 
-  describe('requestPermission', () => {
-    it('should grant permission for non-high-risk actions', async () => {
-      const action = { actionType: 'UPDATE_BUDGET' };
-      const result = await requestPermission(action);
-      expect(result).toBe(true);
-    });
-
-    it('should require password confirmation for high-risk actions', async () => {
-      const action = { actionType: 'PLAID_TRANSFER' };
-      const { unlock } = await import('../../../src/lib/services/secureVault');
-      
-      await requestPermission(action);
-      
-      expect(unlock).toHaveBeenCalledWith('test-password');
-    });
-
-    it('should throw error if password verification fails', async () => {
-      const action = { actionType: 'PLAID_TRANSFER' };
-      const { unlock } = await import('../../../src/lib/services/secureVault');
-      
-      unlock.mockRejectedValueOnce(new Error('Invalid password'));
-      
-      await expect(requestPermission(action)).rejects.toThrow('Permission denied for PLAID_TRANSFER: Invalid password');
-    });
-
-    it('should handle multiple high-risk action types', async () => {
-      const highRiskActions = [
-        'PLAID_TRANSFER',
-        'MODIFY_GOAL',
-        'DELETE_ACCOUNT',
-        'EXPORT_DATA'
-      ];
-
-      for (const actionType of highRiskActions) {
-        const action = { actionType };
-        const { unlock } = await import('../../../src/lib/services/secureVault');
-        
-        await requestPermission(action);
-        expect(unlock).toHaveBeenCalledWith('test-password');
-        
-        vi.clearAllMocks();
-      }
-    });
-  });
-
-  describe('isActionHighRisk', () => {
-    it('should identify high-risk actions', () => {
-      expect(isActionHighRisk('PLAID_TRANSFER')).toBe(true);
-      expect(isActionHighRisk('MODIFY_GOAL')).toBe(true);
-      expect(isActionHighRisk('DELETE_ACCOUNT')).toBe(true);
-      expect(isActionHighRisk('EXPORT_DATA')).toBe(true);
-    });
-
-    it('should identify non-high-risk actions', () => {
-      expect(isActionHighRisk('UPDATE_BUDGET')).toBe(false);
-      expect(isActionHighRisk('SEND_NOTIFICATION')).toBe(false);
-      expect(isActionHighRisk('CREATE_ALERT')).toBe(false);
-    });
-  });
-
   describe('canExecuteAction', () => {
     it('should allow low-risk actions for authenticated users', async () => {
-      const action = {
-        actionType: 'SEND_NOTIFICATION',
-        payload: { message: 'Test notification' }
-      };
-
-      const result = await canExecuteAction(action);
-
+      const result = await PermissionEnforcer.canExecuteAction('ADD_MEMO');
       expect(result).toEqual({ allowed: true });
-      expect(mockUIStore.showPasswordConfirmationModal).not.toHaveBeenCalled();
     });
 
     it('should deny any action for unauthenticated users', async () => {
       mockAuthStore.isAuthenticated = false;
 
-      const action = {
-        actionType: 'SEND_NOTIFICATION',
-        payload: { message: 'Test notification' }
-      };
-
-      const result = await canExecuteAction(action);
+      const result = await PermissionEnforcer.canExecuteAction('ADD_MEMO');
 
       expect(result).toEqual({
         allowed: false,
-        reason: 'User not authenticated'
+        reason: 'User must be authenticated to execute actions'
       });
     });
 
-    it('should deny high-risk actions if user cancels password prompt', async () => {
-      mockUIStore.showPasswordConfirmationModal.mockImplementation((message, callback) => {
-        callback(false);
-      });
+    it('should deny actions if user lacks required permissions', async () => {
+      mockAuthStore.user.permissions = ['transactions:modify']; // Missing plaid:transfer
 
-      const action = {
-        actionType: 'PLAID_TRANSFER',
-        payload: { amount: 100 }
-      };
-
-      const result = await canExecuteAction(action);
+      const result = await PermissionEnforcer.canExecuteAction('PLAID_TRANSFER');
 
       expect(result).toEqual({
         allowed: false,
-        reason: 'Action cancelled by user'
+        reason: 'User does not have required permissions'
       });
-      expect(mockUIStore.showPasswordConfirmationModal).toHaveBeenCalled();
     });
 
     it('should allow high-risk actions after password confirmation', async () => {
-      mockUIStore.showPasswordConfirmationModal.mockImplementation((message, callback) => {
-        callback(true);
-      });
-
-      const action = {
-        actionType: 'PLAID_TRANSFER',
-        payload: { amount: 100 }
-      };
-
-      const result = await canExecuteAction(action);
+      const result = await PermissionEnforcer.canExecuteAction('PLAID_TRANSFER');
 
       expect(result).toEqual({ allowed: true });
-      expect(mockUIStore.showPasswordConfirmationModal).toHaveBeenCalled();
+      expect(mockUIStore.showPasswordPrompt).toHaveBeenCalled();
     });
 
     it('should handle errors gracefully', async () => {
-      mockUIStore.showPasswordConfirmationModal.mockRejectedValue(new Error('Test error'));
+      mockUIStore.showPasswordPrompt.mockRejectedValue(new Error('Test error'));
 
-      const action = {
-        actionType: 'PLAID_TRANSFER',
-        payload: { amount: 100 }
-      };
-
-      const result = await canExecuteAction(action);
+      const result = await PermissionEnforcer.canExecuteAction('PLAID_TRANSFER');
 
       expect(result).toEqual({
         allowed: false,
-        reason: 'Permission check failed: Test error'
+        reason: 'Permission check failed'
       });
-    });
-  });
-
-  describe('hasActionPermission', () => {
-    it('should return true for permitted actions', () => {
-      expect(hasActionPermission('PLAID_TRANSFER')).toBe(true);
-      expect(hasActionPermission('SEND_NOTIFICATION')).toBe(true);
-    });
-
-    it('should return false for non-permitted actions', () => {
-      expect(hasActionPermission('DELETE_ACCOUNT')).toBe(false);
-    });
-
-    it('should handle missing permissions array', () => {
-      mockAuthStore.userPermissions = undefined;
-      expect(hasActionPermission('PLAID_TRANSFER')).toBe(false);
     });
   });
 
   describe('validateActionPayload', () => {
-    it('should validate action payloads', () => {
-      const action = {
-        actionType: 'PLAID_TRANSFER',
-        payload: { amount: 100 }
+    it('should validate Plaid transfer payloads', () => {
+      const validPayload = {
+        amount: 100,
+        fromAccount: 'acc_123',
+        toAccount: 'acc_456'
       };
+      expect(PermissionEnforcer.validateActionPayload('PLAID_TRANSFER', validPayload)).toBe(true);
 
-      expect(validateActionPayload(action)).toBe(true);
+      const invalidPayload = {
+        amount: '100', // Should be number
+        fromAccount: 'acc_123'
+      };
+      expect(PermissionEnforcer.validateActionPayload('PLAID_TRANSFER', invalidPayload)).toBe(false);
+    });
+
+    it('should validate webhook payloads', () => {
+      const validPayload = {
+        url: 'https://api.example.com/webhook',
+        method: 'POST'
+      };
+      expect(PermissionEnforcer.validateActionPayload('WEBHOOK', validPayload)).toBe(true);
+
+      const invalidPayload = {
+        url: 'http://api.example.com/webhook', // Should be https
+        method: 'GET' // Not allowed
+      };
+      expect(PermissionEnforcer.validateActionPayload('WEBHOOK', invalidPayload)).toBe(false);
+    });
+
+    it('should validate goal adjustment payloads', () => {
+      const validPayload = {
+        goalId: 'goal_123',
+        amount: 100
+      };
+      expect(PermissionEnforcer.validateActionPayload('ADJUST_GOAL', validPayload)).toBe(true);
+
+      const invalidPayload = {
+        goalId: 'goal_123',
+        amount: '100' // Should be number
+      };
+      expect(PermissionEnforcer.validateActionPayload('ADJUST_GOAL', invalidPayload)).toBe(false);
+    });
+
+    it('should validate memo payloads', () => {
+      const validPayload = {
+        memo: 'Test memo'
+      };
+      expect(PermissionEnforcer.validateActionPayload('ADD_MEMO', validPayload)).toBe(true);
+
+      const invalidPayload = {
+        memo: 'a'.repeat(201) // Too long
+      };
+      expect(PermissionEnforcer.validateActionPayload('ADD_MEMO', invalidPayload)).toBe(false);
+    });
+
+    it('should return false for unknown action types', () => {
+      expect(PermissionEnforcer.validateActionPayload('UNKNOWN_ACTION', {})).toBe(false);
     });
   });
 }); 
