@@ -173,7 +173,7 @@ describe('FeedbackForm', () => {
       fireEvent.click(bugReportCard);
 
       // The selected category should have different styling
-      expect(bugReportCard).toHaveClass('border-blue-500');
+      expect(bugReportCard).toHaveClass('border-blue-500', 'bg-blue-100');
     });
 
     it('should allow changing selected category', () => {
@@ -411,7 +411,7 @@ describe('FeedbackForm', () => {
     });
 
     it('should export snapshot to clipboard', async () => {
-      const clipboardButton = screen.getByText('Copy to Clipboard');
+      const clipboardButton = screen.getByRole('button', { name: 'Copy to Clipboard' });
       fireEvent.click(clipboardButton);
 
       await waitFor(() => {

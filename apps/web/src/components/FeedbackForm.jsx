@@ -164,7 +164,7 @@ const FeedbackForm = () => {
     if (!snapshotData) return;
 
     try {
-      await feedbackUploader.exportSnapshot(snapshotData);
+      await feedbackUploader.exportSnapshot(snapshotData, 'file');
       await executionLogService.log('feedback.snapshot.exported', {
         category: selectedCategory,
         totalSize: `${totalSize}KB`
@@ -173,6 +173,23 @@ const FeedbackForm = () => {
     } catch (error) {
       console.error('Error exporting snapshot:', error);
       alert('Error exporting snapshot. Please try again.');
+    }
+  };
+
+  const handleClipboardExport = async () => {
+    if (!snapshotData) return;
+
+    try {
+      await feedbackUploader.exportSnapshot(snapshotData, 'clipboard');
+      await executionLogService.log('feedback.snapshot.exported', {
+        category: selectedCategory,
+        totalSize: `${totalSize}KB`,
+        format: 'clipboard'
+      });
+      alert('Snapshot data copied to clipboard!');
+    } catch (error) {
+      console.error('Error copying to clipboard:', error);
+      alert('Error copying to clipboard. Please try again.');
     }
   };
 
@@ -368,10 +385,7 @@ const FeedbackForm = () => {
                 </p>
                 <Button 
                   variant="outline" 
-                  onClick={() => {
-                    navigator.clipboard.writeText(JSON.stringify(snapshotData, null, 2));
-                    alert('Snapshot data copied to clipboard!');
-                  }}
+                  onClick={handleClipboardExport}
                   className="w-full"
                 >
                   Copy to Clipboard

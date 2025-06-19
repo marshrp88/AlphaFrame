@@ -256,7 +256,7 @@ const AlphaProDashboard = () => {
             <Link to="/pro/reports">View Reports</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link to="/pro/feedback">Send Feedback</Link>
+            <Link to="/feedback">Send Feedback</Link>
           </Button>
         </div>
       </div>
