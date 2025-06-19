@@ -1,0 +1,206 @@
+/**
+ * CardSection.css
+ * 
+ * Purpose: Styles for the card section component
+ * 
+ * Procedure:
+ * - Implements card-based layout with consistent styling
+ * - Supports collapsible functionality and loading states
+ * - Includes theme variants and accessibility features
+ * - Provides smooth transitions and focus management
+ * 
+ * Conclusion: Ensures consistent card appearance and interaction
+ */
+
+.card-section {
+  background: var(--color-card-background, #ffffff);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: var(--border-radius, 8px);
+  box-shadow: var(--shadow-sm, 0 1px 3px 0 rgba(0, 0, 0, 0.1));
+  margin-bottom: var(--spacing-md, 1rem);
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+}
+
+.card-section:hover {
+  box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
+}
+
+.card-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md, 1rem);
+  background: var(--color-header-background, #f9fafb);
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+  min-height: 60px;
+}
+
+.card-section__header--collapsible {
+  cursor: pointer;
+}
+
+.card-section__header--collapsible:hover {
+  background: var(--color-header-hover, #f3f4f6);
+}
+
+.card-section__title-area {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 0.5rem);
+  flex: 1;
+}
+
+.card-section__icon {
+  font-size: 1.25rem;
+  color: var(--color-primary, #2563eb);
+  flex-shrink: 0;
+}
+
+.card-section__title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text, #111827);
+  line-height: 1.4;
+}
+
+.card-section__toggle {
+  background: none;
+  border: none;
+  padding: var(--spacing-sm, 0.5rem);
+  border-radius: var(--border-radius-sm, 4px);
+  cursor: pointer;
+  color: var(--color-text-secondary, #6b7280);
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-section__toggle:hover {
+  background: var(--color-button-hover, #f3f4f6);
+  color: var(--color-text, #111827);
+}
+
+.card-section__toggle:focus {
+  outline: 2px solid var(--color-focus, #007acc);
+  outline-offset: 2px;
+}
+
+.card-section__toggle-icon {
+  font-size: 1rem;
+  transition: transform 0.2s ease-in-out;
+}
+
+.card-section__content {
+  padding: var(--spacing-md, 1rem);
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+.card-section__content--collapsed {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.card-section__loading {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 0.5rem);
+  color: var(--color-text-secondary, #6b7280);
+  font-style: italic;
+}
+
+.card-section__loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color-border, #e5e7eb);
+  border-top: 2px solid var(--color-primary, #2563eb);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Variants */
+.card-section--highlighted {
+  border-color: var(--color-primary, #2563eb);
+  box-shadow: 0 0 0 1px var(--color-primary, #2563eb);
+}
+
+.card-section--compact {
+  margin-bottom: var(--spacing-sm, 0.5rem);
+}
+
+.card-section--compact .card-section__header {
+  padding: var(--spacing-sm, 0.5rem);
+  min-height: 48px;
+}
+
+.card-section--compact .card-section__content {
+  padding: var(--spacing-sm, 0.5rem);
+}
+
+.card-section--compact .card-section__title {
+  font-size: 1rem;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .card-section {
+    --color-card-background: #1f2937;
+    --color-header-background: #374151;
+    --color-header-hover: #4b5563;
+    --color-border: #4b5563;
+    --color-text: #f9fafb;
+    --color-text-secondary: #d1d5db;
+    --color-button-hover: #4b5563;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .card-section,
+  .card-section__content,
+  .card-section__toggle,
+  .card-section__toggle-icon {
+    transition: none;
+  }
+  
+  .card-section__loading-spinner {
+    animation: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .card-section {
+    border-width: 2px;
+    box-shadow: none;
+  }
+  
+  .card-section__toggle:focus {
+    outline-width: 3px;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .card-section__header {
+    padding: var(--spacing-sm, 0.5rem);
+    min-height: 48px;
+  }
+  
+  .card-section__content {
+    padding: var(--spacing-sm, 0.5rem);
+  }
+  
+  .card-section__title {
+    font-size: 1rem;
+  }
+} 

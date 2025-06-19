@@ -1,0 +1,97 @@
+/**
+ * ProPageLayout.css
+ * 
+ * Purpose: Styles for the main AlphaPro page layout
+ * 
+ * Procedure:
+ * - Implements responsive grid layout
+ * - Supports dark mode and theme variants
+ * - Includes focus management and accessibility styles
+ * - Provides consistent spacing and typography
+ * 
+ * Conclusion: Ensures professional appearance and usability
+ */
+
+.layout-pro {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-background, #ffffff);
+  color: var(--color-text, #333333);
+  font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+}
+
+.layout-pro__content {
+  flex: 1;
+  padding: var(--spacing-lg, 2rem);
+  max-width: var(--max-width, 1200px);
+  margin: 0 auto;
+  width: 100%;
+  outline: none; /* Remove default focus outline */
+}
+
+.layout-pro__content:focus {
+  outline: 2px solid var(--color-focus, #007acc);
+  outline-offset: 2px;
+}
+
+/* Mode variants */
+.layout-pro--planner {
+  --color-primary: #2563eb;
+  --color-secondary: #1e40af;
+  --color-accent: #3b82f6;
+}
+
+.layout-pro--investor {
+  --color-primary: #059669;
+  --color-secondary: #047857;
+  --color-accent: #10b981;
+}
+
+.layout-pro--minimalist {
+  --color-primary: #6b7280;
+  --color-secondary: #4b5563;
+  --color-accent: #9ca3af;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .layout-pro {
+    --color-background: #1a1a1a;
+    --color-text: #e5e5e5;
+    --color-border: #404040;
+    --color-focus: #60a5fa;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .layout-pro * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .layout-pro {
+    --color-background: #000000;
+    --color-text: #ffffff;
+    --color-border: #ffffff;
+    --color-focus: #ffff00;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .layout-pro__content {
+    padding: var(--spacing-md, 1rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .layout-pro__content {
+    padding: var(--spacing-sm, 0.5rem);
+  }
+} 

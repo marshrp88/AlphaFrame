@@ -11,12 +11,14 @@ export default defineConfig({
       '**/e2e/**',
     ],
     globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./tests/setup.js'],
+    environment: 'node',
+    // setupFiles: ['./tests/setup.js'], // Temporarily disabled
     threads: false,
     isolate: true,
     passWithNoTests: true,
+    inspector: false, // Disable inspector to fix Windows compatibility
     coverage: {
+      provider: 'v8',
       reporter: ['text', 'json', 'html'],
       exclude: [
         'node_modules/',

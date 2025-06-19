@@ -1,0 +1,80 @@
+/**
+ * Icon.css
+ * 
+ * Purpose: Styles for the icon component
+ * 
+ * Procedure:
+ * - Implements consistent icon display
+ * - Supports different icon types and sizes
+ * - Includes accessibility features
+ * 
+ * Conclusion: Ensures consistent icon appearance
+ */
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* Icon variants */
+.icon--chevron-up,
+.icon--chevron-down {
+  font-size: 0.875rem;
+  transition: transform 0.2s ease-in-out;
+}
+
+.icon--chart {
+  font-size: 1.25rem;
+}
+
+.icon--wallet {
+  font-size: 1.125rem;
+}
+
+.icon--target {
+  font-size: 1.125rem;
+}
+
+.icon--settings {
+  font-size: 1rem;
+}
+
+.icon--help {
+  font-size: 1rem;
+}
+
+.icon--export,
+.icon--save,
+.icon--share {
+  font-size: 0.875rem;
+}
+
+.icon--analyze,
+.icon--optimize,
+.icon--report {
+  font-size: 1rem;
+}
+
+.icon--expand,
+.icon--collapse {
+  font-size: 0.875rem;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .icon {
+    filter: brightness(1.2);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .icon {
+    transition: none;
+  }
+} 
