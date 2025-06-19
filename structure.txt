@@ -1,0 +1,78 @@
+Folder PATH listing for volume Windows-SSD
+Volume serial number is 5ACB-51A5
+C:\USERS\MARSH\DESKTOP\ALPHAFRAME\APPS\WEB\SRC
+|   App.css
+|   App.jsx
+|   index.css
+|   main.jsx
+|   setupTests.js
+|   
++---assets
+|       react.svg
+|       
++---components
+|   |   Button.jsx
+|   |   ErrorBoundary.jsx
+|   |   
+|   +---framesync
+|   |       ActionLogView.jsx
+|   |       ActionSelector.jsx
+|   |       ConfirmationModal.jsx
+|   |       InternalActionForm.jsx
+|   |       PlaidActionForm.jsx
+|   |       RuleBinderRoot.jsx
+|   |       Safeguards.jsx
+|   |       SimulationPreview.jsx
+|   |       WebhookActionForm.jsx
+|   |       
+|   \---ui
+|           badge.jsx
+|           Button.css
+|           Button.jsx
+|           Card.jsx
+|           dialog.jsx
+|           Input.jsx
+|           Label.jsx
+|           radio-group.jsx
+|           Select.jsx
+|           switch.jsx
+|           table.jsx
+|           textarea.jsx
+|           tooltip.jsx
+|           use-toast.jsx
+|           
++---lib
+|   |   config.js
+|   |   utils.js
+|   |   
+|   +---mocks
+|   |       serviceMocks.js
+|   |       
+|   +---services
+|   |       crypto.js
+|   |       ExecutionController.js
+|   |       PermissionEnforcer.js
+|   |       ruleEngine.js
+|   |       secureVault.js
+|   |       simulation.js
+|   |       SimulationService.js
+|   |       syncEngine.js
+|   |       TriggerDispatcher.js
+|   |       
+|   \---store
+|           authStore.js
+|           financialStateStore.js
+|           logStore.js
+|           uiStore.js
+|           
++---pages
+|       About.jsx
+|       Home.jsx
+|       RulesPage.jsx
+|       
++---store
+|       useAppStore.js
+|       
+\---types
+        index.js
+        

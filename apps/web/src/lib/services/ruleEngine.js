@@ -3,6 +3,8 @@
  * This service provides functions for evaluating and managing financial rules.
  */
 
+import { RuleSchema } from '../validation/schemas';
+
 /**
  * Asynchronously evaluates a single rule against a transaction object.
  * @param {object} rule - The rule object to evaluate.
@@ -10,6 +12,13 @@
  * @returns {Promise<boolean>} - A promise that resolves to true if conditions are met, or rejects on invalid input.
  */
 export const evaluateRule = async (rule, transaction) => {
+  // Validate rule structure using Zod
+  const parsed = RuleSchema.safeParse(rule);
+  if (!parsed.success || !transaction) {
+    throw new Error('Invalid rule or transaction object provided.');
+  }
+  rule = parsed.data;
+
   if (!rule || !rule.conditions || !Array.isArray(rule.conditions) || !transaction) {
     // This throw is for invalid rule/transaction structures.
     throw new Error('Invalid rule or transaction object provided.');
@@ -70,15 +79,9 @@ export const executeRule = async (rule) => {
  * @returns {Promise<boolean>} - A promise that resolves to true if the rule is valid, false otherwise.
  */
 export const validateRule = async (rule) => {
-  const isValid =
-    !!rule &&
-    typeof rule.id === 'string' &&
-    typeof rule.name === 'string' &&
-    Array.isArray(rule.conditions) &&
-    rule.conditions.length > 0 &&
-    typeof rule.action === 'object' &&
-    rule.action !== null;
-  return isValid;
+  // Use Zod schema to validate rule
+  const parsed = RuleSchema.safeParse(rule);
+  return parsed.success;
 };
 
 /**

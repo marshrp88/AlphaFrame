@@ -82,7 +82,7 @@ pnpm lint       # Run linter
 - **Example State:** Counter with increment and reset actions.
 - **Usage:**
   ```js
-  import useAppStore from '@/store/useAppStore';
+  import { useAppStore } from '@/store/useAppStore';
   const counter = useAppStore((state) => state.counter);
   const increment = useAppStore((state) => state.increment);
   ```

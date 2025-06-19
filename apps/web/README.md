@@ -19,7 +19,7 @@ This project uses [Zustand](https://zustand-demo.pmnd.rs/) for simple, global st
 - Example state: a counter with increment and reset actions
 - Usage:
   ```js
-  import useAppStore from '@/store/useAppStore';
+  import { useAppStore } from '@/store/useAppStore';
   const counter = useAppStore((state) => state.counter);
   const increment = useAppStore((state) => state.increment);
   ```

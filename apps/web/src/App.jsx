@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
-import Button from './components/ui/Button'
-import useAppStore from './store/useAppStore'
+import { Button } from './components/ui/Button'
+import { useAppStore } from './store/useAppStore'
 import Home from './pages/Home'
 import About from './pages/About'
+import RulesPage from './pages/RulesPage'
 import { config } from './lib/config'
+import PrivateRoute from './components/PrivateRoute'
+import AlphaPro from './pages/AlphaPro'
 
 function HomeWithDemo() {
   // Access counter value and actions from Zustand store
@@ -59,7 +62,9 @@ function HomeWithDemo() {
           ) : error ? (
             <div style={{color: 'red'}}>Error: {error}</div>
           ) : apiData ? (
-            <pre style={{textAlign: 'left', background: '#222', color: '#fff', padding: '1em', borderRadius: '8px'}}>{JSON.stringify(apiData, null, 2)}</pre>
+            <pre style={{textAlign: 'left', background: '#222', color: '#fff', padding: '1em', borderRadius: '8px'}}>
+              {typeof apiData === 'string' ? apiData : JSON.stringify(apiData, null, 2)}
+            </pre>
           ) : (
             <div>No data received.</div>
           )
@@ -76,11 +81,16 @@ function App() {
       <nav style={{ marginBottom: '2rem' }}>
         <Link to="/" style={{ marginRight: '1rem' }}>Home</Link>
         <Link to="/about">About</Link>
+        <Link to="/rules">Rules</Link>
+        <Link to="/pro" style={{ marginLeft: '1rem', color: 'purple' }}>AlphaPro</Link>
       </nav>
       {/* Route definitions */}
       <Routes>
         <Route path="/" element={<HomeWithDemo />} />
         <Route path="/about" element={<About />} />
+        <Route path="/rules" element={<RulesPage />} />
+        {/* Protected AlphaPro route */}
+        <Route path="/pro" element={<PrivateRoute><AlphaPro /></PrivateRoute>} />
       </Routes>
     </>
   )
