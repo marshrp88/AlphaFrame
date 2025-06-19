@@ -16,7 +16,7 @@
  * analytics while maintaining zero-knowledge compliance.
  */
 
-import executionLogService from './ExecutionLogService.js';
+import executionLogService from '../../../core/services/ExecutionLogService.js';
 
 // Default budget categories
 const DEFAULT_CATEGORIES = {
