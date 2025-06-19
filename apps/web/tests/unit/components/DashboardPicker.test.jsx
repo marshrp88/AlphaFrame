@@ -23,7 +23,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import DashboardPicker from '../../../src/components/DashboardPicker.jsx';
 
 // Mock UI components
-vi.mock('../../../src/components/ui/Card.jsx', () => ({
+vi.mock('@/components/ui/Card.jsx', () => ({
   Card: ({ children, className, onClick, ...props }) => (
     <div 
       className={`card ${className || ''}`} 
@@ -36,7 +36,7 @@ vi.mock('../../../src/components/ui/Card.jsx', () => ({
   )
 }));
 
-vi.mock('../../../src/components/ui/Button.jsx', () => ({
+vi.mock('@/components/ui/Button.jsx', () => ({
   Button: ({ children, onClick, variant, size, className, ...props }) => (
     <button 
       className={`button ${variant || ''} ${size || ''} ${className || ''}`}
@@ -49,7 +49,7 @@ vi.mock('../../../src/components/ui/Button.jsx', () => ({
   )
 }));
 
-vi.mock('../../../src/components/ui/badge.jsx', () => ({
+vi.mock('@/components/ui/badge.jsx', () => ({
   Badge: ({ children, variant, className, ...props }) => (
     <span 
       className={`badge ${variant || ''} ${className || ''}`}

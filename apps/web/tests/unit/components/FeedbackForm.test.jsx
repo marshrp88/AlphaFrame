@@ -37,7 +37,7 @@ vi.mock('../../../src/lib/services/ExecutionLogService.js', () => ({
 }));
 
 // Mock UI components
-vi.mock('../../../src/components/ui/Card.jsx', () => ({
+vi.mock('@/components/ui/Card.jsx', () => ({
   Card: ({ children, className, ...props }) => (
     <div data-testid="card" className={className} {...props}>
       {children}
@@ -45,7 +45,7 @@ vi.mock('../../../src/components/ui/Card.jsx', () => ({
   )
 }));
 
-vi.mock('../../../src/components/ui/Button.jsx', () => ({
+vi.mock('@/components/ui/Button.jsx', () => ({
   Button: ({ children, onClick, disabled, variant, className, ...props }) => (
     <button
       data-testid="button"
@@ -59,7 +59,7 @@ vi.mock('../../../src/components/ui/Button.jsx', () => ({
   )
 }));
 
-vi.mock('../../../src/components/ui/switch.jsx', () => ({
+vi.mock('@/components/ui/switch.jsx', () => ({
   Checkbox: ({ checked, onCheckedChange, className, ...props }) => (
     <input
       type="checkbox"
@@ -72,7 +72,7 @@ vi.mock('../../../src/components/ui/switch.jsx', () => ({
   )
 }));
 
-vi.mock('../../../src/components/ui/textarea.jsx', () => ({
+vi.mock('@/components/ui/textarea.jsx', () => ({
   Textarea: ({ value, onChange, placeholder, className, ...props }) => (
     <textarea
       data-testid="textarea"
@@ -85,7 +85,7 @@ vi.mock('../../../src/components/ui/textarea.jsx', () => ({
   )
 }));
 
-vi.mock('../../../src/components/ui/Select.jsx', () => ({
+vi.mock('@/components/ui/Select.jsx', () => ({
   Select: ({ children, ...props }) => (
     <select data-testid="select" {...props}>
       {children}
@@ -93,7 +93,7 @@ vi.mock('../../../src/components/ui/Select.jsx', () => ({
   )
 }));
 
-vi.mock('../../../src/components/ui/badge.jsx', () => ({
+vi.mock('@/components/ui/badge.jsx', () => ({
   Badge: ({ children, variant, className, ...props }) => (
     <span data-testid="badge" className={`badge ${variant || ''} ${className || ''}`} {...props}>
       {children}

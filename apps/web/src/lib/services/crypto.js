@@ -85,4 +85,40 @@ export const decrypt = async (encryptedData, key) => {
 export const generateSalt = async () => {
   const salt = nacl.randomBytes(nacl.secretbox.nonceLength);
   return util.encodeBase64(salt);
+};
+
+/**
+ * Encrypts data using the encrypt function
+ * @param {string} data - Data to encrypt
+ * @param {string} key - Encryption key
+ * @returns {Promise<string>} Encrypted data
+ */
+export const encryptData = async (data, key) => {
+  return await encrypt(data, key);
+};
+
+/**
+ * Decrypts data using the decrypt function
+ * @param {string} encryptedData - Data to decrypt
+ * @param {string} key - Decryption key
+ * @returns {Promise<string>} Decrypted data
+ */
+export const decryptData = async (encryptedData, key) => {
+  return await decrypt(encryptedData, key);
+};
+
+// Alias functions for compatibility
+export const encryptDataAlias = encrypt;
+export const decryptDataAlias = decrypt;
+
+// Default export
+export default {
+  deriveKey,
+  encrypt,
+  decrypt,
+  generateSalt,
+  encryptData,
+  decryptData,
+  encryptDataAlias,
+  decryptDataAlias
 }; 
