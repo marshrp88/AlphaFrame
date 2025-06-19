@@ -15,7 +15,7 @@
  * with predictive analytics while maintaining zero-knowledge compliance.
  */
 
-import executionLogService from './ExecutionLogService.js';
+import executionLogService from '../../../core/services/ExecutionLogService.js';
 
 // Default income and expense categories
 const DEFAULT_INCOME_CATEGORIES = {
@@ -360,7 +360,11 @@ class CashFlowService {
       case 'quarterly':
         return monthsDiff >= 0 && monthsDiff % 3 === 0;
       case 'annual':
-        return monthsDiff >= 0 && monthsDiff % 12 === 0;
+        // For annual transactions:
+        // 1. Must be in the same month
+        // 2. Must be a multiple of 12 months from start
+        return monthDate.getMonth() === transactionDate.getMonth() &&
+               monthsDiff >= 0 && monthsDiff % 12 === 0;
       default:
         return monthsDiff >= 0;
     }
