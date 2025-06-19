@@ -5,7 +5,11 @@ import App from './App';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import './index.css';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+console.log('Debug: Starting to mount app');
+const rootElement = document.getElementById('root');
+console.log('Debug: Root element found:', rootElement);
+
+ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <ErrorBoundary>
       <BrowserRouter>
@@ -14,3 +18,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </ErrorBoundary>
   </React.StrictMode>
 );
+console.log('Debug: Render called');

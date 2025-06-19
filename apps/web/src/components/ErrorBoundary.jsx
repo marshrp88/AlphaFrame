@@ -6,8 +6,8 @@
  */
 
 import React from 'react';
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Button } from "../components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/Card";
 import { AlertCircle } from 'lucide-react';
 
 /**
@@ -31,6 +31,7 @@ export class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null };
+    console.log('Debug: ErrorBoundary constructed');
   }
 
   /**
@@ -39,6 +40,7 @@ export class ErrorBoundary extends React.Component {
    * @returns {ErrorBoundaryState} New state object
    */
   static getDerivedStateFromError(error) {
+    console.log('Debug: ErrorBoundary caught error:', error);
     return { hasError: true, error };
   }
 
@@ -60,6 +62,7 @@ export class ErrorBoundary extends React.Component {
   };
 
   render() {
+    console.log('Debug: ErrorBoundary rendering, hasError:', this.state.hasError);
     if (this.state.hasError) {
       return (
         <div className="min-h-screen flex items-center justify-center p-4">

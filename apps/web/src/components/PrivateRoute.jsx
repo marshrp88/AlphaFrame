@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '../lib/auth';
 
 /**
  * PrivateRoute component
@@ -9,6 +9,11 @@ import { useAuth } from '@/lib/auth';
  * Usage: <PrivateRoute><ProtectedComponent /></PrivateRoute>
  */
 export default function PrivateRoute({ children }) {
+  // DEV BYPASS: Always authenticate in development
+  if (import.meta.env.DEV) {
+    return children;
+  }
+
   const { isAuthenticated } = useAuth();
   if (!isAuthenticated) {
     // Redirect to login if not authenticated
@@ -20,4 +25,5 @@ export default function PrivateRoute({ children }) {
 
 // Notes:
 // - This component is used to wrap protected routes.
-// - It is simple and easy to understand for a 10th-grade reader. 
+// - It is simple and easy to understand for a 10th-grade reader.
+// - In development mode, authentication is bypassed for easier testing. 
