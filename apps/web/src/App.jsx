@@ -89,8 +89,8 @@ function App() {
         <Route path="/" element={<HomeWithDemo />} />
         <Route path="/about" element={<About />} />
         <Route path="/rules" element={<RulesPage />} />
-        {/* Protected AlphaPro route */}
-        <Route path="/pro" element={<PrivateRoute><AlphaPro /></PrivateRoute>} />
+        {/* Protected AlphaPro routes with nested routing */}
+        <Route path="/pro/*" element={<PrivateRoute><AlphaPro /></PrivateRoute>} />
       </Routes>
     </>
   )

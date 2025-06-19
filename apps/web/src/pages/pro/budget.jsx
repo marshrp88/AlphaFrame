@@ -20,7 +20,7 @@ import budgetService from '../../lib/services/BudgetService.js';
 import { Card } from '../../components/ui/Card.jsx';
 import { Button } from '../../components/ui/Button.jsx';
 import { Input } from '../../components/ui/Input.jsx';
-import { Label } from '../../components/ui/label.jsx';
+import { Label } from '../../components/ui/Label.jsx';
 
 const BudgetPage = () => {
   const [monthlyIncome, setMonthlyIncome] = useState(5000);
