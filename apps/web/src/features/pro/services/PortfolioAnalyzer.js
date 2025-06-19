@@ -15,7 +15,7 @@
  * recommendations while maintaining zero-knowledge compliance.
  */
 
-import executionLogService from './ExecutionLogService.js';
+import executionLogService from '../../../core/services/ExecutionLogService.js';
 
 // Asset classification data (simplified for MVP)
 const ASSET_CLASSIFICATIONS = {
@@ -115,16 +115,20 @@ class PortfolioAnalyzer {
       };
 
       // Log the analysis
-      await executionLogService.logPortfolioAnalysis({
-        totalValue,
-        holdingsCount: holdings.length,
-        deviations: Object.keys(deviations).filter(key => Math.abs(deviations[key]) > 5),
-        diversificationScore: diversificationScores.overall
-      });
+      await executionLogService.logPortfolioAnalysis(
+        `portfolio-${Date.now()}`, // portfolioId
+        Date.now() - analysis.timestamp, // durationMs
+        {
+          totalValue,
+          holdingsCount: holdings.length,
+          deviations: Object.keys(deviations).filter(key => Math.abs(deviations[key]) > 5),
+          diversificationScore: diversificationScores.overall
+        }
+      );
 
       return analysis;
     } catch (error) {
-      await executionLogService.logError('portfolio.analysis.failed', error, { holdings, targets });
+      await executionLogService.logError(error, 'PortfolioAnalyzer', 'analyzePortfolio', { holdings, targets });
       throw error;
     }
   }

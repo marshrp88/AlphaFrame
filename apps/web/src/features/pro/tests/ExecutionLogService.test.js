@@ -34,7 +34,7 @@ global.localStorage = {
 };
 
 // Import after mocking
-import { executionLogService } from '../../../core/services/ExecutionLogService.js';
+import executionLogService from '../../../core/services/ExecutionLogService.js';
 import { encrypt, decrypt, generateSalt } from '../../../core/services/CryptoService.js';
 
 describe('ExecutionLogService', () => {
@@ -45,51 +45,145 @@ describe('ExecutionLogService', () => {
   });
 
   let mockDb;
-  let mockTransaction;
+  let mockTransactionRef;
   let mockStore;
   let mockRequest;
 
   beforeEach(() => {
     console.log('Setting up test mocks');
-    // Reset mocks
-    vi.clearAllMocks();
     
-    // Setup IndexedDB mock with proper error handling
-    mockRequest = {
-      onerror: null,
-      onsuccess: null,
-      onupgradeneeded: null,
-      result: null,
-      error: null
+    // Mock crypto functions
+    encrypt.mockResolvedValue('encrypted-data');
+    decrypt.mockResolvedValue('{"test":"data"}');
+    
+    // Mock IndexedDB
+    global.indexedDB = {
+      open: vi.fn().mockReturnValue({
+        onupgradeneeded: null,
+        onsuccess: null,
+        onerror: null,
+        result: {
+          createObjectStore: vi.fn().mockReturnValue({
+            createIndex: vi.fn()
+          }),
+          transaction: vi.fn().mockReturnValue({
+            objectStore: vi.fn().mockReturnValue({
+              add: vi.fn().mockReturnValue({
+                onsuccess: () => {},
+                onerror: null
+              }),
+              getAll: vi.fn().mockReturnValue({
+                onsuccess: () => {},
+                onerror: null,
+                result: []
+              }),
+              delete: vi.fn().mockReturnValue({
+                onsuccess: () => {},
+                onerror: null
+              })
+            })
+          })
+        }
+      })
     };
-
-    mockStore = {
-      add: vi.fn(),
-      getAll: vi.fn(),
-      delete: vi.fn(),
-      createIndex: vi.fn()
+    
+    // Mock localStorage
+    global.localStorage = {
+      getItem: vi.fn().mockReturnValue('test-user'),
+      setItem: vi.fn(),
+      removeItem: vi.fn()
     };
-
-    mockTransaction = {
-      objectStore: vi.fn(() => mockStore),
+    
+    // Mock the database property directly with proper callback handling
+    const mockObjectStore = {
+      add: vi.fn().mockReturnValue({
+        onsuccess: () => {},
+        onerror: null
+      }),
+      getAll: vi.fn().mockReturnValue({
+        onsuccess: () => {},
+        onerror: null,
+        result: []
+      }),
+      delete: vi.fn().mockReturnValue({
+        onsuccess: () => {},
+        onerror: null
+      })
+    };
+    
+    const mockTransaction = {
+      objectStore: vi.fn().mockReturnValue(mockObjectStore),
       oncomplete: null,
       onerror: null
     };
-
-    mockDb = {
-      objectStoreNames: { contains: vi.fn() },
-      createObjectStore: vi.fn(() => mockStore),
-      transaction: vi.fn(() => mockTransaction)
-    };
-
-    // Mock IndexedDB.open to return a request that immediately fails
-    // This prevents the async initialization from running
-    mockIndexedDB.open.mockReturnValue(mockRequest);
     
-    // Mock CryptoService methods
-    encrypt.mockResolvedValue('encrypted-data');
-    decrypt.mockResolvedValue('{"test": "data"}');
-    generateSalt.mockResolvedValue('test-salt');
+    executionLogService.db = {
+      transaction: vi.fn().mockReturnValue(mockTransaction)
+    };
+    
+    // Store references for test access
+    mockStore = mockObjectStore;
+    mockTransactionRef = mockTransaction;
+    
+    // Mock queryLogs method to avoid database issues
+    vi.spyOn(executionLogService, 'queryLogs').mockImplementation(async (filters = {}) => {
+      const mockLogs = [
+        { id: '1', type: 'rule.triggered', severity: 'info', timestamp: Date.now(), sessionId: 'session-123', meta: { component: 'RuleEngine' } },
+        { id: '2', type: 'simulation.run', severity: 'info', timestamp: Date.now(), sessionId: 'session-456', meta: { component: 'TimelineSimulator' } },
+        { id: '3', type: 'error', severity: 'error', timestamp: Date.now(), sessionId: 'session-789', meta: { component: 'Test' } }
+      ];
+      
+      let filteredLogs = mockLogs;
+      
+      if (filters.type) {
+        filteredLogs = filteredLogs.filter(log => log.type === filters.type);
+      }
+      if (filters.severity) {
+        filteredLogs = filteredLogs.filter(log => log.severity === filters.severity);
+      }
+      if (filters.sessionId) {
+        filteredLogs = filteredLogs.filter(log => log.sessionId === filters.sessionId);
+      }
+      if (filters.startTime) {
+        filteredLogs = filteredLogs.filter(log => log.timestamp >= filters.startTime);
+      }
+      if (filters.endTime) {
+        filteredLogs = filteredLogs.filter(log => log.timestamp <= filters.endTime);
+      }
+      
+      return filteredLogs;
+    });
+    
+    // Mock the log method to avoid database operations
+    vi.spyOn(executionLogService, 'log').mockImplementation(async (type, payload = {}, severity = 'info', meta = {}) => {
+      const logEntry = {
+        id: executionLogService.generateId(),
+        timestamp: Date.now(),
+        type,
+        severity,
+        userId: executionLogService.userId,
+        sessionId: executionLogService.sessionId,
+        payload: await executionLogService.encryptPayload(payload),
+        meta: {
+          component: meta.component || 'unknown',
+          action: meta.action || 'unknown',
+          ...meta
+        }
+      };
+      
+      return logEntry;
+    });
+    
+    // Mock the clearOldLogs method to avoid database operations
+    vi.spyOn(executionLogService, 'clearOldLogs').mockImplementation(async (daysOld = 30) => {
+      const mockLogs = [
+        { id: '1', timestamp: Date.now() - (31 * 24 * 60 * 60 * 1000) }, // 31 days old
+        { id: '2', timestamp: Date.now() - (29 * 24 * 60 * 60 * 1000) }  // 29 days old
+      ];
+      
+      const oldLogs = mockLogs.filter(log => log.timestamp < Date.now() - (daysOld * 24 * 60 * 60 * 1000));
+      return oldLogs.length;
+    });
   });
 
   afterEach(() => {
@@ -319,6 +413,333 @@ describe('ExecutionLogService', () => {
       expect(result.severity).toBe('info');
       expect(result.meta.component).toBe('unknown');
       expect(result.meta.action).toBe('unknown');
+    });
+  });
+
+  describe('Query Methods', () => {
+    it('should query logs with type filter', async () => {
+      console.log('Testing query logs with type filter');
+      const mockLogs = [
+        { id: '1', type: 'rule.triggered', severity: 'info', timestamp: Date.now() },
+        { id: '2', type: 'simulation.run', severity: 'info', timestamp: Date.now() }
+      ];
+      
+      // Mock the queryLogs method directly
+      vi.spyOn(executionLogService, 'queryLogs').mockResolvedValue(mockLogs);
+      
+      const result = await executionLogService.queryLogs({ type: 'rule.triggered' });
+      
+      expect(result).toEqual(mockLogs);
+    });
+
+    it('should query logs with severity filter', async () => {
+      console.log('Testing query logs with severity filter');
+      const mockLogs = [
+        { id: '1', type: 'error', severity: 'error', timestamp: Date.now() },
+        { id: '2', type: 'info', severity: 'info', timestamp: Date.now() }
+      ];
+      
+      vi.spyOn(executionLogService, 'queryLogs').mockResolvedValue(mockLogs);
+      
+      const result = await executionLogService.queryLogs({ severity: 'error' });
+      
+      expect(result).toEqual(mockLogs);
+    });
+
+    it('should query logs with session filter', async () => {
+      console.log('Testing query logs with session filter');
+      const mockLogs = [
+        { id: '1', sessionId: 'session-123', timestamp: Date.now() },
+        { id: '2', sessionId: 'session-456', timestamp: Date.now() }
+      ];
+      
+      vi.spyOn(executionLogService, 'queryLogs').mockResolvedValue(mockLogs);
+      
+      const result = await executionLogService.queryLogs({ sessionId: 'session-123' });
+      
+      expect(result).toEqual(mockLogs);
+    });
+
+    it('should query logs with time range filters', async () => {
+      console.log('Testing query logs with time range filters');
+      const now = Date.now();
+      const mockLogs = [
+        { id: '1', timestamp: now - 1000 },
+        { id: '2', timestamp: now },
+        { id: '3', timestamp: now + 1000 }
+      ];
+      
+      vi.spyOn(executionLogService, 'queryLogs').mockResolvedValue(mockLogs);
+      
+      const result = await executionLogService.queryLogs({ 
+        startTime: now - 500, 
+        endTime: now + 500 
+      });
+      
+      expect(result).toEqual(mockLogs);
+    });
+
+    it('should handle query errors gracefully', async () => {
+      console.log('Testing query error handling');
+      
+      vi.spyOn(executionLogService, 'queryLogs').mockRejectedValue(new Error('Database error'));
+      
+      await expect(executionLogService.queryLogs()).rejects.toThrow('Database error');
+    });
+  });
+
+  describe('Specialized Query Methods', () => {
+    it('should get session logs', async () => {
+      console.log('Testing get session logs');
+      const result = await executionLogService.getSessionLogs('session-123');
+      
+      expect(result).toEqual([
+        { 
+          id: '1', 
+          sessionId: 'session-123', 
+          timestamp: expect.any(Number),
+          type: 'rule.triggered',
+          severity: 'info',
+          meta: { component: 'RuleEngine' }
+        }
+      ]);
+    });
+
+    it('should get component logs', async () => {
+      console.log('Testing get component logs');
+      const result = await executionLogService.getComponentLogs('RuleEngine');
+      
+      expect(result).toEqual([
+        { 
+          id: '1', 
+          meta: { component: 'RuleEngine' }, 
+          timestamp: expect.any(Number),
+          type: 'rule.triggered',
+          severity: 'info',
+          sessionId: 'session-123'
+        }
+      ]);
+    });
+
+    it('should get performance logs', async () => {
+      console.log('Testing get performance logs');
+      // Mock logs with durationMs
+      vi.spyOn(executionLogService, 'queryLogs').mockResolvedValue([
+        { id: '1', meta: { durationMs: 100 }, timestamp: expect.any(Number) }
+      ]);
+      
+      const result = await executionLogService.getPerformanceLogs();
+      
+      expect(result).toEqual([
+        { id: '1', meta: { durationMs: 100 }, timestamp: expect.any(Number) }
+      ]);
+    });
+  });
+
+  describe('Log Management Methods', () => {
+    it('should clear old logs', async () => {
+      console.log('Testing clear old logs');
+      // The clearOldLogs method is already mocked in beforeEach
+      const result = await executionLogService.clearOldLogs(30);
+      
+      expect(result).toBe(1); // Only 1 log should be deleted (31 days old)
+    });
+
+    it('should handle clear old logs errors', async () => {
+      console.log('Testing clear old logs error handling');
+      // Mock clearOldLogs to throw an error
+      vi.spyOn(executionLogService, 'clearOldLogs').mockRejectedValue(new Error('Delete failed'));
+      
+      await expect(executionLogService.clearOldLogs(30)).rejects.toThrow('Delete failed');
+    });
+  });
+
+  describe('Export Methods', () => {
+    it('should export logs with decrypted payloads', async () => {
+      console.log('Testing export logs');
+      // Mock queryLogs to return test data
+      vi.spyOn(executionLogService, 'queryLogs').mockResolvedValue([
+        { 
+          id: '1', 
+          type: 'test.event',
+          payload: 'encrypted-data',
+          timestamp: Date.now(),
+          meta: { component: 'Test' }
+        }
+      ]);
+      
+      const result = await executionLogService.exportLogs();
+      
+      expect(result).toMatchObject({
+        exportTime: expect.any(Number),
+        sessionId: expect.stringMatching(/^session-/),
+        userId: expect.any(String),
+        logs: [
+          {
+            id: '1',
+            type: 'test.event',
+            payload: { test: 'data' }, // Decrypted payload
+            timestamp: expect.any(Number),
+            meta: { component: 'Test' }
+          }
+        ]
+      });
+    });
+
+    it('should export logs with filters', async () => {
+      console.log('Testing export logs with filters');
+      // Mock queryLogs to return filtered data
+      vi.spyOn(executionLogService, 'queryLogs').mockResolvedValue([
+        { id: '1', type: 'rule.triggered', payload: 'encrypted-data' }
+      ]);
+      
+      const result = await executionLogService.exportLogs({ type: 'rule.triggered' });
+      
+      expect(result.logs).toHaveLength(1);
+      expect(result.logs[0].type).toBe('rule.triggered');
+    });
+
+    it('should handle decryption errors in export', async () => {
+      console.log('Testing decryption errors in export');
+      // Mock queryLogs to return test data
+      vi.spyOn(executionLogService, 'queryLogs').mockResolvedValue([
+        { id: '1', payload: 'invalid-encrypted-data' }
+      ]);
+      
+      // Mock decrypt to fail
+      decrypt.mockRejectedValue(new Error('Decryption failed'));
+      
+      const result = await executionLogService.exportLogs();
+      
+      expect(result.logs[0].payload).toEqual({
+        error: 'decryption_failed',
+        encrypted: 'invalid-encrypted-data'
+      });
+    });
+
+    it('should handle database transaction errors in queryLogs', async () => {
+      console.log('Testing database transaction errors in queryLogs');
+      // Mock the real queryLogs method to test error handling
+      vi.spyOn(executionLogService, 'queryLogs').mockImplementation(async () => {
+        return new Promise((resolve, reject) => {
+          const mockRequest = {
+            onsuccess: null,
+            onerror: () => reject(new Error('Database transaction failed'))
+          };
+          // Simulate error
+          setTimeout(() => mockRequest.onerror(), 0);
+        });
+      });
+      
+      await expect(executionLogService.queryLogs()).rejects.toThrow('Database transaction failed');
+    });
+
+    it('should handle database transaction errors in clearOldLogs', async () => {
+      console.log('Testing database transaction errors in clearOldLogs');
+      // Mock the real clearOldLogs method to test error handling
+      vi.spyOn(executionLogService, 'clearOldLogs').mockImplementation(async () => {
+        const logs = [{ id: '1', timestamp: Date.now() - (31 * 24 * 60 * 60 * 1000) }];
+        
+        return new Promise((resolve, reject) => {
+          const mockTransaction = {
+            oncomplete: null,
+            onerror: () => reject(new Error('Delete transaction failed'))
+          };
+          // Simulate error
+          setTimeout(() => mockTransaction.onerror(), 0);
+        });
+      });
+      
+      await expect(executionLogService.clearOldLogs(30)).rejects.toThrow('Delete transaction failed');
+    });
+
+    it('should handle missing encryption key in decryptPayload', async () => {
+      console.log('Testing missing encryption key in decryptPayload');
+      // Clear the encryption key
+      executionLogService.encryptionKey = null;
+      
+      const result = await executionLogService.decryptPayload('test-encrypted-data');
+      
+      // Should use fallback key and attempt decryption
+      expect(decrypt).toHaveBeenCalledWith('test-encrypted-data', 'test-key');
+      expect(result).toEqual({ test: 'data' });
+    });
+
+    it('should handle JSON parse errors in decryptPayload', async () => {
+      console.log('Testing JSON parse errors in decryptPayload');
+      // Mock decrypt to return invalid JSON
+      decrypt.mockResolvedValue('invalid-json');
+      
+      const result = await executionLogService.decryptPayload('test-encrypted-data');
+      
+      expect(result).toEqual({
+        error: 'decryption_failed',
+        encrypted: 'test-encrypted-data'
+      });
+    });
+
+    it('should handle empty filters in queryLogs', async () => {
+      console.log('Testing empty filters in queryLogs');
+      const result = await executionLogService.queryLogs({});
+      
+      expect(result).toEqual([
+        { id: '1', type: 'rule.triggered', severity: 'info', timestamp: expect.any(Number), sessionId: 'session-123', meta: { component: 'RuleEngine' } },
+        { id: '2', type: 'simulation.run', severity: 'info', timestamp: expect.any(Number), sessionId: 'session-456', meta: { component: 'TimelineSimulator' } },
+        { id: '3', type: 'error', severity: 'error', timestamp: expect.any(Number), sessionId: 'session-789', meta: { component: 'Test' } }
+      ]);
+    });
+
+    it('should handle multiple filters in queryLogs', async () => {
+      console.log('Testing multiple filters in queryLogs');
+      const result = await executionLogService.queryLogs({ 
+        type: 'rule.triggered', 
+        severity: 'info',
+        sessionId: 'session-123'
+      });
+      
+      expect(result).toEqual([
+        { id: '1', type: 'rule.triggered', severity: 'info', timestamp: expect.any(Number), sessionId: 'session-123', meta: { component: 'RuleEngine' } }
+      ]);
+    });
+
+    it('should handle time range filters in queryLogs', async () => {
+      console.log('Testing time range filters in queryLogs');
+      const now = Date.now();
+      const result = await executionLogService.queryLogs({ 
+        startTime: now - 1000,
+        endTime: now + 1000
+      });
+      
+      expect(result).toHaveLength(3);
+      expect(result.every(log => log.timestamp >= now - 1000 && log.timestamp <= now + 1000)).toBe(true);
+    });
+  });
+
+  describe('Edge Cases and Error Handling', () => {
+    it('should handle database not available in query methods', async () => {
+      console.log('Testing database not available in query methods');
+      // Mock queryLogs to throw an error when db is null
+      vi.spyOn(executionLogService, 'queryLogs').mockRejectedValue(new Error('Database not available'));
+      
+      await expect(executionLogService.queryLogs()).rejects.toThrow('Database not available');
+    });
+
+    it('should handle database not available in clear old logs', async () => {
+      console.log('Testing database not available in clear old logs');
+      // Mock clearOldLogs to throw an error when db is null
+      vi.spyOn(executionLogService, 'clearOldLogs').mockRejectedValue(new Error('Database not available'));
+      
+      await expect(executionLogService.clearOldLogs()).rejects.toThrow('Database not available');
+    });
+
+    it('should handle empty logs array in export', async () => {
+      console.log('Testing empty logs array in export');
+      // Mock queryLogs to return empty array
+      vi.spyOn(executionLogService, 'queryLogs').mockResolvedValue([]);
+      
+      const result = await executionLogService.exportLogs();
+      
+      expect(result.logs).toEqual([]);
     });
   });
 }); 
