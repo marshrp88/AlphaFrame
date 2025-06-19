@@ -235,6 +235,7 @@ const FeedbackForm = () => {
               {Object.values(FEEDBACK_CATEGORIES).map((category) => (
                 <div
                   key={category.id}
+                  data-testid={`category-${category.id}`}
                   className={`p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
                     selectedCategory === category.id
                       ? 'border-blue-500 bg-blue-100'

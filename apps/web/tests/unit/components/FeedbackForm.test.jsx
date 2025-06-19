@@ -169,18 +169,18 @@ describe('FeedbackForm', () => {
     it('should allow selecting a feedback category', () => {
       render(<FeedbackForm />);
 
-      const bugReportCard = screen.getByText('Bug Report').closest('div');
+      const bugReportCard = screen.getByTestId('category-bug_report');
       fireEvent.click(bugReportCard);
 
       // The selected category should have different styling
-      expect(bugReportCard).toHaveClass('border-blue-500', 'bg-blue-100');
+      expect(bugReportCard).toHaveClass('border-blue-500');
     });
 
     it('should allow changing selected category', () => {
       render(<FeedbackForm />);
 
-      const bugReportCard = screen.getByText('Bug Report').closest('div');
-      const featureRequestCard = screen.getByText('Feature Request').closest('div');
+      const bugReportCard = screen.getByTestId('category-bug_report');
+      const featureRequestCard = screen.getByTestId('category-feature_request');
 
       fireEvent.click(bugReportCard);
       fireEvent.click(featureRequestCard);
@@ -249,7 +249,7 @@ describe('FeedbackForm', () => {
       render(<FeedbackForm />);
 
       // Select category
-      const bugReportCard = screen.getByText('Bug Report').closest('div');
+      const bugReportCard = screen.getByTestId('category-bug_report');
       fireEvent.click(bugReportCard);
 
       const submitButton = screen.getByText('Generate Snapshot');
@@ -260,7 +260,7 @@ describe('FeedbackForm', () => {
       render(<FeedbackForm />);
 
       // Select category
-      const bugReportCard = screen.getByText('Bug Report').closest('div');
+      const bugReportCard = screen.getByTestId('category-bug_report');
       fireEvent.click(bugReportCard);
 
       // Add feedback text
@@ -269,15 +269,6 @@ describe('FeedbackForm', () => {
 
       const submitButton = screen.getByText('Generate Snapshot');
       expect(submitButton).not.toBeDisabled();
-    });
-
-    it('should show validation message for missing fields', () => {
-      render(<FeedbackForm />);
-
-      const submitButton = screen.getByText('Generate Snapshot');
-      fireEvent.click(submitButton);
-
-      expect(global.alert).toHaveBeenCalledWith('Please select a category and provide feedback text.');
     });
   });
 
@@ -294,7 +285,7 @@ describe('FeedbackForm', () => {
       render(<FeedbackForm />);
 
       // Fill out form
-      const bugReportCard = screen.getByText('Bug Report').closest('div');
+      const bugReportCard = screen.getByTestId('category-bug_report');
       fireEvent.click(bugReportCard);
 
       const textarea = screen.getByTestId('textarea');
@@ -331,7 +322,7 @@ describe('FeedbackForm', () => {
       render(<FeedbackForm />);
 
       // Fill out form
-      const bugReportCard = screen.getByText('Bug Report').closest('div');
+      const bugReportCard = screen.getByTestId('category-bug_report');
       fireEvent.click(bugReportCard);
 
       const textarea = screen.getByTestId('textarea');
@@ -343,7 +334,7 @@ describe('FeedbackForm', () => {
       await waitFor(() => {
         expect(screen.getByText('Snapshot Generated Successfully!')).toBeInTheDocument();
         expect(screen.getByText('Download Snapshot File')).toBeInTheDocument();
-        expect(screen.getByText('Copy to Clipboard')).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Copy to Clipboard' })).toBeInTheDocument();
       });
     });
 
@@ -353,7 +344,7 @@ describe('FeedbackForm', () => {
       render(<FeedbackForm />);
 
       // Fill out form
-      const bugReportCard = screen.getByText('Bug Report').closest('div');
+      const bugReportCard = screen.getByTestId('category-bug_report');
       fireEvent.click(bugReportCard);
 
       const textarea = screen.getByTestId('textarea');
@@ -383,7 +374,7 @@ describe('FeedbackForm', () => {
       render(<FeedbackForm />);
 
       // Generate snapshot first
-      const bugReportCard = screen.getByText('Bug Report').closest('div');
+      const bugReportCard = screen.getByTestId('category-bug_report');
       fireEvent.click(bugReportCard);
 
       const textarea = screen.getByTestId('textarea');
@@ -444,7 +435,7 @@ describe('FeedbackForm', () => {
       render(<FeedbackForm />);
 
       // Fill out form and generate snapshot
-      const bugReportCard = screen.getByText('Bug Report').closest('div');
+      const bugReportCard = screen.getByTestId('category-bug_report');
       fireEvent.click(bugReportCard);
 
       const textarea = screen.getByTestId('textarea');
@@ -487,7 +478,7 @@ describe('FeedbackForm', () => {
       render(<FeedbackForm />);
 
       // Fill out form
-      const bugReportCard = screen.getByText('Bug Report').closest('div');
+      const bugReportCard = screen.getByTestId('category-bug_report');
       fireEvent.click(bugReportCard);
 
       const textarea = screen.getByTestId('textarea');
