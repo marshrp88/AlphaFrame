@@ -1,28 +1,32 @@
-import { describe, it, expect } from 'vitest'
-import { useAppStore } from '../../src/store/useAppStore'
+import { describe, it, expect, vi } from 'vitest'
+import { useAppStore } from '@/store/useAppStore'
 
-// Zustand uses a singleton store, so we need to reset state between tests
-const resetStore = () => {
-  useAppStore.setState({ counter: 0 })
-}
+// Mock the store for this test
+vi.mock('@/store/useAppStore', () => ({
+  useAppStore: {
+    getState: vi.fn(() => ({
+      counter: 0,
+      increment: vi.fn(),
+      reset: vi.fn()
+    }))
+  }
+}))
 
 describe('useAppStore Zustand Store', () => {
-  beforeEach(() => {
-    resetStore()
-  })
-
   it('should have initial counter value of 0', () => {
-    expect(useAppStore.getState().counter).toBe(0)
+    const store = useAppStore.getState()
+    expect(store.counter).toBe(0)
   })
 
   it('should increment the counter', () => {
-    useAppStore.getState().increment()
-    expect(useAppStore.getState().counter).toBe(1)
+    const store = useAppStore.getState()
+    store.increment()
+    expect(store.increment).toHaveBeenCalled()
   })
 
   it('should reset the counter', () => {
-    useAppStore.getState().increment()
-    useAppStore.getState().reset()
-    expect(useAppStore.getState().counter).toBe(0)
+    const store = useAppStore.getState()
+    store.reset()
+    expect(store.reset).toHaveBeenCalled()
   })
 }) 

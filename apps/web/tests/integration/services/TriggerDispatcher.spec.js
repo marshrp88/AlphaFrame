@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { queueAction, getActionQueue, clearActionQueue } from '../../../src/lib/services/TriggerDispatcher';
-import { dispatchAction } from '../../../src/lib/services/TriggerDispatcher';
-import { useLogStore } from '../../../src/lib/store/logStore';
+import { queueAction, getActionQueue, clearActionQueue } from '@/lib/services/TriggerDispatcher';
+import { dispatchAction } from '@/lib/services/TriggerDispatcher';
+import { useLogStore } from '@/lib/store/logStore';
 
 // Mock the logStore
 vi.mock('../../../src/lib/store/logStore', () => ({

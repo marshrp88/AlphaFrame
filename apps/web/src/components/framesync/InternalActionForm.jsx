@@ -8,7 +8,7 @@
 import React, { memo, useCallback, useState, useEffect } from 'react';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
-import { Textarea } from '@/components/ui/textarea';
+import Textarea from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { useAppStore } from '@/store/useAppStore';
 

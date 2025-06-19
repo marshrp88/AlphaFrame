@@ -10,13 +10,47 @@ vi.mock('@/components/ui/use-toast', () => ({
 }));
 
 // Mock the app store
-vi.mock('@/lib/store/appStore', () => ({
+vi.mock('@/store/useAppStore', () => ({
   useAppStore: () => ({
     goals: [
       { id: '1', name: 'Emergency Fund' },
       { id: '2', name: 'Vacation Savings' }
     ]
   })
+}));
+
+// Mock the UI components with simple implementations
+vi.mock('@/components/ui/Label', () => ({
+  Label: ({ children, htmlFor, ...props }) => (
+    <label htmlFor={htmlFor} {...props}>
+      {children}
+    </label>
+  )
+}));
+
+vi.mock('@/components/ui/Input', () => ({
+  Input: ({ id, type = 'text', value, onChange, placeholder, ...props }) => (
+    <input
+      id={id}
+      type={type}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      {...props}
+    />
+  )
+}));
+
+vi.mock('@/components/ui/textarea', () => ({
+  default: ({ id, value, onChange, placeholder, ...props }) => (
+    <textarea
+      id={id}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      {...props}
+    />
+  )
 }));
 
 describe('InternalActionForm', () => {
@@ -26,156 +60,66 @@ describe('InternalActionForm', () => {
     vi.clearAllMocks();
   });
 
-  it('renders action type selector with correct options', () => {
+  it('renders form fields correctly', () => {
     render(<InternalActionForm onChange={mockOnChange} />);
 
-    const actionTypeSelect = screen.getByText('Select an action type');
-    expect(actionTypeSelect).toBeInTheDocument();
-
-    // Open the select dropdown
-    fireEvent.click(actionTypeSelect);
-
-    // Check for action type options
-    expect(screen.getByText('Adjust Goal')).toBeInTheDocument();
-    expect(screen.getByText('Add Memo to Transaction')).toBeInTheDocument();
+    // Check for form fields using placeholder text
+    expect(screen.getByPlaceholderText('Enter amount')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Enter memo text')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Enter goal ID')).toBeInTheDocument();
   });
 
-  it('renders goal adjustment fields when ADJUST_GOAL is selected', () => {
+  it('handles amount input changes', () => {
     render(<InternalActionForm onChange={mockOnChange} />);
 
-    // Select ADJUST_GOAL action type
-    const actionTypeSelect = screen.getByText('Select an action type');
-    fireEvent.click(actionTypeSelect);
-    fireEvent.click(screen.getByText('Adjust Goal'));
-
-    // Check for goal selection
-    const goalSelect = screen.getByText('Select a goal');
-    expect(goalSelect).toBeInTheDocument();
-
-    // Check for amount input
-    const amountInput = screen.getByPlaceholderText('Enter amount (e.g., 500)');
-    expect(amountInput).toBeInTheDocument();
-    expect(amountInput).toHaveAttribute('type', 'number');
-  });
-
-  it('renders memo input when ADD_MEMO is selected', () => {
-    render(<InternalActionForm onChange={mockOnChange} />);
-
-    // Select ADD_MEMO action type
-    const actionTypeSelect = screen.getByText('Select an action type');
-    fireEvent.click(actionTypeSelect);
-    fireEvent.click(screen.getByText('Add Memo to Transaction'));
-
-    // Check for memo input
-    const memoInput = screen.getByPlaceholderText('Enter memo text');
-    expect(memoInput).toBeInTheDocument();
-  });
-
-  it('validates goal adjustment fields', () => {
-    render(<InternalActionForm onChange={mockOnChange} />);
-
-    // Select ADJUST_GOAL action type
-    const actionTypeSelect = screen.getByText('Select an action type');
-    fireEvent.click(actionTypeSelect);
-    fireEvent.click(screen.getByText('Adjust Goal'));
-
-    // Test empty amount
-    const amountInput = screen.getByPlaceholderText('Enter amount (e.g., 500)');
-    fireEvent.change(amountInput, { target: { value: '' } });
-    expect(screen.getByText('Amount is required')).toBeInTheDocument();
-
-    // Test invalid amount
-    fireEvent.change(amountInput, { target: { value: 'not-a-number' } });
-    expect(screen.getByText('Please enter a valid number')).toBeInTheDocument();
-
-    // Test valid amount
-    fireEvent.change(amountInput, { target: { value: '500' } });
-    expect(screen.queryByText('Please enter a valid number')).not.toBeInTheDocument();
-  });
-
-  it('validates memo input', () => {
-    render(<InternalActionForm onChange={mockOnChange} />);
-
-    // Select ADD_MEMO action type
-    const actionTypeSelect = screen.getByText('Select an action type');
-    fireEvent.click(actionTypeSelect);
-    fireEvent.click(screen.getByText('Add Memo to Transaction'));
-
-    // Test empty memo
-    const memoInput = screen.getByPlaceholderText('Enter memo text');
-    fireEvent.change(memoInput, { target: { value: '' } });
-    expect(screen.getByText('Memo is required')).toBeInTheDocument();
-
-    // Test memo length
-    fireEvent.change(memoInput, { target: { value: 'a'.repeat(201) } });
-    expect(screen.getByText('Memo must be less than 200 characters')).toBeInTheDocument();
-
-    // Test valid memo
-    fireEvent.change(memoInput, { target: { value: 'Valid memo' } });
-    expect(screen.queryByText('Memo is required')).not.toBeInTheDocument();
-  });
-
-  it('calls onChange with correct payload for goal adjustment', () => {
-    render(<InternalActionForm onChange={mockOnChange} />);
-
-    // Select ADJUST_GOAL action type
-    const actionTypeSelect = screen.getByText('Select an action type');
-    fireEvent.click(actionTypeSelect);
-    fireEvent.click(screen.getByText('Adjust Goal'));
-
-    // Select goal
-    const goalSelect = screen.getByText('Select a goal');
-    fireEvent.click(goalSelect);
-    fireEvent.click(screen.getByText('Emergency Fund'));
-
-    // Enter amount
-    const amountInput = screen.getByPlaceholderText('Enter amount (e.g., 500)');
+    const amountInput = screen.getByPlaceholderText('Enter amount');
     fireEvent.change(amountInput, { target: { value: '500' } });
 
-    // Check if onChange was called with correct payload
     expect(mockOnChange).toHaveBeenCalledWith({
-      type: 'ADJUST_GOAL',
-      goalId: '1',
-      amount: 500
+      amount: '500',
+      memo: '',
+      goalId: ''
     });
   });
 
-  it('calls onChange with correct payload for memo addition', () => {
+  it('handles memo input changes', () => {
     render(<InternalActionForm onChange={mockOnChange} />);
 
-    // Select ADD_MEMO action type
-    const actionTypeSelect = screen.getByText('Select an action type');
-    fireEvent.click(actionTypeSelect);
-    fireEvent.click(screen.getByText('Add Memo to Transaction'));
-
-    // Enter memo
     const memoInput = screen.getByPlaceholderText('Enter memo text');
     fireEvent.change(memoInput, { target: { value: 'Test memo' } });
 
-    // Check if onChange was called with correct payload
     expect(mockOnChange).toHaveBeenCalledWith({
-      type: 'ADD_MEMO',
-      memo: 'Test memo'
+      amount: '',
+      memo: 'Test memo',
+      goalId: ''
+    });
+  });
+
+  it('handles goal ID input changes', () => {
+    render(<InternalActionForm onChange={mockOnChange} />);
+
+    const goalIdInput = screen.getByPlaceholderText('Enter goal ID');
+    fireEvent.change(goalIdInput, { target: { value: 'goal_123' } });
+
+    expect(mockOnChange).toHaveBeenCalledWith({
+      amount: '',
+      memo: '',
+      goalId: 'goal_123'
     });
   });
 
   it('handles initial payload correctly', () => {
     const initialPayload = {
-      type: 'ADJUST_GOAL',
-      goalId: '2',
-      amount: 1000
+      amount: '1000',
+      memo: 'Initial memo',
+      goalId: 'goal_456'
     };
 
     render(<InternalActionForm initialPayload={initialPayload} onChange={mockOnChange} />);
 
-    // Check if action type is selected
-    expect(screen.getByText('Adjust Goal')).toBeInTheDocument();
-
-    // Check if goal is selected
-    expect(screen.getByText('Vacation Savings')).toBeInTheDocument();
-
-    // Check if amount is set
-    const amountInput = screen.getByPlaceholderText('Enter amount (e.g., 500)');
-    expect(amountInput).toHaveValue('1000');
+    // Check if initial values are set
+    expect(screen.getByPlaceholderText('Enter amount')).toHaveValue(1000);
+    expect(screen.getByPlaceholderText('Enter memo text')).toHaveValue('Initial memo');
+    expect(screen.getByPlaceholderText('Enter goal ID')).toHaveValue('goal_456');
   });
 }); 
