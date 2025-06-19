@@ -81,7 +81,7 @@ describe('PermissionEnforcer', () => {
     });
 
     it('should handle errors gracefully', async () => {
-      mockUIStore.showPasswordPrompt.mockRejectedValue(new Error('Test error'));
+      mockUIStore.showPasswordPrompt.mockImplementation(() => { throw new Error('Test error'); });
 
       const result = await PermissionEnforcer.canExecuteAction('PLAID_TRANSFER');
 

@@ -91,6 +91,12 @@ export default function WebhookActionForm({ initialPayload, onChange }) {
     setMethod(e.target.value);
   };
 
+  // Validate URL on mount and whenever it changes
+  useEffect(() => {
+    const urlError = validateUrl(url);
+    setErrors(prev => ({ ...prev, url: urlError }));
+  }, [url]);
+
   // Notify parent of changes
   useEffect(() => {
     if (onChange) {

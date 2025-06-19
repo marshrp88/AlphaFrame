@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import WebhookActionForm from '@/components/framesync/WebhookActionForm';
 
 // Mock the toast
@@ -57,26 +57,29 @@ describe('WebhookActionForm', () => {
     expect(payloadTextarea).toHaveAttribute('rows', '8');
   });
 
-  it('validates URL input', () => {
+  it('validates URL input', async () => {
     render(<WebhookActionForm onChange={mockOnChange} />);
 
     const urlInput = screen.getByPlaceholderText('https://api.example.com/webhook');
     
     // Test empty URL
     fireEvent.change(urlInput, { target: { value: '' } });
-    expect(screen.getByText('Webhook URL is required')).toBeInTheDocument();
+    expect(await screen.findByText('Webhook URL is required')).toBeInTheDocument();
     
     // Test invalid URL
     fireEvent.change(urlInput, { target: { value: 'not-a-url' } });
-    expect(screen.getByText('Please enter a valid HTTPS URL')).toBeInTheDocument();
+    expect(await screen.findByText('Please enter a valid HTTPS URL')).toBeInTheDocument();
     
     // Test HTTP URL
     fireEvent.change(urlInput, { target: { value: 'http://example.com' } });
-    expect(screen.getByText('Please enter a valid HTTPS URL')).toBeInTheDocument();
+    expect(await screen.findByText('Please enter a valid HTTPS URL')).toBeInTheDocument();
     
     // Test valid HTTPS URL
     fireEvent.change(urlInput, { target: { value: 'https://api.example.com/webhook' } });
-    expect(screen.queryByText(/Please enter a valid HTTPS URL/)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText(/Please enter a valid HTTPS URL/)).not.toBeInTheDocument();
+      expect(screen.queryByText('Webhook URL is required')).not.toBeInTheDocument();
+    });
   });
 
   it('validates JSON payload', () => {

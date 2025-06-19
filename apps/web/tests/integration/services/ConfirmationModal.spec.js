@@ -14,6 +14,26 @@ vi.mock('../../../src/lib/services/secureVault', () => ({
   get: vi.fn(() => 'mock-token')
 }));
 
+// Mock global.fetch for Plaid API
+const mockPlaidResponse = (data) => Promise.resolve({
+  ok: true,
+  json: () => Promise.resolve(data),
+});
+beforeAll(() => {
+  vi.stubGlobal('fetch', vi.fn((url) => {
+    if (url.includes('/transfer/authorization/create')) {
+      return mockPlaidResponse({ authorization_id: 'mock_auth_id' });
+    }
+    if (url.includes('/transfer/create')) {
+      return mockPlaidResponse({ transfer_id: 'mock_transfer_id', status: 'success' });
+    }
+    return mockPlaidResponse({});
+  }));
+});
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
 // ✅ Simplified UI store mock that returns the spy directly
 vi.mock('../../../src/lib/store/uiStore', () => ({
   useUIStore: {
@@ -38,7 +58,10 @@ vi.mock('../../../src/lib/store/financialStateStore', () => ({
   useFinancialStateStore: {
     getState: vi.fn(() => ({
       getAccountBalance: vi.fn(),
-      getGoal: vi.fn()
+      getGoal: vi.fn(),
+      adjustGoal: vi.fn(() => ({ success: true })),
+      updateBudget: vi.fn(() => ({ success: true })),
+      modifyCategory: vi.fn(() => ({ success: true })),
     }))
   }
 }));

@@ -201,7 +201,7 @@ export const dispatchAction = async (rule, transaction) => {
     const actionId = logStore.queueAction(payload);
     
     // Execute the action immediately
-    const result = await ExecutionController.executeAction(payload.type, payload);
+    const result = await ExecutionController.executeAction(payload.actionType, payload.payload);
     
     // Update the action status in the logStore
     updateActionStatus(actionId, result);
@@ -225,4 +225,9 @@ export const listenForEvents = (ruleEngineService) => {
       console.error('Failed to process rule trigger:', error);
     }
   });
-}; 
+};
+
+// Utility functions for testing and queue management
+export const queueAction = (action) => useTriggerStore.getState().queueAction(action.type, action);
+export const getActionQueue = () => useTriggerStore.getState().actionQueue;
+export const clearActionQueue = () => useTriggerStore.setState({ actionQueue: [] }); 

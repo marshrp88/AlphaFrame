@@ -1,19 +1,20 @@
 // Define stable mock instances at the top
-const mockQueueAction = vi.fn(() => 'mock_action_id');
-const mockUpdateAction = vi.fn();
-
-vi.mock('../../../src/lib/services/ExecutionController', () => ({
-  ExecutionController: {
-    executeAction: vi.fn()
-  }
-}));
+let mockActionLog = [];
+const mockQueueAction = vi.fn((action) => {
+  // Simulate adding the action to the log
+  mockActionLog.push({ ...action, id: mockActionLog.length });
+  return mockActionLog.length - 1;
+});
+const mockUpdateAction = vi.fn((index, updatedAction) => {
+  mockActionLog[index] = updatedAction;
+});
 
 vi.mock('../../../src/lib/store/logStore', () => ({
   useLogStore: {
     getState: () => ({
       queueAction: mockQueueAction,
       updateAction: mockUpdateAction,
-      actionLog: []
+      get actionLog() { return mockActionLog; }
     })
   }
 }));
@@ -39,6 +40,7 @@ describe('FrameSync Integration', () => {
     vi.clearAllMocks();
     mockQueueAction.mockClear();
     mockUpdateAction.mockClear();
+    mockActionLog = [];
     ExecutionController.executeAction.mockClear();
   });
 
@@ -83,9 +85,12 @@ describe('FrameSync Integration', () => {
     );
 
     expect(ExecutionController.executeAction).toHaveBeenCalledWith(
+      'PLAID_TRANSFER',
       expect.objectContaining({
-        ruleId: 'rule_123',
-        actionType: 'PLAID_TRANSFER'
+        amount: 100,
+        sourceAccount: 'acc_123',
+        destinationAccount: 'acc_456',
+        transactionId: 'tx_789'
       })
     );
 

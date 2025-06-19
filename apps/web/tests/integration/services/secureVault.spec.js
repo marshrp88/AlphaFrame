@@ -47,7 +47,7 @@ describe('SecureVault', () => {
     it('should create empty vault if no encrypted data exists', async () => {
       await unlock('test-password');
       expect(isUnlocked()).toBe(true);
-      expect(get('test')).rejects.toThrow('Key not found in vault: test');
+      expect(() => get('test')).toThrow('Key not found in vault: test');
     });
 
     it('should decrypt existing vault data', async () => {
@@ -73,6 +73,7 @@ describe('SecureVault', () => {
     });
 
     it('should throw error when vault is locked', async () => {
+      lock();
       await expect(set('test-key', 'test-value')).rejects.toThrow('Vault is locked');
     });
   });
@@ -85,6 +86,7 @@ describe('SecureVault', () => {
     });
 
     it('should throw error when vault is locked', () => {
+      lock();
       expect(() => get('test-key')).toThrow('Vault is locked');
     });
 
