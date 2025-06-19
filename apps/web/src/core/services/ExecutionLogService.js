@@ -262,10 +262,19 @@ class ExecutionLogService {
     const processedLogs = [];
     
     for (const log of logs) {
-      processedLogs.push({
-        ...log,
-        payload: await this.decryptPayload(log.payload)
-      });
+      try {
+        const decryptedPayload = await this.decryptPayload(log.payload);
+        processedLogs.push({
+          ...log,
+          payload: decryptedPayload
+        });
+      } catch (error) {
+        // Handle decryption errors gracefully
+        processedLogs.push({
+          ...log,
+          payload: { error: 'decryption_failed', encrypted: log.payload }
+        });
+      }
     }
     
     return {
