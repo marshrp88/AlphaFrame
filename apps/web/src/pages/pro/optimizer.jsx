@@ -18,11 +18,11 @@
 
 import React, { useState, useEffect } from 'react';
 import portfolioAnalyzer from '../../lib/services/PortfolioAnalyzer.js';
-import { Card } from '../../components/ui/Card.jsx';
-import { Button } from '../../components/ui/Button.jsx';
-import { Input } from '../../components/ui/Input.jsx';
-import { Label } from '../../components/ui/Label.jsx';
-import { Select } from '../../components/ui/Select.jsx';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/Label';
+import { Select } from '@/components/ui/Select';
 
 const PortfolioOptimizer = () => {
   const [holdings, setHoldings] = useState([

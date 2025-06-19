@@ -17,10 +17,10 @@
 
 import React, { useState, useEffect } from 'react';
 import budgetService from '../../lib/services/BudgetService.js';
-import { Card } from '../../components/ui/Card.jsx';
-import { Button } from '../../components/ui/Button.jsx';
-import { Input } from '../../components/ui/Input.jsx';
-import { Label } from '../../components/ui/Label.jsx';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/Label';
 
 const BudgetPage = () => {
   const [monthlyIncome, setMonthlyIncome] = useState(5000);
