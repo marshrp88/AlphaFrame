@@ -35,7 +35,7 @@ describe('App Integration Tests', () => {
     // Mock fetch for the success case.
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ message: 'API fetch successful!' }),
+      json: () => Promise.resolve('API fetch successful!'),
     });
 
     render(

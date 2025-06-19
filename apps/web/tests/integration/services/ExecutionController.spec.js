@@ -1,16 +1,47 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { executeAction } from '@/lib/services/ExecutionController';
+// Define spies for store methods
+const adjustGoalSpy = vi.fn();
+const updateBudgetSpy = vi.fn();
+const modifyCategorySpy = vi.fn();
+const getAccountBalanceSpy = vi.fn(() => 1000);
+const setAccountBalanceSpy = vi.fn();
 
-// Mock the financial state store
-vi.mock('@/lib/store/financialStateStore', () => ({
-  useFinancialStateStore: {
+// Mock useUIStore at the very top for hoisting
+vi.mock('@/lib/store/uiStore', () => ({
+  useUIStore: {
     getState: vi.fn(() => ({
-      adjustGoal: vi.fn(),
-      updateBudget: vi.fn(),
-      modifyCategory: vi.fn()
+      showPasswordPrompt: vi.fn(({ onConfirm }) => {
+        console.log('[MOCK showPasswordPrompt] called, confirming...');
+        return onConfirm('mock-password');
+      }),
+      isSandboxMode: false
     }))
   }
 }));
+
+// Mock canExecuteAction to always allow
+vi.mock('@/lib/services/PermissionEnforcer', () => ({
+  canExecuteAction: vi.fn(() => Promise.resolve({ allowed: true }))
+}));
+
+// Mock useFinancialStateStore with spies for internal actions
+vi.mock('@/lib/store/financialStateStore', () => ({
+  useFinancialStateStore: {
+    getState: vi.fn(() => {
+      console.log('[MOCK getState()] returning store with spies...');
+      return {
+        adjustGoal: adjustGoalSpy,
+        updateBudget: updateBudgetSpy,
+        modifyCategory: modifyCategorySpy,
+        getAccountBalance: getAccountBalanceSpy,
+        setAccountBalance: setAccountBalanceSpy,
+      };
+    })
+  }
+}));
+
+import { useFinancialStateStore } from '@/lib/store/financialStateStore';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { ExecutionController } from '@/lib/services/ExecutionController';
 
 // Mock the secure vault
 vi.mock('@/lib/services/secureVault', () => ({
@@ -21,12 +52,9 @@ vi.mock('@/lib/services/secureVault', () => ({
 global.fetch = vi.fn();
 
 describe('ExecutionController', () => {
-  let mockStore;
-
   beforeEach(() => {
     // Reset all mocks
     vi.clearAllMocks();
-    mockStore = useFinancialStateStore.getState();
     global.fetch.mockReset();
   });
 
@@ -36,18 +64,18 @@ describe('ExecutionController', () => {
       actionType: 'ADJUST_GOAL',
       payload: {
         goalId: 'goal_123',
-        newAmount: 5000
+        amount: 5000
       }
     };
 
     const mockResult = { success: true };
-    mockStore.adjustGoal.mockResolvedValue(mockResult);
+    adjustGoalSpy.mockResolvedValue(mockResult);
 
     // Act
-    const result = await executeAction(mockAction);
+    const result = await ExecutionController.executeAction(mockAction.actionType, mockAction.payload);
 
     // Assert
-    expect(mockStore.adjustGoal).toHaveBeenCalledWith(mockAction.payload);
+    expect(adjustGoalSpy).toHaveBeenCalledWith(mockAction.payload);
     expect(result).toEqual(mockResult);
   });
 
@@ -69,7 +97,7 @@ describe('ExecutionController', () => {
     });
 
     // Act
-    const result = await executeAction(mockAction);
+    const result = await ExecutionController.executeAction(mockAction.actionType, mockAction.payload);
 
     // Assert
     expect(global.fetch).toHaveBeenCalledWith(
@@ -112,7 +140,7 @@ describe('ExecutionController', () => {
       .mockResolvedValueOnce(mockTransferResponse);
 
     // Act
-    const result = await executeAction(mockAction);
+    const result = await ExecutionController.executeAction(mockAction.actionType, mockAction.payload);
 
     // Assert
     expect(global.fetch).toHaveBeenCalledTimes(2);
@@ -180,7 +208,7 @@ describe('ExecutionController', () => {
     });
 
     // Act & Assert
-    await expect(executeAction(mockAction)).rejects.toThrow('Transfer authorization failed: Invalid token');
+    await expect(ExecutionController.executeAction(mockAction.actionType, mockAction.payload)).rejects.toThrow('Transfer authorization failed: Invalid token');
   });
 
   it('should handle Plaid transfer creation failure', async () => {
@@ -206,7 +234,7 @@ describe('ExecutionController', () => {
       });
 
     // Act & Assert
-    await expect(executeAction(mockAction)).rejects.toThrow('Transfer creation failed: Invalid account');
+    await expect(ExecutionController.executeAction(mockAction.actionType, mockAction.payload)).rejects.toThrow('Transfer creation failed: Invalid account');
   });
 
   it('should handle missing Plaid API token', async () => {
@@ -224,7 +252,7 @@ describe('ExecutionController', () => {
     get.mockResolvedValueOnce(null);
 
     // Act & Assert
-    await expect(executeAction(mockAction)).rejects.toThrow('Plaid API token not found in secure vault');
+    await expect(ExecutionController.executeAction(mockAction.actionType, mockAction.payload)).rejects.toThrow('Plaid API token not found in secure vault');
   });
 
   it('should handle internal action errors', async () => {
@@ -234,10 +262,10 @@ describe('ExecutionController', () => {
       payload: { goalId: 'invalid' }
     };
 
-    mockStore.adjustGoal.mockRejectedValue(new Error('Invalid goal'));
+    adjustGoalSpy.mockRejectedValue(new Error('Invalid goal'));
 
     // Act & Assert
-    await expect(executeAction(mockAction)).rejects.toThrow('Invalid goal');
+    await expect(ExecutionController.executeAction(mockAction.actionType, mockAction.payload)).rejects.toThrow('Invalid goal');
   });
 
   it('should handle communication action errors', async () => {
@@ -253,7 +281,7 @@ describe('ExecutionController', () => {
     });
 
     // Act & Assert
-    await expect(executeAction(mockAction)).rejects.toThrow('Communication action failed: Invalid recipient');
+    await expect(ExecutionController.executeAction(mockAction.actionType, mockAction.payload)).rejects.toThrow('Communication action failed: Invalid recipient');
   });
 
   it('should reject unsupported action types', async () => {
@@ -264,6 +292,36 @@ describe('ExecutionController', () => {
     };
 
     // Act & Assert
-    await expect(executeAction(mockAction)).rejects.toThrow('Unsupported action type: UNSUPPORTED_ACTION');
+    await expect(ExecutionController.executeAction(mockAction.actionType, mockAction.payload)).rejects.toThrow('Unsupported action type: UNSUPPORTED_ACTION');
+  });
+});
+
+describe('ExecutionController - Diagnostics', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should call adjustGoal when ADJUST_GOAL is dispatched', async () => {
+    const mockAction = {
+      actionType: 'ADJUST_GOAL',
+      payload: { goalId: 'goal_123', amount: 250 },
+    };
+
+    // Set up spy to return success
+    adjustGoalSpy.mockResolvedValue({ success: true });
+
+    // === 💡 Pre-run diagnostic checks ===
+    const store = (await import('../../../src/lib/store/financialStateStore')).useFinancialStateStore.getState();
+    console.log('[TEST] Retrieved store:', store);
+    console.log('[TEST] typeof store.adjustGoal =', typeof store.adjustGoal);
+    expect(typeof store.adjustGoal).toBe('function');
+
+    // === 🚀 Run action ===
+    console.log('[TEST] Calling ExecutionController.executeAction...');
+    await ExecutionController.executeAction(mockAction.actionType, mockAction.payload);
+    console.log('[TEST] Execution complete.');
+
+    // === ✅ Assertion ===
+    expect(adjustGoalSpy).toHaveBeenCalledWith(mockAction.payload);
   });
 }); 

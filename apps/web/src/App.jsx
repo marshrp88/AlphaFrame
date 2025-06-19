@@ -62,7 +62,9 @@ function HomeWithDemo() {
           ) : error ? (
             <div style={{color: 'red'}}>Error: {error}</div>
           ) : apiData ? (
-            <pre style={{textAlign: 'left', background: '#222', color: '#fff', padding: '1em', borderRadius: '8px'}}>{JSON.stringify(apiData, null, 2)}</pre>
+            <pre style={{textAlign: 'left', background: '#222', color: '#fff', padding: '1em', borderRadius: '8px'}}>
+              {typeof apiData === 'string' ? apiData : JSON.stringify(apiData, null, 2)}
+            </pre>
           ) : (
             <div>No data received.</div>
           )

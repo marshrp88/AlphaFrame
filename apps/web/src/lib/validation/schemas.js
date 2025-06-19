@@ -3,8 +3,14 @@ import { z } from 'zod';
 // RuleSchema: Defines the structure of a rule object
 export const RuleSchema = z.object({
   id: z.string().optional(), // Rule ID (optional for new rules)
-  condition: z.string(), // The rule logic as a string
-  actionType: z.string(), // The type of action to trigger
+  conditions: z.array(
+    z.object({
+      field: z.string(),
+      operator: z.enum(['>', '<', '===', 'contains']),
+      value: z.any(),
+    })
+  ),
+  actionType: z.string().optional(), // The type of action to trigger (optional for now)
   isActive: z.boolean().default(true), // Whether the rule is enabled
 });
 

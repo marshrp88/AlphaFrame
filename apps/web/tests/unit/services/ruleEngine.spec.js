@@ -10,36 +10,54 @@ const mockState = {
 };
 
 describe('ruleEngine (unit)', () => {
-  it('should evaluate simple greater-than rule', () => {
-    const rule = { condition: 'checking_account_balance > 5000' };
+  it('should evaluate simple greater-than rule', async () => {
+    const rule = {
+      conditions: [
+        { field: 'checking_account_balance', operator: '>', value: 5000 }
+      ]
+    };
     // Contract test: validate rule with Zod
     const parsed = RuleSchema.safeParse(rule);
     expect(parsed.success).toBe(true);
-    expect(evaluateRule(rule, mockState)).toBe(true);
+    expect(await evaluateRule(rule, mockState)).toBe(true);
   });
 
-  it('should evaluate AND/OR conditions', () => {
-    const rule = { condition: 'checking_account_balance > 5000 AND savings_account_balance > 10000 OR credit_score > 700' };
+  it('should evaluate AND conditions', async () => {
+    const rule = {
+      conditions: [
+        { field: 'checking_account_balance', operator: '>', value: 5000 },
+        { field: 'savings_account_balance', operator: '>', value: 10000 },
+        { field: 'credit_score', operator: '>', value: 700 }
+      ]
+    };
     // Contract test: validate rule with Zod
     const parsed = RuleSchema.safeParse(rule);
     expect(parsed.success).toBe(true);
-    expect(evaluateRule(rule, mockState)).toBe(true);
+    expect(await evaluateRule(rule, mockState)).toBe(true);
   });
 
-  it('should return false for unmet conditions', () => {
-    const rule = { condition: 'checking_account_balance > 10000' };
+  it('should return false for unmet conditions', async () => {
+    const rule = {
+      conditions: [
+        { field: 'checking_account_balance', operator: '>', value: 10000 }
+      ]
+    };
     // Contract test: validate rule with Zod
     const parsed = RuleSchema.safeParse(rule);
     expect(parsed.success).toBe(true);
-    expect(evaluateRule(rule, mockState)).toBe(false);
+    expect(await evaluateRule(rule, mockState)).toBe(false);
   });
 
-  it('should handle invalid rule format gracefully', () => {
-    const rule = { condition: 'invalid syntax' };
+  it('should handle invalid rule format gracefully', async () => {
+    const rule = {
+      conditions: [
+        { field: 'nonexistent_field', operator: '>', value: 100 }
+      ]
+    };
     // Contract test: validate rule with Zod
     const parsed = RuleSchema.safeParse(rule);
     expect(parsed.success).toBe(true);
-    expect(evaluateRule(rule, mockState)).toBe(false);
+    await expect(evaluateRule(rule, mockState)).rejects.toThrow();
   });
 
   // Add more tests for edge cases as needed

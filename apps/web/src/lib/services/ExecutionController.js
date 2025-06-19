@@ -16,6 +16,12 @@ import { ActionSchema } from '../validation/schemas';
 const PLAID_API_BASE = 'https://api.plaid.com';
 
 /**
+ * List of internal actions that modify the financial state
+ * @type {string[]}
+ */
+const INTERNAL_ACTIONS = ['ADJUST_GOAL', 'UPDATE_BUDGET', 'MODIFY_CATEGORY'];
+
+/**
  * List of action types that require user confirmation before execution
  * @type {string[]}
  */
@@ -40,17 +46,20 @@ const requiresConfirmation = (actionType) => {
  * @returns {Promise<Object>} Result of the action
  */
 const handleInternalAction = async (action) => {
+  console.log('[HANDLER] Entered handleInternalAction:', action.type, action.payload);
   const store = useFinancialStateStore.getState();
   
-  switch (action.actionType) {
+  switch (action.type) {
     case 'ADJUST_GOAL':
+      console.log('[HANDLER] Calling adjustGoal with payload:', action.payload);
       return store.adjustGoal(action.payload);
     case 'UPDATE_BUDGET':
       return store.updateBudget(action.payload);
     case 'MODIFY_CATEGORY':
       return store.modifyCategory(action.payload);
     default:
-      throw new Error(`Unsupported internal action type: ${action.actionType}`);
+      console.warn('[HANDLER] Unhandled internal action:', action.type);
+      throw new Error(`Unhandled internal action: ${action.type}`);
   }
 };
 
@@ -181,9 +190,14 @@ export class ExecutionController {
    * @throws {Error} If the action execution fails or is not permitted
    */
   static async executeAction(actionType, payload, confirmed = false) {
+    console.log('[EXECUTION] Received:', actionType, payload);
+
     // Validate action payload using Zod
-    const parsed = ActionSchema.safeParse({ type: actionType, payload });
+    const validationData = { type: actionType, payload };
+    console.log('[ZOD DEBUG] Validating:', validationData);
+    const parsed = ActionSchema.safeParse(validationData);
     if (!parsed.success) {
+      console.error('[ZOD ERROR]', parsed.error);
       throw new Error('Invalid action payload.');
     }
 
@@ -210,18 +224,32 @@ export class ExecutionController {
       return this.executeAction(actionType, payload, true);
     }
 
-    // Execute the appropriate action handler
+    // Add diagnostic logs for internal action routing
+    console.log('[DEBUG] INTERNAL_ACTIONS =', INTERNAL_ACTIONS);
+    console.log('[DEBUG] actionType =', actionType);
+    console.log('[DEBUG] isInternal =', INTERNAL_ACTIONS.includes(actionType));
+
+    // Handle internal actions
+    if (INTERNAL_ACTIONS.includes(actionType)) {
+      console.log('[EXECUTION] Handling internal action:', actionType);
+      return handleInternalAction({ type: actionType, payload });
+    }
+
+    // Execute the appropriate action handler for non-internal actions
     switch (actionType) {
       case 'PLAID_TRANSFER':
-        return this.handlePlaidTransfer(payload);
+        return this.executePlaidTransfer(payload);
       case 'WEBHOOK':
         return this.handleWebhook(payload);
-      case 'ADJUST_GOAL':
-        return this.handleGoalAdjustment(payload);
+      case 'SEND_EMAIL':
+      case 'SEND_NOTIFICATION':
+      case 'CREATE_ALERT':
+        return handleCommunicationAction({ actionType, payload });
       case 'ADD_MEMO':
         return this.handleMemoAddition(payload);
       default:
-        throw new Error(`Unknown action type: ${actionType}`);
+        console.warn('[EXECUTION] Unknown action type:', actionType);
+        throw new Error(`Unsupported action type: ${actionType}`);
     }
   }
 
@@ -231,9 +259,8 @@ export class ExecutionController {
    * @returns {Promise<Object>} The result of the transfer
    * @private
    */
-  static async handlePlaidTransfer(payload) {
-    // Implementation for Plaid transfers
-    return { success: true, transferId: 'mock_transfer_id' };
+  static async executePlaidTransfer(payload) {
+    return handlePlaidTransfer({ type: 'PLAID_TRANSFER', payload });
   }
 
   /**

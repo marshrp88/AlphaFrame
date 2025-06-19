@@ -28,12 +28,19 @@ export const mockUIComponents = {
 
 // Mock stores
 export const mockStores = {
-  useAppStore: vi.fn(() => ({
-    accounts: [
-      { id: '1', name: 'Checking', balance: 1000 },
-      { id: '2', name: 'Savings', balance: 5000 }
-    ]
-  })),
+  useAppStore: vi.fn((selector) => {
+    // Provide a realistic mock for selector usage
+    const state = {
+      counter: 0,
+      accounts: [
+        { id: '1', name: 'Checking', balance: 1000 },
+        { id: '2', name: 'Savings', balance: 5000 }
+      ],
+      increment: vi.fn(),
+      reset: vi.fn(),
+    };
+    return selector ? selector(state) : state.counter; // Default to counter if no selector
+  }),
   useAuthStore: vi.fn(() => ({
     isAuthenticated: true,
     user: {
