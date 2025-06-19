@@ -7,6 +7,9 @@ import { create } from 'zustand';
  * Manages application-wide state including accounts and UI state
  */
 export const useAppStore = create((set) => ({
+  // Schema version for future migrations
+  dataSchemaVersion: 1,
+
   // Counter state (example)
   counter: 0,
   increment: () => set((state) => ({ counter: state.counter + 1 })),
