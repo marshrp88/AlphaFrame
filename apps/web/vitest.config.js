@@ -11,8 +11,8 @@ export default defineConfig({
       '**/e2e/**',
     ],
     globals: true,
-    environment: 'node',
-    // setupFiles: ['./tests/setup.js'], // Temporarily disabled
+    environment: 'jsdom',
+    setupFiles: ['./tests/setup.js'],
     threads: false,
     isolate: true,
     passWithNoTests: true,
