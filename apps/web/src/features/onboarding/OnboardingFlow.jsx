@@ -28,7 +28,7 @@ import Step2ReviewTransactions from './steps/Step2ReviewTransactions.jsx';
 import Step3BudgetSetup from './steps/Step3BudgetSetup.jsx';
 import Step4SetMode from './steps/Step4SetMode.jsx';
 import { useAuthStore } from '../../core/store/authStore.js';
-import { useFinancialStateStore } from '../../lib/store/financialStateStore.js';
+import { useFinancialStateStore } from '../../core/store/financialStateStore.js';
 
 /**
  * Onboarding steps configuration

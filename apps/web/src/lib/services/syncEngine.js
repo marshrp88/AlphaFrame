@@ -139,6 +139,58 @@ export const exchangePublicToken = async (publicToken) => {
 };
 
 /**
+ * Get all transactions for an access token
+ * @param {string} accessToken - Plaid access token
+ * @returns {Array} Array of transactions
+ */
+export const getTransactions = async (accessToken) => {
+  try {
+    if (!plaidClient) {
+      throw new Error('Plaid client not initialized');
+    }
+
+    let allTransactions = [];
+    let hasMore = true;
+    let cursor = null;
+
+    while (hasMore) {
+      const request = {
+        access_token: accessToken,
+        cursor: cursor,
+      };
+      const response = await plaidClient.transactionsSync(request);
+      const data = response.data;
+      
+      allTransactions = allTransactions.concat(data.added);
+      hasMore = data.has_more;
+      cursor = data.next_cursor;
+    }
+    
+    const transactions = allTransactions.map(txn => ({
+      id: txn.transaction_id,
+      amount: txn.amount,
+      date: txn.date,
+      description: txn.name,
+      category: txn.personal_finance_category?.[0] || 'Uncategorized',
+      accountId: txn.account_id,
+      pending: txn.pending,
+      merchantName: txn.merchant_name,
+      paymentChannel: txn.payment_channel,
+      transactionType: txn.transaction_type
+    }));
+
+    await executionLogService.log('plaid.transactions.fetched', {
+      transactionCount: transactions.length,
+    });
+
+    return transactions;
+  } catch (error) {
+    await executionLogService.logError('plaid.transactions.fetch.failed', error);
+    throw new Error(`Failed to fetch transactions: ${error.message}`);
+  }
+};
+
+/**
  * Sync transactions for an account
  * @param {string} accessToken - Plaid access token
  * @param {string} accountId - Account identifier

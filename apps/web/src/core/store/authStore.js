@@ -39,13 +39,22 @@ export const useAuthStore = create((set, get) => ({
   
   // Actions
   initialize: async () => {
+    console.log('🔐 authStore.initialize() called');
     set({ isLoading: true, error: null });
     
     try {
+      console.log('🔐 Calling initializeAuth()...');
       const success = await initializeAuth();
+      console.log('🔐 initializeAuth() result:', success);
+      
       const user = getCurrentUser();
+      console.log('🔐 getCurrentUser() result:', user);
+      
       const authenticated = checkAuth();
+      console.log('🔐 checkAuth() result:', authenticated);
+      
       const permissions = getUserPermissions();
+      console.log('🔐 getUserPermissions() result:', permissions);
       
       set({
         user,
@@ -54,8 +63,13 @@ export const useAuthStore = create((set, get) => ({
         isLoading: false
       });
       
+      console.log('✅ authStore.initialize() completed successfully');
+      console.log('✅ Final state:', { user, isAuthenticated: authenticated, permissions });
+      
       return success;
     } catch (error) {
+      console.error('❌ authStore.initialize() ERROR:', error);
+      console.error('❌ Error stack:', error.stack);
       set({
         error: error.message,
         isLoading: false

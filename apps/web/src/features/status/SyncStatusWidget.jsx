@@ -30,7 +30,7 @@ import {
   Calendar
 } from 'lucide-react';
 import { getLastSyncMetadata, syncTransactions } from '../../lib/services/syncEngine.js';
-import { useFinancialStateStore } from '../../lib/store/financialStateStore.js';
+import { useFinancialStateStore } from '../../core/store/financialStateStore.js';
 
 /**
  * Sync status widget component
@@ -168,7 +168,7 @@ export const SyncStatusWidget = () => {
   const statusDisplay = getStatusDisplay();
 
   return (
-    <Card className="p-4">
+    <Card className="p-4" data-testid="sync-status-widget">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-2">
