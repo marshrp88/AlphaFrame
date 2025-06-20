@@ -15,46 +15,10 @@
  * intuitive navigation and user-friendly interface.
  */
 
-import React, { useState, useEffect } from 'react';
-import { Link, Routes, Route } from 'react-router-dom';
-import { Card } from '../components/ui/Card.jsx';
-import { Button } from '../components/ui/Button.jsx';
-import { Badge } from '../components/ui/badge.jsx';
-
-// Import Pro feature pages
-import BudgetPage from './pro/budget.jsx';
-import OptimizerPage from './pro/optimizer.jsx';
-import ReportsPage from './pro/reports.jsx';
-
-const FEATURES = [
-  {
-    id: 'portfolio',
-    title: 'Portfolio Optimizer',
-    description: 'Analyze and optimize your investment portfolio with real-time allocation tracking',
-    icon: '📈',
-    color: 'blue',
-    path: '/pro/optimizer',
-    status: 'active'
-  },
-  {
-    id: 'budget',
-    title: 'Budget & Cash Flow',
-    description: 'Track spending, set budgets, and forecast your financial future',
-    icon: '💰',
-    color: 'green',
-    path: '/pro/budget',
-    status: 'active'
-  },
-  {
-    id: 'reports',
-    title: 'Reports & Insights',
-    description: 'Comprehensive dashboards and financial insights',
-    icon: '📊',
-    color: 'purple',
-    path: '/pro/reports',
-    status: 'active'
-  }
-];
+import React from 'react';
+import { Card } from "@/shared/ui/Card.jsx";
+import { Badge } from "@/shared/ui/badge.jsx";
+import DashboardModeManager from "../features/pro/components/DashboardModeManager.jsx"; // Corrected import path
 
 const AlphaProDashboard = () => {
   return (
@@ -71,44 +35,18 @@ const AlphaProDashboard = () => {
           <Badge variant="outline">MVP-Pro v1.0</Badge>
         </div>
       </div>
-
-      {/* Features Grid */}
+      
+      {/* Dashboard Mode Manager is now the core of this page */}
       <div className="mb-8">
-        <h2 className="text-2xl font-semibold mb-6">Features</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {FEATURES.map((feature) => (
-            <Card 
-              key={feature.id}
-              className="p-6 cursor-pointer transition-all duration-200 hover:shadow-lg"
-            >
-              <Link to={feature.path} className="block">
-                <div className="flex items-center space-x-3 mb-3">
-                  <span className="text-3xl">{feature.icon}</span>
-                  <div>
-                    <h3 className="text-lg font-semibold">{feature.title}</h3>
-                    <Badge variant="secondary" className="text-xs">
-                      {feature.status}
-                    </Badge>
-                  </div>
-                </div>
-                <p className="text-sm text-gray-600">{feature.description}</p>
-              </Link>
-            </Card>
-          ))}
-        </div>
+        <DashboardModeManager />
       </div>
+
+      {/* The incorrect feature grid has been removed. Navigation is handled by the manager. */}
     </div>
   );
 };
 
-// Main AlphaPro component with routing
+// Main AlphaPro component simplified
 export default function AlphaPro() {
-  return (
-    <Routes>
-      <Route path="/" element={<AlphaProDashboard />} />
-      <Route path="/optimizer" element={<OptimizerPage />} />
-      <Route path="/budget" element={<BudgetPage />} />
-      <Route path="/reports" element={<ReportsPage />} />
-    </Routes>
-  );
+  return <AlphaProDashboard />;
 } 

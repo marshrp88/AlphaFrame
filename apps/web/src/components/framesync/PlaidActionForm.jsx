@@ -11,12 +11,12 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/Select";
-import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/Label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+} from "@/shared/ui/Select";
+import { Input } from "@/shared/ui/Input";
+import { Label } from "@/shared/ui/Label";
+import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group";
 import { useAppStore } from '@/store/useAppStore';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/shared/ui/use-toast";
 
 /**
  * PlaidActionForm Component
@@ -183,3 +183,4 @@ export const PlaidActionForm = ({ initialPayload = {}, onChange }) => {
     </div>
   );
 }; 
+

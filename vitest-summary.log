@@ -1,0 +1,587 @@
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/marsh/Desktop/AlphaFrame[39m
+      [2mCoverage enabled with [22m[33mv8[39m
+
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mBasic Properties[2m > [22mshould have correct basic properties[32m 11[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mUtility Methods[2m > [22mshould generate unique IDs[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mUtility Methods[2m > [22mshould generate session IDs[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mUtility Methods[2m > [22mshould get user ID from localStorage[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mUtility Methods[2m > [22mshould return anonymous for missing user ID[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mEncryption Methods[2m > [22mshould encrypt payload successfully[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mEncryption Methods[2m > [22mshould handle encryption errors gracefully[32m 34[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mEncryption Methods[2m > [22mshould decrypt payload successfully[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mEncryption Methods[2m > [22mshould handle decryption errors gracefully[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mEncryption Methods[2m > [22mshould return original data for encryption_failed payloads[32m 4[2mms[22m[39m
+ [31m├ù[39m apps/web/tests/app.import.test.js[2m > [22mcan import the App component with a mocked config[32m 41[2mms[22m[39m
+[31m   ΓåÆ Failed to resolve import "react/jsx-dev-runtime" from "apps/web/src/App.jsx". Does the file exist?[39m
+ [31m├ù[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mLog Methods[2m > [22mshould create properly structured log entries[33m 5046[2mms[22m[39m
+[31m   ΓåÆ Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+ [31m├ù[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mLog Methods[2m > [22mshould use default values for optional parameters[33m 5081[2mms[22m[39m
+[31m   ΓåÆ Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mQuery Methods[2m > [22mshould query logs with type filter[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mQuery Methods[2m > [22mshould query logs with severity filter[32m 7[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mQuery Methods[2m > [22mshould query logs with session filter[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mQuery Methods[2m > [22mshould query logs with time range filters[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mQuery Methods[2m > [22mshould handle query errors gracefully[32m 7[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mSpecialized Query Methods[2m > [22mshould get session logs[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mSpecialized Query Methods[2m > [22mshould get component logs[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mSpecialized Query Methods[2m > [22mshould get performance logs[32m 11[2mms[22m[39m
+ [31m├ù[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mLog Management Methods[2m > [22mshould clear old logs[33m 5034[2mms[22m[39m
+[31m   ΓåÆ Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+ [31m├ù[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mLog Management Methods[2m > [22mshould handle clear old logs errors[33m 5018[2mms[22m[39m
+[31m   ΓåÆ Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+ [31m├ù[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mExport Methods[2m > [22mshould export logs with decrypted payloads[32m 64[2mms[22m[39m
+[31m   ΓåÆ expected { exportTime: 1750376765172, ΓÇª(3) } to match object { exportTime: Any<Number>, ΓÇª(3) }[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mExport Methods[2m > [22mshould export logs with filters[32m 20[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mExport Methods[2m > [22mshould handle empty logs array in export[32m 8[2mms[22m[39m
+ [31m├ù[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mExport Methods[2m > [22mshould handle decryption errors in export[32m 14[2mms[22m[39m
+[31m   ΓåÆ expected { error: 'decryption_failed', ΓÇª(1) } to deeply equal { error: 'decryption_failed', ΓÇª(1) }[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mBasic Properties[2m > [22mshould have correct basic properties[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mBasic Properties[2m > [22mshould have default categories[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mBasic Properties[2m > [22mshould get budget type[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mBudget Initialization[2m > [22mshould initialize budget correctly[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mBudget Initialization[2m > [22mshould calculate default caps based on income[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mBudget Initialization[2m > [22mshould log budget initialization[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mBudget Initialization[2m > [22mshould handle initialization errors[32m 7[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mCategory Management[2m > [22mshould update category cap[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mCategory Management[2m > [22mshould throw error for non-existent category[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mCategory Management[2m > [22mshould add new category[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mCategory Management[2m > [22mshould throw error when adding duplicate category[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mCategory Management[2m > [22mshould remove category[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mCategory Management[2m > [22mshould throw error when removing non-existent category[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mBudget Forecasting[2m > [22mshould generate 30-day forecast[32m 41[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mBudget Forecasting[2m > [22mshould generate 90-day forecast[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mBudget Forecasting[2m > [22mshould calculate projected spending from history[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mBudget Forecasting[2m > [22mshould use category caps when no history[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mBudget Forecasting[2m > [22mshould log forecast generation[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mBudget Forecasting[2m > [22mshould handle forecast errors[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mSpending Calculations[2m > [22mshould calculate average monthly spending[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mSpending Calculations[2m > [22mshould return 0 for empty history[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mSpending Calculations[2m > [22mshould calculate months from history[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mSpending Calculations[2m > [22mshould return 2 for single month with different dates[32m 0[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mSpending Calculations[2m > [22mshould calculate category spending[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mCategory Status[2m > [22mshould return under for budget > projected by >10%[32m 0[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mCategory Status[2m > [22mshould return over for budget < projected by >10%[32m 0[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mCategory Status[2m > [22mshould return on-track for variance within 10%[32m 0[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mCategory Status[2m > [22mshould handle zero budget[32m 0[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mWarnings and Recommendations[2m > [22mshould generate overspending warning[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mWarnings and Recommendations[2m > [22mshould generate low savings warning[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mWarnings and Recommendations[2m > [22mshould generate low savings warning for very low savings[32m 1[2mms[22m[39m
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mshould run basic test
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mshould run basic test
+[22m[39mBasic test is running
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mBasic Properties[2m > [22m[2mshould have correct basic properties
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mBasic Properties[2m > [22m[2mshould have correct basic properties
+[22m[39mTesting basic properties
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mUtility Methods[2m > [22m[2mshould generate unique IDs
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mUtility Methods[2m > [22m[2mshould generate unique IDs
+[22m[39mTesting ID generation
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mUtility Methods[2m > [22m[2mshould generate session IDs
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mUtility Methods[2m > [22m[2mshould generate session IDs
+[22m[39mTesting session ID generation
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mUtility Methods[2m > [22m[2mshould get user ID from localStorage
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mUtility Methods[2m > [22m[2mshould get user ID from localStorage
+[22m[39mTesting user ID retrieval
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mUtility Methods[2m > [22m[2mshould return anonymous for missing user ID
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mUtility Methods[2m > [22m[2mshould return anonymous for missing user ID
+[22m[39mTesting anonymous user ID
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEncryption Methods[2m > [22m[2mshould encrypt payload successfully
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEncryption Methods[2m > [22m[2mshould encrypt payload successfully
+[22m[39mTesting payload encryption
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEncryption Methods[2m > [22m[2mshould handle encryption errors gracefully
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEncryption Methods[2m > [22m[2mshould handle encryption errors gracefully
+[22m[39mTesting encryption error handling
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEncryption Methods[2m > [22m[2mshould decrypt payload successfully
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEncryption Methods[2m > [22m[2mshould decrypt payload successfully
+[22m[39mTesting payload decryption
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEncryption Methods[2m > [22m[2mshould handle decryption errors gracefully
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEncryption Methods[2m > [22m[2mshould handle decryption errors gracefully
+[22m[39mTesting decryption error handling
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEncryption Methods[2m > [22m[2mshould return original data for encryption_failed payloads
+[22m[39mSetting up test mocks
+
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mshould run basic test[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mBasic Properties[2m > [22mshould have correct basic properties[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mUtility Methods[2m > [22mshould generate unique IDs[32m 7[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mUtility Methods[2m > [22mshould generate session IDs[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mUtility Methods[2m > [22mshould get user ID from localStorage[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mUtility Methods[2m > [22mshould return anonymous for missing user ID[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mEncryption Methods[2m > [22mshould encrypt payload successfully[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mEncryption Methods[2m > [22mshould handle encryption errors gracefully[32m 46[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mEncryption Methods[2m > [22mshould decrypt payload successfully[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mEncryption Methods[2m > [22mshould handle decryption errors gracefully[32m 6[2mms[22m[39m
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEncryption Methods[2m > [22m[2mshould return original data for encryption_failed payloads
+[22m[39mTesting encryption_failed payload handling
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mConvenience Methods[2m > [22m[2mshould log rule triggered events
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mConvenience Methods[2m > [22m[2mshould log rule triggered events
+[22m[39mTesting rule triggered logging
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mConvenience Methods[2m > [22m[2mshould log simulation run events
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mConvenience Methods[2m > [22m[2mshould log simulation run events
+[22m[39mTesting simulation run logging
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mConvenience Methods[2m > [22m[2mshould log budget forecast events
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mConvenience Methods[2m > [22m[2mshould log budget forecast events
+[22m[39mTesting budget forecast logging
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mConvenience Methods[2m > [22m[2mshould log portfolio analysis events
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mConvenience Methods[2m > [22m[2mshould log portfolio analysis events
+[22m[39mTesting portfolio analysis logging
+
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mBasic Properties[2m > [22mshould have correct basic properties[32m 13[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mBasic Properties[2m > [22mshould have default income categories[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mBasic Properties[2m > [22mshould have default expense categories[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mTransaction Management[2m > [22mshould add income transaction correctly[32m 14[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mTransaction Management[2m > [22mshould add expense transaction correctly[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mTransaction Management[2m > [22mshould generate unique transaction IDs[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mTransaction Management[2m > [22mshould validate transaction amount[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mTransaction Management[2m > [22mshould validate transaction type[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mTransaction Management[2m > [22mshould validate transaction category[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mTransaction Management[2m > [22mshould handle transaction add errors[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mTransaction Retrieval[2m > [22mshould get transactions for date range[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mTransaction Retrieval[2m > [22mshould filter transactions by type[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mTransaction Retrieval[2m > [22mshould return empty array for no matching transactions[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mCash Flow Calculations[2m > [22mshould calculate cash flow correctly[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mCash Flow Calculations[2m > [22mshould handle empty period[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mCash Flow Calculations[2m > [22mshould handle only income transactions[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mCash Flow Calculations[2m > [22mshould handle only expense transactions[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mCash Flow Forecasting[2m > [22mshould generate forecast correctly[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mCash Flow Forecasting[2m > [22mshould calculate historical averages correctly[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mCash Flow Forecasting[2m > [22mshould handle empty transaction history[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mCash Flow Forecasting[2m > [22mshould calculate seasonal factors with sufficient data[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mCash Flow Forecasting[2m > [22mshould log forecast generation[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mCash Flow Forecasting[2m > [22mshould handle forecast errors[32m 7[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mRecurring Transactions[2m > [22mshould calculate recurring income correctly[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mRecurring Transactions[2m > [22mshould calculate recurring expenses correctly[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mRecurring Transactions[2m > [22mshould include annual transactions in correct months[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mRecurring Transactions[2m > [22mshould handle different frequencies correctly[32m 1[2mms[22m[39m
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mConvenience Methods[2m > [22m[2mshould log error events
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mConvenience Methods[2m > [22m[2mshould log error events
+[22m[39mTesting error logging
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mLog Entry Structure[2m > [22m[2mshould create properly structured log entries
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mLog Entry Structure[2m > [22m[2mshould create properly structured log entries
+[22m[39mTesting log entry structure
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mLog Entry Structure[2m > [22m[2mshould use default values for optional parameters
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mLog Entry Structure[2m > [22m[2mshould use default values for optional parameters
+[22m[39mTesting default parameter values
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mQuery Methods[2m > [22m[2mshould query logs with type filter
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mQuery Methods[2m > [22m[2mshould query logs with type filter
+[22m[39mTesting query logs with type filter
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mQuery Methods[2m > [22m[2mshould query logs with severity filter
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mQuery Methods[2m > [22m[2mshould query logs with severity filter
+[22m[39mTesting query logs with severity filter
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mQuery Methods[2m > [22m[2mshould query logs with session filter
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mQuery Methods[2m > [22m[2mshould query logs with session filter
+[22m[39mTesting query logs with session filter
+
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mEncryption Methods[2m > [22mshould return original data for encryption_failed payloads[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mConvenience Methods[2m > [22mshould log rule triggered events[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mConvenience Methods[2m > [22mshould log simulation run events[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mConvenience Methods[2m > [22mshould log budget forecast events[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mConvenience Methods[2m > [22mshould log portfolio analysis events[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mConvenience Methods[2m > [22mshould log error events[32m 10[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mLog Entry Structure[2m > [22mshould create properly structured log entries[32m 13[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mLog Entry Structure[2m > [22mshould use default values for optional parameters[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mQuery Methods[2m > [22mshould query logs with type filter[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mQuery Methods[2m > [22mshould query logs with severity filter[32m 21[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mQuery Methods[2m > [22mshould query logs with session filter[32m 7[2mms[22m[39m
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mQuery Methods[2m > [22m[2mshould query logs with time range filters
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mQuery Methods[2m > [22m[2mshould query logs with time range filters
+[22m[39mTesting query logs with time range filters
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mQuery Methods[2m > [22m[2mshould handle query errors gracefully
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mQuery Methods[2m > [22m[2mshould handle query errors gracefully
+[22m[39mTesting query error handling
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mSpecialized Query Methods[2m > [22m[2mshould get session logs
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mSpecialized Query Methods[2m > [22m[2mshould get session logs
+[22m[39mTesting get session logs
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mSpecialized Query Methods[2m > [22m[2mshould get component logs
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mSpecialized Query Methods[2m > [22m[2mshould get component logs
+[22m[39mTesting get component logs
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mSpecialized Query Methods[2m > [22m[2mshould get performance logs
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mSpecialized Query Methods[2m > [22m[2mshould get performance logs
+[22m[39mTesting get performance logs
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mLog Management Methods[2m > [22m[2mshould clear old logs
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mLog Management Methods[2m > [22m[2mshould clear old logs
+[22m[39mTesting clear old logs
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mLog Management Methods[2m > [22m[2mshould handle clear old logs errors
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mLog Management Methods[2m > [22m[2mshould handle clear old logs errors
+[22m[39mTesting clear old logs error handling
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould export logs with decrypted payloads
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould export logs with decrypted payloads
+[22m[39mTesting export logs
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould export logs with filters
+[22m[39mSetting up test mocks
+
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mWarnings and Recommendations[2m > [22mshould generate category overspending warnings[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mSpending Limit Monitoring[2m > [22mshould detect spending limit breach[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mSpending Limit Monitoring[2m > [22mshould detect spending limit warning[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mSpending Limit Monitoring[2m > [22mshould handle normal spending levels[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mSpending Limit Monitoring[2m > [22mshould throw error for non-existent category[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mBudget Summary[2m > [22mshould generate budget summary[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mBudget Summary[2m > [22mshould calculate correct budget breakdowns[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle zero income initialization[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle negative spending amounts[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle single transaction history[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle invalid dates gracefully[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/BudgetService.test.js[2m > [22mBudgetService[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle category with no spending history[32m 1[2mms[22m[39m
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould export logs with filters
+[22m[39mTesting export logs with filters
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould handle decryption errors in export
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould handle database transaction errors in queryLogs
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould handle database transaction errors in queryLogs
+[22m[39mTesting database transaction errors in queryLogs
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould handle database transaction errors in clearOldLogs
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould handle database transaction errors in clearOldLogs
+[22m[39mTesting database transaction errors in clearOldLogs
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould handle missing encryption key in decryptPayload
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould handle missing encryption key in decryptPayload
+[22m[39mTesting missing encryption key in decryptPayload
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould handle JSON parse errors in decryptPayload
+[22m[39mSetting up test mocks
+
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mQuery Methods[2m > [22mshould query logs with time range filters[32m 10[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mQuery Methods[2m > [22mshould handle query errors gracefully[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mSpecialized Query Methods[2m > [22mshould get session logs[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mSpecialized Query Methods[2m > [22mshould get component logs[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mSpecialized Query Methods[2m > [22mshould get performance logs[32m 7[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mLog Management Methods[2m > [22mshould clear old logs[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mLog Management Methods[2m > [22mshould handle clear old logs errors[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mExport Methods[2m > [22mshould export logs with decrypted payloads[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mExport Methods[2m > [22mshould export logs with filters[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mExport Methods[2m > [22mshould handle decryption errors in export[32m 17[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mExport Methods[2m > [22mshould handle database transaction errors in queryLogs[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mExport Methods[2m > [22mshould handle database transaction errors in clearOldLogs[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mExport Methods[2m > [22mshould handle missing encryption key in decryptPayload[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mCash Flow Insights[2m > [22mshould generate negative cash flow warning[32m 54[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mCash Flow Insights[2m > [22mshould generate low cash reserves warning[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mCash Flow Insights[2m > [22mshould generate income stabilization opportunity[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mCash Flow Insights[2m > [22mshould generate expense reduction opportunity[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mAnalytics and Calculations[2m > [22mshould calculate income variability correctly[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mAnalytics and Calculations[2m > [22mshould return zero variability for single transaction[32m 0[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mAnalytics and Calculations[2m > [22mshould calculate expense breakdown correctly[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mAnalytics and Calculations[2m > [22mshould handle unknown categories in expense breakdown[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mCash Flow Summary[2m > [22mshould generate cash flow summary[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mCash Flow Summary[2m > [22mshould calculate year-to-date cash flow[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle invalid transaction object[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle transactions with missing date[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle empty transaction arrays[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle date range with start after end[32m 0[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle very large numbers[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/CashFlowService.test.js[2m > [22mCashFlowService[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle decimal amounts[32m 1[2mms[22m[39m
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould handle JSON parse errors in decryptPayload
+[22m[39mTesting JSON parse errors in decryptPayload
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould handle empty filters in queryLogs
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould handle empty filters in queryLogs
+[22m[39mTesting empty filters in queryLogs
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould handle multiple filters in queryLogs
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould handle multiple filters in queryLogs
+[22m[39mTesting multiple filters in queryLogs
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould handle time range filters in queryLogs
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Methods[2m > [22m[2mshould handle time range filters in queryLogs
+[22m[39mTesting time range filters in queryLogs
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEdge Cases and Error Handling[2m > [22m[2mshould handle database not available in query methods
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEdge Cases and Error Handling[2m > [22m[2mshould handle database not available in query methods
+[22m[39mTesting database not available in query methods
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEdge Cases and Error Handling[2m > [22m[2mshould handle database not available in clear old logs
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEdge Cases and Error Handling[2m > [22m[2mshould handle database not available in clear old logs
+[22m[39mTesting database not available in clear old logs
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEdge Cases and Error Handling[2m > [22m[2mshould handle empty logs array in export
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEdge Cases and Error Handling[2m > [22m[2mshould handle empty logs array in export
+[22m[39mTesting empty logs array in export
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mDatabase Error Handling[2m > [22m[2mshould handle database transaction errors in queryLogs
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mDatabase Error Handling[2m > [22m[2mshould handle database transaction errors in clearOldLogs
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mDatabase Error Handling[2m > [22m[2mshould handle database not available in query methods
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mDatabase Error Handling[2m > [22m[2mshould handle database not available in clear old logs
+[22m[39mSetting up test mocks
+
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mExport Methods[2m > [22mshould handle JSON parse errors in decryptPayload[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mExport Methods[2m > [22mshould handle empty filters in queryLogs[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mExport Methods[2m > [22mshould handle multiple filters in queryLogs[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mExport Methods[2m > [22mshould handle time range filters in queryLogs[32m 11[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle database not available in query methods[32m 10[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle database not available in clear old logs[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle empty logs array in export[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mDatabase Error Handling[2m > [22mshould handle database transaction errors in queryLogs[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mDatabase Error Handling[2m > [22mshould handle database transaction errors in clearOldLogs[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mDatabase Error Handling[2m > [22mshould handle database not available in query methods[32m 12[2mms[22m[39m
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEncryption Edge Cases[2m > [22m[2mshould handle missing encryption key in decryptPayload
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEncryption Edge Cases[2m > [22m[2mshould handle JSON parse errors in decryptPayload
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mEncryption Edge Cases[2m > [22m[2mshould handle encryption key initialization failure
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mFilter Edge Cases[2m > [22m[2mshould handle empty filters in queryLogs
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mFilter Edge Cases[2m > [22m[2mshould handle multiple filters in queryLogs
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mFilter Edge Cases[2m > [22m[2mshould handle time range filters in queryLogs
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Edge Cases[2m > [22m[2mshould handle empty logs array in export
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mExport Edge Cases[2m > [22m[2mshould handle decryption errors in export
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mUtility Method Edge Cases[2m > [22m[2mshould handle localStorage not available
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mUtility Method Edge Cases[2m > [22m[2mshould handle window not available
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mUtility Method Edge Cases[2m > [22m[2mshould generate unique IDs consistently
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mUtility Method Edge Cases[2m > [22m[2mshould generate unique session IDs consistently
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mConvenience Method Edge Cases[2m > [22m[2mshould handle log method errors in convenience methods
+[22m[39mSetting up test mocks
+
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mDatabase Error Handling[2m > [22mshould handle database not available in clear old logs[32m 15[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mEncryption Edge Cases[2m > [22mshould handle missing encryption key in decryptPayload[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mEncryption Edge Cases[2m > [22mshould handle JSON parse errors in decryptPayload[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mEncryption Edge Cases[2m > [22mshould handle encryption key initialization failure[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mFilter Edge Cases[2m > [22mshould handle empty filters in queryLogs[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mFilter Edge Cases[2m > [22mshould handle multiple filters in queryLogs[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mFilter Edge Cases[2m > [22mshould handle time range filters in queryLogs[32m 17[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mExport Edge Cases[2m > [22mshould handle empty logs array in export[32m 7[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mExport Edge Cases[2m > [22mshould handle decryption errors in export[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mUtility Method Edge Cases[2m > [22mshould handle localStorage not available[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mUtility Method Edge Cases[2m > [22mshould handle window not available[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mUtility Method Edge Cases[2m > [22mshould generate unique IDs consistently[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mUtility Method Edge Cases[2m > [22mshould generate unique session IDs consistently[32m 11[2mms[22m[39m
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mConvenience Method Edge Cases[2m > [22m[2mshould handle error objects in logError
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mAdvanced Edge Cases & Coverage[2m > [22m[2mshould handle empty string inputs gracefully
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mAdvanced Edge Cases & Coverage[2m > [22m[2mshould use fallback configuration when defaults are missing
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mAdvanced Edge Cases & Coverage[2m > [22m[2mshould handle timeout scenarios gracefully
+[22m[39mSetting up test mocks
+
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mConvenience Method Edge Cases[2m > [22mshould handle log method errors in convenience methods[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mConvenience Method Edge Cases[2m > [22mshould handle error objects in logError[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mAdvanced Edge Cases & Coverage[2m > [22mshould handle empty string inputs gracefully[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mAdvanced Edge Cases & Coverage[2m > [22mshould use fallback configuration when defaults are missing[32m 12[2mms[22m[39m
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mAdvanced Edge Cases & Coverage[2m > [22m[2mshould validate log entry structure integrity
+[22m[39mSetting up test mocks
+
+[90mstdout[2m | apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22m[2mExecutionLogService[2m > [22m[2mAdvanced Edge Cases & Coverage[2m > [22m[2mshould handle multiple log operations
+[22m[39mSetting up test mocks
+
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mAdvanced Edge Cases & Coverage[2m > [22mshould handle timeout scenarios gracefully[32m 117[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mAdvanced Edge Cases & Coverage[2m > [22mshould validate log entry structure integrity[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mAdvanced Edge Cases & Coverage[2m > [22mshould handle multiple log operations[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/integration/services/ruleEngine.spec.js[2m > [22mRuleEngine Integration[2m > [22mshould evaluate rule conditions correctly[32m 10[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/integration/services/ruleEngine.spec.js[2m > [22mRuleEngine Integration[2m > [22mshould execute rule actions[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/integration/services/ruleEngine.spec.js[2m > [22mRuleEngine Integration[2m > [22mshould validate rule structure[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/integration/services/ruleEngine.spec.js[2m > [22mRuleEngine Integration[2m > [22mshould find matching rules for a transaction[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/integration/services/ruleEngine.spec.js[2m > [22mRuleEngine Integration[2m > [22mshould handle invalid rule structures gracefully[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/integration/services/ruleEngine.spec.js[2m > [22mRuleEngine Integration[2m > [22mshould handle rule execution errors by rejecting[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/integration/services/syncEngine.spec.js[2m > [22mSyncEngine Integration[2m > [22mshould initialize Plaid client with correct config[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/integration/services/syncEngine.spec.js[2m > [22mSyncEngine Integration[2m > [22mshould sync transactions for an account[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/integration/services/syncEngine.spec.js[2m > [22mSyncEngine Integration[2m > [22mshould sync account balances[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/integration/services/syncEngine.spec.js[2m > [22mSyncEngine Integration[2m > [22mshould handle webhook events[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/integration/services/syncEngine.spec.js[2m > [22mSyncEngine Integration[2m > [22mshould handle sync errors gracefully[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mBasic Properties[2m > [22mshould have correct basic properties[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mBasic Properties[2m > [22mshould have supported assets[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mBasic Properties[2m > [22mshould have default targets[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mPortfolio Analysis[2m > [22mshould analyze a simple portfolio correctly[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mPortfolio Analysis[2m > [22mshould handle empty portfolio[32m 11[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mPortfolio Analysis[2m > [22mshould handle custom targets[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mPortfolio Analysis[2m > [22mshould calculate sector allocations correctly[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mPortfolio Analysis[2m > [22mshould handle unknown tickers gracefully[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mPortfolio Analysis[2m > [22mshould log portfolio analysis[32m 10[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mPortfolio Analysis[2m > [22mshould handle analysis errors and log them[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mAllocation Calculations[2m > [22mshould calculate current allocation correctly[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mAllocation Calculations[2m > [22mshould calculate allocation percentages correctly[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mAllocation Calculations[2m > [22mshould handle zero total value[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mAllocation Calculations[2m > [22mshould handle missing bySector property[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mDeviation Calculations[2m > [22mshould calculate deviations correctly[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mDeviation Calculations[2m > [22mshould handle missing asset classes[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mDeviation Calculations[2m > [22mshould handle zero targets[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mDiversification Scoring[2m > [22mshould calculate diversification scores correctly[32m 3[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mDiversification Scoring[2m > [22mshould handle concentrated portfolios[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mDiversification Scoring[2m > [22mshould handle portfolios with unknown tickers[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mDiversification Scoring[2m > [22mshould handle empty holdings[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mRecommendation Generation[2m > [22mshould generate rebalancing recommendations for significant deviations[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mRecommendation Generation[2m > [22mshould generate diversification recommendations for low scores[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mRecommendation Generation[2m > [22mshould handle no significant deviations[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mRecommendation Generation[2m > [22mshould handle edge case deviations[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mValidation[2m > [22mshould validate valid holdings[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mValidation[2m > [22mshould detect missing required fields[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mValidation[2m > [22mshould detect negative values[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mValidation[2m > [22mshould warn about unsupported tickers[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mValidation[2m > [22mshould handle empty holdings array[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle holdings with zero values[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle very large numbers[32m 2[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle decimal quantities and prices[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/PortfolioAnalyzer.test.js[2m > [22mPortfolioAnalyzer[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle missing asset classifications gracefully[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/integration/services/simulation.spec.js[2m > [22mSimulationService Integration[2m > [22mshould run debt vs investment simulation[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/integration/services/simulation.spec.js[2m > [22mSimulationService Integration[2m > [22mshould generate realistic scenarios[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/integration/services/simulation.spec.js[2m > [22mSimulationService Integration[2m > [22mshould calculate optimal strategy[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/integration/services/simulation.spec.js[2m > [22mSimulationService Integration[2m > [22mshould project future state[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/integration/services/simulation.spec.js[2m > [22mSimulationService Integration[2m > [22mshould handle invalid parameters[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/integration/services/simulation.spec.js[2m > [22mSimulationService Integration[2m > [22mshould handle edge cases[32m 1[2mms[22m[39m
+[90mstdout[2m | apps/web/src/features/pro/tests/simple.test.js[2m > [22m[2mSimple Test[2m > [22m[2mshould work
+[22m[39mSimple test is running
+
+[90mstdout[2m | apps/web/tests/simple.test.js[2m > [22m[2mSimple Test[2m > [22m[2mshould work
+[22m[39mSimple test is running
+
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/simple.test.js[2m > [22mSimple Test[2m > [22mshould work[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m apps/web/tests/simple.test.js[2m > [22mSimple Test[2m > [22mshould work[32m 7[2mms[22m[39m
+ [31m├ù[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mConvenience Methods[2m > [22mshould log rule triggered events[33m 5022[2mms[22m[39m
+[31m   ΓåÆ Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+ [31m├ù[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mConvenience Methods[2m > [22mshould log simulation run events[33m 5018[2mms[22m[39m
+[31m   ΓåÆ Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+ [31m├ù[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mConvenience Methods[2m > [22mshould log budget forecast events[33m 5014[2mms[22m[39m
+[31m   ΓåÆ Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+ [31m├ù[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mConvenience Methods[2m > [22mshould log portfolio analysis events[33m 5002[2mms[22m[39m
+[31m   ΓåÆ Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+ [31m├ù[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mConvenience Methods[2m > [22mshould log error events[33m 5009[2mms[22m[39m
+[31m   ΓåÆ Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+ [31m├ù[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle database not available in query methods[32m 5[2mms[22m[39m
+[31m   ΓåÆ promise resolved "[ { id: '1', ΓÇª(5) }, ΓÇª(2) ]" instead of rejecting[39m
+ [32mΓ£ô[39m apps/web/src/features/pro/tests/ExecutionLogService.simple.test.js[2m > [22mExecutionLogService - Simplified Tests[2m > [22mEdge Cases and Error Handling[2m > [22mshould handle database not available in clear old logs[32m 2[2mms[22m[39m
+
+[2m Test Files [22m [1m[31m35 failed[39m[22m[2m | [22m[1m[32m9 passed[39m[22m[90m (44)[39m
+[2m      Tests [22m [1m[31m13 failed[39m[22m[2m | [22m[1m[32m224 passed[39m[22m[90m (237)[39m
+[2m   Start at [22m 19:45:39
+[2m   Duration [22m 51.14s[2m (transform 992ms, setup 38.49s, collect 1.66s, tests 46.68s, environment 143.38s, prepare 30.16s)[22m
+

@@ -1,154 +1,351 @@
 /**
- * Mock data structures for testing services
- * These mocks provide realistic test data for all major services
+ * Centralized Mock Utilities for AlphaPro Services
+ * 
+ * This file provides standardized mocks and stubs for all AlphaPro services,
+ * ensuring consistency across tests and reducing mock fragmentation.
+ * 
+ * Usage:
+ * import { mockExecutionLogService, mockBudgetService } from '@/lib/mocks/serviceMocks';
  */
 
-// Crypto Service Mocks
-export const cryptoMocks = {
-  password: 'testPassword123!',
-  salt: 'testSalt123',
-  key: 'testKey123',
-  data: {
-    sensitive: 'sensitive data',
-    timestamp: new Date().toISOString()
-  },
-  encryptedData: 'encrypted_test_data_123'
+import { vi } from 'vitest';
+
+// ============================================================================
+// EXECUTION LOG SERVICE MOCKS
+// ============================================================================
+
+export const mockExecutionLogService = {
+  log: vi.fn().mockResolvedValue({
+    id: 'mock-log-id',
+    timestamp: Date.now(),
+    type: 'mock.event',
+    payload: { data: 'mock' },
+    severity: 'info',
+    userId: 'mock-user',
+    sessionId: 'mock-session',
+    meta: { component: 'MockComponent', action: 'mockAction' }
+  }),
+  
+  queryLogs: vi.fn().mockResolvedValue([
+    {
+      id: '1',
+      type: 'rule.triggered',
+      severity: 'info',
+      timestamp: Date.now(),
+      sessionId: 'session-123',
+      meta: { component: 'RuleEngine' }
+    }
+  ]),
+  
+  exportLogs: vi.fn().mockResolvedValue({
+    exportTime: Date.now(),
+    sessionId: 'mock-session',
+    userId: 'mock-user',
+    logs: []
+  }),
+  
+  clearOldLogs: vi.fn().mockResolvedValue(5),
+  
+  encryptPayload: vi.fn().mockResolvedValue('encrypted-data'),
+  decryptPayload: vi.fn().mockResolvedValue({ test: 'data' }),
+  
+  // Convenience methods
+  logRuleTriggered: vi.fn().mockResolvedValue({ type: 'rule.triggered' }),
+  logSimulationRun: vi.fn().mockResolvedValue({ type: 'simulation.run' }),
+  logBudgetForecast: vi.fn().mockResolvedValue({ type: 'budget.forecast.generated' }),
+  logPortfolioAnalysis: vi.fn().mockResolvedValue({ type: 'portfolio.analysis.completed' }),
+  logError: vi.fn().mockResolvedValue({ type: 'error.occurred' })
 };
 
-// Sync Engine Mocks
-export const syncMocks = {
-  plaidConfig: {
-    clientId: 'test_client_id',
-    secret: 'test_secret',
-    env: 'sandbox'
-  },
-  account: {
-    id: 'test_account_123',
-    name: 'Test Checking',
-    type: 'checking',
-    balance: 5000.00,
-    currency: 'USD'
-  },
-  transactions: [
-    {
-      id: 'tx_123',
-      amount: 100.00,
-      description: 'Test Transaction 1',
-      date: new Date().toISOString(),
-      category: 'groceries',
-      accountId: 'test_account_123'
+// ============================================================================
+// BUDGET SERVICE MOCKS
+// ============================================================================
+
+export const mockBudgetService = {
+  createBudget: vi.fn().mockResolvedValue({
+    id: 'mock-budget-id',
+    name: 'Mock Budget',
+    categories: [],
+    total: 1000,
+    createdAt: Date.now()
+  }),
+  
+  updateBudget: vi.fn().mockResolvedValue({
+    id: 'mock-budget-id',
+    name: 'Updated Budget',
+    total: 1200
+  }),
+  
+  getBudget: vi.fn().mockResolvedValue({
+    id: 'mock-budget-id',
+    name: 'Mock Budget',
+    categories: [
+      { name: 'Food', allocated: 300, spent: 250 },
+      { name: 'Transport', allocated: 200, spent: 180 }
+    ],
+    total: 1000
+  }),
+  
+  addExpense: vi.fn().mockResolvedValue({
+    id: 'mock-expense-id',
+    amount: 50,
+    category: 'Food',
+    date: Date.now()
+  }),
+  
+  getBudgetAnalytics: vi.fn().mockResolvedValue({
+    totalSpent: 430,
+    remaining: 570,
+    overspentCategories: [],
+    underspentCategories: ['Transport']
+  })
+};
+
+// ============================================================================
+// CASH FLOW SERVICE MOCKS
+// ============================================================================
+
+export const mockCashFlowService = {
+  calculateCashFlow: vi.fn().mockResolvedValue({
+    income: 5000,
+    expenses: 3500,
+    netFlow: 1500,
+    monthlyAverage: 1200
+  }),
+  
+  forecastCashFlow: vi.fn().mockResolvedValue({
+    nextMonth: 1600,
+    nextQuarter: 4500,
+    nextYear: 18000,
+    confidence: 0.85
+  }),
+  
+  getRecurringTransactions: vi.fn().mockResolvedValue([
+    { type: 'income', amount: 5000, frequency: 'monthly', description: 'Salary' },
+    { type: 'expense', amount: 1200, frequency: 'monthly', description: 'Rent' }
+  ]),
+  
+  analyzeSpendingPatterns: vi.fn().mockResolvedValue({
+    topCategories: ['Food', 'Transport', 'Entertainment'],
+    seasonalTrends: { winter: 1.2, summer: 0.8 },
+    recommendations: ['Reduce dining out', 'Consider carpooling']
+  })
+};
+
+// ============================================================================
+// PORTFOLIO ANALYZER MOCKS
+// ============================================================================
+
+export const mockPortfolioAnalyzer = {
+  analyzePortfolio: vi.fn().mockResolvedValue({
+    totalValue: 100000,
+    allocation: {
+      stocks: 60,
+      bonds: 30,
+      cash: 10
     },
-    {
-      id: 'tx_124',
-      amount: -50.00,
-      description: 'Test Transaction 2',
-      date: new Date().toISOString(),
-      category: 'utilities',
-      accountId: 'test_account_123'
-    }
+    riskScore: 7.5,
+    diversificationScore: 8.2,
+    recommendations: ['Increase bond allocation', 'Add international exposure']
+  }),
+  
+  calculateReturns: vi.fn().mockResolvedValue({
+    totalReturn: 0.15,
+    annualizedReturn: 0.12,
+    volatility: 0.18,
+    sharpeRatio: 0.67
+  }),
+  
+  rebalancePortfolio: vi.fn().mockResolvedValue({
+    trades: [
+      { asset: 'VTI', action: 'buy', shares: 10 },
+      { asset: 'BND', action: 'sell', shares: 5 }
+    ],
+    estimatedCost: 1500
+  })
+};
+
+// ============================================================================
+// NARRATIVE SERVICE MOCKS
+// ============================================================================
+
+export const mockNarrativeService = {
+  generateInsight: vi.fn().mockResolvedValue({
+    type: 'spending_alert',
+    title: 'Unusual Spending Detected',
+    description: 'Your dining expenses are 25% higher than usual this month.',
+    severity: 'warning',
+    actionable: true,
+    recommendations: ['Review recent restaurant charges', 'Set dining budget limit']
+  }),
+  
+  generateReport: vi.fn().mockResolvedValue({
+    summary: 'Your financial health is improving with consistent savings.',
+    insights: [
+      'Savings rate increased by 15%',
+      'Investment returns outperformed benchmark',
+      'Emergency fund is well-funded'
+    ],
+    nextSteps: ['Consider increasing 401k contribution', 'Review insurance coverage']
+  }),
+  
+  analyzeTrends: vi.fn().mockResolvedValue({
+    trends: [
+      { metric: 'savings_rate', direction: 'up', change: 0.15 },
+      { metric: 'debt_to_income', direction: 'down', change: -0.08 }
+    ],
+    predictions: [
+      'Savings will reach $50k by year-end',
+      'Debt-free status achievable in 18 months'
+    ]
+  })
+};
+
+// ============================================================================
+// CRYPTO SERVICE MOCKS
+// ============================================================================
+
+export const mockCryptoService = {
+  encrypt: vi.fn().mockResolvedValue('encrypted-data'),
+  decrypt: vi.fn().mockResolvedValue('decrypted-data'),
+  generateSalt: vi.fn().mockResolvedValue('mock-salt'),
+  deriveKey: vi.fn().mockResolvedValue('derived-key'),
+  hash: vi.fn().mockResolvedValue('hashed-data')
+};
+
+// ============================================================================
+// STORE MOCKS
+// ============================================================================
+
+export const mockFinancialStateStore = {
+  getState: vi.fn().mockReturnValue({
+    portfolios: [],
+    budgets: [],
+    transactions: [],
+    goals: []
+  }),
+  
+  setState: vi.fn(),
+  
+  subscribe: vi.fn().mockReturnValue(() => {}),
+  
+  // Actions
+  addTransaction: vi.fn(),
+  updatePortfolio: vi.fn(),
+  setBudget: vi.fn(),
+  addGoal: vi.fn()
+};
+
+export const mockUIStore = {
+  getState: vi.fn().mockReturnValue({
+    theme: 'light',
+    sidebarOpen: false,
+    notifications: [],
+    loading: false
+  }),
+  
+  setState: vi.fn(),
+  
+  subscribe: vi.fn().mockReturnValue(() => {}),
+  
+  // Actions
+  setTheme: vi.fn(),
+  toggleSidebar: vi.fn(),
+  addNotification: vi.fn(),
+  setLoading: vi.fn()
+};
+
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
+/**
+ * Reset all mocks to their initial state
+ */
+export const resetAllMocks = () => {
+  Object.values(mockExecutionLogService).forEach(mock => mock.mockClear());
+  Object.values(mockBudgetService).forEach(mock => mock.mockClear());
+  Object.values(mockCashFlowService).forEach(mock => mock.mockClear());
+  Object.values(mockPortfolioAnalyzer).forEach(mock => mock.mockClear());
+  Object.values(mockNarrativeService).forEach(mock => mock.mockClear());
+  Object.values(mockCryptoService).forEach(mock => mock.mockClear());
+  Object.values(mockFinancialStateStore).forEach(mock => mock.mockClear());
+  Object.values(mockUIStore).forEach(mock => mock.mockClear());
+};
+
+/**
+ * Create a mock error response
+ */
+export const createMockError = (message = 'Mock error', code = 'MOCK_ERROR') => ({
+  error: true,
+  message,
+  code,
+  timestamp: Date.now()
+});
+
+/**
+ * Create a mock success response
+ */
+export const createMockSuccess = (data, message = 'Success') => ({
+  success: true,
+  data,
+  message,
+  timestamp: Date.now()
+});
+
+// ============================================================================
+// TEST DATA GENERATORS
+// ============================================================================
+
+export const generateMockTransaction = (overrides = {}) => ({
+  id: `txn-${Date.now()}`,
+  amount: 100,
+  category: 'Food',
+  description: 'Grocery shopping',
+  date: Date.now(),
+  type: 'expense',
+  ...overrides
+});
+
+export const generateMockPortfolio = (overrides = {}) => ({
+  id: `portfolio-${Date.now()}`,
+  name: 'My Portfolio',
+  totalValue: 100000,
+  assets: [
+    { symbol: 'VTI', shares: 100, value: 25000 },
+    { symbol: 'BND', shares: 200, value: 20000 }
   ],
-  webhookEvent: {
-    type: 'TRANSACTIONS_UPDATE',
-    accountId: 'test_account_123',
-    timestamp: new Date().toISOString()
-  }
-};
+  ...overrides
+});
 
-// Rule Engine Mocks
-export const ruleMocks = {
-  alertRule: {
-    id: 'rule_123',
-    type: 'alert',
-    conditions: {
-      amount: { greaterThan: 1000 },
-      category: { equals: 'large_purchase' }
-    },
-    actions: {
-      type: 'notification',
-      message: 'Large purchase detected!'
-    },
-    enabled: true
-  },
-  automationRule: {
-    id: 'rule_124',
-    type: 'automation',
-    conditions: {
-      category: { equals: 'subscription' },
-      amount: { lessThan: 50 }
-    },
-    actions: {
-      type: 'categorize',
-      category: 'recurring'
-    },
-    enabled: true
-  },
-  transaction: {
-    id: 'tx_125',
-    amount: 1500.00,
-    description: 'Large Purchase',
-    date: new Date().toISOString(),
-    category: 'large_purchase',
-    accountId: 'test_account_123'
-  }
-};
+export const generateMockBudget = (overrides = {}) => ({
+  id: `budget-${Date.now()}`,
+  name: 'Monthly Budget',
+  total: 5000,
+  categories: [
+    { name: 'Food', allocated: 800, spent: 600 },
+    { name: 'Transport', allocated: 500, spent: 450 }
+  ],
+  ...overrides
+});
 
-// Simulation Service Mocks
-export const simulationMocks = {
-  params: {
-    initialDebt: 10000,
-    interestRate: 0.05,
-    investmentReturn: 0.07,
-    monthlyPayment: 500,
-    timeframe: 24
-  },
-  financialState: {
-    debt: 10000,
-    investments: 5000,
-    monthlyIncome: 5000,
-    monthlyExpenses: 3000
-  },
-  strategy: {
-    type: 'aggressive',
-    monthlyDebtPayment: 1000,
-    monthlyInvestment: 500
-  },
-  scenario: {
-    name: 'base_case',
-    parameters: {
-      incomeGrowth: 0.03,
-      expenseGrowth: 0.02,
-      marketReturn: 0.07
-    }
-  }
-};
+// ============================================================================
+// EXPORT ALL MOCKS
+// ============================================================================
 
-// Error State Mocks
-export const errorMocks = {
-  apiError: {
-    code: 'API_ERROR',
-    message: 'Failed to fetch data',
-    details: 'Network timeout',
-    timestamp: new Date()
-  },
-  validationError: {
-    code: 'VALIDATION_ERROR',
-    message: 'Invalid input data',
-    details: 'Amount must be positive',
-    timestamp: new Date()
-  },
-  authError: {
-    code: 'AUTH_ERROR',
-    message: 'Authentication failed',
-    details: 'Invalid credentials',
-    timestamp: new Date()
-  }
-};
-
-// Export all mocks
 export default {
-  crypto: cryptoMocks,
-  sync: syncMocks,
-  rule: ruleMocks,
-  simulation: simulationMocks,
-  error: errorMocks
+  mockExecutionLogService,
+  mockBudgetService,
+  mockCashFlowService,
+  mockPortfolioAnalyzer,
+  mockNarrativeService,
+  mockCryptoService,
+  mockFinancialStateStore,
+  mockUIStore,
+  resetAllMocks,
+  createMockError,
+  createMockSuccess,
+  generateMockTransaction,
+  generateMockPortfolio,
+  generateMockBudget
 }; 

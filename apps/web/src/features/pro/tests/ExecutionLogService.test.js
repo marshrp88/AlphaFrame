@@ -977,4 +977,71 @@ describe('ExecutionLogService', () => {
       expect(result.id).toBeDefined();
     });
   });
+
+  describe('Advanced Edge Cases & Coverage', () => {
+    it('should handle empty string inputs gracefully', async () => {
+      // Test with empty string inputs - these work with the current implementation
+      const result1 = await executionLogService.log('', {});
+      expect(result1.type).toBe('');
+      expect(result1.payload).toBeDefined();
+
+      const result2 = await executionLogService.log('test', {});
+      expect(result2.payload).toBeDefined();
+    });
+
+    it('should use fallback configuration when defaults are missing', async () => {
+      // Test with missing configuration
+      const originalConfig = executionLogService.dbName;
+      executionLogService.dbName = null;
+
+      // Should use fallback
+      const result = await executionLogService.log('fallback.test', { data: 'test' });
+      expect(result).toBeDefined();
+
+      // Restore
+      executionLogService.dbName = originalConfig;
+    });
+
+    it('should handle timeout scenarios gracefully', async () => {
+      // Mock slow operation
+      const originalEncrypt = encrypt;
+      encrypt.mockImplementation(() => new Promise(resolve => setTimeout(() => resolve('encrypted'), 100)));
+
+      const result = await executionLogService.log('timeout.test', { data: 'test' });
+      expect(result).toBeDefined();
+
+      // Restore
+      encrypt.mockImplementation(originalEncrypt);
+    });
+
+    it('should validate log entry structure integrity', async () => {
+      const result = await executionLogService.log('validation.test', { data: 'test' });
+      
+      // Verify all required fields are present and properly typed
+      expect(typeof result.id).toBe('string');
+      expect(typeof result.timestamp).toBe('number');
+      expect(typeof result.type).toBe('string');
+      expect(typeof result.severity).toBe('string');
+      expect(typeof result.userId).toBe('string');
+      expect(typeof result.sessionId).toBe('string');
+      expect(typeof result.meta).toBe('object');
+      expect(typeof result.meta.component).toBe('string');
+      expect(typeof result.meta.action).toBe('string');
+    });
+
+    it('should handle multiple log operations', async () => {
+      // Test multiple log operations sequentially
+      const results = [];
+      for (let i = 0; i < 5; i++) {
+        const result = await executionLogService.log(`sequential.test.${i}`, { testIndex: i });
+        results.push(result);
+      }
+      
+      expect(results).toHaveLength(5);
+      results.forEach((result, i) => {
+        expect(result.type).toBe(`sequential.test.${i}`);
+        expect(result.payload).toBeDefined();
+      });
+    });
+  });
 }); 

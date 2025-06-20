@@ -22,7 +22,7 @@ import { Button } from './ui/Button.jsx';
 import { Checkbox } from './ui/switch.jsx';
 import { Textarea } from './ui/textarea.jsx';
 import { Select } from './ui/Select.jsx';
-import { Badge } from './ui/badge.jsx';
+import { Badge } from '../shared/ui/badge.jsx';
 import feedbackUploader from '../lib/services/FeedbackUploader.js';
 import executionLogService from '../lib/services/ExecutionLogService.js';
 

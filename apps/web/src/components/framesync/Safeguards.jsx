@@ -5,10 +5,10 @@
  */
 
 import React, { memo, useCallback } from 'react';
-import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/Label";
-import { Switch } from "@/components/ui/switch";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Input } from "@/shared/ui/Input";
+import { Label } from "@/shared/ui/Label";
+import { Switch } from "@/shared/ui/switch";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/Card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 
@@ -144,3 +144,4 @@ function SafeguardsComponent({ value, onChange }) {
 
 // Export memoized component
 export const Safeguards = memo(SafeguardsComponent); 
+

@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/ui/badge";
 import { format } from "date-fns";
 
 /**
@@ -109,3 +109,4 @@ function ActionLogView() {
 }
 
 export default ActionLogView; 
+

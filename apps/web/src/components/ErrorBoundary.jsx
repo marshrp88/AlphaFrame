@@ -6,8 +6,8 @@
  */
 
 import React from 'react';
-import { Button } from "../components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/Card";
+import { Button } from "../shared/ui/Button.jsx";
+import { Card, CardContent, CardHeader, CardTitle } from "../shared/ui/Card.jsx";
 import { AlertCircle } from 'lucide-react';
 
 /**

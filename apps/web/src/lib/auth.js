@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAuthStore } from '@/lib/store/authStore';
+import { useAuthStore } from '../core/store/authStore.js';
 
 /**
  * useAuth hook

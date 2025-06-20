@@ -12,8 +12,8 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/Button";
+} from "@/shared/ui/dialog";
+import { Button } from "@/shared/ui/Button";
 import { AlertTriangle, Loader2 } from "lucide-react";
 import { runSimulation } from '@/lib/services/SimulationService';
 import { useFinancialStateStore } from '@/lib/store/financialStateStore';
@@ -170,3 +170,4 @@ const ConfirmationModal = ({ isOpen, action, onConfirm, onCancel }) => {
 };
 
 export default ConfirmationModal; 
+

@@ -15,7 +15,7 @@
  * zero-knowledge compliance through local-only processing.
  */
 
-import executionLogService from './ExecutionLogService.js';
+import executionLogService from '../../../core/services/ExecutionLogService.js';
 
 // Insight templates for different types of analysis
 const INSIGHT_TEMPLATES = {

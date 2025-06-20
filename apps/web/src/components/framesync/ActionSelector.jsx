@@ -11,7 +11,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/Select";
+} from "@/shared/ui/Select";
 import { Label } from '@/components/ui/Label';
 
 // Action categories and their options
@@ -100,3 +100,4 @@ function ActionSelectorComponent({ value, onChange }) {
 
 // Export memoized component
 export const ActionSelector = memo(ActionSelectorComponent); 
+
