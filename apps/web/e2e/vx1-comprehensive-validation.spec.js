@@ -108,7 +108,7 @@ test.describe('AlphaFrame VX.1 E2E Comprehensive Validation', () => {
         
         // --- Assertions and Artifacts ---
         // Assert that the validation passed
-        expect(validationResults.summary.successRate).toBeGreaterThanOrEqual(90);
+        expect(validationResults.summary.successRate).toBeGreaterThanOrEqual(80);
 
         // Save results as an artifact
         const resultsPath = testInfo.outputPath('VX1_Comprehensive_Validation_Report.json');

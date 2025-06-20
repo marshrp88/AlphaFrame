@@ -26,27 +26,27 @@ export const config = {
   
   // Plaid Configuration
   plaid: {
-    clientId: import.meta.env.VITE_PLAID_CLIENT_ID,
-    secret: import.meta.env.VITE_PLAID_SECRET,
+    clientId: import.meta.env.VITE_PLAID_CLIENT_ID || null,
+    secret: import.meta.env.VITE_PLAID_SECRET || null,
     env: import.meta.env.VITE_PLAID_ENV || 'sandbox'
   },
   
   // Authentication Configuration
   auth: {
-    domain: import.meta.env.VITE_AUTH_DOMAIN,
-    clientId: import.meta.env.VITE_AUTH_CLIENT_ID,
-    audience: import.meta.env.VITE_AUTH_AUDIENCE
+    domain: import.meta.env.VITE_AUTH_DOMAIN || null,
+    clientId: import.meta.env.VITE_AUTH_CLIENT_ID || null,
+    audience: import.meta.env.VITE_AUTH_AUDIENCE || null
   },
   
   // Webhook Configuration
   webhook: {
-    url: import.meta.env.VITE_WEBHOOK_URL,
-    secret: import.meta.env.VITE_WEBHOOK_SECRET
+    url: import.meta.env.VITE_WEBHOOK_URL || null,
+    secret: import.meta.env.VITE_WEBHOOK_SECRET || null
   },
   
   // Notification Configuration
   notifications: {
-    sendgridApiKey: import.meta.env.VITE_SENDGRID_API_KEY,
+    sendgridApiKey: import.meta.env.VITE_SENDGRID_API_KEY || null,
     fromEmail: import.meta.env.VITE_NOTIFICATION_FROM_EMAIL || 'noreply@alphaframe.com'
   },
   
@@ -66,8 +66,8 @@ export const config = {
   
   // Security Configuration
   security: {
-    encryptionKey: import.meta.env.VITE_ENCRYPTION_KEY,
-    jwtSecret: import.meta.env.VITE_JWT_SECRET
+    encryptionKey: import.meta.env.VITE_ENCRYPTION_KEY || null,
+    jwtSecret: import.meta.env.VITE_JWT_SECRET || null
   }
 };
 
@@ -127,6 +127,32 @@ export const validateConfig = () => {
 };
 
 /**
+ * Initialize configuration safely - call this instead of validating at module load
+ * @returns {Object} Initialization result
+ */
+export const initializeConfig = () => {
+  const validation = validateConfig();
+  
+  if (!validation.isValid) {
+    console.error('Configuration validation failed:', validation.errors);
+    
+    // In production, we should fail fast
+    if (isProduction()) {
+      throw new Error('Invalid configuration for production environment');
+    }
+    
+    // In development, log warnings but continue
+    console.warn('Continuing with missing configuration - features may be disabled');
+  }
+  
+  if (validation.warnings.length > 0) {
+    console.warn('Configuration warnings:', validation.warnings);
+  }
+  
+  return validation;
+};
+
+/**
  * Get feature flag value
  * @param {string} featureName - Name of the feature flag
  * @returns {boolean} Feature flag value
@@ -179,15 +205,8 @@ export const getSecureConfig = () => {
   };
 };
 
-// Validate configuration on module load
-const validation = validateConfig();
-if (!validation.isValid) {
-  console.error('Configuration validation failed:', validation.errors);
-  if (isProduction()) {
-    throw new Error('Invalid configuration for production environment');
-  }
-}
-
-if (validation.warnings.length > 0) {
-  console.warn('Configuration warnings:', validation.warnings);
-} 
+// Log configuration status on module load (but don't crash)
+console.log('🔧 Configuration module loaded');
+console.log('🔧 Environment:', config.env);
+console.log('🔧 Plaid integration:', config.plaid.clientId ? 'enabled' : 'disabled');
+console.log('🔧 Auth integration:', config.auth.domain ? 'enabled' : 'disabled'); 

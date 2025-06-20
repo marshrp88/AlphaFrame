@@ -71,8 +71,11 @@ window.ComprehensiveValidationRunner = class ComprehensiveValidationRunner {
     this.currentTest = 'App Loading';
     
     try {
-      // Test if React is loaded
-      const hasReact = typeof React !== 'undefined';
+      // Test if React is loaded - check multiple ways
+      const hasReact = typeof React !== 'undefined' || 
+                      typeof window.React !== 'undefined' ||
+                      document.querySelector('[data-reactroot]') !== null ||
+                      document.querySelector('#root').children.length > 0;
       this.logResult(this.currentTest, hasReact, 
         hasReact ? 'React loaded successfully' : 'React not loaded');
       

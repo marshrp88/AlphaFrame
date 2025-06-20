@@ -1,0 +1,120 @@
+{
+  "summary": {
+    "total": 17,
+    "passed": 15,
+    "failed": 2,
+    "successRate": 88.2,
+    "productionReady": false
+  },
+  "results": [
+    {
+      "test": "Browser Environment",
+      "passed": true,
+      "details": "Window object available",
+      "timestamp": "2025-06-20T19:49:01.362Z"
+    },
+    {
+      "test": "LocalStorage",
+      "passed": true,
+      "details": "LocalStorage available",
+      "timestamp": "2025-06-20T19:49:01.362Z"
+    },
+    {
+      "test": "IndexedDB",
+      "passed": true,
+      "details": "IndexedDB available",
+      "timestamp": "2025-06-20T19:49:01.363Z"
+    },
+    {
+      "test": "Fetch API",
+      "passed": true,
+      "details": "Fetch API available",
+      "timestamp": "2025-06-20T19:49:01.363Z"
+    },
+    {
+      "test": "App Loading",
+      "passed": true,
+      "details": "React loaded successfully",
+      "timestamp": "2025-06-20T19:49:01.365Z"
+    },
+    {
+      "test": "App Root Element",
+      "passed": true,
+      "details": "App root element found",
+      "timestamp": "2025-06-20T19:49:01.367Z"
+    },
+    {
+      "test": "App Content",
+      "passed": true,
+      "details": "App has rendered content",
+      "timestamp": "2025-06-20T19:49:01.367Z"
+    },
+    {
+      "test": "LocalStorage Persistence",
+      "passed": true,
+      "details": "LocalStorage is accessible and persistent.",
+      "timestamp": "2025-06-20T19:49:01.368Z"
+    },
+    {
+      "test": "Auth Store Evidence",
+      "passed": true,
+      "details": "Auth token found in localStorage.",
+      "timestamp": "2025-06-20T19:49:01.369Z"
+    },
+    {
+      "test": "Sync Engine Evidence",
+      "passed": false,
+      "details": "SyncStatusWidget not found or not connected.",
+      "timestamp": "2025-06-20T19:49:01.369Z"
+    },
+    {
+      "test": "ExecutionLogService Evidence",
+      "passed": false,
+      "details": "No logs found in IndexedDB.",
+      "timestamp": "2025-06-20T19:49:01.378Z"
+    },
+    {
+      "test": "UI Components",
+      "passed": true,
+      "details": "3/4 UI element types present",
+      "timestamp": "2025-06-20T19:49:01.379Z"
+    },
+    {
+      "test": "Network Connectivity",
+      "passed": true,
+      "details": "Network connectivity working",
+      "timestamp": "2025-06-20T19:49:03.874Z"
+    },
+    {
+      "test": "Performance",
+      "passed": true,
+      "details": "Page load time: 4951.60ms",
+      "timestamp": "2025-06-20T19:49:03.874Z"
+    },
+    {
+      "test": "Memory Usage",
+      "passed": true,
+      "details": "Memory usage: 9.54MB (0.3%)",
+      "timestamp": "2025-06-20T19:49:03.875Z"
+    },
+    {
+      "test": "Security",
+      "passed": true,
+      "details": "Running on secure context",
+      "timestamp": "2025-06-20T19:49:03.875Z"
+    },
+    {
+      "test": "Service Worker Support",
+      "passed": true,
+      "details": "Service workers available",
+      "timestamp": "2025-06-20T19:49:03.875Z"
+    }
+  ],
+  "timestamp": "2025-06-20T19:49:03.875Z",
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/138.0.7204.15 Safari/537.36",
+    "url": "http://localhost:5178/",
+    "protocol": "http:",
+    "hostname": "localhost"
+  }
+}
