@@ -10,8 +10,11 @@ import { useFinancialStateStore } from '../store/financialStateStore';
 import { useUIStore } from '../store/uiStore';
 import { get } from './secureVault';
 import { canExecuteAction } from './PermissionEnforcer';
-import { useLogStore } from "@/lib/store/logStore";
+import { useLogStore } from '../store/logStore';
 import { ActionSchema } from '../validation/schemas';
+import { z } from 'zod';
+import { executeWebhook } from './WebhookService.js';
+import { sendEmail } from './NotificationService.js';
 
 const PLAID_API_BASE = 'https://api.plaid.com';
 
@@ -270,8 +273,39 @@ export class ExecutionController {
    * @private
    */
   static async handleWebhook(payload) {
-    // Implementation for webhook calls
-    return { success: true, webhookId: 'mock_webhook_id' };
+    try {
+      // Validate webhook payload
+      if (!payload.url) {
+        throw new Error('Webhook URL is required');
+      }
+
+      // Execute webhook using real service
+      const result = await executeWebhook(payload);
+      
+      // Log successful webhook execution
+      useLogStore.getState().queueAction({ 
+        type: 'WEBHOOK_EXECUTED', 
+        payload: { 
+          url: payload.url, 
+          result,
+          timestamp: Date.now() 
+        } 
+      });
+
+      return result;
+    } catch (error) {
+      // Log failed webhook execution
+      useLogStore.getState().queueAction({ 
+        type: 'WEBHOOK_FAILED', 
+        payload: { 
+          url: payload.url, 
+          error: error.message,
+          timestamp: Date.now() 
+        } 
+      });
+      
+      throw error;
+    }
   }
 
   /**
@@ -295,5 +329,43 @@ export class ExecutionController {
     // Implementation for memo additions
     useLogStore.getState().queueAction({ type: 'ADD_MEMO', payload: { memo: payload.memo, timestamp: Date.now() } });
     return { success: true, memoId: 'mock_memo_id' };
+  }
+
+  /**
+   * Handles communication actions (email, notifications)
+   * @param {Object} payload - The communication configuration
+   * @returns {Promise<Object>} The result of the communication
+   * @private
+   */
+  static async handleCommunicationAction(payload) {
+    try {
+      const { actionType, payload: actionPayload } = payload;
+      
+      switch (actionType) {
+        case 'SEND_EMAIL':
+          return await sendEmail(actionPayload);
+        
+        case 'SEND_NOTIFICATION':
+          // For now, treat notifications as emails
+          return await sendEmail({
+            ...actionPayload,
+            template: actionPayload.template || 'notification'
+          });
+        
+        case 'CREATE_ALERT':
+          // Create in-app alert
+          useUIStore.getState().showAlert({
+            type: actionPayload.type || 'info',
+            message: actionPayload.message,
+            title: actionPayload.title
+          });
+          return { success: true, alertId: `alert_${Date.now()}` };
+        
+        default:
+          throw new Error(`Unsupported communication action: ${actionType}`);
+      }
+    } catch (error) {
+      throw new Error(`Communication action failed: ${error.message}`);
+    }
   }
 } 
