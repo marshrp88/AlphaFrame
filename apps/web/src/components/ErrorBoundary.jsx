@@ -1,12 +1,30 @@
+/**
+ * ErrorBoundary.jsx - AlphaFrame VX.1 Finalization
+ * 
+ * Purpose: Global error boundary that catches React errors
+ * and displays user-friendly fallback UI with recovery options.
+ * 
+ * Procedure:
+ * 1. Catch JavaScript errors in component tree
+ * 2. Log errors to Sentry for debugging
+ * 3. Display ErrorBoundaryFallback component
+ * 4. Prevent app crashes and maintain user trust
+ * 
+ * Conclusion: Provides robust error handling and recovery
+ * for production-ready user experience.
+ */
+
 import React from "react";
-import { Button } from "../shared/ui/Button.jsx";
-import { Card, CardContent, CardHeader, CardTitle } from "../shared/ui/Card.jsx";
-import { AlertCircle } from "lucide-react";
+import { ErrorBoundaryFallback } from "../shared/components/ErrorBoundaryFallback.jsx";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { 
+      hasError: false, 
+      error: null, 
+      componentStack: null 
+    };
   }
 
   static getDerivedStateFromError(error) {
@@ -15,32 +33,34 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     console.error("ErrorBoundary caught an error:", error, errorInfo);
+    
+    // Update state with component stack
+    this.setState({ componentStack: errorInfo.componentStack });
+    
+    // Log to Sentry if available
+    if (window.Sentry) {
+      window.Sentry.captureException(error, {
+        contexts: {
+          component: {
+            stack: errorInfo.componentStack
+          }
+        },
+        tags: {
+          errorType: 'react_error_boundary',
+          component: 'ErrorBoundary'
+        }
+      });
+    }
   }
 
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex items-center justify-center h-screen">
-          <Card className="w-full max-w-lg text-center p-6">
-            <CardHeader>
-              <div className="mx-auto bg-red-100 p-3 rounded-full">
-                <AlertCircle className="h-8 w-8 text-red-600" />
-              </div>
-              <CardTitle className="mt-4">Application Error</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">
-                Something went wrong. Please try refreshing the page.
-              </p>
-              <pre className="text-xs text-left p-2 bg-gray-100 rounded overflow-auto mb-4">
-                {this.state.error?.message || "No error message available."}
-              </pre>
-              <Button onClick={() => window.location.reload()}>
-                Refresh Page
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+        <ErrorBoundaryFallback
+          error={this.state.error}
+          resetError={() => this.setState({ hasError: false, error: null, componentStack: null })}
+          componentStack={this.state.componentStack}
+        />
       );
     }
 

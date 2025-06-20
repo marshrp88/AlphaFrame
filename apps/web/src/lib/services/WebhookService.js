@@ -1,22 +1,74 @@
 /**
- * WebhookService.js - AlphaFrame VX.1
+ * WebhookService.js - AlphaFrame VX.1 Finalization
  * 
  * Purpose: Real webhook execution service with security validation,
- * retry logic, and comprehensive logging for external integrations.
+ * retry logic, comprehensive logging, and schema validation for
+ * external integrations.
  * 
  * Procedure:
- * 1. Validate webhook payload and security headers
+ * 1. Validate webhook payload and security headers with Zod schemas
  * 2. Execute webhook with proper error handling
  * 3. Implement retry logic for failed webhooks
  * 4. Log all webhook activities and results
  * 5. Support webhook signature verification
+ * 6. Validate incoming webhook data before processing
  * 
  * Conclusion: Provides secure, reliable webhook execution
- * with comprehensive monitoring and error recovery.
+ * with comprehensive monitoring, error recovery, and data validation.
  */
 
+import { z } from 'zod';
 import { config, getFeatureFlag } from '../config.js';
 import executionLogService from '../../core/services/ExecutionLogService.js';
+
+/**
+ * Webhook payload validation schema
+ */
+const WebhookPayloadSchema = z.object({
+  url: z.string().url('Invalid webhook URL'),
+  method: z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']).default('POST'),
+  headers: z.record(z.string()).optional(),
+  body: z.any().optional(),
+  secret: z.string().optional(),
+  auth: z.object({
+    type: z.enum(['bearer', 'basic']),
+    token: z.string().optional(),
+    username: z.string().optional(),
+    password: z.string().optional()
+  }).optional()
+});
+
+/**
+ * Plaid webhook transaction schema
+ */
+const PlaidTransactionSchema = z.object({
+  account_id: z.string(),
+  amount: z.number(),
+  merchant_name: z.string().optional(),
+  category: z.array(z.string()).optional(),
+  date: z.string(), // ISO date string
+  transaction_id: z.string(),
+  pending: z.boolean().optional(),
+  payment_channel: z.string().optional(),
+  transaction_type: z.string().optional()
+});
+
+/**
+ * Plaid webhook payload schema
+ */
+const PlaidWebhookSchema = z.object({
+  webhook_type: z.string(),
+  webhook_code: z.string(),
+  item_id: z.string(),
+  new_transactions: z.number().optional(),
+  removed_transactions: z.array(z.string()).optional(),
+  transactions: z.array(PlaidTransactionSchema).optional(),
+  error: z.object({
+    error_type: z.string(),
+    error_code: z.string(),
+    error_message: z.string()
+  }).optional()
+});
 
 /**
  * Webhook execution configuration
@@ -45,29 +97,23 @@ export const executeWebhook = async (payload) => {
       throw new Error('Webhooks are disabled in current environment');
     }
 
-    // Validate payload
-    if (!payload.url) {
-      throw new Error('Webhook URL is required');
-    }
-
-    if (!payload.method) {
-      payload.method = 'POST';
-    }
+    // Validate payload with Zod schema
+    const validatedPayload = WebhookPayloadSchema.parse(payload);
 
     // Validate URL security
-    if (!isValidWebhookUrl(payload.url)) {
+    if (!isValidWebhookUrl(validatedPayload.url)) {
       throw new Error('Invalid webhook URL - must be HTTPS in production');
     }
 
     // Prepare request
-    const requestConfig = await prepareWebhookRequest(payload);
+    const requestConfig = await prepareWebhookRequest(validatedPayload);
     
     // Execute with retry logic
-    const result = await executeWithRetry(requestConfig, payload);
+    const result = await executeWithRetry(requestConfig, validatedPayload);
     
     await executionLogService.log('webhook.executed.success', {
-      url: maskUrl(payload.url),
-      method: payload.method,
+      url: maskUrl(validatedPayload.url),
+      method: validatedPayload.method,
       statusCode: result.status,
       responseTime: result.responseTime,
       retryCount: result.retryCount
@@ -83,6 +129,16 @@ export const executeWebhook = async (payload) => {
     };
 
   } catch (error) {
+    // Handle Zod validation errors
+    if (error instanceof z.ZodError) {
+      const validationError = new Error(`Webhook payload validation failed: ${error.errors.map(e => e.message).join(', ')}`);
+      await executionLogService.logError('webhook.validation.failed', validationError, {
+        errors: error.errors,
+        payload: payload
+      });
+      throw validationError;
+    }
+
     await executionLogService.logError('webhook.execution.failed', error, {
       url: maskUrl(payload.url),
       method: payload.method
@@ -90,6 +146,147 @@ export const executeWebhook = async (payload) => {
 
     throw new Error(`Webhook execution failed: ${error.message}`);
   }
+};
+
+/**
+ * Handle incoming Plaid webhook with schema validation
+ * @param {Object} webhookData - Incoming webhook data
+ * @param {string} signature - Webhook signature for verification
+ * @returns {Promise<Object>} Processed webhook result
+ */
+export const handlePlaidWebhook = async (webhookData, signature) => {
+  try {
+    // Validate webhook signature if provided
+    if (signature && config.plaid.webhookSecret) {
+      const isValid = await verifyWebhookSignature(
+        JSON.stringify(webhookData),
+        signature,
+        config.plaid.webhookSecret
+      );
+      
+      if (!isValid) {
+        throw new Error('Invalid webhook signature');
+      }
+    }
+
+    // Validate webhook data with Zod schema
+    const validatedData = PlaidWebhookSchema.parse(webhookData);
+
+    // Log successful webhook receipt
+    await executionLogService.log('plaid.webhook.received', {
+      webhookType: validatedData.webhook_type,
+      webhookCode: validatedData.webhook_code,
+      itemId: validatedData.item_id,
+      newTransactions: validatedData.new_transactions || 0,
+      removedTransactions: validatedData.removed_transactions?.length || 0
+    });
+
+    // Process based on webhook type
+    switch (validatedData.webhook_type) {
+      case 'TRANSACTIONS':
+        return await processTransactionWebhook(validatedData);
+      case 'ITEM':
+        return await processItemWebhook(validatedData);
+      case 'ACCOUNTS':
+        return await processAccountWebhook(validatedData);
+      default:
+        await executionLogService.log('plaid.webhook.unknown_type', {
+          webhookType: validatedData.webhook_type
+        });
+        return { processed: false, reason: 'Unknown webhook type' };
+    }
+
+  } catch (error) {
+    // Handle Zod validation errors
+    if (error instanceof z.ZodError) {
+      const validationError = new Error(`Plaid webhook validation failed: ${error.errors.map(e => e.message).join(', ')}`);
+      await executionLogService.logError('plaid.webhook.validation.failed', validationError, {
+        errors: error.errors,
+        webhookData: webhookData
+      });
+      throw validationError;
+    }
+
+    await executionLogService.logError('plaid.webhook.processing.failed', error, {
+      webhookData: webhookData
+    });
+
+    throw new Error(`Plaid webhook processing failed: ${error.message}`);
+  }
+};
+
+/**
+ * Process transaction webhook
+ * @param {Object} webhookData - Validated webhook data
+ * @returns {Promise<Object>} Processing result
+ */
+const processTransactionWebhook = async (webhookData) => {
+  try {
+    if (webhookData.transactions && webhookData.transactions.length > 0) {
+      // Process new transactions
+      const processedTransactions = webhookData.transactions.map(transaction => ({
+        id: transaction.transaction_id,
+        accountId: transaction.account_id,
+        amount: transaction.amount,
+        merchantName: transaction.merchant_name,
+        category: transaction.category?.[0] || 'Other',
+        date: transaction.date,
+        pending: transaction.pending || false,
+        paymentChannel: transaction.payment_channel,
+        transactionType: transaction.transaction_type
+      }));
+
+      // Store transactions (this would integrate with your transaction store)
+      // await transactionStore.addTransactions(processedTransactions);
+
+      await executionLogService.log('plaid.transactions.processed', {
+        count: processedTransactions.length,
+        itemId: webhookData.item_id
+      });
+
+      return {
+        processed: true,
+        transactionsProcessed: processedTransactions.length,
+        transactions: processedTransactions
+      };
+    }
+
+    return { processed: true, transactionsProcessed: 0 };
+
+  } catch (error) {
+    await executionLogService.logError('plaid.transactions.processing.failed', error, {
+      webhookData: webhookData
+    });
+    throw error;
+  }
+};
+
+/**
+ * Process item webhook
+ * @param {Object} webhookData - Validated webhook data
+ * @returns {Promise<Object>} Processing result
+ */
+const processItemWebhook = async (webhookData) => {
+  await executionLogService.log('plaid.item.webhook.processed', {
+    webhookCode: webhookData.webhook_code,
+    itemId: webhookData.item_id
+  });
+
+  return { processed: true, type: 'item' };
+};
+
+/**
+ * Process account webhook
+ * @param {Object} webhookData - Validated webhook data
+ * @returns {Promise<Object>} Processing result
+ */
+const processAccountWebhook = async (webhookData) => {
+  await executionLogService.log('plaid.account.webhook.processed', {
+    webhookCode: webhookData.webhook_code,
+    itemId: webhookData.item_id
+  });
+
+  return { processed: true, type: 'account' };
 };
 
 /**

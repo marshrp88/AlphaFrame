@@ -1,22 +1,80 @@
 /**
- * Rule Engine 2.0 - AlphaPro VX.0 Enhanced
+ * Rule Engine 2.0 - AlphaPro VX.1 Finalization
  * 
  * Purpose: Advanced rule evaluation system with multi-condition chaining,
- * calendar triggers, live simulation, and comprehensive logging for the
- * AlphaPro suite.
+ * calendar triggers, live simulation, comprehensive logging, and robust
+ * schema validation for the AlphaPro suite.
  * 
  * Procedure:
  * 1. Evaluates complex rule conditions with AND/OR/NOT logic
  * 2. Supports calendar and event-based triggers
  * 3. Provides live simulation of rule outcomes
  * 4. Integrates with ExecutionLogService for comprehensive tracking
+ * 5. Validates all rule data with Zod schemas before processing
+ * 6. Ensures data integrity and prevents invalid rule execution
  * 
  * Conclusion: Delivers sophisticated rule processing while maintaining
- * zero-knowledge compliance and robust error handling.
+ * zero-knowledge compliance, robust error handling, and data validation.
  */
 
+import { z } from 'zod';
 import { RuleSchema } from '../validation/schemas';
 import executionLogService from '../../core/services/ExecutionLogService.js';
+
+/**
+ * Enhanced rule validation schemas
+ */
+const RuleConditionSchema = z.object({
+  field: z.string().min(1, 'Field is required'),
+  operator: z.enum([
+    '>', '<', '>=', '<=', '===', '!==', 'contains', 'startsWith', 'endsWith',
+    'isToday', 'isThisWeek', 'isThisMonth'
+  ], { errorMap: () => ({ message: 'Invalid operator' }) }),
+  value: z.any(),
+  logicalOperator: z.enum(['AND', 'OR', 'NOT']).optional(),
+  conditions: z.array(z.lazy(() => RuleConditionSchema)).optional()
+});
+
+const RuleActionSchema = z.object({
+  type: z.enum(['notification', 'categorization', 'webhook', 'budget_adjustment', 'custom']),
+  parameters: z.record(z.any()).optional(),
+  webhook: z.object({
+    url: z.string().url('Invalid webhook URL'),
+    method: z.enum(['GET', 'POST', 'PUT', 'DELETE']).default('POST'),
+    headers: z.record(z.string()).optional(),
+    body: z.any().optional()
+  }).optional(),
+  notification: z.object({
+    title: z.string(),
+    message: z.string(),
+    type: z.enum(['info', 'warning', 'error', 'success']).default('info')
+  }).optional()
+});
+
+const RuleSchemaV2 = z.object({
+  id: z.string().optional(),
+  name: z.string().min(1, 'Rule name is required').max(100, 'Rule name too long'),
+  description: z.string().optional(),
+  conditions: z.array(RuleConditionSchema).min(1, 'At least one condition is required'),
+  action: RuleActionSchema,
+  enabled: z.boolean().default(true),
+  priority: z.number().min(1).max(10).default(5),
+  tags: z.array(z.string()).optional(),
+  created: z.date().optional(),
+  updated: z.date().optional()
+});
+
+const TransactionSchema = z.object({
+  id: z.string(),
+  amount: z.number(),
+  merchant_name: z.string().optional(),
+  category: z.string().optional(),
+  date: z.string().or(z.date()),
+  account_id: z.string().optional(),
+  pending: z.boolean().optional(),
+  payment_channel: z.string().optional(),
+  transaction_type: z.string().optional()
+});
 
 // Enhanced rule operators
 const OPERATORS = {
@@ -71,26 +129,42 @@ class RuleEngine {
   }
 
   /**
-   * Register a rule with the engine
+   * Register a rule with the engine with enhanced validation
    * @param {Object} rule - Rule object
    * @returns {string} Rule ID
    */
   async registerRule(rule) {
     try {
-      // Validate rule structure
-      const isValid = await this.validateRule(rule);
-      if (!isValid) {
-        throw new Error('Invalid rule structure');
+      // Validate rule with enhanced schema
+      const validationResult = RuleSchemaV2.safeParse(rule);
+      if (!validationResult.success) {
+        const validationError = new Error(`Rule validation failed: ${validationResult.error.errors.map(e => e.message).join(', ')}`);
+        await executionLogService.logError('rule.validation.failed', validationError, {
+          errors: validationResult.error.errors,
+          rule: rule
+        });
+        throw validationError;
       }
 
-      const ruleId = rule.id || `rule_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      this.rules.set(ruleId, { ...rule, id: ruleId });
+      const validatedRule = validationResult.data;
+      const ruleId = validatedRule.id || `rule_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Add metadata
+      const ruleWithMetadata = {
+        ...validatedRule,
+        id: ruleId,
+        created: validatedRule.created || new Date(),
+        updated: new Date()
+      };
+
+      this.rules.set(ruleId, ruleWithMetadata);
 
       await executionLogService.log('rule.registered', {
         ruleId,
-        ruleName: rule.name,
-        conditionsCount: rule.conditions.length,
-        actionType: rule.action?.type
+        ruleName: ruleWithMetadata.name,
+        conditionsCount: ruleWithMetadata.conditions.length,
+        actionType: ruleWithMetadata.action?.type,
+        priority: ruleWithMetadata.priority
       });
 
       return ruleId;
@@ -101,35 +175,139 @@ class RuleEngine {
   }
 
   /**
-   * Evaluate a single rule against transaction data
+   * Evaluate a single rule against transaction data with validation
    * @param {Object} rule - Rule object
    * @param {Object} transaction - Transaction data
    * @returns {Promise<boolean>} Evaluation result
    */
   async evaluateRule(rule, transaction) {
     try {
-      // Validate inputs
-      const parsed = RuleSchema.safeParse(rule);
-      if (!parsed.success || !transaction) {
-        throw new Error('Invalid rule or transaction object provided.');
+      // Validate rule with enhanced schema
+      const ruleValidation = RuleSchemaV2.safeParse(rule);
+      if (!ruleValidation.success) {
+        const validationError = new Error(`Rule validation failed: ${ruleValidation.error.errors.map(e => e.message).join(', ')}`);
+        await executionLogService.logError('rule.evaluation.validation.failed', validationError, {
+          errors: ruleValidation.error.errors,
+          rule: rule
+        });
+        throw validationError;
       }
-      rule = parsed.data;
+
+      // Validate transaction
+      const transactionValidation = TransactionSchema.safeParse(transaction);
+      if (!transactionValidation.success) {
+        const validationError = new Error(`Transaction validation failed: ${transactionValidation.error.errors.map(e => e.message).join(', ')}`);
+        await executionLogService.logError('rule.evaluation.transaction.validation.failed', validationError, {
+          errors: transactionValidation.error.errors,
+          transaction: transaction
+        });
+        throw validationError;
+      }
+
+      const validatedRule = ruleValidation.data;
+      const validatedTransaction = transactionValidation.data;
 
       // Evaluate conditions
-      const result = await this.evaluateConditions(rule.conditions, transaction);
+      const result = await this.evaluateConditions(validatedRule.conditions, validatedTransaction);
 
       // Log evaluation
       await executionLogService.log('rule.evaluated', {
-        ruleId: rule.id,
-        ruleName: rule.name,
+        ruleId: validatedRule.id,
+        ruleName: validatedRule.name,
         result,
-        transactionId: transaction.id,
-        conditionsCount: rule.conditions.length
+        transactionId: validatedTransaction.id,
+        conditionsCount: validatedRule.conditions.length,
+        priority: validatedRule.priority
       });
 
       return result;
     } catch (error) {
       await executionLogService.logError('rule.evaluation.failed', error, { rule, transaction });
+      throw error;
+    }
+  }
+
+  /**
+   * Create a new rule with validation
+   * @param {Object} ruleData - Rule data
+   * @returns {Promise<Object>} Created rule
+   */
+  async createRule(ruleData) {
+    try {
+      // Validate rule data
+      const validationResult = RuleSchemaV2.safeParse(ruleData);
+      if (!validationResult.success) {
+        const validationError = new Error(`Rule creation validation failed: ${validationResult.error.errors.map(e => e.message).join(', ')}`);
+        await executionLogService.logError('rule.creation.validation.failed', validationError, {
+          errors: validationResult.error.errors,
+          ruleData: ruleData
+        });
+        throw validationError;
+      }
+
+      const validatedRule = validationResult.data;
+      
+      // Register the rule
+      const ruleId = await this.registerRule(validatedRule);
+      
+      // Return the created rule
+      const createdRule = this.rules.get(ruleId);
+      
+      await executionLogService.log('rule.created', {
+        ruleId,
+        ruleName: createdRule.name,
+        actionType: createdRule.action.type
+      });
+
+      return createdRule;
+    } catch (error) {
+      await executionLogService.logError('rule.creation.failed', error, { ruleData });
+      throw error;
+    }
+  }
+
+  /**
+   * Update an existing rule with validation
+   * @param {string} ruleId - Rule ID
+   * @param {Object} updates - Rule updates
+   * @returns {Promise<Object>} Updated rule
+   */
+  async updateRule(ruleId, updates) {
+    try {
+      const existingRule = this.rules.get(ruleId);
+      if (!existingRule) {
+        throw new Error(`Rule with ID ${ruleId} not found`);
+      }
+
+      // Merge updates with existing rule
+      const updatedRule = { ...existingRule, ...updates, updated: new Date() };
+
+      // Validate the updated rule
+      const validationResult = RuleSchemaV2.safeParse(updatedRule);
+      if (!validationResult.success) {
+        const validationError = new Error(`Rule update validation failed: ${validationResult.error.errors.map(e => e.message).join(', ')}`);
+        await executionLogService.logError('rule.update.validation.failed', validationError, {
+          errors: validationResult.error.errors,
+          ruleId,
+          updates: updates
+        });
+        throw validationError;
+      }
+
+      const validatedRule = validationResult.data;
+      
+      // Update the rule
+      this.rules.set(ruleId, validatedRule);
+
+      await executionLogService.log('rule.updated', {
+        ruleId,
+        ruleName: validatedRule.name,
+        updatedFields: Object.keys(updates)
+      });
+
+      return validatedRule;
+    } catch (error) {
+      await executionLogService.logError('rule.update.failed', error, { ruleId, updates });
       throw error;
     }
   }
