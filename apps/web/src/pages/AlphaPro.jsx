@@ -1,29 +1,12 @@
-/**
- * AlphaPro.jsx
- * 
- * Purpose: Main AlphaPro dashboard that provides navigation to all
- * MVP-Pro features including portfolio optimization, budgeting,
- * reporting, and feedback systems.
- * 
- * Procedure:
- * 1. Display welcome message and feature overview
- * 2. Provide navigation cards to all major features
- * 3. Show quick stats and recent activity
- * 4. Include feedback and help options
- * 
- * Conclusion: Central hub for all AlphaPro functionality with
- * intuitive navigation and user-friendly interface.
- */
-
 import React from 'react';
-import { Card } from "@/shared/ui/Card.jsx";
-import { Badge } from "@/shared/ui/badge.jsx";
-import DashboardModeManager from "../features/pro/components/DashboardModeManager.jsx"; // Corrected import path
+import { Card } from '@/shared/ui/Card.jsx';
+import { Badge } from '@/shared/ui/badge.jsx';
+import DashboardModeManager from '../features/pro/components/DashboardModeManager.jsx';
+import FeedbackModule from '../features/pro/components/FeedbackModule.jsx';
 
 const AlphaProDashboard = () => {
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <div>
@@ -35,18 +18,16 @@ const AlphaProDashboard = () => {
           <Badge variant="outline">MVP-Pro v1.0</Badge>
         </div>
       </div>
-      
-      {/* Dashboard Mode Manager is now the core of this page */}
       <div className="mb-8">
         <DashboardModeManager />
       </div>
-
-      {/* The incorrect feature grid has been removed. Navigation is handled by the manager. */}
+      <div className="mt-8">
+        <FeedbackModule />
+      </div>
     </div>
   );
 };
 
-// Main AlphaPro component simplified
 export default function AlphaPro() {
   return <AlphaProDashboard />;
 } 

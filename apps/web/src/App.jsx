@@ -13,11 +13,11 @@ function App() {
     }}>
       <nav style={{ padding: '1rem', borderBottom: '1px solid #eee' }}>
         <Link to="/" style={{ marginRight: '1rem', color: '#646cff' }}>Home</Link>
-        <Link to="/pro" style={{ color: '#646cff' }}>AlphaPro</Link>
+        <Link to="/alphapro" style={{ color: '#646cff' }}>AlphaPro</Link>
       </nav>
       <Routes>
         <Route path="/" element={<h1 style={{ padding: '2rem' }}>✅ AlphaFrame Home is Rendering</h1>} />
-        <Route path="/pro/*" element={<PrivateRoute><AlphaPro /></PrivateRoute>} />
+        <Route path="/alphapro" element={<PrivateRoute><AlphaPro /></PrivateRoute>} />
       </Routes>
     </div>
   )
