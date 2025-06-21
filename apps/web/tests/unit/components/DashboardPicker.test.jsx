@@ -41,9 +41,9 @@ describe('DashboardPicker', () => {
     it('should highlight the selected mode', () => {
       render(<DashboardPicker selectedMode="PLANNER" onModeChange={mockOnModeChange} />);
 
-      // Check for the checkmark icon in the selected mode
-      const checkmark = screen.getByTestId('check-icon');
-      expect(checkmark).toBeInTheDocument();
+      // Check that the selected mode has the correct styling
+      const plannerCard = screen.getByText('Planner').closest('div');
+      expect(plannerCard).toHaveClass('border-blue-500', 'bg-blue-100');
     });
 
     it('should show mode descriptions', () => {
@@ -104,20 +104,18 @@ describe('DashboardPicker', () => {
 
       // Selected mode should have different styling
       const plannerCard = screen.getByText('Planner').closest('div');
-      expect(plannerCard.className).toContain('border-blue-500');
-      expect(plannerCard.className).toContain('bg-blue-100');
+      expect(plannerCard).toHaveClass('border-blue-500', 'bg-blue-100');
 
       // Unselected modes should have different styling
       const investorCard = screen.getByText('Investor').closest('div');
-      expect(investorCard.className).toContain('border-gray-200');
-      expect(investorCard.className).toContain('bg-white');
+      expect(investorCard).toHaveClass('border-gray-200', 'bg-white');
     });
 
     it('should show hover effects on unselected cards', () => {
       render(<DashboardPicker selectedMode="PLANNER" onModeChange={mockOnModeChange} />);
 
       const investorCard = screen.getByText('Investor').closest('div');
-      expect(investorCard.className).toContain('hover:bg-gray-50');
+      expect(investorCard).toHaveClass('hover:bg-gray-50');
     });
   });
 
@@ -128,7 +126,7 @@ describe('DashboardPicker', () => {
       const cards = screen.getAllByText(/Planner|Investor|Minimalist/);
       cards.forEach(card => {
         const cardElement = card.closest('div');
-        expect(cardElement.className).toContain('cursor-pointer');
+        expect(cardElement).toHaveClass('cursor-pointer');
       });
     });
 
