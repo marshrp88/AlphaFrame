@@ -63,6 +63,11 @@ describe('PlaidService - Fixed', () => {
 
   describe('Link Token Management', () => {
     it('should create link token successfully', async () => {
+      // Ensure the mock returns the expected structure
+      global.testUtils.mockPlaidClient.linkTokenCreate.mockResolvedValue({
+        data: { link_token: 'test_link_token_12345' }
+      });
+
       const result = await plaidService.createLinkToken({
         user: { id: 'test_user_123' },
         clientName: 'AlphaFrame',
@@ -105,6 +110,11 @@ describe('PlaidService - Fixed', () => {
 
   describe('Public Token Exchange', () => {
     it('should exchange public token successfully', async () => {
+      // Ensure the mock returns the expected structure
+      global.testUtils.mockPlaidClient.itemPublicTokenExchange.mockResolvedValue({
+        data: { access_token: 'test_access_token_67890' }
+      });
+
       const result = await plaidService.exchangePublicToken('test_public_token');
 
       expect(result.success).toBe(true);
@@ -128,6 +138,11 @@ describe('PlaidService - Fixed', () => {
     it('should get account balances successfully', async () => {
       plaidService.accessToken = 'test_access_token';
       
+      // Ensure the mock returns the expected structure
+      global.testUtils.mockPlaidClient.accountsGet.mockResolvedValue({
+        data: { accounts: [{ account_id: 'test_account', balances: { available: 1000 } }] }
+      });
+      
       const result = await plaidService.getAccountBalances();
 
       expect(result.success).toBe(true);
@@ -148,6 +163,11 @@ describe('PlaidService - Fixed', () => {
   describe('Transaction Management', () => {
     it('should get transactions successfully', async () => {
       plaidService.accessToken = 'test_access_token';
+      
+      // Ensure the mock returns the expected structure
+      global.testUtils.mockPlaidClient.transactionsGet.mockResolvedValue({
+        data: { transactions: [{ transaction_id: 'test_transaction', amount: 100 }] }
+      });
       
       const result = await plaidService.getTransactions('2024-01-01', '2024-01-31');
 

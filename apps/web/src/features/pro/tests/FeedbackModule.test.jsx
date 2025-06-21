@@ -27,24 +27,10 @@ vi.mock('../../../core/services/ExecutionLogService.js', () => ({
 describe('FeedbackModule', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    
-    // Mock document methods
-    global.document.createElement = vi.fn(() => ({
-      href: '',
-      download: '',
-      click: vi.fn()
-    }));
-    global.document.body.appendChild = vi.fn();
-    global.document.body.removeChild = vi.fn();
-    
-    // Mock URL.createObjectURL and revokeObjectURL
+    // Mock document methods only if required by the component
     global.URL.createObjectURL = vi.fn(() => 'mock-url');
     global.URL.revokeObjectURL = vi.fn();
-    
-    // Mock Blob
     global.Blob = vi.fn(() => ({}));
-    
-    // Mock Date.now for consistent timestamps
     vi.spyOn(Date, 'now').mockReturnValue(1234567890);
   });
 
@@ -67,15 +53,11 @@ describe('FeedbackModule', () => {
     const mockLogs = [
       { type: 'test.log', timestamp: '2024-01-01T00:00:00Z', payload: { test: 'data' } }
     ];
-    
     const mockExecutionLogService = require('../../../core/services/ExecutionLogService.js').default;
     mockExecutionLogService.queryLogs.mockResolvedValue(mockLogs);
-    
     render(<FeedbackModule />);
-    
     const generateButton = screen.getByText('Generate & Download Report');
     fireEvent.click(generateButton);
-    
     await waitFor(() => {
       expect(mockExecutionLogService.queryLogs).toHaveBeenCalled();
     });
