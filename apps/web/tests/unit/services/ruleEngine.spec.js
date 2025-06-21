@@ -18,22 +18,18 @@ describe('ruleEngine (unit)', () => {
     const rule = {
       id: 'test-rule',
       name: 'Test Rule',
-      description: 'Test rule description',
-      enabled: true,
-      priority: 1,
-      condition: {
-        field: 'balance',
-        operator: 'greater_than',
-        value: 1000
-      },
+      conditions: [
+        {
+          field: 'balance',
+          operator: '>',
+          value: 1000
+        }
+      ],
       action: {
         type: 'notification',
-        message: 'High balance alert'
+        payload: { message: 'High balance alert' }
       },
-      metadata: {
-        created: new Date().toISOString(),
-        updated: new Date().toISOString()
-      }
+      isActive: true
     };
 
     const data = { balance: 1500 };
@@ -47,32 +43,28 @@ describe('ruleEngine (unit)', () => {
     const rule = {
       id: 'complex-rule',
       name: 'Complex Rule',
-      description: 'Complex rule description',
-      enabled: true,
-      priority: 1,
-      condition: {
-        operator: 'and',
-        conditions: [
-          {
-            field: 'balance',
-            operator: 'greater_than',
-            value: 1000
-          },
-          {
-            field: 'category',
-            operator: 'equals',
-            value: 'income'
-          }
-        ]
-      },
+      conditions: [
+        {
+          logicalOperator: 'and',
+          conditions: [
+            {
+              field: 'balance',
+              operator: '>',
+              value: 1000
+            },
+            {
+              field: 'category',
+              operator: '===',
+              value: 'income'
+            }
+          ]
+        }
+      ],
       action: {
         type: 'webhook',
-        url: 'https://api.example.com/webhook'
+        payload: { url: 'https://api.example.com/webhook' }
       },
-      metadata: {
-        created: new Date().toISOString(),
-        updated: new Date().toISOString()
-      }
+      isActive: true
     };
 
     const data = { balance: 1500, category: 'income' };
@@ -85,22 +77,18 @@ describe('ruleEngine (unit)', () => {
     const rule = {
       id: 'test-rule',
       name: 'Test Rule',
-      description: 'Test rule description',
-      enabled: true,
-      priority: 1,
-      condition: {
-        field: 'balance',
-        operator: 'greater_than',
-        value: 1000
-      },
+      conditions: [
+        {
+          field: 'balance',
+          operator: '>',
+          value: 1000
+        }
+      ],
       action: {
         type: 'notification',
-        message: 'High balance alert'
+        payload: { message: 'High balance alert' }
       },
-      metadata: {
-        created: new Date().toISOString(),
-        updated: new Date().toISOString()
-      }
+      isActive: true
     };
 
     const data = { balance: 500 };
