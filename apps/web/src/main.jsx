@@ -18,6 +18,7 @@ console.log("🚀 main.jsx is loading...");
 
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 console.log("🔧 React imports successful");
 
@@ -28,5 +29,15 @@ console.log("🧩 App.jsx import successful");
 const root = ReactDOM.createRoot(document.getElementById("root"));
 console.log("🔧 React root created successfully");
 
-root.render(<App />);
-console.log("✅ Real App mounted successfully");
+root.render(
+  <Auth0Provider
+    domain={import.meta.env.VITE_AUTH0_DOMAIN}
+    clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
+    authorizationParams={{
+      redirect_uri: window.location.origin,
+    }}
+  >
+    <App />
+  </Auth0Provider>
+);
+console.log("✅ Real App mounted successfully with Auth0Provider");
