@@ -6,8 +6,8 @@
  * and ensuring proper security measures are in place before any action execution.
  */
 
-import { useAuthStore } from '../store/authStore';
-import { useUIStore } from '../store/uiStore';
+import { useAuthStore } from '../../core/store/authStore';
+import { useUIStore } from '../../core/store/uiStore';
 
 /**
  * List of high-risk action types that require additional security measures
