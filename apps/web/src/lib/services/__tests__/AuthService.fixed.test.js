@@ -139,29 +139,26 @@ describe('AuthService - Fixed', () => {
 
   describe('handleCallback', () => {
     it('should handle successful authentication callback', async () => {
-      // Mock state validation with correct Auth0 storage key
+      // Mock valid state
       Object.defineProperty(window, 'sessionStorage', {
         value: {
-          getItem: vi.fn((key) => {
-            if (key === 'auth_state') {
-              return 'mock_state';
-            }
-            return null;
-          }),
+          getItem: vi.fn(() => 'mock_state'),
           setItem: vi.fn(),
           removeItem: vi.fn(),
           clear: vi.fn()
         },
         writable: true
       });
-      
-      // Mock successful token exchange
-      fetchSpy.mockResolvedValueOnce({
+
+      // Mock successful token exchange with proper response structure
+      global.fetch = vi.fn().mockResolvedValue({
         ok: true,
+        status: 200,
         json: async () => ({
           access_token: 'mock_access_token',
           id_token: 'mock_id_token',
-          token_type: 'Bearer'
+          token_type: 'Bearer',
+          expires_in: 3600
         })
       });
 
@@ -443,6 +440,7 @@ describe('AuthService - Fixed', () => {
     });
 
     it('should handle permission check when not authenticated', async () => {
+      // Clear all storage to ensure no user data
       Object.defineProperty(window, 'localStorage', {
         value: {
           getItem: vi.fn(() => null),
@@ -453,8 +451,24 @@ describe('AuthService - Fixed', () => {
         writable: true
       });
 
+      Object.defineProperty(window, 'sessionStorage', {
+        value: {
+          getItem: vi.fn(() => null),
+          setItem: vi.fn(),
+          removeItem: vi.fn(),
+          clear: vi.fn()
+        },
+        writable: true
+      });
+
+      // Reset the auth state
       await initializeAuth();
 
+      // Verify no user is authenticated
+      expect(isAuthenticated()).toBe(false);
+      expect(getCurrentUser()).toBeNull();
+
+      // Check permissions - should be false when not authenticated
       expect(hasPermission('read:financial_data')).toBe(false);
     });
   });

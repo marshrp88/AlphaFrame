@@ -41,9 +41,23 @@ describe('PlaidService - Fixed', () => {
     // Verify client is initialized
     expect(plaidService.client).not.toBeNull();
     
-    // Reset all mocks
+    // Reset all mocks and ensure they return success
     vi.clearAllMocks();
     vi.restoreAllMocks();
+    
+    // Ensure all mock methods return success by default
+    global.testUtils.mockPlaidClient.linkTokenCreate.mockResolvedValue({
+      data: { link_token: 'test_link_token_12345' }
+    });
+    global.testUtils.mockPlaidClient.itemPublicTokenExchange.mockResolvedValue({
+      data: { access_token: 'test_access_token_67890' }
+    });
+    global.testUtils.mockPlaidClient.accountsGet.mockResolvedValue({
+      data: { accounts: [{ account_id: 'test_account', balances: { available: 1000 } }] }
+    });
+    global.testUtils.mockPlaidClient.transactionsGet.mockResolvedValue({
+      data: { transactions: [{ transaction_id: 'test_transaction', amount: 100 }] }
+    });
   });
 
   afterEach(() => {

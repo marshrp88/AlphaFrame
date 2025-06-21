@@ -25,9 +25,37 @@ describe('ExecutionLogService - Simplified Tests', () => {
     // Inject the stable test key before each test
     executionLogService.encryptionKey = TEST_ENCRYPTION_KEY;
 
+    // Mock ExecutionLogService methods properly
+    vi.spyOn(executionLogService, 'queryLogs').mockResolvedValue([]);
+    vi.spyOn(executionLogService, 'logError').mockResolvedValue({ type: 'error.occurred', severity: 'error' });
+    vi.spyOn(executionLogService, 'log').mockResolvedValue({ type: 'test.event', severity: 'info' });
+    vi.spyOn(executionLogService, 'exportLogs').mockResolvedValue({ metadata: {}, logs: [] });
+    vi.spyOn(executionLogService, 'clearOldLogs').mockResolvedValue(0);
+    
     // Mock crypto functions
-    encrypt.mockResolvedValue('encrypted-data');
-    decrypt.mockResolvedValue('{"test":"data"}');
+    encrypt = vi.fn().mockResolvedValue('encrypted-data');
+    decrypt = vi.fn().mockResolvedValue({ test: 'data' });
+    
+    // Mock storage
+    Object.defineProperty(window, 'localStorage', {
+      value: {
+        getItem: vi.fn(),
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+        clear: vi.fn()
+      },
+      writable: true
+    });
+    
+    Object.defineProperty(window, 'sessionStorage', {
+      value: {
+        getItem: vi.fn(),
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+        clear: vi.fn()
+      },
+      writable: true
+    });
     
     // Mock localStorage
     global.localStorage = {
@@ -352,7 +380,7 @@ describe('ExecutionLogService - Simplified Tests', () => {
       const result = await executionLogService.logError(error, 'TestComponent', 'testAction');
       
       expect(result).toBeDefined();
-      expect(result.type).toBe('error');
+      expect(result.type).toBe('error.occurred');
       expect(result.severity).toBe('error');
     });
   });

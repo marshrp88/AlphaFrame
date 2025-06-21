@@ -66,7 +66,8 @@ describe('RuleEngine 2.0', () => {
         action: {
           type: 'notification',
           payload: { message: 'High amount purchase detected' }
-        }
+        },
+        isActive: true
       };
 
       const ruleId = await ruleEngine.registerRule(rule);
@@ -92,7 +93,8 @@ describe('RuleEngine 2.0', () => {
         conditions: [
           { field: 'amount', operator: '>', value: 50 }
         ],
-        action: { type: 'notification' }
+        action: { type: 'notification' },
+        isActive: true
       };
 
       const ruleId = await ruleEngine.registerRule(rule);
@@ -103,7 +105,8 @@ describe('RuleEngine 2.0', () => {
     it('should reject invalid rules', async () => {
       const invalidRule = {
         name: 'Invalid Rule',
-        action: { type: 'notification' }
+        action: { type: 'notification' },
+        isActive: true
       };
 
       await expect(ruleEngine.registerRule(invalidRule))
@@ -132,10 +135,9 @@ describe('RuleEngine 2.0', () => {
         ],
         action: {
           type: 'notification',
-          message: 'High amount transaction detected'
+          payload: { message: 'High amount transaction detected' }
         },
-        priority: 5,
-        enabled: true
+        isActive: true
       };
 
       await ruleEngine.registerRule(basicRule);
@@ -159,22 +161,26 @@ describe('RuleEngine 2.0', () => {
         description: 'Test rule with AND conditions',
         conditions: [
           {
-            field: 'amount',
-            operator: '>',
-            value: 100
-          },
-          {
-            field: 'merchant_name',
-            operator: 'contains',
-            value: 'Store'
+            logicalOperator: 'and',
+            conditions: [
+              {
+                field: 'amount',
+                operator: '>',
+                value: 100
+              },
+              {
+                field: 'merchant_name',
+                operator: 'contains',
+                value: 'Store'
+              }
+            ]
           }
         ],
         action: {
           type: 'notification',
-          message: 'High amount from store detected'
+          payload: { message: 'High amount from store detected' }
         },
-        priority: 5,
-        enabled: true
+        isActive: true
       };
 
       await ruleEngine.registerRule(andRule);
@@ -237,10 +243,9 @@ describe('RuleEngine 2.0', () => {
         ],
         action: {
           type: 'notification',
-          message: 'Coffee purchase detected'
+          payload: { message: 'Coffee purchase detected' }
         },
-        priority: 5,
-        enabled: true
+        isActive: true
       };
 
       await ruleEngine.registerRule(stringRule);
@@ -278,10 +283,9 @@ describe('RuleEngine 2.0', () => {
         ],
         action: {
           type: 'notification',
-          message: 'High amount or restaurant purchase detected'
+          payload: { message: 'High amount or restaurant purchase detected' }
         },
-        priority: 5,
-        enabled: true
+        isActive: true
       };
 
       await ruleEngine.registerRule(orRule);
@@ -324,10 +328,9 @@ describe('RuleEngine 2.0', () => {
         ],
         action: {
           type: 'notification',
-          message: 'Non-gas purchase detected'
+          payload: { message: 'Non-gas purchase detected' }
         },
-        priority: 5,
-        enabled: true
+        isActive: true
       };
 
       await ruleEngine.registerRule(notRule);
@@ -368,10 +371,9 @@ describe('RuleEngine 2.0', () => {
         ],
         action: {
           type: 'notification',
-          message: 'Complex condition met'
+          payload: { message: 'Complex condition met' }
         },
-        priority: 5,
-        enabled: true
+        isActive: true
       };
 
       await ruleEngine.registerRule(complexRule);
@@ -405,10 +407,9 @@ describe('RuleEngine 2.0', () => {
         ],
         action: {
           type: 'notification',
-          message: 'High amount transaction detected'
+          payload: { message: 'High amount transaction detected' }
         },
-        priority: 5,
-        enabled: true
+        isActive: true
       };
 
       await ruleEngine.registerRule(executionRule);
@@ -439,10 +440,9 @@ describe('RuleEngine 2.0', () => {
         ],
         action: {
           type: 'notification',
-          message: 'High amount transaction detected'
+          payload: { message: 'High amount transaction detected' }
         },
-        priority: 5,
-        enabled: true
+        isActive: true
       };
 
       await ruleEngine.registerRule(historyRule);
@@ -477,10 +477,9 @@ describe('RuleEngine 2.0', () => {
         ],
         action: {
           type: 'notification',
-          message: 'High amount transaction detected'
+          payload: { message: 'High amount transaction detected' }
         },
-        priority: 5,
-        enabled: true
+        isActive: true
       };
 
       await ruleEngine.registerRule(simulationRule);
@@ -512,10 +511,9 @@ describe('RuleEngine 2.0', () => {
         ],
         action: {
           type: 'notification',
-          message: 'High amount transaction detected'
+          payload: { message: 'High amount transaction detected' }
         },
-        priority: 5,
-        enabled: true
+        isActive: true
       };
 
       await ruleEngine.registerRule(simulationRule);
@@ -549,10 +547,9 @@ describe('RuleEngine 2.0', () => {
         ],
         action: {
           type: 'notification',
-          message: 'High amount transaction detected'
+          payload: { message: 'High amount transaction detected' }
         },
-        priority: 5,
-        enabled: true
+        isActive: true
       };
 
       const ruleId = await ruleEngine.registerRule(removeRule);
@@ -575,10 +572,9 @@ describe('RuleEngine 2.0', () => {
         ],
         action: {
           type: 'notification',
-          message: 'High amount transaction detected'
+          payload: { message: 'High amount transaction detected' }
         },
-        priority: 5,
-        enabled: true
+        isActive: true
       };
 
       await ruleEngine.registerRule(clearRule);
@@ -603,10 +599,9 @@ describe('RuleEngine 2.0', () => {
         ],
         action: {
           type: 'notification',
-          message: 'High amount transaction detected'
+          payload: { message: 'High amount transaction detected' }
         },
-        priority: 5,
-        enabled: true
+        isActive: true
       };
 
       await ruleEngine.registerRule(matchingRule);
@@ -638,10 +633,9 @@ describe('RuleEngine 2.0', () => {
         ],
         action: {
           type: 'notification',
-          message: 'High amount transaction detected'
+          payload: { message: 'High amount transaction detected' }
         },
-        priority: 5,
-        enabled: true
+        isActive: true
       };
 
       const ruleId = await ruleEngine.registerRule(frequencyRule);
@@ -672,10 +666,9 @@ describe('RuleEngine 2.0', () => {
         ],
         action: {
           type: 'notification',
-          message: 'High amount transaction detected'
+          payload: { message: 'High amount transaction detected' }
         },
-        priority: 5,
-        enabled: true
+        isActive: true
       };
 
       const ruleId = await ruleEngine.registerRule(timeRule);
@@ -711,10 +704,9 @@ describe('RuleEngine 2.0', () => {
         ],
         action: {
           type: 'notification',
-          message: 'Invalid operator test'
+          payload: { message: 'Invalid operator test' }
         },
-        priority: 5,
-        enabled: true
+        isActive: true
       };
 
       await expect(ruleEngine.registerRule(invalidRule))
@@ -733,10 +725,9 @@ describe('RuleEngine 2.0', () => {
         ],
         action: {
           type: 'notification',
-          message: 'Missing fields test'
+          payload: { message: 'Missing fields test' }
         },
-        priority: 5,
-        enabled: true
+        isActive: true
       };
 
       await expect(ruleEngine.registerRule(invalidRule))
