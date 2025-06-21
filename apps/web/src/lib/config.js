@@ -31,7 +31,15 @@ export const config = {
     env: import.meta.env.VITE_PLAID_ENV || 'sandbox'
   },
   
-  // Authentication Configuration
+  // Auth0 Configuration (Primary Authentication)
+  auth0: {
+    domain: import.meta.env.VITE_AUTH0_DOMAIN || null,
+    clientId: import.meta.env.VITE_AUTH0_CLIENT_ID || null,
+    audience: import.meta.env.VITE_AUTH0_AUDIENCE || null,
+    redirectUri: import.meta.env.VITE_AUTH0_REDIRECT_URI || 'http://localhost:5173'
+  },
+  
+  // Legacy Authentication Configuration (Fallback)
   auth: {
     domain: import.meta.env.VITE_AUTH_DOMAIN || null,
     clientId: import.meta.env.VITE_AUTH_CLIENT_ID || null,
@@ -88,16 +96,21 @@ export const validateConfig = () => {
     errors.push('VITE_PLAID_SECRET is required');
   }
   
+  // Auth0 validation (primary authentication)
+  if (!config.auth0.domain) {
+    errors.push('VITE_AUTH0_DOMAIN is required');
+  }
+  
+  if (!config.auth0.clientId) {
+    errors.push('VITE_AUTH0_CLIENT_ID is required');
+  }
+  
+  if (!config.auth0.audience) {
+    errors.push('VITE_AUTH0_AUDIENCE is required');
+  }
+  
   // Required for production
   if (config.env === 'production') {
-    if (!config.auth.domain) {
-      errors.push('VITE_AUTH_DOMAIN is required for production');
-    }
-    
-    if (!config.auth.clientId) {
-      errors.push('VITE_AUTH_CLIENT_ID is required for production');
-    }
-    
     if (!config.webhook.secret) {
       errors.push('VITE_WEBHOOK_SECRET is required for production');
     }
@@ -109,10 +122,6 @@ export const validateConfig = () => {
   
   // Warnings for development
   if (config.env === 'development') {
-    if (!config.auth.domain) {
-      warnings.push('VITE_AUTH_DOMAIN not set - authentication will be mocked');
-    }
-    
     if (!config.webhook.secret) {
       warnings.push('VITE_WEBHOOK_SECRET not set - webhooks will be mocked');
     }

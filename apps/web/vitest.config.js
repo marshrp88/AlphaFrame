@@ -5,35 +5,31 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   test: {
-    exclude: [
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/e2e/**',
-    ],
-    globals: true,
     environment: 'jsdom',
-    setupFiles: ['./tests/setup.js'],
-    threads: false,
-    isolate: true,
-    passWithNoTests: true,
-    inspector: false, // Disable inspector to fix Windows compatibility
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/',
-        'src/setupTests.js',
-        '**/*.d.ts',
-        '**/*.test.{js,jsx,ts,tsx}',
-        '**/*.spec.{js,jsx,ts,tsx}',
-      ],
+    setupFiles: ['./src/setupTests.js'],
+    globals: true,
+    css: false,
+    // Fix for React 18 createRoot issues
+    environmentOptions: {
+      jsdom: {
+        resources: 'usable',
+        runScripts: 'dangerously'
+      }
     },
-    testTimeout: 10000,
-    hookTimeout: 10000,
+    // Mock environment variables
+    env: {
+      VITE_APP_ENV: 'test',
+      VITE_AUTH0_DOMAIN: 'test.auth0.com',
+      VITE_AUTH0_CLIENT_ID: 'test_client_id',
+      VITE_AUTH0_AUDIENCE: 'https://test.api.alphaframe.dev',
+      VITE_PLAID_CLIENT_ID: 'test_plaid_client_id',
+      VITE_PLAID_SECRET: 'test_plaid_secret',
+      VITE_PLAID_ENV: 'sandbox'
+    }
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'),
-    },
-  },
+      '@': path.resolve(__dirname, './src')
+    }
+  }
 }); 

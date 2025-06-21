@@ -19,25 +19,47 @@ console.log("🚀 main.jsx is loading...");
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Auth0Provider } from "@auth0/auth0-react";
+import App from "./App.jsx";
+import "./index.css";
+import { config } from "./lib/config.js";
 
 console.log("🔧 React imports successful");
 
 console.log("🧩 Attempting to import App.jsx...");
-import App from "./App.jsx";
 console.log("🧩 App.jsx import successful");
 
+// Auth0 configuration
+const auth0Config = {
+  domain: config.auth0.domain,
+  clientId: config.auth0.clientId,
+  authorizationParams: {
+    redirect_uri: config.auth0.redirectUri,
+    audience: config.auth0.audience,
+    scope: "openid profile email read:financial_data write:financial_data"
+  },
+  cacheLocation: "localstorage",
+  useRefreshTokens: true,
+  // Development settings
+  ...(config.env === "development" && {
+    cacheLocation: "localstorage",
+    useRefreshTokens: true
+  })
+};
+
+// Validate Auth0 configuration
+if (!auth0Config.domain || !auth0Config.clientId) {
+  console.warn("⚠️ Auth0 not configured - authentication will be disabled");
+  console.warn("Please set VITE_AUTH0_DOMAIN and VITE_AUTH0_CLIENT_ID in your environment");
+}
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
-console.log("🔧 React root created successfully");
+console.log("�� React root created successfully");
 
 root.render(
-  <Auth0Provider
-    domain={import.meta.env.VITE_AUTH0_DOMAIN}
-    clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
-    authorizationParams={{
-      redirect_uri: window.location.origin,
-    }}
-  >
-    <App />
-  </Auth0Provider>
+  <React.StrictMode>
+    <Auth0Provider {...auth0Config}>
+      <App />
+    </Auth0Provider>
+  </React.StrictMode>
 );
 console.log("✅ Real App mounted successfully with Auth0Provider");

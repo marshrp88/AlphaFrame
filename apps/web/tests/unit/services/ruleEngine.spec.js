@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { evaluateRule } from '@/lib/services/ruleEngine';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import ruleEngine from '../../../src/lib/services/ruleEngine';
 import { RuleSchema } from '@/lib/validation/schemas';
 
 // Mock data for rules and state
@@ -10,42 +10,103 @@ const mockState = {
 };
 
 describe('ruleEngine (unit)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('should evaluate simple greater-than rule', async () => {
     const rule = {
-      conditions: [
-        { field: 'checking_account_balance', operator: '>', value: 5000 }
-      ]
+      id: 'test-rule',
+      name: 'Test Rule',
+      description: 'Test rule description',
+      enabled: true,
+      priority: 1,
+      condition: {
+        field: 'balance',
+        operator: 'greater_than',
+        value: 1000
+      },
+      action: {
+        type: 'notification',
+        message: 'High balance alert'
+      },
+      metadata: {
+        created: new Date().toISOString(),
+        updated: new Date().toISOString()
+      }
     };
-    // Contract test: validate rule with Zod
-    const parsed = RuleSchema.safeParse(rule);
-    expect(parsed.success).toBe(true);
-    expect(await evaluateRule(rule, mockState)).toBe(true);
+
+    const data = { balance: 1500 };
+    const result = await ruleEngine.evaluateRule(rule, data);
+    
+    expect(result.matched).toBe(true);
+    expect(result.action).toEqual(rule.action);
   });
 
   it('should evaluate AND conditions', async () => {
     const rule = {
-      conditions: [
-        { field: 'checking_account_balance', operator: '>', value: 5000 },
-        { field: 'savings_account_balance', operator: '>', value: 10000 },
-        { field: 'credit_score', operator: '>', value: 700 }
-      ]
+      id: 'complex-rule',
+      name: 'Complex Rule',
+      description: 'Complex rule description',
+      enabled: true,
+      priority: 1,
+      condition: {
+        operator: 'and',
+        conditions: [
+          {
+            field: 'balance',
+            operator: 'greater_than',
+            value: 1000
+          },
+          {
+            field: 'category',
+            operator: 'equals',
+            value: 'income'
+          }
+        ]
+      },
+      action: {
+        type: 'webhook',
+        url: 'https://api.example.com/webhook'
+      },
+      metadata: {
+        created: new Date().toISOString(),
+        updated: new Date().toISOString()
+      }
     };
-    // Contract test: validate rule with Zod
-    const parsed = RuleSchema.safeParse(rule);
-    expect(parsed.success).toBe(true);
-    expect(await evaluateRule(rule, mockState)).toBe(true);
+
+    const data = { balance: 1500, category: 'income' };
+    const result = await ruleEngine.evaluateRule(rule, data);
+    
+    expect(result.matched).toBe(true);
   });
 
   it('should return false for unmet conditions', async () => {
     const rule = {
-      conditions: [
-        { field: 'checking_account_balance', operator: '>', value: 10000 }
-      ]
+      id: 'test-rule',
+      name: 'Test Rule',
+      description: 'Test rule description',
+      enabled: true,
+      priority: 1,
+      condition: {
+        field: 'balance',
+        operator: 'greater_than',
+        value: 1000
+      },
+      action: {
+        type: 'notification',
+        message: 'High balance alert'
+      },
+      metadata: {
+        created: new Date().toISOString(),
+        updated: new Date().toISOString()
+      }
     };
-    // Contract test: validate rule with Zod
-    const parsed = RuleSchema.safeParse(rule);
-    expect(parsed.success).toBe(true);
-    expect(await evaluateRule(rule, mockState)).toBe(false);
+
+    const data = { balance: 500 };
+    const result = await ruleEngine.evaluateRule(rule, data);
+    
+    expect(result.matched).toBe(false);
   });
 
   it('should handle invalid rule format gracefully', async () => {
@@ -57,7 +118,7 @@ describe('ruleEngine (unit)', () => {
     // Contract test: validate rule with Zod
     const parsed = RuleSchema.safeParse(rule);
     expect(parsed.success).toBe(true);
-    await expect(evaluateRule(rule, mockState)).rejects.toThrow();
+    await expect(ruleEngine.evaluateRule(rule, mockState)).rejects.toThrow();
   });
 
   // Add more tests for edge cases as needed

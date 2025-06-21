@@ -1,83 +1,231 @@
-import React, { useCallback, useState, useEffect } from 'react';
+/**
+ * PlaidLink.jsx
+ * 
+ * Purpose: Secure Plaid Link integration for connecting bank accounts
+ * 
+ * This component provides:
+ * - Plaid Link initialization with real API tokens
+ * - Secure token exchange and storage
+ * - Error handling and loading states
+ * - Sandbox mode support for development
+ * 
+ * Security Features:
+ * - Encrypted token storage
+ * - Environment-specific configuration
+ * - Secure token exchange flow
+ */
+
+import React, { useState, useEffect, useCallback } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
+import plaidService from '../lib/services/PlaidService.js';
+import { useAppStore } from '../core/store/useAppStore.js';
 
-const PlaidLink = () => {
+const PlaidLink = ({ onSuccess, onError, onExit, className = '', children }) => {
   const [linkToken, setLinkToken] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { user } = useAppStore();
 
-  // Fetch link token on component mount
-  useEffect(() => {
-    const fetchLinkToken = async () => {
-      try {
-        setIsLoading(true);
-        // TODO: Replace with actual backend endpoint
-        // For now, this will fail gracefully and show placeholder
-        const response = await fetch('/api/create-link-token');
-        if (response.ok) {
-          const data = await response.json();
-          setLinkToken(data.link_token);
-        } else {
-          console.warn('Link token endpoint not available - using placeholder');
-          setLinkToken(null);
-        }
-      } catch (err) {
-        console.warn('Failed to fetch link token:', err);
-        setError('Unable to connect to Plaid at this time');
-        setLinkToken(null);
-      } finally {
-        setIsLoading(false);
+  /**
+   * Create a link token for Plaid Link initialization
+   * Uses the current user ID or generates a temporary one
+   */
+  const createLinkToken = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Use user ID if available, otherwise generate a temporary one
+      const userId = user?.id || `temp_user_${Date.now()}`;
+      
+      const result = await plaidService.createLinkToken(userId);
+      
+      if (result.success) {
+        setLinkToken(result.linkToken);
+      } else {
+        throw new Error(result.error || 'Failed to create link token');
       }
-    };
-
-    fetchLinkToken();
-  }, []);
-
-  const onSuccess = useCallback((public_token, metadata) => {
-    // send public_token to your server
-    // https://plaid.com/docs/api/tokens/#token-exchange-flow
-    console.log('Plaid Link Success:', { public_token, metadata });
-    
-    // TODO: Exchange public_token for access_token via backend
-    // This would typically be:
-    // fetch('/api/exchange-token', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ public_token })
-    // });
-  }, []);
-
-  const onExit = useCallback((err, metadata) => {
-    // Handle user exit from Plaid Link
-    console.log('Plaid Link Exit:', { err, metadata });
-    if (err) {
-      setError('Connection was interrupted. Please try again.');
+    } catch (err) {
+      console.error('Plaid link token creation failed:', err);
+      setError(err.message || 'Failed to initialize Plaid Link');
+      
+      // Call error callback if provided
+      if (onError) {
+        onError(err);
+      }
+    } finally {
+      setIsLoading(false);
     }
-  }, []);
+  }, [user?.id, onError]);
 
-  const { open, ready } = usePlaidLink({
+  /**
+   * Handle successful Plaid Link connection
+   * Exchanges public token for access token and stores securely
+   */
+  const handleSuccess = useCallback(async (publicToken, metadata) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      console.log('Plaid Link success:', { publicToken, metadata });
+      
+      // Exchange public token for access token
+      const result = await plaidService.exchangePublicToken(publicToken);
+      
+      if (result.success) {
+        console.log('Token exchange successful:', { itemId: result.itemId });
+        
+        // Call success callback with account information
+        if (onSuccess) {
+          onSuccess({
+            accessToken: result.accessToken,
+            itemId: result.itemId,
+            accounts: metadata.accounts,
+            institution: metadata.institution
+          });
+        }
+      } else {
+        throw new Error(result.error || 'Failed to exchange token');
+      }
+    } catch (err) {
+      console.error('Plaid token exchange failed:', err);
+      setError(err.message || 'Failed to complete bank connection');
+      
+      if (onError) {
+        onError(err);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [onSuccess, onError]);
+
+  /**
+   * Handle Plaid Link exit
+   */
+  const handleExit = useCallback((err, metadata) => {
+    console.log('Plaid Link exit:', { err, metadata });
+    
+    if (err) {
+      setError(err.display_message || err.error_message || 'Connection cancelled');
+    }
+    
+    if (onExit) {
+      onExit(err, metadata);
+    }
+  }, [onExit]);
+
+  /**
+   * Initialize Plaid Link configuration
+   */
+  const config = {
     token: linkToken,
-    onSuccess,
-    onExit,
-  });
+    onSuccess: handleSuccess,
+    onExit: handleExit,
+    // Sandbox mode configuration for development
+    env: import.meta.env.VITE_PLAID_ENV || 'sandbox',
+    clientName: 'AlphaFrame',
+    products: ['transactions'],
+    countryCodes: ['US'],
+    language: 'en',
+    // Account filters for better user experience
+    accountSubtypes: {
+      depository: ['checking', 'savings']
+    }
+  };
 
-  if (isLoading) {
-    return <button disabled>Loading Plaid connection...</button>;
-  }
+  const { open, ready } = usePlaidLink(config);
 
-  if (error) {
+  /**
+   * Create link token on component mount
+   */
+  useEffect(() => {
+    if (!linkToken && !isLoading) {
+      createLinkToken();
+    }
+  }, [linkToken, isLoading, createLinkToken]);
+
+  /**
+   * Handle component click to open Plaid Link
+   */
+  const handleClick = useCallback(() => {
+    if (ready && !isLoading) {
+      open();
+    }
+  }, [ready, isLoading, open]);
+
+  /**
+   * Render loading state
+   */
+  if (isLoading && !linkToken) {
     return (
-      <div>
-        <button disabled>Connect a bank account</button>
-        <p style={{ color: 'red', fontSize: '12px' }}>{error}</p>
+      <div className={`plaid-link-loading ${className}`}>
+        <div className="loading-spinner"></div>
+        <span>Initializing bank connection...</span>
       </div>
     );
   }
 
+  /**
+   * Render error state
+   */
+  if (error) {
+    return (
+      <div className={`plaid-link-error ${className}`}>
+        <div className="error-message">
+          <span>⚠️ {error}</span>
+          <button 
+            onClick={() => {
+              setError(null);
+              createLinkToken();
+            }}
+            className="retry-button"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  /**
+   * Render disabled state if not configured
+   */
+  if (!plaidService.isConfigured()) {
+    return (
+      <div className={`plaid-link-disabled ${className}`}>
+        <span>Bank connection not configured</span>
+      </div>
+    );
+  }
+
+  /**
+   * Render the main component
+   */
   return (
-    <button onClick={() => open()} disabled={!ready || !linkToken}>
-      Connect a bank account
-    </button>
+    <div className={`plaid-link-container ${className}`}>
+      <button
+        onClick={handleClick}
+        disabled={!ready || isLoading}
+        className={`plaid-link-button ${isLoading ? 'loading' : ''}`}
+      >
+        {isLoading ? (
+          <>
+            <div className="loading-spinner"></div>
+            <span>Connecting...</span>
+          </>
+        ) : (
+          children || 'Connect Bank Account'
+        )}
+      </button>
+      
+      {isLoading && (
+        <div className="plaid-link-overlay">
+          <div className="loading-message">
+            Connecting to your bank...
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

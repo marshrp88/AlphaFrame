@@ -22,10 +22,10 @@ import executionLogService from '../../core/services/ExecutionLogService.js';
  * Auth0 configuration
  */
 const AUTH0_CONFIG = {
-  domain: config.auth.domain,
-  clientId: config.auth.clientId,
-  audience: config.auth.audience,
-  redirectUri: window.location.origin,
+  domain: config.auth0.domain || config.auth.domain,
+  clientId: config.auth0.clientId || config.auth.clientId,
+  audience: config.auth0.audience || config.auth.audience,
+  redirectUri: config.auth0.redirectUri || window.location.origin,
   responseType: 'code',
   scope: 'openid profile email read:financial_data write:financial_data'
 };
@@ -423,13 +423,12 @@ const loadSession = async () => {
 /**
  * Clear session from storage
  */
-const clearSession = async () => {
+export const clearSession = async () => {
   try {
     localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
     localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
     localStorage.removeItem(STORAGE_KEYS.USER_PROFILE);
     localStorage.removeItem(STORAGE_KEYS.SESSION_EXPIRY);
-    
     currentUser = null;
     accessToken = null;
     refreshToken = null;

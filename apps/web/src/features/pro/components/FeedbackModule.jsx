@@ -26,14 +26,14 @@ const FeedbackModule = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  const handleGenerateReport = () => {
+  const handleGenerateReport = async () => {
     setIsGenerating(true);
     setError(null);
     setSuccess(false);
 
     try {
       // Collect execution logs
-      const executionLogs = executionLogService.getLogs();
+      const executionLogs = await executionLogService.queryLogs();
       
       // Generate narrative insights (placeholder for now)
       const narrativeInsights = { 

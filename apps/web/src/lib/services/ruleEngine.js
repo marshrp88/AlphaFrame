@@ -18,7 +18,6 @@
  */
 
 import { z } from 'zod';
-import { RuleSchema } from '../validation/schemas';
 import executionLogService from '../../core/services/ExecutionLogService.js';
 
 /**
@@ -525,7 +524,7 @@ class RuleEngine {
    */
   async validateRule(rule) {
     try {
-      const parsed = RuleSchema.safeParse(rule);
+      const parsed = RuleSchemaV2.safeParse(rule);
       return parsed.success;
     } catch (error) {
       await executionLogService.logError('rule.validation.failed', error, { rule });

@@ -15,9 +15,10 @@
  * and user-friendly dashboard mode management with proper error handling.
  */
 
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import DashboardModeManager from '../components/DashboardModeManager.jsx';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import DashboardModeManager from '../components/DashboardModeManager';
 import { useDashboardModeStore } from '../../core/store/dashboardModeStore.js';
 import executionLogService from '../../core/services/ExecutionLogService.js';
 
@@ -61,10 +62,28 @@ vi.mock('../../components/ui/badge.jsx', () => ({
   )
 }));
 
+// Mock the stores
+vi.mock('../../../core/store/dashboardModeStore', () => ({
+  useDashboardModeStore: vi.fn(() => ({
+    mode: 'basic',
+    setMode: vi.fn(),
+    isProMode: false
+  }))
+}));
+
+vi.mock('../../../core/store/authStore', () => ({
+  useAuthStore: vi.fn(() => ({
+    user: { role: 'user' },
+    isAuthenticated: true
+  }))
+}));
+
 describe('DashboardModeManager', () => {
   let mockStore;
 
   beforeEach(() => {
+    vi.clearAllMocks();
+
     // Reset mocks
     executionLogService.log.mockClear();
     executionLogService.logError.mockClear();
@@ -159,8 +178,8 @@ describe('DashboardModeManager', () => {
           })
         );
         expect(onModeChange).toHaveBeenCalledWith('INVESTOR');
-      });
-    });
+      }, { timeout: 1000 });
+    }, 2000);
 
     it('should handle mode switch errors', async () => {
       const error = new Error('Switch failed');
@@ -181,8 +200,8 @@ describe('DashboardModeManager', () => {
             currentMode: 'PLANNER'
           })
         );
-      });
-    });
+      }, { timeout: 1000 });
+    }, 2000);
 
     it('should prevent multiple simultaneous switches', async () => {
       mockStore.switchMode.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)));
@@ -194,7 +213,7 @@ describe('DashboardModeManager', () => {
       fireEvent.click(switchButton); // Second click should be ignored
       
       expect(mockStore.switchMode).toHaveBeenCalledTimes(1);
-    });
+    }, 2000);
 
     it('should validate mode switch before executing', async () => {
       mockStore.isModeSwitchAllowed.mockReturnValue(false);
@@ -205,9 +224,10 @@ describe('DashboardModeManager', () => {
       fireEvent.click(switchButton);
       
       await waitFor(() => {
-        expect(screen.getByText('Mode switch to INVESTOR is not allowed')).toBeInTheDocument();
-      });
-    });
+        expect(screen.getByText(/Mode switch not allowed/)).toBeInTheDocument();
+        expect(mockStore.switchMode).not.toHaveBeenCalled();
+      }, { timeout: 1000 });
+    }, 2000);
   });
 
   describe('Mode History', () => {
@@ -356,5 +376,27 @@ describe('DashboardModeManager', () => {
       fireEvent.keyDown(firstButton, { key: 'Enter' });
       expect(firstButton).toHaveFocus();
     });
+  });
+
+  it('renders mode selection buttons', () => {
+    render(<DashboardModeManager />);
+    expect(screen.getByText('Basic Mode')).toBeInTheDocument();
+    expect(screen.getByText('Pro Mode')).toBeInTheDocument();
+  });
+
+  it('handles mode changes', () => {
+    const mockSetMode = vi.fn();
+    vi.mocked(require('../../../core/store/dashboardModeStore').useDashboardModeStore).mockReturnValue({
+      mode: 'basic',
+      setMode: mockSetMode,
+      isProMode: false
+    });
+
+    render(<DashboardModeManager />);
+    
+    const proButton = screen.getByText('Pro Mode');
+    fireEvent.click(proButton);
+    
+    expect(mockSetMode).toHaveBeenCalledWith('pro');
   });
 }); 
