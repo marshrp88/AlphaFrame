@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils.js";
 
 // The Button component is a reusable UI element that can be rendered as a button.
 // It uses React.forwardRef to allow parent components to pass a ref to the underlying DOM element.

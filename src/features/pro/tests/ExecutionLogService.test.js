@@ -14,15 +14,15 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 // Mock CryptoService functions
-vi.mock('../../core/services/CryptoService.js', () => ({
+vi.mock('../../core/services/CryptoService', () => ({
   encrypt: vi.fn(),
   decrypt: vi.fn(),
   generateSalt: vi.fn()
 }));
 
 // Import after mocking
-import { executionLogService } from '../../core/services/ExecutionLogService.js';
-import { encrypt, decrypt, generateSalt } from '../../core/services/CryptoService.js';
+import { executionLogService } from '../../core/services/ExecutionLogService';
+import { encrypt, decrypt, generateSalt } from '../../core/services/CryptoService';
 
 // Mock IndexedDB
 const mockIndexedDB = {

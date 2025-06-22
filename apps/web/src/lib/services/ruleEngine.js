@@ -123,9 +123,10 @@ const LOGICAL_OPERATORS = {
 };
 
 class RuleEngine {
-  constructor() {
+  constructor(logger = executionLogService) {
     this.rules = new Map();
     this.triggerHistory = new Map();
+    this.logger = logger;
   }
 
   /**
@@ -139,7 +140,7 @@ class RuleEngine {
       const validationResult = RuleSchemaV2.safeParse(rule);
       if (!validationResult.success) {
         const validationError = new Error(`Rule validation failed: ${validationResult.error.errors.map(e => e.message).join(', ')}`);
-        await executionLogService.logError('rule.validation.failed', validationError, {
+        await this.logger.logError('rule.validation.failed', validationError, {
           errors: validationResult.error.errors,
           rule: rule
         });
@@ -159,7 +160,7 @@ class RuleEngine {
 
       this.rules.set(ruleId, ruleWithMetadata);
 
-      await executionLogService.log('rule.registered', {
+      await this.logger.log('rule.registered', {
         ruleId,
         ruleName: ruleWithMetadata.name,
         conditionsCount: ruleWithMetadata.conditions.length,
@@ -169,7 +170,7 @@ class RuleEngine {
 
       return ruleId;
     } catch (error) {
-      await executionLogService.logError('rule.registration.failed', error, { rule });
+      await this.logger.logError('rule.registration.failed', error, { rule });
       throw error;
     }
   }
@@ -186,7 +187,7 @@ class RuleEngine {
       const ruleValidation = RuleSchemaV2.safeParse(rule);
       if (!ruleValidation.success) {
         const validationError = new Error(`Rule validation failed: ${ruleValidation.error.errors.map(e => e.message).join(', ')}`);
-        await executionLogService.logError('rule.evaluation.validation.failed', validationError, {
+        await this.logger.logError('rule.evaluation.validation.failed', validationError, {
           errors: ruleValidation.error.errors,
           rule: rule
         });
@@ -197,7 +198,7 @@ class RuleEngine {
       const transactionValidation = TransactionSchema.safeParse(transaction);
       if (!transactionValidation.success) {
         const validationError = new Error(`Transaction validation failed: ${transactionValidation.error.errors.map(e => e.message).join(', ')}`);
-        await executionLogService.logError('rule.evaluation.transaction.validation.failed', validationError, {
+        await this.logger.logError('rule.evaluation.transaction.validation.failed', validationError, {
           errors: transactionValidation.error.errors,
           transaction: transaction
         });
@@ -210,9 +211,9 @@ class RuleEngine {
       // Extract logicOperator from rule and pass it to evaluateConditions
       const { logicOperator = 'AND' } = validatedRule;
       const result = await this.evaluateConditions(validatedRule.conditions, validatedTransaction, logicOperator);
-
+      
       // Log evaluation
-      await executionLogService.log('rule.evaluated', {
+      await this.logger.log('rule.evaluated', {
         ruleId: validatedRule.id,
         ruleName: validatedRule.name,
         result,
@@ -223,55 +224,52 @@ class RuleEngine {
 
       return result;
     } catch (error) {
-      await executionLogService.logError('rule.evaluation.failed', error, { rule, transaction });
+      await this.logger.logError('rule.evaluation.failed', error, { rule, transaction });
       throw error;
     }
   }
 
   /**
-   * Create a new rule with validation
+   * Create a new rule
    * @param {Object} ruleData - Rule data
-   * @returns {Promise<Object>} Created rule
+   * @returns {Promise<Object>} The created rule
    */
   async createRule(ruleData) {
     try {
-      // Validate rule data
       const validationResult = RuleSchemaV2.safeParse(ruleData);
       if (!validationResult.success) {
         const validationError = new Error(`Rule creation validation failed: ${validationResult.error.errors.map(e => e.message).join(', ')}`);
-        await executionLogService.logError('rule.creation.validation.failed', validationError, {
+        await this.logger.logError('rule.creation.validation.failed', validationError, {
           errors: validationResult.error.errors,
           ruleData: ruleData
         });
         throw validationError;
       }
-
+      
       const validatedRule = validationResult.data;
-      
-      // Register the rule
       const ruleId = await this.registerRule(validatedRule);
-      
-      // Return the created rule
       const createdRule = this.rules.get(ruleId);
       
-      await executionLogService.log('rule.created', {
+      await this.logger.log('rule.created', {
         ruleId,
         ruleName: createdRule.name,
-        actionType: createdRule.action.type
+        conditionsCount: createdRule.conditions.length,
+        actionType: createdRule.action?.type,
+        priority: createdRule.priority
       });
 
       return createdRule;
     } catch (error) {
-      await executionLogService.logError('rule.creation.failed', error, { ruleData });
+      await this.logger.logError('rule.creation.failed', error, { ruleData });
       throw error;
     }
   }
 
   /**
-   * Update an existing rule with validation
+   * Update an existing rule
    * @param {string} ruleId - Rule ID
-   * @param {Object} updates - Rule updates
-   * @returns {Promise<Object>} Updated rule
+   * @param {Object} updates - Fields to update
+   * @returns {Promise<Object>} The updated rule
    */
   async updateRule(ruleId, updates) {
     try {
@@ -280,27 +278,23 @@ class RuleEngine {
         throw new Error(`Rule with ID ${ruleId} not found`);
       }
 
-      // Merge updates with existing rule
       const updatedRule = { ...existingRule, ...updates, updated: new Date() };
 
-      // Validate the updated rule
       const validationResult = RuleSchemaV2.safeParse(updatedRule);
       if (!validationResult.success) {
         const validationError = new Error(`Rule update validation failed: ${validationResult.error.errors.map(e => e.message).join(', ')}`);
-        await executionLogService.logError('rule.update.validation.failed', validationError, {
+        await this.logger.logError('rule.update.validation.failed', validationError, {
           errors: validationResult.error.errors,
           ruleId,
           updates: updates
         });
         throw validationError;
       }
-
-      const validatedRule = validationResult.data;
       
-      // Update the rule
+      const validatedRule = validationResult.data;
       this.rules.set(ruleId, validatedRule);
 
-      await executionLogService.log('rule.updated', {
+      await this.logger.log('rule.updated', {
         ruleId,
         ruleName: validatedRule.name,
         updatedFields: Object.keys(updates)
@@ -308,75 +302,68 @@ class RuleEngine {
 
       return validatedRule;
     } catch (error) {
-      await executionLogService.logError('rule.update.failed', error, { ruleId, updates });
+      await this.logger.logError('rule.update.failed', error, { ruleId, updates });
       throw error;
     }
   }
 
   /**
-   * Evaluate conditions with proper logical operator handling
-   * @param {Array} conditions - Array of conditions
+   * Evaluate a set of conditions against transaction data
+   * @param {Array} conditions - Array of condition objects
    * @param {Object} transaction - Transaction data
-   * @param {string} logicOperator - Logical operator (AND, OR, NOT)
+   * @param {string} logicOperator - AND, OR, NOT
    * @returns {Promise<boolean>} Evaluation result
    */
   async evaluateConditions(conditions, transaction, logicOperator = 'AND') {
-    if (!Array.isArray(conditions)) {
-      return await this.evaluateSingleCondition(conditions, transaction);
+    const results = [];
+    for (const condition of conditions) {
+      if (condition.conditions && condition.conditions.length > 0) {
+        // Handle nested conditions recursively
+        const nestedResult = await this.evaluateConditions(
+          condition.conditions,
+          transaction,
+          condition.logicalOperator || 'AND'
+        );
+        results.push(nestedResult);
+      } else {
+        const result = await this.evaluateSingleCondition(condition, transaction);
+        results.push(result);
+      }
     }
 
-    // Handle logical groups
-    const results = await Promise.all(
-      conditions.map(condition => this.evaluateSingleCondition(condition, transaction))
-    );
+    const logicalOperatorFn = LOGICAL_OPERATORS[logicOperator];
+    if (!logicalOperatorFn) {
+      throw new Error(`Unsupported logical operator: ${logicOperator}`);
+    }
 
-    // Debug logging
-    console.log('🔍 evaluateConditions DEBUG:', {
-      logicOperator,
-      conditions: conditions.map(c => ({ field: c.field, operator: c.operator, value: c.value })),
-      results,
-      transaction: { category: transaction.category, amount: transaction.amount }
-    });
-
-    // Use the specified logic operator instead of hardcoded AND
-    const logicFn = LOGICAL_OPERATORS[logicOperator?.toUpperCase() || 'AND'];
-    const finalResult = logicFn(results);
-    
-    console.log('🔍 Final result:', finalResult);
-    return finalResult;
+    return logicalOperatorFn(results);
   }
 
   /**
-   * Evaluate a single condition or condition group
+   * Evaluate a single condition
    * @param {Object} condition - Condition object
    * @param {Object} transaction - Transaction data
    * @returns {Promise<boolean>} Evaluation result
    */
   async evaluateSingleCondition(condition, transaction) {
-    // Handle logical groups
-    if (condition.logicalOperator) {
-      const subResults = await Promise.all(
-        condition.conditions.map(subCondition => 
-          this.evaluateSingleCondition(subCondition, transaction)
-        )
-      );
-      return LOGICAL_OPERATORS[condition.logicalOperator](subResults);
+    const operatorFn = OPERATORS[condition.operator];
+    if (!operatorFn) {
+      throw new Error(`Unsupported operator: ${condition.operator}`);
     }
 
-    // Handle single condition
-    const { field, operator, value } = condition;
-    const transactionValue = transaction[field];
+    let transactionValue;
+    // Handle nested fields like transaction.location.city
+    if (condition.field.includes('.')) {
+      transactionValue = condition.field.split('.').reduce((obj, key) => obj && obj[key], transaction);
+    } else {
+      transactionValue = transaction[condition.field];
+    }
 
     if (transactionValue === undefined) {
-      throw new Error(`Field "${field}" not found on transaction.`);
+      return false; // Field does not exist on transaction
     }
 
-    const operatorFn = OPERATORS[operator];
-    if (!operatorFn) {
-      throw new Error(`Unknown operator: ${operator}`);
-    }
-
-    return operatorFn(transactionValue, value);
+    return operatorFn(transactionValue, condition.value);
   }
 
   /**
@@ -387,53 +374,35 @@ class RuleEngine {
    */
   async executeRule(rule, transaction) {
     const startTime = Date.now();
-    
     try {
-      // Add timeout protection to prevent hanging
-      const timeout = (ms) => new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Execution timed out')), ms)
-      );
+      await this.logger.logRuleTriggered(rule.id, rule.action?.type, {
+        ruleName: rule.name,
+        transactionId: transaction.id,
+        actionPayload: rule.action?.payload
+      });
 
-      const run = async () => {
-        // Log rule trigger
-        await executionLogService.logRuleTriggered(rule.id, rule.action?.type, {
-          ruleName: rule.name,
-          transactionId: transaction.id,
-          actionPayload: rule.action?.payload
-        });
-
-        // Simulate some processing time for measurable execution time
-        await new Promise(resolve => setTimeout(resolve, 1));
-
-        // Execute action
-        const result = {
-          ruleId: rule.id,
-          ruleName: rule.name,
-          actionType: rule.action?.type,
-          payload: rule.action?.payload,
-          transactionId: transaction.id,
-          timestamp: new Date().toISOString(),
-          executionTime: Date.now() - startTime
-        };
-
-        // Update trigger history
-        this.updateTriggerHistory(rule.id);
-
-        await executionLogService.log('rule.executed', {
-          ruleId: rule.id,
-          ruleName: rule.name,
-          executionTime: result.executionTime,
-          actionType: rule.action?.type
-        });
-
-        return result;
+      const result = {
+        ruleId: rule.id,
+        ruleName: rule.name,
+        actionType: rule.action?.type,
+        payload: rule.action?.payload,
+        transactionId: transaction.id,
+        timestamp: new Date().toISOString(),
+        executionTime: Date.now() - startTime
       };
 
-      // Timeout after 2 seconds to prevent hanging
-      return await Promise.race([run(), timeout(2000)]);
+      this.updateTriggerHistory(rule.id);
+
+      await this.logger.log('rule.executed', {
+        ruleId: rule.id,
+        ruleName: rule.name,
+        executionTime: result.executionTime,
+        actionType: rule.action?.type
+      });
+
+      return result;
     } catch (error) {
-      console.error('executeRule failed:', error);
-      await executionLogService.logError('rule.execution.failed', error, { rule, transaction });
+      await this.logger.logError('rule.execution.failed', error, { rule, transaction });
       throw error;
     }
   }
@@ -456,12 +425,12 @@ class RuleEngine {
             }
           } catch (error) {
             // Log evaluation error but continue with other rules
-            await executionLogService.logError('rule.evaluation.error', error, { ruleId, transaction });
+            await this.logger.logError('rule.evaluation.error', error, { ruleId, transaction });
           }
         }
       }
 
-      await executionLogService.log('rules.matching.found', {
+      await this.logger.log('rules.matching.found', {
         transactionId: transaction.id,
         matchingCount: matchingRules.length,
         totalRules: this.rules.size
@@ -469,7 +438,7 @@ class RuleEngine {
 
       return matchingRules;
     } catch (error) {
-      await executionLogService.logError('rules.matching.failed', error, { transaction });
+      await this.logger.logError('rules.matching.failed', error, { transaction });
       throw error;
     }
   }
@@ -482,13 +451,8 @@ class RuleEngine {
    */
   async simulateRule(rule, transaction) {
     const startTime = Date.now();
-    
     try {
-      // Evaluate without executing
       const wouldTrigger = await this.evaluateRule(rule, transaction);
-      
-      // Simulate some processing time for measurable simulation time
-      await new Promise(resolve => setTimeout(resolve, 1));
       
       const simulation = {
         ruleId: rule.id,
@@ -500,17 +464,17 @@ class RuleEngine {
         simulationTime: Date.now() - startTime,
         timestamp: new Date().toISOString()
       };
-
-      await executionLogService.log('rule.simulated', {
+      
+      await this.logger.log('rule.simulated', {
         ruleId: rule.id,
         ruleName: rule.name,
         wouldTrigger,
         simulationTime: simulation.simulationTime
       });
-
+      
       return simulation;
     } catch (error) {
-      await executionLogService.logError('rule.simulation.failed', error, { rule, transaction });
+      await this.logger.logError('rule.simulation.failed', error, { rule, transaction });
       throw error;
     }
   }
@@ -553,7 +517,7 @@ class RuleEngine {
       const parsed = RuleSchemaV2.safeParse(rule);
       return parsed.success;
     } catch (error) {
-      await executionLogService.logError('rule.validation.failed', error, { rule });
+      await this.logger.logError('rule.validation.failed', error, { rule });
       return false;
     }
   }
@@ -575,7 +539,7 @@ class RuleEngine {
       this.rules.delete(ruleId);
       this.triggerHistory.delete(ruleId);
       
-      await executionLogService.log('rule.removed', { ruleId });
+      await this.logger.log('rule.removed', { ruleId });
     }
   }
 
@@ -600,7 +564,7 @@ class RuleEngine {
           });
         } catch (error) {
           // Log evaluation error but continue with other rules
-          await executionLogService.logError('rule.evaluation.error', error, { ruleId: rule.id, transaction });
+          await this.logger.logError('rule.evaluation.error', error, { ruleId: rule.id, transaction });
           results.push({
             ruleId: rule.id,
             ruleName: rule.name,
@@ -610,7 +574,7 @@ class RuleEngine {
         }
       }
 
-      await executionLogService.log('rules.evaluated', {
+      await this.logger.log('rules.evaluated', {
         transactionId: transaction.id,
         rulesCount: rules.length,
         resultsCount: results.length
@@ -618,7 +582,7 @@ class RuleEngine {
 
       return results;
     } catch (error) {
-      await executionLogService.logError('rules.evaluation.failed', error, { rules, transaction });
+      await this.logger.logError('rules.evaluation.failed', error, { rules, transaction });
       throw error;
     }
   }
@@ -630,7 +594,7 @@ class RuleEngine {
     this.rules.clear();
     this.triggerHistory.clear();
     
-    await executionLogService.log('rules.cleared');
+    await this.logger.log('rules.cleared');
   }
 }
 
@@ -643,7 +607,8 @@ export { RuleEngine };
 
 // Legacy exports for backward compatibility
 export const evaluateRule = (rule, transaction) => ruleEngine.evaluateRule(rule, transaction);
-export const executeRule = (rule) => ruleEngine.executeRule(rule, {});
+export const executeRule = (rule, transaction) => ruleEngine.executeRule(rule, transaction);
+export const simulateRule = (rule, transaction) => ruleEngine.simulateRule(rule, transaction);
 export const validateRule = (rule) => ruleEngine.validateRule(rule);
 export const getMatchingRules = (transaction, allRules) => {
   // Legacy function - now uses internal rule registry

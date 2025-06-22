@@ -451,34 +451,50 @@ const ensureMockPersistence = () => {
 ensureMockPersistence();
 
 // ============================================================================
-// EXECUTION LOG SERVICE MOCKING
+// EXECUTION LOG SERVICE MOCK
 // ============================================================================
 
-// Mock ExecutionLogService with all required methods
-const createExecutionLogServiceMock = () => {
-  return {
-    log: vi.fn().mockResolvedValue({ id: 'log-1', timestamp: Date.now() }),
-    logError: vi.fn().mockResolvedValue({ id: 'error-1', timestamp: Date.now() }),
-    logInfo: vi.fn().mockResolvedValue({ id: 'info-1', timestamp: Date.now() }),
-    queryLogs: vi.fn().mockResolvedValue([]),
-    exportLogs: vi.fn().mockResolvedValue({ logs: [], metadata: {} }),
-    clearOldLogs: vi.fn().mockResolvedValue(0),
-    encryptPayload: vi.fn().mockResolvedValue('encrypted-data'),
-    decryptPayload: vi.fn().mockResolvedValue({ test: 'data' }),
-    generateId: vi.fn().mockReturnValue('test-id'),
-    generateSessionId: vi.fn().mockReturnValue('session-test-id'),
-    getUserId: vi.fn().mockReturnValue('test-user'),
-    dbName: 'AlphaProLogs',
-    storeName: 'executionLogs',
-    sessionId: 'session-test-id',
-    userId: 'test-user'
-  };
-};
+// // Mock ExecutionLogService for consistent logging behavior
+// const createExecutionLogServiceMock = () => {
+//   return {
+//     log: vi.fn((event, data) => {
+//       // console.log(`[Mock Log] ${event}:`, data);
+//       return Promise.resolve();
+//     }),
+//     logError: vi.fn((event, error, data) => {
+//       // console.error(`[Mock Error] ${event}:`, error, data);
+//       return Promise.resolve();
+//     }),
+//     logRuleTriggered: vi.fn().mockResolvedValue(),
+//     queryLogs: vi.fn().mockResolvedValue([]),
+//     getSessionLogs: vi.fn().mockResolvedValue([]),
+//     clearOldLogs: vi.fn().mockResolvedValue(0)
+//   };
+// };
 
-const mockExecutionLogService = createExecutionLogServiceMock();
+// const mockExecutionLogService = createExecutionLogServiceMock();
 
-vi.mock('../../core/services/ExecutionLogService.js', () => ({
-  default: mockExecutionLogService
-}));
+// vi.mock('./core/services/ExecutionLogService.js', () => ({
+//   default: mockExecutionLogService
+// }));
+
+// ============================================================================
+// GLOBAL MOCK MANAGEMENT (CLEANUP/RESET)
+// ============================================================================
+
+// Ensure all mocks are reset before each test
+beforeEach(() => {
+  // Reset all standard Vitest mocks
+  vi.clearAllMocks();
+
+  // Reset custom mocks to their initial state
+  Object.assign(mockAuth0, createAuth0Mock());
+  // Object.assign(mockExecutionLogService, createExecutionLogServiceMock());
+});
+
+// Final cleanup after all tests
+afterAll(() => {
+  vi.restoreAllMocks();
+});
 
 console.log('✅ Surgical test infrastructure fixes applied - ready for 116 test repairs'); 
