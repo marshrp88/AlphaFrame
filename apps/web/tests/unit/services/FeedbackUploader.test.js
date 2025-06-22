@@ -5,15 +5,10 @@
  * all snapshot generation, encryption, export, and data sanitization functionality
  * works correctly with proper error handling and privacy controls.
  *
- * Procedure:
- * 1. Test snapshot generation with various data types
- * 2. Test encryption and decryption functionality
- * 3. Test export methods (file download, clipboard)
- * 4. Test data sanitization and privacy controls
- * 5. Test error handling and edge cases
- *
- * Conclusion: These tests validate that the FeedbackUploader properly handles
- * user feedback data while maintaining security, privacy, and zero-knowledge compliance.
+ * Fixes Applied:
+ * - Proper afterEach cleanup with vi.restoreAllMocks()
+ * - Added proper mock isolation
+ * - Comments added for clarity
  */
 
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';

@@ -8,6 +8,7 @@
  * - Correct mock client initialization
  * - Test isolation with fresh instances
  * - Proper async handling
+ * - CLUSTER 2 FIXES: Fixed success flag issues and proper mock setup
  */
 
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
@@ -19,6 +20,9 @@ describe('PlaidService - Fixed', () => {
   let sessionStorageSpy;
 
   beforeEach(() => {
+    // CLUSTER 2 FIX: Reset all mocks before each test
+    vi.clearAllMocks();
+    
     // Create a new instance for each test
     plaidService = new PlaidService();
     
@@ -41,11 +45,7 @@ describe('PlaidService - Fixed', () => {
     // Verify client is initialized
     expect(plaidService.client).not.toBeNull();
     
-    // Reset all mocks and ensure they return success
-    vi.clearAllMocks();
-    vi.restoreAllMocks();
-    
-    // Ensure all mock methods return success by default
+    // CLUSTER 2 FIX: Ensure all mock methods return success by default
     global.testUtils.mockPlaidClient.linkTokenCreate.mockResolvedValue({
       data: { link_token: 'test_link_token_12345' }
     });
@@ -61,6 +61,7 @@ describe('PlaidService - Fixed', () => {
   });
 
   afterEach(() => {
+    // CLUSTER 2 FIX: Proper cleanup
     vi.restoreAllMocks();
   });
 
@@ -77,7 +78,7 @@ describe('PlaidService - Fixed', () => {
 
   describe('Link Token Management', () => {
     it('should create link token successfully', async () => {
-      // Ensure the mock returns the expected structure
+      // CLUSTER 2 FIX: Ensure the mock returns the expected structure
       global.testUtils.mockPlaidClient.linkTokenCreate.mockResolvedValue({
         data: { link_token: 'test_link_token_12345' }
       });
@@ -124,7 +125,7 @@ describe('PlaidService - Fixed', () => {
 
   describe('Public Token Exchange', () => {
     it('should exchange public token successfully', async () => {
-      // Ensure the mock returns the expected structure
+      // CLUSTER 2 FIX: Ensure the mock returns the expected structure
       global.testUtils.mockPlaidClient.itemPublicTokenExchange.mockResolvedValue({
         data: { access_token: 'test_access_token_67890' }
       });
@@ -152,7 +153,7 @@ describe('PlaidService - Fixed', () => {
     it('should get account balances successfully', async () => {
       plaidService.accessToken = 'test_access_token';
       
-      // Ensure the mock returns the expected structure
+      // CLUSTER 2 FIX: Ensure the mock returns the expected structure
       global.testUtils.mockPlaidClient.accountsGet.mockResolvedValue({
         data: { accounts: [{ account_id: 'test_account', balances: { available: 1000 } }] }
       });
@@ -178,7 +179,7 @@ describe('PlaidService - Fixed', () => {
     it('should get transactions successfully', async () => {
       plaidService.accessToken = 'test_access_token';
       
-      // Ensure the mock returns the expected structure
+      // CLUSTER 2 FIX: Ensure the mock returns the expected structure
       global.testUtils.mockPlaidClient.transactionsGet.mockResolvedValue({
         data: { transactions: [{ transaction_id: 'test_transaction', amount: 100 }] }
       });
@@ -206,6 +207,7 @@ describe('PlaidService - Fixed', () => {
 
   describe('Token Storage', () => {
     it('should load stored access token', async () => {
+      // CLUSTER 2 FIX: Mock proper localStorage behavior
       localStorageSpy.mockImplementation((key) => {
         if (key === 'plaid_access_token') {
           return 'stored_access_token';
@@ -214,17 +216,21 @@ describe('PlaidService - Fixed', () => {
       });
 
       const result = await plaidService.loadStoredAccessToken();
+      // CLUSTER 2 FIX: loadStoredAccessToken returns boolean, not object with success property
       expect(result).toBe(true);
     });
 
     it('should return false when no token stored', async () => {
+      // CLUSTER 2 FIX: Ensure no token in storage
       localStorageSpy.mockReturnValue(null);
 
       const result = await plaidService.loadStoredAccessToken();
+      // CLUSTER 2 FIX: loadStoredAccessToken returns boolean
       expect(result).toBe(false);
     });
 
     it('should clear access token', () => {
+      // CLUSTER 2 FIX: Mock removeItem properly
       const removeItemSpy = vi.spyOn(window.localStorage, 'removeItem');
       
       plaidService.clearAccessToken();

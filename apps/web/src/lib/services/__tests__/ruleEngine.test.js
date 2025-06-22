@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import ruleEngine from '../ruleEngine';
 
 describe('ruleEngine', () => {
@@ -6,14 +6,19 @@ describe('ruleEngine', () => {
     vi.clearAllMocks();
   });
 
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   describe('evaluateRule', () => {
     it('should evaluate a simple condition rule', async () => {
       const rule = {
         id: 'test-rule',
         name: 'Test Rule',
+        description: 'Test rule for high amounts',
         conditions: [
           {
-            field: 'balance',
+            field: 'amount',
             operator: '>',
             value: 1000
           }
@@ -22,10 +27,16 @@ describe('ruleEngine', () => {
           type: 'notification',
           payload: { message: 'High balance alert' }
         },
-        isActive: true
+        logicOperator: 'AND',
+        enabled: true
       };
 
-      const data = { balance: 1500 };
+      const data = { 
+        id: 'txn_1',
+        amount: 1500,
+        date: '2024-01-15',
+        description: 'Test transaction'
+      };
       const result = await ruleEngine.evaluateRule(rule, data);
       
       expect(result.matched).toBe(true);
@@ -36,31 +47,34 @@ describe('ruleEngine', () => {
       const rule = {
         id: 'complex-rule',
         name: 'Complex Rule',
+        description: 'Complex rule with multiple conditions',
         conditions: [
           {
-            logicalOperator: 'and',
-            conditions: [
-              {
-                field: 'balance',
-                operator: '>',
-                value: 1000
-              },
-              {
-                field: 'category',
-                operator: '===',
-                value: 'income'
-              }
-            ]
+            field: 'amount',
+            operator: '>',
+            value: 1000
+          },
+          {
+            field: 'category',
+            operator: '===',
+            value: 'income'
           }
         ],
         action: {
           type: 'webhook',
           payload: { url: 'https://api.example.com/webhook' }
         },
-        isActive: true
+        logicOperator: 'AND',
+        enabled: true
       };
 
-      const data = { balance: 1500, category: 'income' };
+      const data = { 
+        id: 'txn_1',
+        amount: 1500, 
+        date: '2024-01-15',
+        category: 'income',
+        description: 'Test transaction'
+      };
       const result = await ruleEngine.evaluateRule(rule, data);
       
       expect(result.matched).toBe(true);
@@ -70,9 +84,10 @@ describe('ruleEngine', () => {
       const rule = {
         id: 'test-rule',
         name: 'Test Rule',
+        description: 'Test rule for high amounts',
         conditions: [
           {
-            field: 'balance',
+            field: 'amount',
             operator: '>',
             value: 1000
           }
@@ -81,10 +96,16 @@ describe('ruleEngine', () => {
           type: 'notification',
           payload: { message: 'High balance alert' }
         },
-        isActive: true
+        logicOperator: 'AND',
+        enabled: true
       };
 
-      const data = { balance: 500 };
+      const data = { 
+        id: 'txn_1',
+        amount: 500,
+        date: '2024-01-15',
+        description: 'Test transaction'
+      };
       const result = await ruleEngine.evaluateRule(rule, data);
       
       expect(result.matched).toBe(false);
@@ -97,9 +118,10 @@ describe('ruleEngine', () => {
         {
           id: 'rule1',
           name: 'Rule 1',
+          description: 'First rule for testing',
           conditions: [
             {
-              field: 'balance',
+              field: 'amount',
               operator: '>',
               value: 1000
             }
@@ -108,11 +130,13 @@ describe('ruleEngine', () => {
             type: 'notification',
             payload: { message: 'High balance' }
           },
-          isActive: true
+          logicOperator: 'AND',
+          enabled: true
         },
         {
           id: 'rule2',
           name: 'Rule 2',
+          description: 'Second rule for testing',
           conditions: [
             {
               field: 'category',
@@ -124,11 +148,18 @@ describe('ruleEngine', () => {
             type: 'webhook',
             payload: { url: 'https://api.example.com/expense' }
           },
-          isActive: true
+          logicOperator: 'AND',
+          enabled: true
         }
       ];
 
-      const data = { balance: 1500, category: 'expense' };
+      const data = { 
+        id: 'txn_1',
+        amount: 1500, 
+        date: '2024-01-15',
+        category: 'expense',
+        description: 'Test transaction'
+      };
       const results = await ruleEngine.evaluateRules(rules, data);
       
       expect(results).toHaveLength(2);
@@ -142,9 +173,10 @@ describe('ruleEngine', () => {
       const rule = {
         id: 'valid-rule',
         name: 'Valid Rule',
+        description: 'Valid rule for testing',
         conditions: [
           {
-            field: 'balance',
+            field: 'amount',
             operator: '>',
             value: 1000
           }
@@ -153,7 +185,8 @@ describe('ruleEngine', () => {
           type: 'notification',
           payload: { message: 'Test message' }
         },
-        isActive: true
+        logicOperator: 'AND',
+        enabled: true
       };
 
       const result = await ruleEngine.validateRule(rule);

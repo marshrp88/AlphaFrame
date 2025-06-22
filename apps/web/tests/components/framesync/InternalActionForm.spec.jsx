@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { InternalActionForm } from '@/components/framesync/InternalActionForm';
 
 // Mock the toast
-vi.mock('@/components/ui/use-toast', () => ({
+vi.mock('@/shared/ui/use-toast', () => ({
   useToast: () => ({
     toast: vi.fn()
   })
@@ -20,7 +20,7 @@ vi.mock('@/core/store/useAppStore', () => ({
 }));
 
 // Mock the UI components with simple implementations
-vi.mock('@/components/ui/Label', () => ({
+vi.mock('@/shared/ui/Label', () => ({
   Label: ({ children, htmlFor, ...props }) => (
     <label htmlFor={htmlFor} {...props}>
       {children}
@@ -28,7 +28,7 @@ vi.mock('@/components/ui/Label', () => ({
   )
 }));
 
-vi.mock('@/components/ui/Input', () => ({
+vi.mock('@/shared/ui/Input', () => ({
   Input: ({ id, type = 'text', value, onChange, placeholder, ...props }) => (
     <input
       id={id}
@@ -41,7 +41,7 @@ vi.mock('@/components/ui/Input', () => ({
   )
 }));
 
-vi.mock('@/components/ui/textarea', () => ({
+vi.mock('@/shared/ui/textarea', () => ({
   default: ({ id, value, onChange, placeholder, ...props }) => (
     <textarea
       id={id}

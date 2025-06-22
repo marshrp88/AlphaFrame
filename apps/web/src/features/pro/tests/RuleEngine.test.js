@@ -17,6 +17,13 @@
  * Conclusion: These tests validate that the Rule Engine 2.0 properly
  * processes complex rules, handles advanced conditions, and integrates
  * seamlessly with the logging system.
+ * 
+ * Fixes Applied:
+ * - Proper afterEach cleanup with vi.restoreAllMocks()
+ * - Removed console.log statements for cleaner output
+ * - Added proper mock isolation
+ * - Comments added for clarity
+ * - PHASE 2 FIXES: Updated to match actual return structures from service methods
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
@@ -29,8 +36,6 @@ describe('RuleEngine', () => {
   let loggerMock;
 
   beforeEach(() => {
-    console.log('🔍 TEST: beforeEach - creating new RuleEngine instance');
-    
     // Create a simple mock logger
     loggerMock = {
       log: vi.fn().mockResolvedValue(undefined),
@@ -43,19 +48,15 @@ describe('RuleEngine', () => {
     
     // Create RuleEngine with injected mock logger
     ruleEngine = new RuleEngine(loggerMock);
-    console.log('🔍 TEST: beforeEach - RuleEngine instance created');
-    console.log('🔍 TEST: RuleEngine logger:', ruleEngine.logger);
     vi.clearAllMocks();
   });
 
   afterEach(() => {
-    console.log('🔍 TEST: afterEach - cleaning up');
+    vi.restoreAllMocks();
   });
 
   // Simple executeRule test with known-good inputs
   it('should execute rule with minimal inputs - executeRule test', async () => {
-    console.log('🔍 EXECUTE TEST: Starting minimal executeRule test');
-    
     const simpleRule = {
       name: 'Execute Test',
       conditions: [{ field: 'amount', operator: '>', value: 50 }],
@@ -70,27 +71,18 @@ describe('RuleEngine', () => {
     
     try {
       const ruleId = await ruleEngine.registerRule(simpleRule);
-      console.log('🔍 EXECUTE TEST: Rule registered:', ruleId);
-      
       const registeredRule = ruleEngine.rules.get(ruleId);
-      console.log('🔍 EXECUTE TEST: About to call executeRule...');
-      
       const result = await ruleEngine.executeRule(registeredRule, simpleTransaction);
-      console.log('🔍 EXECUTE TEST: executeRule result:', JSON.stringify(result, null, 2));
       
       expect(result).toBeDefined();
       expect(typeof result.ruleId).toBe('string');
     } catch (error) {
-      console.error('🔍 EXECUTE TEST: Failed with error:', error);
-      console.error('🔍 EXECUTE TEST: Error stack:', error.stack);
       throw error;
     }
   }, 10000);
 
   // Simple simulateRule test with known-good inputs
   it('should simulate rule with minimal inputs - simulateRule test', async () => {
-    console.log('🔍 SIMULATE TEST: Starting minimal simulateRule test');
-    
     const simpleRule = {
       name: 'Simulate Test',
       conditions: [{ field: 'amount', operator: '>', value: 50 }],
@@ -105,20 +97,13 @@ describe('RuleEngine', () => {
     
     try {
       const ruleId = await ruleEngine.registerRule(simpleRule);
-      console.log('🔍 SIMULATE TEST: Rule registered:', ruleId);
-      
       const registeredRule = ruleEngine.rules.get(ruleId);
-      console.log('🔍 SIMULATE TEST: About to call simulateRule...');
-      
       const result = await ruleEngine.simulateRule(registeredRule, simpleTransaction);
-      console.log('🔍 SIMULATE TEST: simulateRule result:', JSON.stringify(result, null, 2));
       
       expect(result).toBeDefined();
       expect(typeof result.ruleId).toBe('string');
       expect(typeof result.wouldTrigger).toBe('boolean');
     } catch (error) {
-      console.error('🔍 SIMULATE TEST: Failed with error:', error);
-      console.error('🔍 SIMULATE TEST: Error stack:', error.stack);
       throw error;
     }
   }, 10000);
@@ -150,7 +135,7 @@ describe('RuleEngine', () => {
       const ruleId = await ruleEngine.registerRule(rule);
       const registeredRule = ruleEngine.rules.get(ruleId);
       const result = await ruleEngine.evaluateRule(registeredRule, mockTransaction);
-      expect(result).toBe(true);
+      expect(result.matched).toBe(true);
     });
 
     it('should fail evaluation for non-matching transaction', async () => {
@@ -166,7 +151,7 @@ describe('RuleEngine', () => {
         const ruleId = await ruleEngine.registerRule(rule);
         const registeredRule = ruleEngine.rules.get(ruleId);
         const result = await ruleEngine.evaluateRule(registeredRule, mockTransaction);
-        expect(result).toBe(false);
+        expect(result.matched).toBe(false);
       });
   });
 
@@ -186,7 +171,7 @@ describe('RuleEngine', () => {
       // This transaction matches the first condition (category)
       const transaction = { ...mockTransaction, category: 'Travel' };
       const result = await ruleEngine.evaluateRule(registeredRule, transaction);
-      expect(result).toBe(true);
+      expect(result.matched).toBe(true);
     });
 
     it('should correctly evaluate NOT conditions', async () => {
@@ -200,9 +185,8 @@ describe('RuleEngine', () => {
       };
       const ruleId = await ruleEngine.registerRule(rule);
       const registeredRule = ruleEngine.rules.get(ruleId);
-      // This transaction does not match 'Food', so NOT makes it true
       const result = await ruleEngine.evaluateRule(registeredRule, mockTransaction);
-      expect(result).toBe(true);
+      expect(result.matched).toBe(true);
     });
   });
 
@@ -238,17 +222,10 @@ describe('RuleEngine', () => {
             action: { type: 'notification', parameters: { message: 'Execute!' } },
         };
         
-        console.log('🔍 DEBUG: Rule input:', JSON.stringify(rule, null, 2));
-
         const ruleId = await ruleEngine.registerRule(rule);
         const registeredRule = ruleEngine.rules.get(ruleId);
         
-        console.log('🔍 DEBUG: Registered rule:', JSON.stringify(registeredRule, null, 2));
-        console.log('🔍 DEBUG: Mock transaction:', JSON.stringify(mockTransaction, null, 2));
-
         const result = await ruleEngine.executeRule(registeredRule, mockTransaction);
-        
-        console.log('🔍 DEBUG: Execution result:', JSON.stringify(result, null, 2));
         
         expect(result.ruleId).toBe(ruleId);
         expect(loggerMock.logRuleTriggered).toHaveBeenCalled();
@@ -277,8 +254,8 @@ describe('RuleEngine', () => {
             conditions: [{ field: 'amount', operator: '>', value: 0 }],
             action: { type: 'notification', parameters: { message: 'Valid' } },
         };
-        const isValid = await ruleEngine.validateRule(validRule);
-        expect(isValid).toBe(true);
+        const result = await ruleEngine.validateRule(validRule);
+        expect(result.valid).toBe(true);
     });
 
     it('should reject an invalid rule structure', async () => {
@@ -287,8 +264,8 @@ describe('RuleEngine', () => {
             conditions: [{ field: 'amount', operator: 'INVALID', value: 0 }],
             action: { type: 'notification', parameters: { message: 'Invalid' } },
         };
-        const isValid = await ruleEngine.validateRule(invalidRule);
-        expect(isValid).toBe(false);
+        const result = await ruleEngine.validateRule(invalidRule);
+        expect(result.valid).toBe(false);
     });
   });
 });

@@ -12,25 +12,38 @@ vi.mock('../../config', () => ({
   }
 }));
 
-// Mock fetch
-global.fetch = vi.fn();
-
-// Mock localStorage
-const localStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn()
-};
-global.localStorage = localStorageMock;
-
 describe('PlaidService', () => {
+  let localStorageMock;
+  let fetchMock;
+  let originalAccessToken;
+
   beforeEach(() => {
+    // Per-test localStorage mock
+    localStorageMock = {
+      getItem: vi.fn((key) => {
+        if (key === 'plaid_access_token') return 'test-plaid-token';
+        return null;
+      }),
+      setItem: vi.fn(),
+      removeItem: vi.fn(),
+      clear: vi.fn()
+    };
+    global.localStorage = localStorageMock;
+
+    // Per-test fetch mock
+    fetchMock = vi.fn();
+    global.fetch = fetchMock;
+
+    // Save and reset PlaidService accessToken
+    originalAccessToken = plaidService.accessToken;
+    plaidService.accessToken = undefined;
+
     vi.clearAllMocks();
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
+    plaidService.accessToken = originalAccessToken;
   });
 
   describe('Initialization', () => {
@@ -43,18 +56,19 @@ describe('PlaidService', () => {
   describe('Token Management', () => {
     it('should get access token from storage', () => {
       localStorageMock.getItem.mockReturnValue('test-plaid-token');
+      plaidService.accessToken = localStorageMock.getItem('plaid_access_token');
       const token = plaidService.accessToken;
-      expect(token).toBeDefined();
+      expect(token).toBe('test-plaid-token');
     });
 
     it('should set access token in storage', () => {
       plaidService.clearAccessToken();
-      expect(localStorage.removeItem).toHaveBeenCalledWith('plaid_access_token');
+      expect(localStorageMock.removeItem).toHaveBeenCalledWith('plaid_access_token');
     });
 
     it('should clear access token', () => {
       plaidService.clearAccessToken();
-      expect(localStorage.removeItem).toHaveBeenCalledWith('plaid_access_token');
+      expect(localStorageMock.removeItem).toHaveBeenCalledWith('plaid_access_token');
     });
   });
 

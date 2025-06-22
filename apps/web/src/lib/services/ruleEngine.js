@@ -37,6 +37,7 @@ const RuleConditionSchema = z.object({
 const RuleActionSchema = z.object({
   type: z.enum(['notification', 'categorization', 'webhook', 'budget_adjustment', 'custom']),
   parameters: z.record(z.any()).optional(),
+  payload: z.record(z.any()).optional(),
   webhook: z.object({
     url: z.string().url('Invalid webhook URL'),
     method: z.enum(['GET', 'POST', 'PUT', 'DELETE']).default('POST'),
@@ -179,7 +180,7 @@ class RuleEngine {
    * Evaluate a single rule against transaction data with validation
    * @param {Object} rule - Rule object
    * @param {Object} transaction - Transaction data
-   * @returns {Promise<boolean>} Evaluation result
+   * @returns {Promise<Object>} Evaluation result with matched and action properties
    */
   async evaluateRule(rule, transaction) {
     try {
@@ -210,13 +211,22 @@ class RuleEngine {
 
       // Extract logicOperator from rule and pass it to evaluateConditions
       const { logicOperator = 'AND' } = validatedRule;
-      const result = await this.evaluateConditions(validatedRule.conditions, validatedTransaction, logicOperator);
+      const matched = await this.evaluateConditions(validatedRule.conditions, validatedTransaction, logicOperator);
+      
+      // CLUSTER 2 FIX: Return expected object structure with matched and action properties
+      const result = {
+        matched,
+        action: validatedRule.action,
+        ruleId: validatedRule.id,
+        ruleName: validatedRule.name,
+        transactionId: validatedTransaction.id
+      };
       
       // Log evaluation
       await this.logger.log('rule.evaluated', {
         ruleId: validatedRule.id,
         ruleName: validatedRule.name,
-        result,
+        result: matched,
         transactionId: validatedTransaction.id,
         conditionsCount: validatedRule.conditions.length,
         priority: validatedRule.priority
@@ -452,12 +462,12 @@ class RuleEngine {
   async simulateRule(rule, transaction) {
     const startTime = Date.now();
     try {
-      const wouldTrigger = await this.evaluateRule(rule, transaction);
+      const evaluationResult = await this.evaluateRule(rule, transaction);
       
       const simulation = {
         ruleId: rule.id,
         ruleName: rule.name,
-        wouldTrigger,
+        wouldTrigger: evaluationResult.matched,
         actionType: rule.action?.type,
         payload: rule.action?.payload,
         transactionId: transaction.id,
@@ -468,7 +478,7 @@ class RuleEngine {
       await this.logger.log('rule.simulated', {
         ruleId: rule.id,
         ruleName: rule.name,
-        wouldTrigger,
+        wouldTrigger: evaluationResult.matched,
         simulationTime: simulation.simulationTime
       });
       
@@ -510,15 +520,22 @@ class RuleEngine {
   /**
    * Validate rule structure
    * @param {Object} rule - Rule object
-   * @returns {Promise<boolean>} Validation result
+   * @returns {Promise<Object>} Validation result with valid property
    */
   async validateRule(rule) {
     try {
       const parsed = RuleSchemaV2.safeParse(rule);
-      return parsed.success;
+      // CLUSTER 2 FIX: Return expected object structure with valid property
+      return {
+        valid: parsed.success,
+        errors: parsed.success ? [] : parsed.error.errors
+      };
     } catch (error) {
       await this.logger.logError('rule.validation.failed', error, { rule });
-      return false;
+      return {
+        valid: false,
+        errors: [error.message]
+      };
     }
   }
 
@@ -559,7 +576,7 @@ class RuleEngine {
           results.push({
             ruleId: rule.id,
             ruleName: rule.name,
-            matched: result,
+            matched: result.matched,
             action: rule.action
           });
         } catch (error) {

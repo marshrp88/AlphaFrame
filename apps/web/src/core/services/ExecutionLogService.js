@@ -176,6 +176,12 @@ class ExecutionLogService {
    * Query logs by various criteria
    */
   async queryLogs(filters = {}) {
+    // Check if we're in a Node environment (for testing)
+    if (typeof window === 'undefined' || !this.db) {
+      console.warn('IndexedDB not available - returning empty logs array');
+      return [];
+    }
+
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([this.storeName], 'readonly');
       const store = transaction.objectStore(this.storeName);

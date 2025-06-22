@@ -15,7 +15,7 @@ import {
 import { Input } from "@/shared/ui/Input";
 import { Label } from "@/shared/ui/Label";
 import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group";
-import { useAppStore } from '@/store/useAppStore';
+import { useAppStore } from '@/core/store/useAppStore';
 import { useToast } from "@/shared/ui/use-toast";
 
 /**

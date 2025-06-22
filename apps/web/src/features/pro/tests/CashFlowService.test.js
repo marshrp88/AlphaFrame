@@ -5,16 +5,10 @@
  * all cash flow functionality works correctly including transaction management,
  * forecasting, analysis, and insights generation.
  * 
- * Procedure:
- * 1. Test transaction management (add, retrieve, filter)
- * 2. Test cash flow calculations and analysis
- * 3. Test forecasting algorithms and projections
- * 4. Test recurring transaction handling
- * 5. Test insights and warning generation
- * 6. Test validation and error handling
- * 
- * Conclusion: These tests validate that the CashFlowService properly
- * manages cash flow, generates forecasts, and provides actionable insights.
+ * Fixes Applied:
+ * - Proper afterEach cleanup with vi.restoreAllMocks()
+ * - Added proper mock isolation
+ * - Comments added for clarity
  */
 
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
@@ -38,6 +32,8 @@ describe('CashFlowService', () => {
     // Reset mocks
     executionLogService.log.mockResolvedValue();
     executionLogService.logError.mockResolvedValue();
+    
+    vi.clearAllMocks();
   });
 
   afterEach(() => {

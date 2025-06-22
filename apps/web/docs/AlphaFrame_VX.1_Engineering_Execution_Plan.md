@@ -3,7 +3,7 @@
 **Document Type:** Finalized Engineering Plan for Customer-Ready Product Delivery  
 **Version:** VX.1  
 **Status:** Approved for Implementation  
-**Branch:** `feat/alphapro`  
+**Branch:** `feat/vx1-restart`  
 **Date:** December 2024
 
 ---

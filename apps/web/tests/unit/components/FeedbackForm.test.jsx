@@ -5,16 +5,10 @@
  * all UI interactions, form validation, category selection, data inclusion
  * options, and snapshot generation work correctly with proper error handling.
  *
- * Procedure:
- * 1. Test component rendering and initial state
- * 2. Test feedback category selection
- * 3. Test data inclusion toggles and size calculation
- * 4. Test form validation and submission
- * 5. Test snapshot generation and export functionality
- * 6. Test error handling and user feedback
- *
- * Conclusion: These tests validate that the FeedbackForm provides a smooth
- * user experience for feedback submission while maintaining data privacy.
+ * Fixes Applied:
+ * - Proper afterEach cleanup with vi.restoreAllMocks()
+ * - Added proper mock isolation
+ * - Comments added for clarity
  */
 
 import React from 'react';
