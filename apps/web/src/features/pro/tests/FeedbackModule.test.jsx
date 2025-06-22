@@ -4,23 +4,26 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import FeedbackModule from '../components/FeedbackModule';
 
 // Mock dependencies
-vi.mock('../../../lib/services/FeedbackUploader', () => ({
+vi.mock('../../../core/services/FeedbackUploader', () => ({
   default: {
     uploadFeedback: vi.fn()
   }
 }));
 
-vi.mock('../../../lib/services/NotificationService', () => ({
+vi.mock('../../../core/services/NotificationService', () => ({
   default: {
     showNotification: vi.fn()
   }
 }));
 
-vi.mock('../../../core/services/ExecutionLogService.js', () => ({
+// Mock ExecutionLogService
+const mockQueryLogs = vi.fn().mockResolvedValue([
+  { type: 'test.log', timestamp: '2024-01-01T00:00:00Z', payload: { test: 'data' } }
+]);
+
+vi.mock('../../../core/services/ExecutionLogService', () => ({
   default: {
-    queryLogs: vi.fn().mockResolvedValue([
-      { type: 'test.log', timestamp: '2024-01-01T00:00:00Z', payload: { test: 'data' } }
-    ])
+    queryLogs: mockQueryLogs
   }
 }));
 
@@ -53,7 +56,7 @@ describe('FeedbackModule', () => {
     const mockLogs = [
       { type: 'test.log', timestamp: '2024-01-01T00:00:00Z', payload: { test: 'data' } }
     ];
-    const mockExecutionLogService = require('../../../core/services/ExecutionLogService.js').default;
+    const mockExecutionLogService = require('../../../core/services/ExecutionLogService').default;
     mockExecutionLogService.queryLogs.mockResolvedValue(mockLogs);
     render(<FeedbackModule />);
     const generateButton = screen.getByText('Generate & Download Report');

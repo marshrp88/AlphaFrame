@@ -54,6 +54,7 @@ const RuleSchemaV2 = z.object({
   id: z.string().optional(),
   name: z.string().min(1, 'Rule name is required').max(100, 'Rule name too long'),
   description: z.string().optional(),
+  logicOperator: z.enum(['AND', 'OR', 'NOT']).default('AND'),
   conditions: z.array(RuleConditionSchema).min(1, 'At least one condition is required'),
   action: RuleActionSchema,
   enabled: z.boolean().default(true),
@@ -206,8 +207,9 @@ class RuleEngine {
       const validatedRule = ruleValidation.data;
       const validatedTransaction = transactionValidation.data;
 
-      // Evaluate conditions
-      const result = await this.evaluateConditions(validatedRule.conditions, validatedTransaction);
+      // Extract logicOperator from rule and pass it to evaluateConditions
+      const { logicOperator = 'AND' } = validatedRule;
+      const result = await this.evaluateConditions(validatedRule.conditions, validatedTransaction, logicOperator);
 
       // Log evaluation
       await executionLogService.log('rule.evaluated', {
@@ -312,12 +314,13 @@ class RuleEngine {
   }
 
   /**
-   * Evaluate complex conditions with logical operators
-   * @param {Array} conditions - Array of conditions or condition groups
+   * Evaluate conditions with proper logical operator handling
+   * @param {Array} conditions - Array of conditions
    * @param {Object} transaction - Transaction data
+   * @param {string} logicOperator - Logical operator (AND, OR, NOT)
    * @returns {Promise<boolean>} Evaluation result
    */
-  async evaluateConditions(conditions, transaction) {
+  async evaluateConditions(conditions, transaction, logicOperator = 'AND') {
     if (!Array.isArray(conditions)) {
       return await this.evaluateSingleCondition(conditions, transaction);
     }
@@ -327,8 +330,20 @@ class RuleEngine {
       conditions.map(condition => this.evaluateSingleCondition(condition, transaction))
     );
 
-    // Default to AND logic if no logical operator specified
-    return LOGICAL_OPERATORS.AND(results);
+    // Debug logging
+    console.log('🔍 evaluateConditions DEBUG:', {
+      logicOperator,
+      conditions: conditions.map(c => ({ field: c.field, operator: c.operator, value: c.value })),
+      results,
+      transaction: { category: transaction.category, amount: transaction.amount }
+    });
+
+    // Use the specified logic operator instead of hardcoded AND
+    const logicFn = LOGICAL_OPERATORS[logicOperator?.toUpperCase() || 'AND'];
+    const finalResult = logicFn(results);
+    
+    console.log('🔍 Final result:', finalResult);
+    return finalResult;
   }
 
   /**
@@ -365,7 +380,7 @@ class RuleEngine {
   }
 
   /**
-   * Execute a rule's action
+   * Execute a rule's action with timeout protection
    * @param {Object} rule - Rule object
    * @param {Object} transaction - Transaction that triggered the rule
    * @returns {Promise<Object>} Action result
@@ -374,39 +389,50 @@ class RuleEngine {
     const startTime = Date.now();
     
     try {
-      // Log rule trigger
-      await executionLogService.logRuleTriggered(rule.id, rule.action?.type, {
-        ruleName: rule.name,
-        transactionId: transaction.id,
-        actionPayload: rule.action?.payload
-      });
+      // Add timeout protection to prevent hanging
+      const timeout = (ms) => new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Execution timed out')), ms)
+      );
 
-      // Simulate some processing time for measurable execution time
-      await new Promise(resolve => setTimeout(resolve, 1));
+      const run = async () => {
+        // Log rule trigger
+        await executionLogService.logRuleTriggered(rule.id, rule.action?.type, {
+          ruleName: rule.name,
+          transactionId: transaction.id,
+          actionPayload: rule.action?.payload
+        });
 
-      // Execute action
-      const result = {
-        ruleId: rule.id,
-        ruleName: rule.name,
-        actionType: rule.action?.type,
-        payload: rule.action?.payload,
-        transactionId: transaction.id,
-        timestamp: new Date().toISOString(),
-        executionTime: Date.now() - startTime
+        // Simulate some processing time for measurable execution time
+        await new Promise(resolve => setTimeout(resolve, 1));
+
+        // Execute action
+        const result = {
+          ruleId: rule.id,
+          ruleName: rule.name,
+          actionType: rule.action?.type,
+          payload: rule.action?.payload,
+          transactionId: transaction.id,
+          timestamp: new Date().toISOString(),
+          executionTime: Date.now() - startTime
+        };
+
+        // Update trigger history
+        this.updateTriggerHistory(rule.id);
+
+        await executionLogService.log('rule.executed', {
+          ruleId: rule.id,
+          ruleName: rule.name,
+          executionTime: result.executionTime,
+          actionType: rule.action?.type
+        });
+
+        return result;
       };
 
-      // Update trigger history
-      this.updateTriggerHistory(rule.id);
-
-      await executionLogService.log('rule.executed', {
-        ruleId: rule.id,
-        ruleName: rule.name,
-        executionTime: result.executionTime,
-        actionType: rule.action?.type
-      });
-
-      return result;
+      // Timeout after 2 seconds to prevent hanging
+      return await Promise.race([run(), timeout(2000)]);
     } catch (error) {
+      console.error('executeRule failed:', error);
       await executionLogService.logError('rule.execution.failed', error, { rule, transaction });
       throw error;
     }

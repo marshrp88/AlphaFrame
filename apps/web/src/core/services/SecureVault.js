@@ -4,7 +4,7 @@
  * Uses the CryptoService for encryption/decryption operations.
  */
 
-import { deriveKey, encrypt, decrypt, generateSalt } from './crypto';
+import { deriveKey, encrypt, decrypt, generateSalt } from './CryptoService';
 
 // Private variables
 let vaultData = null;

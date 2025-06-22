@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useFinancialStateStore } from '@/lib/store/financialStateStore';
+import { useFinancialStateStore } from '@/core/store/financialStateStore';
 
 function Home() {
   // Get store functions

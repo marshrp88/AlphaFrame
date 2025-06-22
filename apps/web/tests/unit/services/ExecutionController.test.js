@@ -8,12 +8,12 @@ vi.mock('@/lib/services/PermissionEnforcer', () => ({
 }));
 
 // Mock useUIStore to provide showPasswordPrompt
-vi.mock('@/lib/store/uiStore', () => ({
+vi.mock('@/core/store/uiStore', () => ({
   useUIStore: {
-    getState: () => ({
+    getState: vi.fn(() => ({
       showPasswordPrompt: vi.fn(({ onConfirm }) => onConfirm('mock-password')),
       isSandboxMode: false
-    })
+    }))
   }
 }));
 

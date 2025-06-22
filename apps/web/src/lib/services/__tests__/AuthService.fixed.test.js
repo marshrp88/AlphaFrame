@@ -56,10 +56,22 @@ vi.mock('../../../core/services/ExecutionLogService.js', () => ({
 describe('AuthService - Fixed', () => {
   let locationSpy;
   let fetchSpy;
+  let mockStorage;
 
   beforeEach(async () => {
     // Reset modules to clear any cached state
     vi.resetModules();
+    
+    // Mock storage (localStorage and sessionStorage)
+    let store = {};
+    mockStorage = {
+      getItem: vi.fn(key => store[key] || null),
+      setItem: vi.fn((key, value) => { store[key] = value.toString(); }),
+      removeItem: vi.fn(key => { delete store[key]; }),
+      clear: vi.fn(() => { store = {}; })
+    };
+    Object.defineProperty(window, 'localStorage', { value: mockStorage, writable: true });
+    Object.defineProperty(window, 'sessionStorage', { value: mockStorage, writable: true });
     
     // Mock window.location
     Object.defineProperty(window, 'location', {
@@ -82,6 +94,7 @@ describe('AuthService - Fixed', () => {
   });
 
   afterEach(() => {
+    mockStorage.clear();
     vi.restoreAllMocks();
   });
 
@@ -140,15 +153,7 @@ describe('AuthService - Fixed', () => {
   describe('handleCallback', () => {
     it('should handle successful authentication callback', async () => {
       // Mock valid state
-      Object.defineProperty(window, 'sessionStorage', {
-        value: {
-          getItem: vi.fn(() => 'mock_state'),
-          setItem: vi.fn(),
-          removeItem: vi.fn(),
-          clear: vi.fn()
-        },
-        writable: true
-      });
+      mockStorage.setItem('oauth_state', 'mock_state');
 
       // Mock successful token exchange with proper response structure
       global.fetch = vi.fn().mockResolvedValue({
@@ -168,15 +173,7 @@ describe('AuthService - Fixed', () => {
 
     it('should handle token exchange errors', async () => {
       // Mock invalid state
-      Object.defineProperty(window, 'sessionStorage', {
-        value: {
-          getItem: vi.fn(() => 'different_state'),
-          setItem: vi.fn(),
-          removeItem: vi.fn(),
-          clear: vi.fn()
-        },
-        writable: true
-      });
+      mockStorage.setItem('oauth_state', 'different_state');
       
       await expect(handleCallback('mock_code', 'mock_state'))
         .rejects.toThrow('Invalid state parameter');
@@ -201,25 +198,8 @@ describe('AuthService - Fixed', () => {
         email: 'test@example.com',
         name: 'Test User'
       };
-
-      // Mock storage with user data - use actual localStorage mock
-      Object.defineProperty(window, 'localStorage', {
-        value: {
-          getItem: vi.fn((key) => {
-            if (key === 'alphaframe_user_profile') {
-              return JSON.stringify(mockUser);
-            }
-            if (key === 'alphaframe_access_token') {
-              return 'mock_access_token';
-            }
-            return null;
-          }),
-          setItem: vi.fn(),
-          removeItem: vi.fn(),
-          clear: vi.fn()
-        },
-        writable: true
-      });
+      mockStorage.setItem('alphaframe_user_profile', JSON.stringify(mockUser));
+      mockStorage.setItem('alphaframe_access_token', 'mock_access_token');
 
       // Initialize auth to load session
       await initializeAuth();
@@ -229,16 +209,7 @@ describe('AuthService - Fixed', () => {
     });
 
     it('should return null when user not authenticated', async () => {
-      // Mock no user in storage
-      Object.defineProperty(window, 'localStorage', {
-        value: {
-          getItem: vi.fn(() => null),
-          setItem: vi.fn(),
-          removeItem: vi.fn(),
-          clear: vi.fn()
-        },
-        writable: true
-      });
+      // Storage is cleared in afterEach, so no user exists by default
 
       // Initialize auth to load session
       await initializeAuth();
@@ -249,40 +220,15 @@ describe('AuthService - Fixed', () => {
 
     it('should check authentication status correctly', async () => {
       // Test authenticated
-      Object.defineProperty(window, 'localStorage', {
-        value: {
-          getItem: vi.fn((key) => {
-            if (key === 'alphaframe_access_token') {
-              return 'mock_access_token';
-            }
-            if (key === 'alphaframe_user_profile') {
-              return JSON.stringify({ sub: 'auth0|123', email: 'test@example.com' });
-            }
-            if (key === 'alphaframe_session_expiry') {
-              return (Date.now() + 3600000).toString();
-            }
-            return null;
-          }),
-          setItem: vi.fn(),
-          removeItem: vi.fn(),
-          clear: vi.fn()
-        },
-        writable: true
-      });
+      mockStorage.setItem('alphaframe_access_token', 'mock_access_token');
+      mockStorage.setItem('alphaframe_user_profile', JSON.stringify({ sub: 'auth0|123', email: 'test@example.com' }));
+      mockStorage.setItem('alphaframe_session_expiry', (Date.now() + 3600000).toString());
 
       await initializeAuth();
       expect(isAuthenticated()).toBe(true);
 
       // Test not authenticated
-      Object.defineProperty(window, 'localStorage', {
-        value: {
-          getItem: vi.fn(() => null),
-          setItem: vi.fn(),
-          removeItem: vi.fn(),
-          clear: vi.fn()
-        },
-        writable: true
-      });
+      mockStorage.clear(); // Ensure storage is empty for this part of the test
       await initializeAuth();
       expect(isAuthenticated()).toBe(false);
     });
@@ -291,20 +237,7 @@ describe('AuthService - Fixed', () => {
   describe('Token Management', () => {
     it('should return access token when available', async () => {
       // Mock storage with access token
-      Object.defineProperty(window, 'localStorage', {
-        value: {
-          getItem: vi.fn((key) => {
-            if (key === 'alphaframe_access_token') {
-              return 'mock_access_token';
-            }
-            return null;
-          }),
-          setItem: vi.fn(),
-          removeItem: vi.fn(),
-          clear: vi.fn()
-        },
-        writable: true
-      });
+      mockStorage.setItem('alphaframe_access_token', 'mock_access_token');
 
       await initializeAuth();
       const token = getAccessToken();
@@ -312,16 +245,7 @@ describe('AuthService - Fixed', () => {
     });
 
     it('should return null when no access token', async () => {
-      Object.defineProperty(window, 'localStorage', {
-        value: {
-          getItem: vi.fn(() => null),
-          setItem: vi.fn(),
-          removeItem: vi.fn(),
-          clear: vi.fn()
-        },
-        writable: true
-      });
-
+      // No token in storage by default
       await initializeAuth();
       const token = getAccessToken();
       expect(token).toBeNull();
@@ -338,23 +262,8 @@ describe('AuthService - Fixed', () => {
       };
 
       // Mock user with permissions
-      Object.defineProperty(window, 'localStorage', {
-        value: {
-          getItem: vi.fn((key) => {
-            if (key === 'alphaframe_user_profile') {
-              return JSON.stringify(mockUser);
-            }
-            if (key === 'alphaframe_access_token') {
-              return 'mock_access_token';
-            }
-            return null;
-          }),
-          setItem: vi.fn(),
-          removeItem: vi.fn(),
-          clear: vi.fn()
-        },
-        writable: true
-      });
+      mockStorage.setItem('alphaframe_user_profile', JSON.stringify(mockUser));
+      mockStorage.setItem('alphaframe_access_token', 'mock_access_token');
 
       await initializeAuth();
       const permissions = getUserPermissions();
@@ -377,23 +286,8 @@ describe('AuthService - Fixed', () => {
       };
 
       // Mock user without permissions
-      Object.defineProperty(window, 'localStorage', {
-        value: {
-          getItem: vi.fn((key) => {
-            if (key === 'alphaframe_user_profile') {
-              return JSON.stringify(mockUser);
-            }
-            if (key === 'alphaframe_access_token') {
-              return 'mock_access_token';
-            }
-            return null;
-          }),
-          setItem: vi.fn(),
-          removeItem: vi.fn(),
-          clear: vi.fn()
-        },
-        writable: true
-      });
+      mockStorage.setItem('alphaframe_user_profile', JSON.stringify(mockUser));
+      mockStorage.setItem('alphaframe_access_token', 'mock_access_token');
 
       await initializeAuth();
       const permissions = getUserPermissions();
@@ -414,23 +308,8 @@ describe('AuthService - Fixed', () => {
       };
 
       // Mock user with specific permissions
-      Object.defineProperty(window, 'localStorage', {
-        value: {
-          getItem: vi.fn((key) => {
-            if (key === 'alphaframe_user_profile') {
-              return JSON.stringify(mockUser);
-            }
-            if (key === 'alphaframe_access_token') {
-              return 'mock_access_token';
-            }
-            return null;
-          }),
-          setItem: vi.fn(),
-          removeItem: vi.fn(),
-          clear: vi.fn()
-        },
-        writable: true
-      });
+      mockStorage.setItem('alphaframe_user_profile', JSON.stringify(mockUser));
+      mockStorage.setItem('alphaframe_access_token', 'mock_access_token');
 
       await initializeAuth();
 
@@ -440,28 +319,7 @@ describe('AuthService - Fixed', () => {
     });
 
     it('should handle permission check when not authenticated', async () => {
-      // Clear all storage to ensure no user data
-      Object.defineProperty(window, 'localStorage', {
-        value: {
-          getItem: vi.fn(() => null),
-          setItem: vi.fn(),
-          removeItem: vi.fn(),
-          clear: vi.fn()
-        },
-        writable: true
-      });
-
-      Object.defineProperty(window, 'sessionStorage', {
-        value: {
-          getItem: vi.fn(() => null),
-          setItem: vi.fn(),
-          removeItem: vi.fn(),
-          clear: vi.fn()
-        },
-        writable: true
-      });
-
-      // Reset the auth state
+      // Storage is cleared, no user is authenticated
       await initializeAuth();
 
       // Verify no user is authenticated
@@ -469,58 +327,29 @@ describe('AuthService - Fixed', () => {
       expect(getCurrentUser()).toBeNull();
 
       // Check permissions - should be false when not authenticated
-      expect(hasPermission('read:financial_data')).toBe(false);
+      expect(hasPermission('read:data')).toBe(false);
     });
   });
 
   describe('State Management', () => {
     it('should validate state parameter correctly', () => {
       // Mock stored state
-      Object.defineProperty(window, 'sessionStorage', {
-        value: {
-          getItem: vi.fn(() => 'stored_state'),
-          setItem: vi.fn(),
-          removeItem: vi.fn(),
-          clear: vi.fn()
-        },
-        writable: true
-      });
+      mockStorage.setItem('oauth_state', 'stored_state');
 
       // This would be tested in handleCallback, but we can test the logic
-      expect(window.sessionStorage.getItem).toBeDefined();
+      expect(mockStorage.getItem('oauth_state')).toBe('stored_state');
     });
 
     it('should handle missing state parameter', () => {
-      Object.defineProperty(window, 'sessionStorage', {
-        value: {
-          getItem: vi.fn(() => null),
-          setItem: vi.fn(),
-          removeItem: vi.fn(),
-          clear: vi.fn()
-        },
-        writable: true
-      });
-
+      // No state in storage by default
       // This would be tested in handleCallback
-      expect(window.sessionStorage.getItem).toBeDefined();
+      expect(mockStorage.getItem('oauth_state')).toBeNull();
     });
 
     it('should clear state after validation', () => {
-      const removeItemSpy = vi.fn();
-      Object.defineProperty(window, 'sessionStorage', {
-        value: {
-          getItem: vi.fn(),
-          setItem: vi.fn(),
-          removeItem: removeItemSpy,
-          clear: vi.fn()
-        },
-        writable: true
-      });
-      
-      // Mock the behavior
-      removeItemSpy.mockImplementation(() => {});
-      
-      expect(removeItemSpy).toBeDefined();
+      mockStorage.setItem('oauth_state', 'stored_state');
+      mockStorage.removeItem('oauth_state');
+      expect(mockStorage.getItem('oauth_state')).toBeNull();
     });
   });
 }); 

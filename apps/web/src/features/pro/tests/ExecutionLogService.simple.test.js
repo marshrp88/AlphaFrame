@@ -34,7 +34,7 @@ describe('ExecutionLogService - Simplified Tests', () => {
     
     // Mock crypto functions
     encrypt = vi.fn().mockResolvedValue('encrypted-data');
-    decrypt = vi.fn().mockResolvedValue({ test: 'data' });
+    decrypt = vi.fn().mockResolvedValue(JSON.stringify({ test: 'data' }));
     
     // Mock storage
     Object.defineProperty(window, 'localStorage', {

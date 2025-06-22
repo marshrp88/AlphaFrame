@@ -10,12 +10,20 @@ import { create } from 'zustand';
  * @property {Object} confirmationModal - Confirmation modal state
  * @property {Function} showConfirmationModal - Function to show the confirmation modal
  * @property {Function} hideConfirmationModal - Function to hide the confirmation modal
+ * @property {Function} showPasswordPrompt - Function to show password prompt
  */
 export const useUIStore = create((set) => ({
   // Initial state
   confirmationModal: {
     isOpen: false,
     action: null,
+    onConfirm: null,
+    onCancel: null
+  },
+
+  // Password prompt state
+  passwordPrompt: {
+    isOpen: false,
     onConfirm: null,
     onCancel: null
   },
@@ -42,10 +50,28 @@ export const useUIStore = create((set) => ({
     }
   }),
 
+  // Password prompt actions
+  showPasswordPrompt: (onConfirm, onCancel) => set({
+    passwordPrompt: {
+      isOpen: true,
+      onConfirm,
+      onCancel
+    }
+  }),
+
+  hidePasswordPrompt: () => set({
+    passwordPrompt: {
+      isOpen: false,
+      onConfirm: null,
+      onCancel: null
+    }
+  }),
+
   // Toggle sandbox mode
   toggleSandboxMode: () => set((state) => ({ isSandboxMode: !state.isSandboxMode }))
 }));
 
 // Notes:
 // - isSandboxMode allows the app to run in a safe, non-destructive mode for testing or demos.
-// - toggleSandboxMode can be used in the UI to switch modes. 
+// - toggleSandboxMode can be used in the UI to switch modes.
+// - showPasswordPrompt is used for high-risk actions that require master password confirmation. 

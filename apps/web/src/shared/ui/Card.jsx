@@ -1,6 +1,6 @@
 // Card.jsx
 // A set of simple card components for grouping UI content.
-// Exports: Card, CardHeader, CardContent, CardTitle
+// Exports: Card, CardHeader, CardContent, CardTitle, CardDescription
 import React from 'react';
 
 /**
@@ -38,4 +38,14 @@ export const CardTitle = ({ className = '', children, ...props }) => (
     {children}
   </h2>
 );
+
+/**
+ * CardDescription - description for a card
+ */
+export const CardDescription = ({ className = '', children, ...props }) => (
+  <p className={`text-gray-600 text-sm ${className}`} {...props}>
+    {children}
+  </p>
+);
+
 // Use these components to build consistent card layouts in the app. 

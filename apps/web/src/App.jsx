@@ -182,7 +182,7 @@ const App = () => {
               <div className="text-center text-gray-600">
                 <p>&copy; 2024 AlphaFrame. All rights reserved.</p>
                 <p className="text-sm mt-2">
-                  Environment: {config.env} | Version: {config.app.version}
+                  Environment: {config.env} | Version: 1.0.0
                 </p>
               </div>
             </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Button } from '@/shared/ui/Button.jsx';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/shared/ui/Card.jsx';
-import executionLogService from '@/core/services/ExecutionLogService.js';
+import { Button } from '@/shared/ui/Button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/shared/ui/Card';
+import executionLogService from '@/core/services/ExecutionLogService';
 
 /**
  * FeedbackModule Component

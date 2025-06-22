@@ -6,11 +6,11 @@
  * high-risk actions, confirmations, and error management.
  */
 
-import { useFinancialStateStore } from '../store/financialStateStore';
-import { useUIStore } from '../store/uiStore';
-import { get } from './secureVault';
+import { useFinancialStateStore } from '../../core/store/financialStateStore';
+import { useUIStore } from '../../core/store/uiStore';
+import { get } from '../../core/services/SecureVault';
 import { canExecuteAction } from './PermissionEnforcer';
-import { useLogStore } from '../store/logStore';
+import { useLogStore } from '../../core/store/logStore';
 import { ActionSchema } from '../validation/schemas';
 import { z } from 'zod';
 import { executeWebhook } from './WebhookService.js';

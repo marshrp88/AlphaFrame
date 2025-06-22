@@ -6,7 +6,7 @@ const getAccountBalanceSpy = vi.fn(() => 1000);
 const setAccountBalanceSpy = vi.fn();
 
 // Mock useUIStore at the very top for hoisting
-vi.mock('@/lib/store/uiStore', () => ({
+vi.mock('@/core/store/uiStore', () => ({
   useUIStore: {
     getState: vi.fn(() => ({
       showPasswordPrompt: vi.fn(({ onConfirm }) => {
@@ -19,12 +19,12 @@ vi.mock('@/lib/store/uiStore', () => ({
 }));
 
 // Mock canExecuteAction to always allow
-vi.mock('@/lib/services/PermissionEnforcer', () => ({
+vi.mock('@/core/services/PermissionEnforcer', () => ({
   canExecuteAction: vi.fn(() => Promise.resolve({ allowed: true }))
 }));
 
 // Mock useFinancialStateStore with spies for internal actions
-vi.mock('@/lib/store/financialStateStore', () => ({
+vi.mock('@/core/store/financialStateStore', () => ({
   useFinancialStateStore: {
     getState: vi.fn(() => {
       console.log('[MOCK getState()] returning store with spies...');
@@ -39,12 +39,12 @@ vi.mock('@/lib/store/financialStateStore', () => ({
   }
 }));
 
-import { useFinancialStateStore } from '@/lib/store/financialStateStore';
+import { useFinancialStateStore } from '@/core/store/financialStateStore';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { ExecutionController } from '@/lib/services/ExecutionController';
+import { ExecutionController } from '@/core/services/ExecutionController';
 
 // Mock the secure vault
-vi.mock('@/lib/services/secureVault', () => ({
+vi.mock('@/core/services/secureVault', () => ({
   get: vi.fn(() => 'mock-plaid-token')
 }));
 
@@ -248,7 +248,7 @@ describe('ExecutionController', () => {
       }
     };
 
-    const { get } = await import('@/lib/services/secureVault');
+    const { get } = await import('@/core/services/secureVault');
     get.mockResolvedValueOnce(null);
 
     // Act & Assert
@@ -311,7 +311,7 @@ describe('ExecutionController - Diagnostics', () => {
     adjustGoalSpy.mockResolvedValue({ success: true });
 
     // === 💡 Pre-run diagnostic checks ===
-    const store = (await import('../../../src/lib/store/financialStateStore')).useFinancialStateStore.getState();
+    const store = (await import('../../../src/core/store/financialStateStore')).useFinancialStateStore.getState();
     console.log('[TEST] Retrieved store:', store);
     console.log('[TEST] typeof store.adjustGoal =', typeof store.adjustGoal);
     expect(typeof store.adjustGoal).toBe('function');

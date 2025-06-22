@@ -1,7 +1,15 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { queueAction, getActionQueue, clearActionQueue } from '@/lib/services/TriggerDispatcher';
 import { dispatchAction } from '@/lib/services/TriggerDispatcher';
-import { useLogStore } from '@/lib/store/logStore';
+import { useLogStore } from '@/core/store/logStore';
+
+// Polyfill crypto.randomUUID for Node test environment
+if (!global.crypto) {
+  global.crypto = {};
+}
+if (!global.crypto.randomUUID) {
+  global.crypto.randomUUID = () => 'mock-uuid-' + Math.random().toString(36).substr(2, 9);
+}
 
 // Mock the logStore
 let mockActionLog = [];
@@ -21,7 +29,7 @@ const mockQueueAction = vi.fn((action) => {
 const mockUpdateAction = vi.fn((index, updatedAction) => {
   mockActionLog[index] = updatedAction;
 });
-vi.mock('../../../src/lib/store/logStore', () => ({
+vi.mock('@/core/store/logStore', () => ({
   useLogStore: {
     getState: vi.fn(() => ({
       queueAction: mockQueueAction,

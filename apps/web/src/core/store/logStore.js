@@ -5,6 +5,15 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+// Polyfill for crypto.randomUUID in test environment
+const generateId = () => {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  // Fallback for test environment
+  return 'id-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
+};
+
 /**
  * Action Log Entry Type
  * @typedef {Object} ActionLogEntry
@@ -33,7 +42,7 @@ import { persist } from 'zustand/middleware';
  * @returns {ActionLogEntry} The created log entry
  */
 const createLogEntry = (actionType, payload) => ({
-  id: crypto.randomUUID(),
+  id: generateId(),
   actionType,
   payload,
   status: 'pending',
@@ -104,6 +113,19 @@ export const useLogStore = create(
        */
       getEntriesByType: (actionType) => {
         return get().actionLog.filter(entry => entry.actionType === actionType);
+      },
+
+      /**
+       * Queues an action for execution
+       * @param {Object} action - Action object to queue
+       * @returns {string} The ID of the queued action
+       */
+      queueAction: (action) => {
+        const entry = createLogEntry(action.type || 'unknown', action);
+        set(state => ({
+          actionLog: [entry, ...state.actionLog]
+        }));
+        return entry.id;
       }
     }),
     {

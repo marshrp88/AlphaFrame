@@ -2,7 +2,7 @@
 // Service for dispatching triggers to the ExecutionController
 // Part of FrameSync - the execution and automation layer of AlphaFrame
 
-import { useLogStore } from '../store/logStore';
+import { useLogStore } from '../../core/store/logStore';
 import { ExecutionController } from './ExecutionController';
 import { create } from 'zustand';
 

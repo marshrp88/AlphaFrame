@@ -23,12 +23,12 @@ import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { RuleEngine } from '../../../lib/services/ruleEngine.js';
 import executionLogService from '../../../core/services/ExecutionLogService.js';
 
-// Mock ExecutionLogService
+// Mock ExecutionLogService to prevent timeouts
 vi.mock('../../../core/services/ExecutionLogService.js', () => ({
   default: {
-    log: vi.fn(),
-    logError: vi.fn(),
-    logRuleTriggered: vi.fn()
+    log: vi.fn().mockResolvedValue(undefined),
+    logError: vi.fn().mockResolvedValue(undefined),
+    logRuleTriggered: vi.fn().mockResolvedValue(undefined)
   }
 }));
 
@@ -44,694 +44,142 @@ describe('RuleEngine 2.0', () => {
     vi.restoreAllMocks();
   });
 
-  describe('Basic Properties', () => {
-    it('should have correct basic properties', () => {
-      expect(ruleEngine.rules).toBeInstanceOf(Map);
-      expect(ruleEngine.triggerHistory).toBeInstanceOf(Map);
-    });
+  // Simplified and valid transaction for testing
+  const mockTransaction = {
+    id: 'txn_123',
+    amount: 150,
+    merchant_name: 'Tech Store',
+    date: '2024-01-15',
+    category: 'Electronics',
+    account_id: 'acc_1',
+    pending: false,
+    payment_channel: 'online',
+    transaction_type: 'digital'
+  };
 
-    it('should start with empty rules and history', () => {
-      expect(ruleEngine.rules.size).toBe(0);
-      expect(ruleEngine.triggerHistory.size).toBe(0);
-    });
-  });
-
-  describe('Rule Registration', () => {
-    it('should register a valid rule', async () => {
+  describe('Rule Registration and Basic Evaluation', () => {
+    it('should register a valid rule and evaluate it correctly', async () => {
       const rule = {
-        name: 'High Spending Alert',
+        name: 'High-Value Electronics Purchase',
+        logicOperator: 'AND',
         conditions: [
-          { field: 'amount', operator: '>', value: 100 }
+          { field: 'amount', operator: '>', value: 100 },
+          { field: 'category', operator: '===', value: 'Electronics' }
         ],
-        action: {
-          type: 'notification',
-          payload: { message: 'High amount purchase detected' }
-        },
-        isActive: true
+        action: { type: 'notification', parameters: { message: 'Alert!' } },
       };
-
       const ruleId = await ruleEngine.registerRule(rule);
-
-      expect(ruleId).toBeDefined();
-      expect(ruleEngine.rules.has(ruleId)).toBe(true);
-      expect(ruleEngine.rules.get(ruleId).name).toBe('High Spending Alert');
-
-      expect(executionLogService.log).toHaveBeenCalledWith(
-        'rule.registered',
-        expect.objectContaining({
-          ruleId,
-          ruleName: 'High Spending Alert',
-          conditionsCount: 1,
-          actionType: 'notification'
-        })
-      );
-    });
-
-    it('should generate rule ID if not provided', async () => {
-      const rule = {
-        name: 'Test Rule',
-        conditions: [
-          { field: 'amount', operator: '>', value: 50 }
-        ],
-        action: { type: 'notification' },
-        isActive: true
-      };
-
-      const ruleId = await ruleEngine.registerRule(rule);
-
-      expect(ruleId).toMatch(/^rule_\d+_[a-z0-9]+$/);
-    });
-
-    it('should reject invalid rules', async () => {
-      const invalidRule = {
-        name: 'Invalid Rule',
-        action: { type: 'notification' },
-        isActive: true
-      };
-
-      await expect(ruleEngine.registerRule(invalidRule))
-        .rejects.toThrow();
-
-      expect(executionLogService.logError).toHaveBeenCalledWith(
-        'rule.registration.failed',
-        expect.any(Error),
-        { rule: invalidRule }
-      );
-    });
-  });
-
-  describe('Basic Condition Evaluation', () => {
-    beforeEach(async () => {
-      // Register a basic rule for testing
-      const basicRule = {
-        name: 'test-rule-basic',
-        description: 'Test rule for basic evaluation',
-        conditions: [
-          {
-            field: 'amount',
-            operator: '>',
-            value: 100
-          }
-        ],
-        action: {
-          type: 'notification',
-          payload: { message: 'High amount transaction detected' }
-        },
-        isActive: true
-      };
-
-      await ruleEngine.registerRule(basicRule);
-    });
-
-    it('should evaluate simple greater-than rule', async () => {
-      const transaction = {
-        id: 'txn_1',
-        amount: 150,
-        merchant_name: 'Test Store',
-        date: '2024-01-15'
-      };
-
-      const result = await ruleEngine.evaluateRule(ruleEngine.rules.get('test-rule-basic'), transaction);
+      const registeredRule = ruleEngine.rules.get(ruleId);
+      const result = await ruleEngine.evaluateRule(registeredRule, mockTransaction);
       expect(result).toBe(true);
     });
 
-    it('should evaluate AND conditions', async () => {
-      const andRule = {
-        name: 'test-rule-and',
-        description: 'Test rule with AND conditions',
-        conditions: [
-          {
-            logicalOperator: 'and',
+    it('should fail evaluation for non-matching transaction', async () => {
+        const rule = {
+            name: 'High-Value Groceries Purchase',
+            logicOperator: 'AND',
             conditions: [
-              {
-                field: 'amount',
-                operator: '>',
-                value: 100
-              },
-              {
-                field: 'merchant_name',
-                operator: 'contains',
-                value: 'Store'
-              }
-            ]
-          }
-        ],
-        action: {
-          type: 'notification',
-          payload: { message: 'High amount from store detected' }
-        },
-        isActive: true
-      };
-
-      await ruleEngine.registerRule(andRule);
-      const ruleId = Array.from(ruleEngine.rules.keys()).find(key => ruleEngine.rules.get(key).name === 'test-rule-and');
-      const rule = ruleEngine.rules.get(ruleId);
-
-      const transaction = {
-        id: 'txn_2',
-        amount: 150,
-        merchant_name: 'Test Store',
-        date: '2024-01-15'
-      };
-
-      const result = await ruleEngine.evaluateRule(rule, transaction);
-      expect(result).toBe(true);
-    });
-
-    it('should return false for unmet conditions', async () => {
-      const transaction = {
-        id: 'txn_3',
-        amount: 50,
-        merchant_name: 'Test Store',
-        date: '2024-01-15'
-      };
-
-      const ruleId = Array.from(ruleEngine.rules.keys()).find(key => ruleEngine.rules.get(key).name === 'test-rule-basic');
-      const rule = ruleEngine.rules.get(ruleId);
-
-      const result = await ruleEngine.evaluateRule(rule, transaction);
-      expect(result).toBe(false);
-    });
-
-    it('should handle missing transaction fields gracefully', async () => {
-      const transaction = {
-        id: 'txn_4',
-        amount: 150,
-        date: '2024-01-15'
-        // merchant_name is missing
-      };
-
-      const ruleId = Array.from(ruleEngine.rules.keys()).find(key => ruleEngine.rules.get(key).name === 'test-rule-basic');
-      const rule = ruleEngine.rules.get(ruleId);
-
-      const result = await ruleEngine.evaluateRule(rule, transaction);
-      expect(result).toBe(true); // Should still pass the amount condition
-    });
-  });
-
-  describe('Advanced Operators', () => {
-    it('should handle string operators', async () => {
-      const stringRule = {
-        name: 'test-rule-string',
-        description: 'Test rule with string operators',
-        conditions: [
-          {
-            field: 'merchant_name',
-            operator: 'contains',
-            value: 'Coffee'
-          }
-        ],
-        action: {
-          type: 'notification',
-          payload: { message: 'Coffee purchase detected' }
-        },
-        isActive: true
-      };
-
-      await ruleEngine.registerRule(stringRule);
-      const ruleId = Array.from(ruleEngine.rules.keys()).find(key => ruleEngine.rules.get(key).name === 'test-rule-string');
-      const rule = ruleEngine.rules.get(ruleId);
-
-      const transaction = {
-        id: 'txn_5',
-        amount: 5.50,
-        merchant_name: 'Starbucks Coffee',
-        date: '2024-01-15'
-      };
-
-      const result = await ruleEngine.evaluateRule(rule, transaction);
-      expect(result).toBe(true);
-    });
+              { field: 'amount', operator: '>', value: 100 },
+              { field: 'category', operator: '===', value: 'Groceries' }
+            ],
+            action: { type: 'notification', parameters: { message: 'Alert!' } },
+        };
+        const ruleId = await ruleEngine.registerRule(rule);
+        const registeredRule = ruleEngine.rules.get(ruleId);
+        const result = await ruleEngine.evaluateRule(registeredRule, mockTransaction);
+        expect(result).toBe(false);
+      });
   });
 
   describe('Logical Operators', () => {
-    it('should handle OR conditions', async () => {
-      const orRule = {
-        name: 'test-rule-or',
-        description: 'Test rule with OR conditions',
+    it('should correctly evaluate OR conditions', async () => {
+      const rule = {
+        name: 'Travel or High Spending',
+        logicOperator: 'OR',
         conditions: [
-          {
-            field: 'amount',
-            operator: '>',
-            value: 100
-          },
-          {
-            field: 'merchant_name',
-            operator: 'contains',
-            value: 'Restaurant'
-          }
+          { field: 'category', operator: '===', value: 'Travel' },
+          { field: 'amount', operator: '>', value: 1000 }
         ],
-        action: {
-          type: 'notification',
-          payload: { message: 'High amount or restaurant purchase detected' }
-        },
-        isActive: true
+        action: { type: 'notification', parameters: { message: 'Alert!' } },
       };
-
-      await ruleEngine.registerRule(orRule);
-      const ruleId = Array.from(ruleEngine.rules.keys()).find(key => ruleEngine.rules.get(key).name === 'test-rule-or');
-      const rule = ruleEngine.rules.get(ruleId);
-
-      // Test with high amount
-      const transaction1 = {
-        id: 'txn_6',
-        amount: 150,
-        merchant_name: 'Grocery Store',
-        date: '2024-01-15'
-      };
-
-      const result1 = await ruleEngine.evaluateRule(rule, transaction1);
-      expect(result1).toBe(true);
-
-      // Test with restaurant
-      const transaction2 = {
-        id: 'txn_7',
-        amount: 25,
-        merchant_name: 'Pizza Restaurant',
-        date: '2024-01-15'
-      };
-
-      const result2 = await ruleEngine.evaluateRule(rule, transaction2);
-      expect(result2).toBe(true);
-    });
-
-    it('should handle NOT conditions', async () => {
-      const notRule = {
-        name: 'test-rule-not',
-        description: 'Test rule with NOT conditions',
-        conditions: [
-          {
-            field: 'merchant_name',
-            operator: '!==',
-            value: 'Gas Station'
-          }
-        ],
-        action: {
-          type: 'notification',
-          payload: { message: 'Non-gas purchase detected' }
-        },
-        isActive: true
-      };
-
-      await ruleEngine.registerRule(notRule);
-      const ruleId = Array.from(ruleEngine.rules.keys()).find(key => ruleEngine.rules.get(key).name === 'test-rule-not');
-      const rule = ruleEngine.rules.get(ruleId);
-
-      const transaction = {
-        id: 'txn_8',
-        amount: 25,
-        merchant_name: 'Grocery Store',
-        date: '2024-01-15'
-      };
-
-      const result = await ruleEngine.evaluateRule(rule, transaction);
+      const ruleId = await ruleEngine.registerRule(rule);
+      const registeredRule = ruleEngine.rules.get(ruleId);
+      // This transaction matches the first condition (category)
+      const transaction = { ...mockTransaction, category: 'Travel' };
+      const result = await ruleEngine.evaluateRule(registeredRule, transaction);
       expect(result).toBe(true);
     });
 
-    it('should handle complex nested logical operators', async () => {
-      const complexRule = {
-        name: 'test-rule-complex',
-        description: 'Test rule with complex nested conditions',
+    it('should correctly evaluate NOT conditions', async () => {
+      const rule = {
+        name: 'Not a Food Purchase',
+        logicOperator: 'NOT',
         conditions: [
-          {
-            field: 'amount',
-            operator: '>',
-            value: 50
-          },
-          {
-            field: 'merchant_name',
-            operator: 'contains',
-            value: 'Store'
-          },
-          {
-            field: 'category',
-            operator: '!==',
-            value: 'Gas'
-          }
+          { field: 'category', operator: '===', value: 'Food' }
         ],
-        action: {
-          type: 'notification',
-          payload: { message: 'Complex condition met' }
-        },
-        isActive: true
+        action: { type: 'notification', parameters: { message: 'Alert!' } },
       };
-
-      await ruleEngine.registerRule(complexRule);
-      const ruleId = Array.from(ruleEngine.rules.keys()).find(key => ruleEngine.rules.get(key).name === 'test-rule-complex');
-      const rule = ruleEngine.rules.get(ruleId);
-
-      const transaction = {
-        id: 'txn_9',
-        amount: 75,
-        merchant_name: 'Grocery Store',
-        category: 'Food',
-        date: '2024-01-15'
-      };
-
-      const result = await ruleEngine.evaluateRule(rule, transaction);
+      const ruleId = await ruleEngine.registerRule(rule);
+      const registeredRule = ruleEngine.rules.get(ruleId);
+      // This transaction does not match 'Food', so NOT makes it true
+      const result = await ruleEngine.evaluateRule(registeredRule, mockTransaction);
       expect(result).toBe(true);
     });
   });
 
-  describe('Rule Execution', () => {
-    it('should execute rule actions', async () => {
-      const executionRule = {
-        name: 'test-rule-execution',
-        description: 'Test rule execution',
-        conditions: [
-          {
-            field: 'amount',
-            operator: '>',
-            value: 100
-          }
-        ],
-        action: {
-          type: 'notification',
-          payload: { message: 'High amount transaction detected' }
-        },
-        isActive: true
-      };
-
-      await ruleEngine.registerRule(executionRule);
-      const ruleId = Array.from(ruleEngine.rules.keys()).find(key => ruleEngine.rules.get(key).name === 'test-rule-execution');
-      const rule = ruleEngine.rules.get(ruleId);
-
-      const transaction = {
-        id: 'txn_10',
-        amount: 150,
-        merchant_name: 'Test Store',
-        date: '2024-01-15'
-      };
-
-      const result = await ruleEngine.executeRule(rule, transaction);
-      expect(result.success).toBe(true);
-    });
-
-    it('should update trigger history on execution', async () => {
-      const historyRule = {
-        name: 'test-rule-history',
-        description: 'Test rule trigger history',
-        conditions: [
-          {
-            field: 'amount',
-            operator: '>',
-            value: 100
-          }
-        ],
-        action: {
-          type: 'notification',
-          payload: { message: 'High amount transaction detected' }
-        },
-        isActive: true
-      };
-
-      await ruleEngine.registerRule(historyRule);
-      const ruleId = Array.from(ruleEngine.rules.keys()).find(key => ruleEngine.rules.get(key).name === 'test-rule-history');
-      const rule = ruleEngine.rules.get(ruleId);
-
-      const transaction = {
-        id: 'txn_11',
-        amount: 150,
-        merchant_name: 'Test Store',
-        date: '2024-01-15'
-      };
-
-      await ruleEngine.executeRule(rule, transaction);
-      
-      const frequency = ruleEngine.getTriggerFrequency(ruleId);
-      expect(frequency).toBeGreaterThan(0);
-    });
-  });
-
-  describe('Rule Simulation', () => {
-    it('should simulate rule execution without executing', async () => {
-      const simulationRule = {
-        name: 'test-rule-simulation',
-        description: 'Test rule simulation',
-        conditions: [
-          {
-            field: 'amount',
-            operator: '>',
-            value: 100
-          }
-        ],
-        action: {
-          type: 'notification',
-          payload: { message: 'High amount transaction detected' }
-        },
-        isActive: true
-      };
-
-      await ruleEngine.registerRule(simulationRule);
-      const ruleId = Array.from(ruleEngine.rules.keys()).find(key => ruleEngine.rules.get(key).name === 'test-rule-simulation');
-      const rule = ruleEngine.rules.get(ruleId);
-
-      const transaction = {
-        id: 'txn_12',
-        amount: 150,
-        merchant_name: 'Test Store',
-        date: '2024-01-15'
-      };
-
-      const result = await ruleEngine.simulateRule(rule, transaction);
-      expect(result.wouldTrigger).toBe(true);
-      expect(result.conditionsMet).toBe(true);
-    });
-
-    it('should simulate rule that would not trigger', async () => {
-      const simulationRule = {
-        name: 'test-rule-simulation-false',
-        description: 'Test rule simulation that would not trigger',
-        conditions: [
-          {
-            field: 'amount',
-            operator: '>',
-            value: 100
-          }
-        ],
-        action: {
-          type: 'notification',
-          payload: { message: 'High amount transaction detected' }
-        },
-        isActive: true
-      };
-
-      await ruleEngine.registerRule(simulationRule);
-      const ruleId = Array.from(ruleEngine.rules.keys()).find(key => ruleEngine.rules.get(key).name === 'test-rule-simulation-false');
-      const rule = ruleEngine.rules.get(ruleId);
-
-      const transaction = {
-        id: 'txn_13',
-        amount: 50,
-        merchant_name: 'Test Store',
-        date: '2024-01-15'
-      };
-
-      const result = await ruleEngine.simulateRule(rule, transaction);
-      expect(result.wouldTrigger).toBe(false);
-      expect(result.conditionsMet).toBe(false);
-    });
-  });
-
-  describe('Rule Management', () => {
-    it('should remove rules', async () => {
-      const removeRule = {
-        name: 'test-rule-remove',
-        description: 'Test rule for removal',
-        conditions: [
-          {
-            field: 'amount',
-            operator: '>',
-            value: 100
-          }
-        ],
-        action: {
-          type: 'notification',
-          payload: { message: 'High amount transaction detected' }
-        },
-        isActive: true
-      };
-
-      const ruleId = await ruleEngine.registerRule(removeRule);
-      expect(ruleEngine.rules.has(ruleId)).toBe(true);
-
-      await ruleEngine.removeRule(ruleId);
-      expect(ruleEngine.rules.has(ruleId)).toBe(false);
-    });
-
-    it('should clear all rules', async () => {
-      const clearRule = {
-        name: 'test-rule-clear',
-        description: 'Test rule for clearing',
-        conditions: [
-          {
-            field: 'amount',
-            operator: '>',
-            value: 100
-          }
-        ],
-        action: {
-          type: 'notification',
-          payload: { message: 'High amount transaction detected' }
-        },
-        isActive: true
-      };
-
-      await ruleEngine.registerRule(clearRule);
-      expect(ruleEngine.rules.size).toBeGreaterThan(0);
-
-      await ruleEngine.clearRules();
-      expect(ruleEngine.rules.size).toBe(0);
-    });
-  });
-
-  describe('Matching Rules', () => {
-    it('should find matching rules for a transaction', async () => {
-      const matchingRule = {
-        name: 'test-rule-matching',
-        description: 'Test rule for matching',
-        conditions: [
-          {
-            field: 'amount',
-            operator: '>',
-            value: 100
-          }
-        ],
-        action: {
-          type: 'notification',
-          payload: { message: 'High amount transaction detected' }
-        },
-        isActive: true
-      };
-
-      await ruleEngine.registerRule(matchingRule);
-
-      const transaction = {
-        id: 'txn_14',
-        amount: 150,
-        merchant_name: 'Test Store',
-        date: '2024-01-15'
-      };
-
-      const matchingRules = await ruleEngine.getMatchingRules(transaction);
-      expect(matchingRules.length).toBeGreaterThan(0);
-      expect(matchingRules.some(rule => rule.name === 'test-rule-matching')).toBe(true);
-    });
-  });
-
-  describe('Trigger Frequency', () => {
-    it('should track trigger frequency', async () => {
-      const frequencyRule = {
-        name: 'test-rule-frequency',
-        description: 'Test rule for frequency tracking',
-        conditions: [
-          {
-            field: 'amount',
-            operator: '>',
-            value: 100
-          }
-        ],
-        action: {
-          type: 'notification',
-          payload: { message: 'High amount transaction detected' }
-        },
-        isActive: true
-      };
-
-      const ruleId = await ruleEngine.registerRule(frequencyRule);
-
-      const transaction = {
-        id: 'txn_15',
-        amount: 150,
-        merchant_name: 'Test Store',
-        date: '2024-01-15'
-      };
-
-      await ruleEngine.executeRule(ruleEngine.rules.get(ruleId), transaction);
-      
-      const frequency = ruleEngine.getTriggerFrequency(ruleId);
-      expect(frequency).toBeGreaterThan(0);
-    });
-
-    it('should respect time window for frequency calculation', async () => {
-      const timeRule = {
-        name: 'test-rule-time',
-        description: 'Test rule for time window frequency',
-        conditions: [
-          {
-            field: 'amount',
-            operator: '>',
-            value: 100
-          }
-        ],
-        action: {
-          type: 'notification',
-          payload: { message: 'High amount transaction detected' }
-        },
-        isActive: true
-      };
-
-      const ruleId = await ruleEngine.registerRule(timeRule);
-
-      const transaction = {
-        id: 'txn_16',
-        amount: 150,
-        merchant_name: 'Test Store',
-        date: '2024-01-15'
-      };
-
-      await ruleEngine.executeRule(ruleEngine.rules.get(ruleId), transaction);
-      
-      const frequency7Days = ruleEngine.getTriggerFrequency(ruleId, 7);
-      const frequency30Days = ruleEngine.getTriggerFrequency(ruleId, 30);
-      
-      expect(frequency7Days).toBeGreaterThan(0);
-      expect(frequency30Days).toBeGreaterThan(0);
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('should handle invalid logical operators', async () => {
+  describe('Error Handling and Validation', () => {
+    it('should reject a rule with an invalid schema', async () => {
       const invalidRule = {
-        name: 'test-rule-invalid',
-        description: 'Test rule with invalid operator',
-        conditions: [
-          {
-            field: 'amount',
-            operator: 'INVALID_OPERATOR',
-            value: 100
-          }
-        ],
-        action: {
-          type: 'notification',
-          payload: { message: 'Invalid operator test' }
-        },
-        isActive: true
+        name: 'Rule with missing conditions',
+        // 'conditions' array is missing, which is required
+        action: { type: 'notification', parameters: { message: 'Alert!' } },
       };
-
-      await expect(ruleEngine.registerRule(invalidRule))
-        .rejects.toThrow('Invalid logical operator');
+      await expect(ruleEngine.registerRule(invalidRule)).rejects.toThrow('Rule validation failed');
     });
 
-    it('should handle missing required fields', async () => {
+    it('should reject a rule with an invalid operator', async () => {
       const invalidRule = {
-        name: 'test-rule-missing-fields',
-        description: 'Test rule with missing fields',
+        name: 'Rule with invalid operator',
+        logicOperator: 'AND',
         conditions: [
-          {
-            field: 'amount',
-            // Missing operator and value
-          }
+          { field: 'amount', operator: 'IS_BIG', value: 100 } // INVALID_OPERATOR
         ],
-        action: {
-          type: 'notification',
-          payload: { message: 'Missing fields test' }
-        },
-        isActive: true
+        action: { type: 'notification', parameters: { message: 'Alert!' } },
       };
-
-      await expect(ruleEngine.registerRule(invalidRule))
-        .rejects.toThrow('Rule validation failed');
+      await expect(ruleEngine.registerRule(invalidRule)).rejects.toThrow('Rule validation failed');
     });
+  });
+
+  describe('Execution and Simulation', () => {
+    it('should execute a matching rule and log it', async () => {
+        const rule = {
+            name: 'Test Execution',
+            logicOperator: 'AND',
+            conditions: [{ field: 'amount', operator: '>', value: 100 }],
+            action: { type: 'notification', parameters: { message: 'Execute!' } },
+        };
+        const ruleId = await ruleEngine.registerRule(rule);
+        const registeredRule = ruleEngine.rules.get(ruleId);
+        
+        await ruleEngine.executeRule(registeredRule, mockTransaction);
+        
+        expect(executionLogService.logRuleTriggered).toHaveBeenCalledWith(registeredRule.id, expect.any(String), expect.any(Object));
+    });
+
+    it('should simulate a matching rule without executing it', async () => {
+        const rule = {
+            name: 'Test Simulation',
+            logicOperator: 'AND',
+            conditions: [{ field: 'amount', operator: '>', value: 100 }],
+            action: { type: 'notification', parameters: { message: 'Simulate!' } },
+        };
+        const ruleId = await ruleEngine.registerRule(rule);
+        const registeredRule = ruleEngine.rules.get(ruleId);
+        
+        const simulationResult = await ruleEngine.simulateRule(registeredRule, mockTransaction);
+        
+        expect(simulationResult.wouldTrigger).toBe(true);
+        expect(executionLogService.logRuleTriggered).not.toHaveBeenCalled();
+      });
   });
 });

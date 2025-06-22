@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils.js";
 
 // The Input component is a reusable text input element that can be customized with props like type and className.
 // It uses React.forwardRef to allow parent components to pass a ref to the underlying DOM element.
