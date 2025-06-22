@@ -45,7 +45,7 @@ describe('ruleEngine (unit)', () => {
       name: 'Complex Rule',
       conditions: [
         {
-          logicalOperator: 'and',
+          logicalOperator: 'AND',
           conditions: [
             {
               field: 'balance',

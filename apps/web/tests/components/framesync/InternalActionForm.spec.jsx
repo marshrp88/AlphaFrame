@@ -10,7 +10,7 @@ vi.mock('@/components/ui/use-toast', () => ({
 }));
 
 // Mock the app store
-vi.mock('@/store/useAppStore', () => ({
+vi.mock('@/core/store/useAppStore', () => ({
   useAppStore: () => ({
     goals: [
       { id: '1', name: 'Emergency Fund' },

@@ -554,6 +554,50 @@ class RuleEngine {
   }
 
   /**
+   * Evaluate multiple rules against transaction data
+   * @param {Array} rules - Array of rule objects
+   * @param {Object} transaction - Transaction data
+   * @returns {Promise<Array>} Array of evaluation results
+   */
+  async evaluateRules(rules, transaction) {
+    try {
+      const results = [];
+      
+      for (const rule of rules) {
+        try {
+          const result = await this.evaluateRule(rule, transaction);
+          results.push({
+            ruleId: rule.id,
+            ruleName: rule.name,
+            matched: result,
+            action: rule.action
+          });
+        } catch (error) {
+          // Log evaluation error but continue with other rules
+          await executionLogService.logError('rule.evaluation.error', error, { ruleId: rule.id, transaction });
+          results.push({
+            ruleId: rule.id,
+            ruleName: rule.name,
+            matched: false,
+            error: error.message
+          });
+        }
+      }
+
+      await executionLogService.log('rules.evaluated', {
+        transactionId: transaction.id,
+        rulesCount: rules.length,
+        resultsCount: results.length
+      });
+
+      return results;
+    } catch (error) {
+      await executionLogService.logError('rules.evaluation.failed', error, { rules, transaction });
+      throw error;
+    }
+  }
+
+  /**
    * Clear all rules
    */
   async clearRules() {

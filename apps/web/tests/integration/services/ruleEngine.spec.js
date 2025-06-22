@@ -18,7 +18,7 @@ const mockRule = {
   id: 'rule_1',
   name: 'High Spending Alert',
   conditions: [{ field: 'amount', operator: '>', value: 100 }],
-  action: { type: 'alert', message: 'High amount purchase detected' },
+  action: { type: 'notification', message: 'High amount purchase detected' },
 };
 
 const invalidTransaction = { id: 'txn_2' }; // Missing 'amount' field

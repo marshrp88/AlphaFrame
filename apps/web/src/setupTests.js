@@ -450,4 +450,35 @@ const ensureMockPersistence = () => {
 // Call immediately
 ensureMockPersistence();
 
+// ============================================================================
+// EXECUTION LOG SERVICE MOCKING
+// ============================================================================
+
+// Mock ExecutionLogService with all required methods
+const createExecutionLogServiceMock = () => {
+  return {
+    log: vi.fn().mockResolvedValue({ id: 'log-1', timestamp: Date.now() }),
+    logError: vi.fn().mockResolvedValue({ id: 'error-1', timestamp: Date.now() }),
+    logInfo: vi.fn().mockResolvedValue({ id: 'info-1', timestamp: Date.now() }),
+    queryLogs: vi.fn().mockResolvedValue([]),
+    exportLogs: vi.fn().mockResolvedValue({ logs: [], metadata: {} }),
+    clearOldLogs: vi.fn().mockResolvedValue(0),
+    encryptPayload: vi.fn().mockResolvedValue('encrypted-data'),
+    decryptPayload: vi.fn().mockResolvedValue({ test: 'data' }),
+    generateId: vi.fn().mockReturnValue('test-id'),
+    generateSessionId: vi.fn().mockReturnValue('session-test-id'),
+    getUserId: vi.fn().mockReturnValue('test-user'),
+    dbName: 'AlphaProLogs',
+    storeName: 'executionLogs',
+    sessionId: 'session-test-id',
+    userId: 'test-user'
+  };
+};
+
+const mockExecutionLogService = createExecutionLogServiceMock();
+
+vi.mock('../../core/services/ExecutionLogService.js', () => ({
+  default: mockExecutionLogService
+}));
+
 console.log('✅ Surgical test infrastructure fixes applied - ready for 116 test repairs'); 

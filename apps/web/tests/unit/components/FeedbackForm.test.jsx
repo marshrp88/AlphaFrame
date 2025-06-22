@@ -30,7 +30,7 @@ vi.mock('../../../src/lib/services/FeedbackUploader.js', () => ({
   }
 }));
 
-vi.mock('../../../src/lib/services/ExecutionLogService.js', () => ({
+vi.mock('../../../src/core/services/ExecutionLogService.js', () => ({
   default: {
     log: vi.fn()
   }
@@ -107,7 +107,7 @@ describe('FeedbackForm', () => {
 
   beforeEach(async () => {
     mockFeedbackUploader = (await import('../../../src/lib/services/FeedbackUploader.js')).default;
-    mockExecutionLogService = (await import('../../../src/lib/services/ExecutionLogService.js')).default;
+    mockExecutionLogService = (await import('../../../src/core/services/ExecutionLogService.js')).default;
 
     vi.clearAllMocks();
 

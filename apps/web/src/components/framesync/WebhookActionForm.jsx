@@ -4,10 +4,11 @@
  * Uses shadcn/ui form components
  */
 
+import { jsxDEV } from "react/jsx-dev-runtime";
 import { useState, useEffect } from 'react';
-import { Input } from '@/components/ui/Input';
-import { Label } from '@/components/ui/Label';
-import { Textarea } from '@/components/ui/textarea';
+import { Input } from "@/shared/ui/Input";
+import { Label } from "@/shared/ui/Label";
+import { Textarea } from "@/shared/ui/textarea";
 import { useToast } from "@/shared/ui/use-toast";
 
 /**

@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { PlaidActionForm } from '@/components/framesync/PlaidActionForm';
-import { useAppStore } from '@/store/useAppStore';
+import PlaidActionForm from '@/components/framesync/PlaidActionForm';
+import { useAppStore } from '@/core/store/useAppStore';
 import React from 'react';
 
 // Mock the useAppStore
-vi.mock('@/store/useAppStore', () => ({
+vi.mock('@/core/store/useAppStore', () => ({
   useAppStore: vi.fn()
 }));
 
