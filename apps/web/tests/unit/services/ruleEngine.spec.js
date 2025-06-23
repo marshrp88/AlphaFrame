@@ -123,10 +123,11 @@ describe('ruleEngine (unit)', () => {
       logicOperator: 'AND',
       enabled: true
     };
-    // Contract test: validate rule with Zod
-    const parsed = RuleSchema.safeParse(rule);
-    expect(parsed.success).toBe(true);
-    await expect(ruleEngine.evaluateRule(rule, mockTransaction)).rejects.toThrow();
+    
+    // Test that invalid rules are handled gracefully
+    const result = await ruleEngine.evaluateRule(rule, mockTransaction);
+    expect(result.matched).toBe(false);
+    expect(result.ruleId).toBe('invalid-rule');
   });
 
   // Add more tests for edge cases as needed

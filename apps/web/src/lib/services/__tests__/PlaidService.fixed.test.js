@@ -11,57 +11,58 @@
  * - CLUSTER 2 FIXES: Fixed success flag issues and proper mock setup
  */
 
+// CLUSTER 2 FIX: Mock Plaid SDK and CryptoService before imports
+const mockPlaidClient = {
+  linkTokenCreate: vi.fn(),
+  itemPublicTokenExchange: vi.fn(),
+  accountsBalanceGet: vi.fn(),
+  transactionsGet: vi.fn()
+};
+
+vi.mock('plaid', () => ({
+  Configuration: vi.fn(),
+  PlaidApi: vi.fn(() => mockPlaidClient),
+  PlaidEnvironments: {
+    sandbox: 'https://sandbox.plaid.com'
+  }
+}));
+
+vi.mock('../../../../core/services/CryptoService.js', () => ({
+  encrypt: vi.fn().mockResolvedValue('encrypted_token'),
+  decrypt: vi.fn().mockResolvedValue('decrypted_token')
+}));
+
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { PlaidService } from '../PlaidService.js';
 
 describe('PlaidService - Fixed', () => {
   let plaidService;
-  let localStorageSpy;
-  let sessionStorageSpy;
+  let mockStorage;
 
   beforeEach(() => {
-    // CLUSTER 2 FIX: Reset all mocks before each test
     vi.clearAllMocks();
-    
-    // Create a new instance for each test
+
+    const createStorageMock = () => {
+      let store = {};
+      return {
+        getItem: vi.fn((key) => store[key] || null),
+        setItem: vi.fn((key, value) => { store[key] = value; }),
+        removeItem: vi.fn((key) => { delete store[key]; }),
+        clear: vi.fn(() => { store = {}; })
+      };
+    };
+    mockStorage = createStorageMock();
+    global.localStorage = mockStorage;
+
+    vi.stubEnv('VITE_PLAID_CLIENT_ID', 'test_client_id');
+    vi.stubEnv('VITE_PLAID_SECRET', 'test_secret');
+    vi.stubEnv('VITE_PLAID_ENV', 'sandbox');
+
     plaidService = new PlaidService();
-    
-    // Setup storage spies with correct Plaid storage keys
-    localStorageSpy = vi.spyOn(window.localStorage, 'getItem');
-    sessionStorageSpy = vi.spyOn(window.sessionStorage, 'getItem');
-    
-    // Ensure environment variables are set
-    import.meta.env.VITE_PLAID_CLIENT_ID = 'test_plaid_client_id';
-    import.meta.env.VITE_PLAID_SECRET = 'test_plaid_secret';
-    import.meta.env.VITE_PLAID_ENV = 'sandbox';
-    
-    // Force re-initialization of PlaidService client
-    plaidService.client = null;
-    plaidService.initializeClient();
-    
-    // Manually set the client to the mock since the constructor might not pick up the mock
-    plaidService.client = global.testUtils.mockPlaidClient;
-    
-    // Verify client is initialized
-    expect(plaidService.client).not.toBeNull();
-    
-    // CLUSTER 2 FIX: Ensure all mock methods return success by default
-    global.testUtils.mockPlaidClient.linkTokenCreate.mockResolvedValue({
-      data: { link_token: 'test_link_token_12345' }
-    });
-    global.testUtils.mockPlaidClient.itemPublicTokenExchange.mockResolvedValue({
-      data: { access_token: 'test_access_token_67890' }
-    });
-    global.testUtils.mockPlaidClient.accountsGet.mockResolvedValue({
-      data: { accounts: [{ account_id: 'test_account', balances: { available: 1000 } }] }
-    });
-    global.testUtils.mockPlaidClient.transactionsGet.mockResolvedValue({
-      data: { transactions: [{ transaction_id: 'test_transaction', amount: 100 }] }
-    });
+    plaidService.client = mockPlaidClient; // Manually assign the mocked client
   });
 
   afterEach(() => {
-    // CLUSTER 2 FIX: Proper cleanup
     vi.restoreAllMocks();
   });
 
@@ -80,7 +81,11 @@ describe('PlaidService - Fixed', () => {
     it('should create link token successfully', async () => {
       // CLUSTER 2 FIX: Ensure the mock returns the expected structure
       global.testUtils.mockPlaidClient.linkTokenCreate.mockResolvedValue({
-        data: { link_token: 'test_link_token_12345' }
+        data: {
+          link_token: 'test_link_token_12345',
+          expiration: '2024-12-31T23:59:59Z',
+          request_id: 'test_request_id'
+        }
       });
 
       const result = await plaidService.createLinkToken({
@@ -92,6 +97,8 @@ describe('PlaidService - Fixed', () => {
 
       expect(result.success).toBe(true);
       expect(result.linkToken).toBe('test_link_token_12345');
+      expect(result.expiration).toBe('2024-12-31T23:59:59Z');
+      expect(result.requestId).toBe('test_request_id');
       expect(global.testUtils.mockPlaidClient.linkTokenCreate).toHaveBeenCalled();
     });
 
@@ -127,14 +134,17 @@ describe('PlaidService - Fixed', () => {
     it('should exchange public token successfully', async () => {
       // CLUSTER 2 FIX: Ensure the mock returns the expected structure
       global.testUtils.mockPlaidClient.itemPublicTokenExchange.mockResolvedValue({
-        data: { access_token: 'test_access_token_67890' }
+        data: { access_token: 'test_access_token_67890', item_id: 'test_item_id' }
       });
 
       const result = await plaidService.exchangePublicToken('test_public_token');
 
       expect(result.success).toBe(true);
       expect(result.accessToken).toBe('test_access_token_67890');
-      expect(global.testUtils.mockPlaidClient.itemPublicTokenExchange).toHaveBeenCalled();
+      expect(result.itemId).toBe('test_item_id');
+      expect(global.testUtils.mockPlaidClient.itemPublicTokenExchange).toHaveBeenCalledWith({
+        public_token: 'test_public_token'
+      });
     });
 
     it('should handle token exchange errors', async () => {
@@ -154,7 +164,7 @@ describe('PlaidService - Fixed', () => {
       plaidService.accessToken = 'test_access_token';
       
       // CLUSTER 2 FIX: Ensure the mock returns the expected structure
-      global.testUtils.mockPlaidClient.accountsGet.mockResolvedValue({
+      global.testUtils.mockPlaidClient.accountsBalanceGet.mockResolvedValue({
         data: { accounts: [{ account_id: 'test_account', balances: { available: 1000 } }] }
       });
       
@@ -163,6 +173,9 @@ describe('PlaidService - Fixed', () => {
       expect(result.success).toBe(true);
       expect(result.accounts).toBeDefined();
       expect(Array.isArray(result.accounts)).toBe(true);
+      expect(global.testUtils.mockPlaidClient.accountsBalanceGet).toHaveBeenCalledWith({
+        access_token: 'test_access_token'
+      });
     });
 
     it('should handle missing access token', async () => {
@@ -181,7 +194,11 @@ describe('PlaidService - Fixed', () => {
       
       // CLUSTER 2 FIX: Ensure the mock returns the expected structure
       global.testUtils.mockPlaidClient.transactionsGet.mockResolvedValue({
-        data: { transactions: [{ transaction_id: 'test_transaction', amount: 100 }] }
+        data: { 
+          transactions: [{ transaction_id: 'test_transaction', amount: 100 }],
+          total_transactions: 1,
+          accounts: [{ account_id: 'test_account' }]
+        }
       });
       
       const result = await plaidService.getTransactions('2024-01-01', '2024-01-31');
@@ -189,6 +206,8 @@ describe('PlaidService - Fixed', () => {
       expect(result.success).toBe(true);
       expect(result.transactions).toBeDefined();
       expect(Array.isArray(result.transactions)).toBe(true);
+      expect(result.total_transactions).toBe(1);
+      expect(result.accounts).toBeDefined();
     });
 
     it('should handle transaction retrieval errors', async () => {
@@ -208,34 +227,31 @@ describe('PlaidService - Fixed', () => {
   describe('Token Storage', () => {
     it('should load stored access token', async () => {
       // CLUSTER 2 FIX: Mock proper localStorage behavior
-      localStorageSpy.mockImplementation((key) => {
-        if (key === 'plaid_access_token') {
-          return 'stored_access_token';
-        }
-        return null;
-      });
+      mockStorage.getItem.mockReturnValue('encrypted_token');
 
       const result = await plaidService.loadStoredAccessToken();
       // CLUSTER 2 FIX: loadStoredAccessToken returns boolean, not object with success property
       expect(result).toBe(true);
+      expect(plaidService.accessToken).toBe('decrypted_token');
     });
 
     it('should return false when no token stored', async () => {
       // CLUSTER 2 FIX: Ensure no token in storage
-      localStorageSpy.mockReturnValue(null);
+      mockStorage.getItem.mockReturnValue(null);
 
       const result = await plaidService.loadStoredAccessToken();
       // CLUSTER 2 FIX: loadStoredAccessToken returns boolean
       expect(result).toBe(false);
+      expect(plaidService.accessToken).toBe(null);
     });
 
     it('should clear access token', () => {
       // CLUSTER 2 FIX: Mock removeItem properly
-      const removeItemSpy = vi.spyOn(window.localStorage, 'removeItem');
-      
+      plaidService.accessToken = 'test_token';
       plaidService.clearAccessToken();
       
-      expect(removeItemSpy).toHaveBeenCalledWith('plaid_access_token');
+      expect(mockStorage.removeItem).toHaveBeenCalledWith('plaid_access_token');
+      expect(plaidService.accessToken).toBe(null);
     });
   });
 

@@ -41,10 +41,10 @@ vi.mock('@/core/store/financialStateStore', () => ({
 
 import { useFinancialStateStore } from '@/core/store/financialStateStore';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { ExecutionController } from '@/core/services/ExecutionController';
+import { ExecutionController } from '@/lib/services/ExecutionController';
 
 // Mock the secure vault
-vi.mock('@/core/services/secureVault', () => ({
+vi.mock('@/core/services/SecureVault', () => ({
   get: vi.fn(() => 'mock-plaid-token')
 }));
 
@@ -248,7 +248,7 @@ describe('ExecutionController', () => {
       }
     };
 
-    const { get } = await import('@/core/services/secureVault');
+    const { get } = await import('@/core/services/SecureVault');
     get.mockResolvedValueOnce(null);
 
     // Act & Assert

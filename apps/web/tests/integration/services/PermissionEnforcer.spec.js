@@ -1,22 +1,22 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { PermissionEnforcer } from '../../../src/lib/services/PermissionEnforcer';
-import { useAuthStore } from '../../../src/lib/store/authStore';
-import { useUIStore } from '../../../src/lib/store/uiStore';
+import { useAuthStore } from '../../../src/core/store/authStore';
+import { useUIStore } from '../../../src/core/store/uiStore';
 
 // Mock the secureVault
-vi.mock('../../../src/lib/services/secureVault', () => ({
+vi.mock('../../../src/core/services/SecureVault', () => ({
   unlock: vi.fn()
 }));
 
 // Mock the auth store
-vi.mock('../../../src/lib/store/authStore', () => ({
+vi.mock('../../../src/core/store/authStore', () => ({
   useAuthStore: {
     getState: vi.fn()
   }
 }));
 
 // Mock the UI store
-vi.mock('../../../src/lib/store/uiStore', () => ({
+vi.mock('../../../src/core/store/uiStore', () => ({
   useUIStore: {
     getState: vi.fn()
   }

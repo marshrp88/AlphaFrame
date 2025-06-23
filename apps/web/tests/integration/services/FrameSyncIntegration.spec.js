@@ -9,7 +9,7 @@ const mockUpdateAction = vi.fn((index, updatedAction) => {
   mockActionLog[index] = updatedAction;
 });
 
-vi.mock('../../../src/lib/store/logStore', () => ({
+vi.mock('../../../src/core/store/logStore', () => ({
   useLogStore: {
     getState: () => ({
       queueAction: mockQueueAction,
@@ -21,7 +21,7 @@ vi.mock('../../../src/lib/store/logStore', () => ({
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { dispatchAction } from '../../../src/lib/services/TriggerDispatcher';
-import { useLogStore } from '../../../src/lib/store/logStore';
+import { useLogStore } from '../../../src/core/store/logStore';
 import { ExecutionController } from '../../../src/lib/services/ExecutionController';
 
 // Mock the ExecutionController static method

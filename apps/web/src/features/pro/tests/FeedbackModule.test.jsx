@@ -1,9 +1,4 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import FeedbackModule from '../components/FeedbackModule';
-
-// Mock dependencies
+// CLUSTER 2 FIX: Define mocks before imports to prevent initialization errors
 vi.mock('../../../core/services/FeedbackUploader', () => ({
   default: {
     uploadFeedback: vi.fn()
@@ -16,16 +11,19 @@ vi.mock('../../../core/services/NotificationService', () => ({
   }
 }));
 
-// Mock ExecutionLogService
-const mockQueryLogs = vi.fn().mockResolvedValue([
-  { type: 'test.log', timestamp: '2024-01-01T00:00:00Z', payload: { test: 'data' } }
-]);
-
+// Mock ExecutionLogService with proper structure
 vi.mock('../../../core/services/ExecutionLogService', () => ({
   default: {
-    queryLogs: mockQueryLogs
+    queryLogs: vi.fn().mockResolvedValue([
+      { type: 'test.log', timestamp: '2024-01-01T00:00:00Z', payload: { test: 'data' } }
+    ])
   }
 }));
+
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import FeedbackModule from '../components/FeedbackModule';
 
 describe('FeedbackModule', () => {
   beforeEach(() => {
@@ -56,13 +54,17 @@ describe('FeedbackModule', () => {
     const mockLogs = [
       { type: 'test.log', timestamp: '2024-01-01T00:00:00Z', payload: { test: 'data' } }
     ];
-    const mockExecutionLogService = require('../../../core/services/ExecutionLogService').default;
-    mockExecutionLogService.queryLogs.mockResolvedValue(mockLogs);
+    
+    // Get the mocked service
+    const mockExecutionLogService = await import('../../../core/services/ExecutionLogService');
+    mockExecutionLogService.default.queryLogs.mockResolvedValue(mockLogs);
+    
     render(<FeedbackModule />);
     const generateButton = screen.getByText('Generate & Download Report');
     fireEvent.click(generateButton);
+    
     await waitFor(() => {
-      expect(mockExecutionLogService.queryLogs).toHaveBeenCalled();
+      expect(mockExecutionLogService.default.queryLogs).toHaveBeenCalled();
     });
   });
 }); 

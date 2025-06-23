@@ -15,14 +15,14 @@ import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { FeedbackUploader } from '../../../src/lib/services/FeedbackUploader.js';
 
 // Mock dependencies
-vi.mock('../../../src/lib/services/crypto.js', () => ({
+vi.mock('../../../src/core/services/CryptoService.js', () => ({
   default: {
     encrypt: vi.fn(),
     decrypt: vi.fn()
   }
 }));
 
-vi.mock('../../../src/lib/services/ExecutionLogService.js', () => ({
+vi.mock('../../../src/core/services/ExecutionLogService.js', () => ({
   default: {
     getLogs: vi.fn(),
     log: vi.fn(),
@@ -30,19 +30,19 @@ vi.mock('../../../src/lib/services/ExecutionLogService.js', () => ({
   }
 }));
 
-vi.mock('../../../src/lib/services/BudgetService.js', () => ({
+vi.mock('../../../src/features/pro/services/BudgetService.js', () => ({
   default: {
     getBudgetSummary: vi.fn()
   }
 }));
 
-vi.mock('../../../src/lib/services/CashFlowService.js', () => ({
+vi.mock('../../../src/features/pro/services/CashFlowService.js', () => ({
   default: {
     getCashFlowSummary: vi.fn()
   }
 }));
 
-vi.mock('../../../src/lib/services/PortfolioAnalyzer.js', () => ({
+vi.mock('../../../src/features/pro/services/PortfolioAnalyzer.js', () => ({
   default: {
     analyzePortfolio: vi.fn()
   }
@@ -59,10 +59,10 @@ describe('FeedbackUploader', () => {
     feedbackUploader = new FeedbackUploader();
     
     // Get mocked services
-    mockCryptoService = (await import('../../../src/lib/services/crypto.js')).default;
-    mockExecutionLogService = (await import('../../../src/lib/services/ExecutionLogService.js')).default;
-    mockBudgetService = (await import('../../../src/lib/services/BudgetService.js')).default;
-    mockCashFlowService = (await import('../../../src/lib/services/CashFlowService.js')).default;
+    mockCryptoService = (await import('../../../src/core/services/CryptoService.js')).default;
+    mockExecutionLogService = (await import('../../../src/core/services/ExecutionLogService.js')).default;
+    mockBudgetService = (await import('../../../src/features/pro/services/BudgetService.js')).default;
+    mockCashFlowService = (await import('../../../src/features/pro/services/CashFlowService.js')).default;
 
     vi.clearAllMocks();
 

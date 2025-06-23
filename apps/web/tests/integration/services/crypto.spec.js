@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { deriveKey, encrypt, decrypt, generateSalt } from '../../../src/lib/services/crypto';
+import { deriveKey, encrypt, decrypt, generateSalt } from '../../../src/core/services/CryptoService';
 
 describe('CryptoService Integration', () => {
   let testPassword;
