@@ -1,61 +1,44 @@
-import React, { useState } from 'react';
-import RuleBinderRoot from '@/components/framesync/RuleBinderRoot';
-import { Button } from '@/components/ui/Button';
+import React from 'react';
 
-export default function RulesPage() {
-  const [showRuleBinder, setShowRuleBinder] = useState(false);
-  const [currentRule, setCurrentRule] = useState(null);
+// Error Catcher Component to catch runtime exceptions
+const ErrorCatcher = ({ children }) => {
+  try {
+    console.log('[ErrorCatcher] Attempting to render children');
+    return children;
+  } catch (err) {
+    console.error('[RulesPage ERROR] Runtime exception caught:', err);
+    return <div data-testid="error-caught">Error rendered: {err.message}</div>;
+  }
+};
 
-  const handleCreateRule = () => {
-    setCurrentRule({
-      id: `rule_${Date.now()}`,
-      trigger: 'checking_account_balance > 5000',
-      action: '',
-      enabled: true
-    });
-    setShowRuleBinder(true);
-  };
+const RulesPage = () => {
+  console.log("[RulesPage] Function invoked");
+  console.log("[RulesPage] Environment:", import.meta.env.VITE_APP_ENV);
+  console.log("[RulesPage] Timestamp:", new Date().toISOString());
 
-  const handleConfigurationChange = (payload) => {
-    console.log('Rule configuration changed:', payload);
-    setShowRuleBinder(false);
-  };
-
+  // Wrap the entire component in error boundary
   return (
-    <div data-testid="debug-rulespage" className="p-6">
-      <h1 className="text-2xl font-bold mb-6">FrameSync Rules</h1>
-      
-      {!showRuleBinder ? (
-        <div className="space-y-4">
-          <Button 
-            onClick={handleCreateRule}
-            data-testid="create-rule-button"
-          >
-            Create Rule
-          </Button>
-          <p>Test: Rules Page Loaded</p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          <Button 
-            onClick={() => setShowRuleBinder(false)}
-            variant="outline"
-          >
-            Cancel
-          </Button>
-          <RuleBinderRoot
-            initialConfig={{
-              rule: currentRule,
-              currentState: {
-                checking_account_balance: 6000,
-                savings_account_balance: 15000,
-                credit_score: 750
-              }
-            }}
-            onConfigurationChange={handleConfigurationChange}
-          />
-        </div>
-      )}
-    </div>
+    <ErrorCatcher>
+      {(() => {
+        try {
+          console.log("[RulesPage] Inner render function starting");
+          
+          const result = (
+            <div data-testid="debug-rulespage" style={{ background: "lime", padding: "2rem" }}>
+              <h1>Rules Page Mounted</h1>
+              <p>Mounted at: {new Date().toISOString()}</p>
+            </div>
+          );
+          
+          console.log("[RulesPage] Inner render function completed successfully");
+          return result;
+        } catch (e) {
+          console.error("[RulesPage] Inner render failed:", e);
+          return <div data-testid="debug-rulespage-error">Inner Render Error: {e.message}</div>;
+        }
+      })()}
+    </ErrorCatcher>
   );
-}
+};
+
+export default RulesPage;

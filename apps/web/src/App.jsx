@@ -16,7 +16,7 @@
  */
 
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { usePlaidLink } from 'react-plaid-link';
 import LoginButton from "./components/LoginButton.jsx";
@@ -26,8 +26,20 @@ import Home from "./pages/Home.jsx";
 import About from "./pages/About.jsx";
 import AlphaPro from "./pages/AlphaPro.jsx";
 import RulesPage from "./pages/RulesPage.jsx";
+import TestMount from "./pages/TestMount.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
+import { ToastProvider } from "./components/ui/use-toast.jsx";
 import { config } from "./lib/config.js";
+
+// Debug Router Logger to trace all route matches
+function DebugRouterLogger() {
+  const location = useLocation();
+  React.useEffect(() => {
+    console.log('[Router Debug] Current pathname:', location.pathname);
+    console.log('[Router Debug] Full location:', location);
+  }, [location]);
+  return null;
+}
 
 const PlaidLink = () => {
   // TODO: This token must be fetched from your own backend server.
@@ -103,7 +115,9 @@ const App = () => {
   const { isLoading } = useAuth0();
   const isTestMode = import.meta.env.VITE_APP_ENV === 'test';
 
-  console.log("🧩 Rendering App with Auth0 state", { isTestMode });
+  console.log("[App] Loaded in test mode:", isTestMode);
+  console.log("[App] RulesPage import:", typeof RulesPage);
+  console.log("[App] Full routing table being configured");
 
   if (isLoading && !isTestMode) {
     return (
@@ -118,84 +132,89 @@ const App = () => {
 
   return (
     <ErrorBoundary>
-      <Router>
-        <div className="min-h-screen bg-gray-50">
-          <Navigation />
-          
-          <main className="py-8">
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              
-              {/* Protected Routes */}
-              <Route 
-                path="/profile" 
-                element={
-                  isTestMode ? <Profile /> : (
-                    <PrivateRoute>
-                      <Profile />
-                    </PrivateRoute>
-                  )
-                } 
-              />
-              
-              <Route 
-                path="/alphapro" 
-                element={
-                  isTestMode ? <AlphaPro /> : (
-                    <PrivateRoute requiredRoles={['premium', 'admin']}>
-                      <AlphaPro />
-                    </PrivateRoute>
-                  )
-                } 
-              />
-              
-              <Route 
-                path="/rules" 
-                element={
-                  isTestMode ? <RulesPage /> : (
-                    <PrivateRoute requiredPermissions={['read:financial_data']}>
-                      <RulesPage />
-                    </PrivateRoute>
-                  )
-                } 
-              />
-              
-              {/* 404 Route */}
-              <Route 
-                path="*" 
-                element={
-                  <div className="flex items-center justify-center min-h-screen">
-                    <div className="text-center">
-                      <h1 className="text-4xl font-bold text-gray-900 mb-4">404</h1>
-                      <p className="text-gray-600 mb-4">Page not found</p>
-                      <Link 
-                        to="/" 
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                      >
-                        Go Home
-                      </Link>
+      <ToastProvider>
+        <Router>
+          <DebugRouterLogger />
+          <div className="min-h-screen bg-gray-50">
+            <Navigation />
+            
+            <main className="py-8">
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/test-mount" element={<TestMount />} />
+                
+                {/* Protected Routes */}
+                <Route 
+                  path="/profile" 
+                  element={
+                    isTestMode ? <Profile /> : (
+                      <PrivateRoute>
+                        <Profile />
+                      </PrivateRoute>
+                    )
+                  } 
+                />
+                
+                <Route 
+                  path="/alphapro" 
+                  element={
+                    isTestMode ? <AlphaPro /> : (
+                      <PrivateRoute requiredRoles={['premium', 'admin']}>
+                        <AlphaPro />
+                      </PrivateRoute>
+                    )
+                  } 
+                />
+                
+                {/* RULES ROUTE - Direct mount without lazy loading or conditional guards */}
+                <Route 
+                  path="/rules" 
+                  element={
+                    (() => {
+                      console.log("[Router Debug] /rules route matched, isTestMode:", isTestMode);
+                      console.log("[Router Debug] About to render RulesPage directly");
+                      return <RulesPage />; // Direct mount - no lazy, no Suspense, no conditional guards
+                    })()
+                  } 
+                />
+                
+                {/* 404 Route */}
+                <Route 
+                  path="*" 
+                  element={
+                    <div className="flex items-center justify-center min-h-screen">
+                      <div className="text-center">
+                        <h1 className="text-4xl font-bold text-gray-900 mb-4">404</h1>
+                        <p className="text-gray-600 mb-4">Page not found</p>
+                        <Link 
+                          to="/" 
+                          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        >
+                          Go Home
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                } 
-              />
-            </Routes>
-          </main>
-          
-          {/* Footer */}
-          <footer className="bg-white border-t border-gray-200 py-8">
-            <div className="max-w-7xl mx-auto px-4">
-              <div className="text-center text-gray-600">
-                <p>&copy; 2024 AlphaFrame. All rights reserved.</p>
-                <p className="text-sm mt-2">
-                  Environment: {config.env} | Version: 1.0.0
-                </p>
+                  } 
+                />
+              </Routes>
+            </main>
+            
+            {/* Footer */}
+            <footer className="bg-white border-t border-gray-200 py-8">
+              <div className="max-w-7xl mx-auto px-4">
+                <div className="text-center text-gray-600">
+                  <p>&copy; 2024 AlphaFrame. All rights reserved.</p>
+                  <p className="text-sm mt-2">
+                    Environment: {config.env} | Version: 1.0.0
+                  </p>
+                </div>
               </div>
-            </div>
-          </footer>
-        </div>
-      </Router>
+            </footer>
+          </div>
+        </Router>
+      </ToastProvider>
     </ErrorBoundary>
   );
 };

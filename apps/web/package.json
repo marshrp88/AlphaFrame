@@ -12,6 +12,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
+    "test:e2e": "node run-e2e-tests.cjs",
     "prepare": "husky install"
   },
   "dependencies": {

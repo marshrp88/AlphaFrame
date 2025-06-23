@@ -5,10 +5,10 @@
  * It sets up mocks, authentication state, and browser API stubs.
  */
 
-import { chromium } from '@playwright/test';
+const { chromium } = require('@playwright/test');
 
-async function globalSetup() {
-  console.log('🔧 Setting up E2E test environment...');
+async function globalSetup(config) {
+  console.log('[Global Setup] Starting test environment setup');
   
   // Launch browser to set up test state
   const browser = await chromium.launch();
@@ -16,57 +16,32 @@ async function globalSetup() {
   const page = await context.newPage();
   
   try {
-    // Navigate to the app and set up authentication state
-    await page.goto('http://localhost:5174');
+    // Wait for server to be ready
+    console.log('[Global Setup] Waiting for server to be ready...');
+    await page.goto('http://localhost:5175', { waitUntil: 'networkidle', timeout: 30000 });
     
-    // Wait for app to load
-    await page.waitForLoadState('networkidle');
-    
-    // Mock localStorage for test data
+    // Set test mode in localStorage
     await page.evaluate(() => {
-      // Set up test authentication state
-      localStorage.setItem('auth_token', 'test_token_123');
-      localStorage.setItem('user_id', 'test_user_123');
-      localStorage.setItem('auth_state', JSON.stringify({
-        isAuthenticated: true,
-        user: {
-          id: 'test_user_123',
-          email: 'test@alphaframe.dev',
-          name: 'Test User'
-        }
-      }));
-      
-      // Mock IndexedDB for test data
-      const mockData = {
-        rules: [
-          {
-            id: 'test_rule_1',
-            trigger: 'checking_account_balance > 5000',
-            action: 'PLAID_TRANSFER',
-            enabled: true
-          }
-        ],
-        transactions: [
-          {
-            id: 'test_txn_1',
-            amount: 6000,
-            account: 'Chase Checking',
-            date: new Date().toISOString()
-          }
-        ]
-      };
-      
-      // Store mock data in localStorage for tests
-      localStorage.setItem('test_data', JSON.stringify(mockData));
+      localStorage.setItem('test_mode', 'true');
+      console.log('[Global Setup] test_mode set to true');
     });
     
-    console.log('✅ E2E test environment configured successfully');
+    // Verify test mode is set
+    const testMode = await page.evaluate(() => localStorage.getItem('test_mode'));
+    console.log('[Global Setup] Verified test_mode:', testMode);
+    
+    // Test that the app loads correctly
+    await page.waitForSelector('#root', { timeout: 10000 });
+    console.log('[Global Setup] App root element found');
     
   } catch (error) {
-    console.error('❌ Failed to set up E2E test environment:', error);
+    console.error('[Global Setup] Error during setup:', error.message);
+    throw error;
   } finally {
     await browser.close();
   }
+  
+  console.log('[Global Setup] Test environment setup complete');
 }
 
-export default globalSetup; 
+module.exports = globalSetup; 

@@ -17,7 +17,7 @@
  * - Secure redirect handling
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Navigate, useLocation } from 'react-router-dom';
 
@@ -28,6 +28,22 @@ const PrivateRoute = ({
   fallbackComponent = null,
   redirectTo = '/login'
 }) => {
+  // Bypass authentication in test mode
+  const isTestMode = import.meta.env.VITE_APP_ENV === 'test';
+  
+  // Diagnostic logging
+  useEffect(() => {
+    console.log('[PrivateRoute] Component mounted');
+    console.log('[PrivateRoute] Test mode:', isTestMode);
+    console.log('[PrivateRoute] Environment:', import.meta.env.VITE_APP_ENV);
+    console.log('[PrivateRoute] localStorage test_mode:', localStorage.getItem('test_mode'));
+  }, [isTestMode]);
+  
+  if (isTestMode) {
+    console.log('[PrivateRoute] Bypassing authentication for test mode');
+    return children;
+  }
+
   const {
     isAuthenticated,
     isLoading,

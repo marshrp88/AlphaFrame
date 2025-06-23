@@ -33,6 +33,12 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     console.error("ErrorBoundary caught an error:", error, errorInfo);
+    console.log('[ErrorBoundary] Test mode:', import.meta.env.VITE_APP_ENV === 'test');
+    console.log('[ErrorBoundary] Error details:', {
+      message: error.message,
+      stack: error.stack,
+      componentStack: errorInfo.componentStack
+    });
     
     // Update state with component stack
     this.setState({ componentStack: errorInfo.componentStack });
