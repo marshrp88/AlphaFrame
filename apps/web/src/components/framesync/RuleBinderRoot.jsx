@@ -199,6 +199,20 @@ function RuleBinderRoot({ initialConfig, onConfigurationChange }) {
     <div className="space-y-6 p-4">
       <div className="space-y-4">
         <h3 className="text-lg font-medium">Configure Action</h3>
+        
+        {/* Add trigger input for E2E tests */}
+        <div className="space-y-2">
+          <label htmlFor="trigger-input" className="text-sm font-medium">Trigger Condition</label>
+          <input
+            id="trigger-input"
+            data-testid="trigger-input"
+            type="text"
+            placeholder="e.g., checking_account_balance > 5000"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            defaultValue="checking_account_balance > 5000"
+          />
+        </div>
+        
         <ActionSelector
           value={actionType}
           onChange={handleActionTypeChange}
@@ -223,6 +237,7 @@ function RuleBinderRoot({ initialConfig, onConfigurationChange }) {
             onClick={handleSave}
             disabled={isExecuting || !actionType || !payload}
             className="w-full"
+            data-testid="save-rule-button"
           >
             {isExecuting ? (
               <>

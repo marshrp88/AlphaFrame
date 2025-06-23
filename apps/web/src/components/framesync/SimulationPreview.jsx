@@ -53,7 +53,7 @@ function SimulationPreview({ actionType, payload, currentState }) {
   }
 
   return (
-    <Card className="mt-4">
+    <Card className="mt-4" data-testid="simulation-preview">
       <CardHeader>
         <CardTitle className="text-lg">Simulation Preview</CardTitle>
       </CardHeader>
@@ -104,4 +104,5 @@ function SimulationPreview({ actionType, payload, currentState }) {
   );
 }
 
-export default SimulationPreview; 
+export default SimulationPreview;
+export { SimulationPreview }; 

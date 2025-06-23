@@ -87,6 +87,7 @@ function InternalActionFormComponent({ initialPayload = {}, onChange }) {
         <Label htmlFor="memo">Memo</Label>
         <Textarea
           id="memo"
+          data-testid="memo-text"
           value={formData.memo}
           onChange={(e) => handleChange('memo', e.target.value)}
           placeholder="Enter memo text"

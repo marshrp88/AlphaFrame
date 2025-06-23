@@ -1,0 +1,10 @@
+# Page snapshot
+
+```yaml
+- text: "[plugin:vite:import-analysis] Failed to resolve import \"@/components/ui/Button\" from \"src/pages/RulesPage.jsx\". Does the file exist? C:/Users/marsh/Desktop/AlphaFrame/apps/web/src/pages/RulesPage.jsx:3:23 18 | import React, { useState } from \"react\"; 19 | import RuleBinderRoot from \"@/components/framesync/RuleBinderRoot\"; 20 | import { Button } from \"@/components/ui/Button\"; | ^ 21 | export default function RulesPage() { 22 | _s(); at formatError (file:///C:/Users/marsh/Desktop/AlphaFrame/node_modules/.pnpm/vite@5.1.4/node_modules/vite/dist/node/chunks/dep-jDlpJiMN.js:50529:46) at TransformContext.error (file:///C:/Users/marsh/Desktop/AlphaFrame/node_modules/.pnpm/vite@5.1.4/node_modules/vite/dist/node/chunks/dep-jDlpJiMN.js:50523:19) at normalizeUrl (file:///C:/Users/marsh/Desktop/AlphaFrame/node_modules/.pnpm/vite@5.1.4/node_modules/vite/dist/node/chunks/dep-jDlpJiMN.js:65594:33) at process.processTicksAndRejections (node:internal/process/task_queues:105:5) at async file:///C:/Users/marsh/Desktop/AlphaFrame/node_modules/.pnpm/vite@5.1.4/node_modules/vite/dist/node/chunks/dep-jDlpJiMN.js:65749:47 at async Promise.all (index 5) at async TransformContext.transform (file:///C:/Users/marsh/Desktop/AlphaFrame/node_modules/.pnpm/vite@5.1.4/node_modules/vite/dist/node/chunks/dep-jDlpJiMN.js:65670:13) at async Object.transform (file:///C:/Users/marsh/Desktop/AlphaFrame/node_modules/.pnpm/vite@5.1.4/node_modules/vite/dist/node/chunks/dep-jDlpJiMN.js:50838:30) at async loadAndTransform (file:///C:/Users/marsh/Desktop/AlphaFrame/node_modules/.pnpm/vite@5.1.4/node_modules/vite/dist/node/chunks/dep-jDlpJiMN.js:53611:29) at async viteTransformMiddleware (file:///C:/Users/marsh/Desktop/AlphaFrame/node_modules/.pnpm/vite@5.1.4/node_modules/vite/dist/node/chunks/dep-jDlpJiMN.js:63409:32 Click outside, press Esc key, or fix the code to dismiss. You can also disable this overlay by setting"
+- code: server.hmr.overlay
+- text: to
+- code: "false"
+- text: in
+- code: vite.config.js.
+```

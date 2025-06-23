@@ -101,10 +101,11 @@ const Navigation = () => {
 
 const App = () => {
   const { isLoading } = useAuth0();
+  const isTestMode = import.meta.env.VITE_APP_ENV === 'test';
 
-  console.log("🧩 Rendering App with Auth0 state");
+  console.log("🧩 Rendering App with Auth0 state", { isTestMode });
 
-  if (isLoading) {
+  if (isLoading && !isTestMode) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center space-y-4">
@@ -131,27 +132,33 @@ const App = () => {
               <Route 
                 path="/profile" 
                 element={
-                  <PrivateRoute>
-                    <Profile />
-                  </PrivateRoute>
+                  isTestMode ? <Profile /> : (
+                    <PrivateRoute>
+                      <Profile />
+                    </PrivateRoute>
+                  )
                 } 
               />
               
               <Route 
                 path="/alphapro" 
                 element={
-                  <PrivateRoute requiredRoles={['premium', 'admin']}>
-                    <AlphaPro />
-                  </PrivateRoute>
+                  isTestMode ? <AlphaPro /> : (
+                    <PrivateRoute requiredRoles={['premium', 'admin']}>
+                      <AlphaPro />
+                    </PrivateRoute>
+                  )
                 } 
               />
               
               <Route 
                 path="/rules" 
                 element={
-                  <PrivateRoute requiredPermissions={['read:financial_data']}>
-                    <RulesPage />
-                  </PrivateRoute>
+                  isTestMode ? <RulesPage /> : (
+                    <PrivateRoute requiredPermissions={['read:financial_data']}>
+                      <RulesPage />
+                    </PrivateRoute>
+                  )
                 } 
               />
               

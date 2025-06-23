@@ -80,7 +80,7 @@ function ActionSelectorComponent({ value, onChange }) {
     <div className="space-y-2">
       <Label htmlFor="action-type">Action Type</Label>
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger id="action-type">
+        <SelectTrigger id="action-type" data-testid="action-selector">
           <SelectValue placeholder="Select an action type" />
         </SelectTrigger>
         <SelectContent>

@@ -1,0 +1,613 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\playwright.config.js",
+    "rootDir": "C:/Users/marsh/Desktop/AlphaFrame/apps/web/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\global-setup.js",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Users/marsh/Desktop/AlphaFrame/apps/web/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/marsh/Desktop/AlphaFrame/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.53.0",
+    "workers": 6,
+    "webServer": {
+      "command": "pnpm dev",
+      "port": 5174,
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "env": {
+        "VITE_APP_ENV": "test",
+        "VITE_AUTH0_DOMAIN": "test.auth0.com",
+        "VITE_AUTH0_CLIENT_ID": "test_client_id",
+        "VITE_AUTH0_AUDIENCE": "https://test.api.alphaframe.dev",
+        "VITE_PLAID_CLIENT_ID": "test_plaid_client_id",
+        "VITE_PLAID_SECRET": "test_plaid_secret",
+        "VITE_PLAID_ENV": "sandbox"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "framesync.spec.js",
+      "file": "framesync.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "FrameSync Integration",
+          "file": "framesync.spec.js",
+          "line": 10,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should create and execute a Plaid transfer rule",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5590,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js:14:55",
+                        "location": {
+                          "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                          "column": 55,
+                          "line": 14
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 12 |\u001b[39m     \u001b[90m// Navigate to the rules page and ensure we're logged in\u001b[39m\n \u001b[90m 13 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/rules'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'debug-rulespage'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*\\/rules/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                            "column": 55,
+                            "line": 14
+                          },
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n\n\n\u001b[0m \u001b[90m 12 |\u001b[39m     \u001b[90m// Navigate to the rules page and ensure we're logged in\u001b[39m\n \u001b[90m 13 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/rules'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'debug-rulespage'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*\\/rules/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js:14:55\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-06-23T08:21:50.985Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\test-results\\framesync-FrameSync-Integr-680f9-ecute-a-Plaid-transfer-rule\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                        "column": 55,
+                        "line": 14
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1b861663350842272ea3-6d4348ce34a5a542d98c",
+              "file": "framesync.spec.js",
+              "line": 18,
+              "column": 3
+            },
+            {
+              "title": "should handle high-risk action cancellation",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5549,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js:14:55",
+                        "location": {
+                          "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                          "column": 55,
+                          "line": 14
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 12 |\u001b[39m     \u001b[90m// Navigate to the rules page and ensure we're logged in\u001b[39m\n \u001b[90m 13 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/rules'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'debug-rulespage'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*\\/rules/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                            "column": 55,
+                            "line": 14
+                          },
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n\n\n\u001b[0m \u001b[90m 12 |\u001b[39m     \u001b[90m// Navigate to the rules page and ensure we're logged in\u001b[39m\n \u001b[90m 13 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/rules'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'debug-rulespage'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*\\/rules/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js:14:55\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-06-23T08:21:59.267Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\test-results\\framesync-FrameSync-Integr-1514f-gh-risk-action-cancellation\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                        "column": 55,
+                        "line": 14
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1b861663350842272ea3-214352ffe19e870aa20c",
+              "file": "framesync.spec.js",
+              "line": 48,
+              "column": 3
+            },
+            {
+              "title": "should validate form inputs",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5581,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js:14:55",
+                        "location": {
+                          "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                          "column": 55,
+                          "line": 14
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 12 |\u001b[39m     \u001b[90m// Navigate to the rules page and ensure we're logged in\u001b[39m\n \u001b[90m 13 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/rules'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'debug-rulespage'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*\\/rules/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                            "column": 55,
+                            "line": 14
+                          },
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n\n\n\u001b[0m \u001b[90m 12 |\u001b[39m     \u001b[90m// Navigate to the rules page and ensure we're logged in\u001b[39m\n \u001b[90m 13 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/rules'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'debug-rulespage'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*\\/rules/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js:14:55\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-06-23T08:22:07.772Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\test-results\\framesync-FrameSync-Integration-should-validate-form-inputs\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                        "column": 55,
+                        "line": 14
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1b861663350842272ea3-1a592acd08bfa1d1b865",
+              "file": "framesync.spec.js",
+              "line": 68,
+              "column": 3
+            },
+            {
+              "title": "should handle simulation preview",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5688,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js:14:55",
+                        "location": {
+                          "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                          "column": 55,
+                          "line": 14
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 12 |\u001b[39m     \u001b[90m// Navigate to the rules page and ensure we're logged in\u001b[39m\n \u001b[90m 13 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/rules'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'debug-rulespage'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*\\/rules/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                            "column": 55,
+                            "line": 14
+                          },
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n\n\n\u001b[0m \u001b[90m 12 |\u001b[39m     \u001b[90m// Navigate to the rules page and ensure we're logged in\u001b[39m\n \u001b[90m 13 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/rules'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'debug-rulespage'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*\\/rules/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js:14:55\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-06-23T08:22:15.985Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\test-results\\framesync-FrameSync-Integr-2d188-d-handle-simulation-preview\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                        "column": 55,
+                        "line": 14
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1b861663350842272ea3-be5ad65e720e917ded30",
+              "file": "framesync.spec.js",
+              "line": 86,
+              "column": 3
+            },
+            {
+              "title": "should display action log",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5503,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js:14:55",
+                        "location": {
+                          "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                          "column": 55,
+                          "line": 14
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 12 |\u001b[39m     \u001b[90m// Navigate to the rules page and ensure we're logged in\u001b[39m\n \u001b[90m 13 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/rules'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'debug-rulespage'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*\\/rules/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                            "column": 55,
+                            "line": 14
+                          },
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n\n\n\u001b[0m \u001b[90m 12 |\u001b[39m     \u001b[90m// Navigate to the rules page and ensure we're logged in\u001b[39m\n \u001b[90m 13 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/rules'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'debug-rulespage'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*\\/rules/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js:14:55\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-06-23T08:22:24.429Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\test-results\\framesync-FrameSync-Integration-should-display-action-log\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                        "column": 55,
+                        "line": 14
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1b861663350842272ea3-b4d74beb7f8ae7378c5b",
+              "file": "framesync.spec.js",
+              "line": 107,
+              "column": 3
+            },
+            {
+              "title": "should create a rule with multiple AND/OR conditions",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5595,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js:14:55",
+                        "location": {
+                          "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                          "column": 55,
+                          "line": 14
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 12 |\u001b[39m     \u001b[90m// Navigate to the rules page and ensure we're logged in\u001b[39m\n \u001b[90m 13 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/rules'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'debug-rulespage'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*\\/rules/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                            "column": 55,
+                            "line": 14
+                          },
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n\n\n\u001b[0m \u001b[90m 12 |\u001b[39m     \u001b[90m// Navigate to the rules page and ensure we're logged in\u001b[39m\n \u001b[90m 13 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/rules'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'debug-rulespage'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*\\/rules/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js:14:55\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-06-23T08:22:32.890Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\test-results\\framesync-FrameSync-Integr-2a270--multiple-AND-OR-conditions\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                        "column": 55,
+                        "line": 14
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1b861663350842272ea3-595a22cc004fb1a0b061",
+              "file": "framesync.spec.js",
+              "line": 131,
+              "column": 3
+            },
+            {
+              "title": "should show or skip confirmation modal based on Safeguards toggle",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5555,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js:14:55",
+                        "location": {
+                          "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                          "column": 55,
+                          "line": 14
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 12 |\u001b[39m     \u001b[90m// Navigate to the rules page and ensure we're logged in\u001b[39m\n \u001b[90m 13 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/rules'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'debug-rulespage'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*\\/rules/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                            "column": 55,
+                            "line": 14
+                          },
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n\n\n\u001b[0m \u001b[90m 12 |\u001b[39m     \u001b[90m// Navigate to the rules page and ensure we're logged in\u001b[39m\n \u001b[90m 13 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/rules'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'debug-rulespage'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*\\/rules/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js:14:55\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-06-23T08:22:41.204Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\test-results\\framesync-FrameSync-Integr-3ee2c--based-on-Safeguards-toggle\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                        "column": 55,
+                        "line": 14
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1b861663350842272ea3-29d775de0a56123e5c54",
+              "file": "framesync.spec.js",
+              "line": 145,
+              "column": 3
+            },
+            {
+              "title": "should complete the Golden Path and verify ActionLog UI",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5623,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js:14:55",
+                        "location": {
+                          "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                          "column": 55,
+                          "line": 14
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 12 |\u001b[39m     \u001b[90m// Navigate to the rules page and ensure we're logged in\u001b[39m\n \u001b[90m 13 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/rules'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'debug-rulespage'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*\\/rules/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                            "column": 55,
+                            "line": 14
+                          },
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: getByTestId('debug-rulespage')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('debug-rulespage')\u001b[22m\n\n\n\u001b[0m \u001b[90m 12 |\u001b[39m     \u001b[90m// Navigate to the rules page and ensure we're logged in\u001b[39m\n \u001b[90m 13 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/rules'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m'debug-rulespage'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[35m/.*\\/rules/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js:14:55\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-06-23T08:22:49.684Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\test-results\\framesync-FrameSync-Integr-41000-ath-and-verify-ActionLog-UI\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\e2e\\framesync.spec.js",
+                        "column": 55,
+                        "line": 14
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1b861663350842272ea3-4837c2511de53d760c56",
+              "file": "framesync.spec.js",
+              "line": 171,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-06-23T08:21:43.253Z",
+    "duration": 72493.93500000001,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 8,
+    "flaky": 0
+  }
+}

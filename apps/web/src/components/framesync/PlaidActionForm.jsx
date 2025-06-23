@@ -95,7 +95,10 @@ export const PlaidActionForm = ({ initialPayload = {}, onChange }) => {
           value={formData.sourceAccount}
           onValueChange={(value) => handleChange('sourceAccount', value)}
         >
-          <SelectTrigger className={errors.sourceAccount ? 'border-red-500' : ''}>
+          <SelectTrigger 
+            className={errors.sourceAccount ? 'border-red-500' : ''}
+            data-testid="from-account"
+          >
             <SelectValue placeholder="Select source account" />
           </SelectTrigger>
           <SelectContent>
@@ -117,7 +120,10 @@ export const PlaidActionForm = ({ initialPayload = {}, onChange }) => {
           value={formData.destinationAccount}
           onValueChange={(value) => handleChange('destinationAccount', value)}
         >
-          <SelectTrigger className={errors.destinationAccount ? 'border-red-500' : ''}>
+          <SelectTrigger 
+            className={errors.destinationAccount ? 'border-red-500' : ''}
+            data-testid="to-account"
+          >
             <SelectValue placeholder="Select destination account" />
           </SelectTrigger>
           <SelectContent>
@@ -165,6 +171,7 @@ export const PlaidActionForm = ({ initialPayload = {}, onChange }) => {
             className={`flex-1 ${errors.amount ? 'border-red-500' : ''}`}
             min="0"
             step="0.01"
+            data-testid="amount"
           />
         </div>
         {errors.amount && (

@@ -171,5 +171,7 @@ export default function WebhookActionForm({ initialPayload, onChange }) {
       </div>
     </div>
   );
-} 
+}
+
+export { WebhookActionForm }; 
 

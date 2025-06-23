@@ -191,4 +191,6 @@ export class PermissionEnforcer {
       payload.memo.length <= 200
     );
   }
-} 
+}
+
+export const canExecuteAction = PermissionEnforcer.canExecuteAction; 

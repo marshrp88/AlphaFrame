@@ -15,8 +15,27 @@ export const useAppStore = create((set) => ({
   increment: () => set((state) => ({ counter: state.counter + 1 })),
   reset: () => set({ counter: 0 }),
 
-  // Accounts state
-  accounts: [],
+  // Accounts state with mock data for E2E tests
+  accounts: [
+    {
+      id: 'chase_checking',
+      name: 'Chase Checking',
+      balance: 6000,
+      type: 'checking'
+    },
+    {
+      id: 'vanguard_brokerage',
+      name: 'Vanguard Brokerage',
+      balance: 25000,
+      type: 'investment'
+    },
+    {
+      id: 'ally_savings',
+      name: 'Ally Savings',
+      balance: 15000,
+      type: 'savings'
+    }
+  ],
   setAccounts: (accounts) => set({ accounts }),
   addAccount: (account) => set((state) => ({
     accounts: [...state.accounts, account]
@@ -29,6 +48,22 @@ export const useAppStore = create((set) => ({
   removeAccount: (accountId) => set((state) => ({
     accounts: state.accounts.filter(account => account.id !== accountId)
   })),
+
+  // Goals state for internal actions
+  goals: [
+    {
+      id: 'emergency_fund',
+      name: 'Emergency Fund',
+      target: 10000,
+      current: 8000
+    },
+    {
+      id: 'vacation_fund',
+      name: 'Vacation Fund',
+      target: 5000,
+      current: 3000
+    }
+  ],
 
   // UI state
   isLoading: false,
