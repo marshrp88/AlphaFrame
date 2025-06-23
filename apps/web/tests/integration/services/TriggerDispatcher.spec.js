@@ -40,7 +40,7 @@ vi.mock('@/core/store/logStore', () => ({
 }));
 
 // Mock useUIStore for showPasswordPrompt and isSandboxMode
-vi.mock('../../../src/lib/store/uiStore', () => ({
+vi.mock('@/core/store/uiStore', () => ({
   useUIStore: {
     getState: vi.fn(() => ({
       showPasswordPrompt: vi.fn(),

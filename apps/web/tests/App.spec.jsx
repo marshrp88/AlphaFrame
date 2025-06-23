@@ -39,11 +39,7 @@ describe('App Integration Tests', () => {
     const mockConfig = { apiUrl: 'https://api.success.com', env: 'test' };
     vi.spyOn(configModule, 'config', 'get').mockReturnValue(mockConfig);
 
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    );
+    render(<App />);
 
     // Wait for the home page to render with longer timeout
     await waitFor(() => {
@@ -60,11 +56,7 @@ describe('App Integration Tests', () => {
     const mockConfig = { apiUrl: 'https://api.test.com', env: 'test' };
     vi.spyOn(configModule, 'config', 'get').mockReturnValue(mockConfig);
 
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    );
+    render(<App />);
 
     // Verify the app structure with longer timeout
     await waitFor(() => {
@@ -85,11 +77,7 @@ describe('App Integration Tests', () => {
     const mockConfig = { apiUrl: undefined, env: 'test' };
     vi.spyOn(configModule, 'config', 'get').mockReturnValue(mockConfig);
 
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    );
+    render(<App />);
 
     // Verify the app renders the home page regardless of API URL config
     await waitFor(() => {

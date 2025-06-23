@@ -13,47 +13,80 @@
  * 
  * CLUSTER 1 FIX: Temporarily commented out global mocks to prevent conflicts
  * with per-test mocks that are causing timeout/hanging issues.
+ * 
+ * CLUSTER 2 FIX: Removed harmful global createRoot mock that interferes with
+ * React Testing Library's natural DOM handling.
  */
 
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 
 // ============================================================================
-// REACT 18 CREATE ROOT FIXES
+// GLOBAL ERROR HANDLERS - CATCH SILENT FAILURES
 // ============================================================================
 
-// Create DOM container for React 18 createRoot
-const createTestContainer = () => {
-  const container = document.createElement('div');
-  container.id = 'root';
-  document.body.appendChild(container);
-  return container;
-};
-
-// Mock React 18 createRoot with proper DOM handling
-const mockCreateRoot = vi.fn((container) => {
-  if (!container) {
-    container = createTestContainer();
-  }
-  
-  return {
-    render: vi.fn((element) => {
-      if (container) {
-        container.innerHTML = '<div data-testid="rendered-component"></div>';
-      }
-    }),
-    unmount: vi.fn(() => {
-      if (container) {
-        container.innerHTML = '';
-      }
-    })
-  };
+// Add global error listeners to catch silent failures that cause test timeouts
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('💥 [TEST SETUP] Unhandled Promise Rejection:', reason);
+  console.error('💥 [TEST SETUP] Promise:', promise);
 });
 
+process.on('uncaughtException', (error) => {
+  console.error('💥 [TEST SETUP] Uncaught Exception:', error);
+  console.error('💥 [TEST SETUP] Stack:', error.stack);
+});
+
+// Also catch errors in the browser environment (jsdom)
+if (typeof window !== 'undefined') {
+  window.addEventListener('error', (event) => {
+    console.error('💥 [TEST SETUP] Window Error:', event.error);
+  });
+  
+  window.addEventListener('unhandledrejection', (event) => {
+    console.error('💥 [TEST SETUP] Window Unhandled Rejection:', event.reason);
+  });
+}
+
+// ============================================================================
+// REACT 18 CREATE ROOT FIXES - REMOVED HARMFUL GLOBAL MOCK
+// ============================================================================
+
+// --- FIX: Commented out global createRoot mock that interferes with React Testing Library ---
+// This mock was causing "Target container is not a DOM element" errors by overriding
+// the natural DOM setup that React Testing Library expects.
+
+// Create DOM container for React 18 createRoot
+// const createTestContainer = () => {
+//   const container = document.createElement('div');
+//   container.id = 'root';
+//   document.body.appendChild(container);
+//   return container;
+// };
+
+// Mock React 18 createRoot with proper DOM handling
+// const mockCreateRoot = vi.fn((container) => {
+//   if (!container) {
+//     container = createTestContainer();
+//   }
+//   
+//   return {
+//     render: vi.fn((element) => {
+//       if (container) {
+//         container.innerHTML = '<div data-testid="rendered-component"></div>';
+//       }
+//     }),
+//     unmount: vi.fn(() => {
+//       if (container) {
+//         container.innerHTML = '';
+//       }
+//     })
+//   };
+// });
+
 // Mock ReactDOM with stable implementation
-vi.mock('react-dom/client', () => ({
-  createRoot: mockCreateRoot
-}));
+// vi.mock('react-dom/client', () => ({
+//   createRoot: mockCreateRoot
+// }));
 
 // ============================================================================
 // AUTH0 SDK COMPLETE MOCKING - TEMPORARILY COMMENTED FOR CLUSTER 1 FIX

@@ -1,18 +1,15 @@
 /**
- * test-utils.jsx
+ * test-utils.jsx - Reusable Test Utilities for AlphaFrame
  * 
- * Purpose: Test utilities for AlphaFrame VX.1
+ * Purpose: Provide standardized testing patterns and utilities for React 18 + Vitest + JSDOM
  * 
- * This file provides:
- * - React 18 compatible test rendering
- * - Router wrappers for component tests
- * - Auth0 provider wrappers
- * - Common test utilities
+ * Procedure:
+ * - DOM polyfills for JSDOM compatibility
+ * - Service mocking utilities
+ * - Common test setup and teardown
+ * - Reusable assertion helpers
  * 
- * Fixes:
- * - React 18 createRoot DOM container issues
- * - Component test setup problems
- * - Router and provider wrapping
+ * Conclusion: Centralized testing utilities ensure consistency and reduce duplication
  */
 
 import React from 'react';
@@ -140,4 +137,203 @@ export const mockErrorState = (error = 'Test error') => {
 export * from '@testing-library/react';
 
 // Override render to use our custom setup
-export { render }; 
+export { render };
+
+// ============================================================================
+// DOM POLYFILLS: JSDOM compatibility utilities
+// ============================================================================
+
+/**
+ * Setup DOM polyfills for JSDOM environment
+ * Handles file download operations, navigation, and browser APIs
+ */
+export const setupDOMPolyfills = () => {
+  // Prevent JSDOM navigation errors
+  HTMLAnchorElement.prototype.click = vi.fn();
+  
+  // Stub blob URL creation and cleanup
+  global.URL.createObjectURL = vi.fn(() => 'mock-blob-url');
+  global.URL.revokeObjectURL = vi.fn();
+  
+  // Mock Blob constructor
+  global.Blob = vi.fn(() => ({
+    size: 1024,
+    type: 'application/json'
+  }));
+  
+  // Mock Date.now for consistent timestamps
+  vi.spyOn(Date, 'now').mockReturnValue(1234567890);
+  
+  // Prevent default navigation behavior
+  document.addEventListener('click', (e) => e.preventDefault());
+};
+
+/**
+ * Clean up DOM polyfills and event listeners
+ */
+export const cleanupDOMPolyfills = () => {
+  vi.restoreAllMocks();
+  document.removeEventListener('click', (e) => e.preventDefault());
+};
+
+// ============================================================================
+// SERVICE MOCKING UTILITIES: Standardized service mocks
+// ============================================================================
+
+/**
+ * Create a mock for ExecutionLogService with realistic data
+ */
+export const createExecutionLogServiceMock = (customData = null) => {
+  const defaultData = [
+    {
+      id: 'test-log-1',
+      type: 'test.log',
+      timestamp: Date.now(),
+      payload: { test: 'mocked data' },
+      severity: 'info',
+      userId: 'test-user',
+      sessionId: 'test-session',
+      meta: { component: 'TestComponent', action: 'test' }
+    }
+  ];
+  
+  return {
+    default: {
+      queryLogs: vi.fn().mockResolvedValue(customData || defaultData),
+      log: vi.fn().mockResolvedValue({ id: 'test-log' }),
+      getSessionLogs: vi.fn().mockResolvedValue([]),
+      getComponentLogs: vi.fn().mockResolvedValue([]),
+      getPerformanceLogs: vi.fn().mockResolvedValue([]),
+      clearOldLogs: vi.fn().mockResolvedValue(),
+      exportLogs: vi.fn().mockResolvedValue([]),
+      decryptPayload: vi.fn().mockResolvedValue({ decrypted: 'data' }),
+      logRuleTriggered: vi.fn().mockResolvedValue({ id: 'rule-log' }),
+      logSimulationRun: vi.fn().mockResolvedValue({ id: 'sim-log' }),
+      logBudgetForecast: vi.fn().mockResolvedValue({ id: 'budget-log' }),
+      logPortfolioAnalysis: vi.fn().mockResolvedValue({ id: 'portfolio-log' }),
+      logError: vi.fn().mockResolvedValue({ id: 'error-log' })
+    }
+  };
+};
+
+/**
+ * Create a mock for FeedbackUploader service
+ */
+export const createFeedbackUploaderMock = () => ({
+  default: {
+    uploadFeedback: vi.fn().mockResolvedValue({ success: true, id: 'upload-123' })
+  }
+});
+
+/**
+ * Create a mock for NotificationService
+ */
+export const createNotificationServiceMock = () => ({
+  default: {
+    showNotification: vi.fn(),
+    showSuccess: vi.fn(),
+    showError: vi.fn(),
+    showWarning: vi.fn(),
+    showInfo: vi.fn()
+  }
+});
+
+// ============================================================================
+// TEST SETUP UTILITIES: Common test lifecycle management
+// ============================================================================
+
+/**
+ * Standard test setup with DOM polyfills and mock clearing
+ */
+export const setupTest = () => {
+  setupDOMPolyfills();
+  vi.clearAllMocks();
+};
+
+/**
+ * Standard test teardown with cleanup
+ */
+export const teardownTest = () => {
+  cleanupDOMPolyfills();
+};
+
+/**
+ * Create spies for common DOM operations
+ */
+export const createDOMSpies = () => ({
+  createObjectURL: vi.spyOn(global.URL, 'createObjectURL'),
+  revokeObjectURL: vi.spyOn(global.URL, 'revokeObjectURL'),
+  anchorClick: vi.spyOn(HTMLAnchorElement.prototype, 'click')
+});
+
+// ============================================================================
+// ASSERTION HELPERS: Common test assertions
+// ============================================================================
+
+/**
+ * Wait for async service call with timeout
+ */
+export const waitForServiceCall = async (serviceMethod, timeout = 5000) => {
+  return new Promise((resolve, reject) => {
+    const check = () => {
+      if (serviceMethod.mock.calls.length > 0) {
+        resolve();
+      } else if (Date.now() - startTime > timeout) {
+        reject(new Error(`Service call timeout after ${timeout}ms`));
+      } else {
+        setTimeout(check, 10);
+      }
+    };
+    const startTime = Date.now();
+    check();
+  });
+};
+
+/**
+ * Verify DOM download operations were performed
+ */
+export const verifyDownloadOperations = (spies) => {
+  expect(spies.createObjectURL).toHaveBeenCalled();
+  expect(spies.anchorClick).toHaveBeenCalled();
+  expect(spies.revokeObjectURL).toHaveBeenCalled();
+};
+
+// ============================================================================
+// MOCK VERIFICATION: Ensure mocks are properly applied
+// ============================================================================
+
+/**
+ * Verify that a service mock is properly applied
+ */
+export const verifyServiceMock = (service, methodName) => {
+  console.log(`🔧 Mock verification - ${service.constructor.name}.${methodName}:`, 
+    typeof service[methodName], 
+    service[methodName].mock ? 'is mocked' : 'NOT MOCKED'
+  );
+  return service[methodName].mock !== undefined;
+};
+
+// ============================================================================
+// EXPORT ALL UTILITIES
+// ============================================================================
+
+export default {
+  // DOM utilities
+  setupDOMPolyfills,
+  cleanupDOMPolyfills,
+  createDOMSpies,
+  
+  // Service mocks
+  createExecutionLogServiceMock,
+  createFeedbackUploaderMock,
+  createNotificationServiceMock,
+  
+  // Test lifecycle
+  setupTest,
+  teardownTest,
+  
+  // Assertions
+  waitForServiceCall,
+  verifyDownloadOperations,
+  verifyServiceMock
+}; 

@@ -1,12 +1,25 @@
+import { describe, it, expect, beforeEach, vi, beforeAll, afterAll } from 'vitest';
+
+// Mock ExecutionController properly - must be before imports
+const mockExecuteAction = vi.fn();
+vi.mock('../../../src/lib/services/ExecutionController', () => ({
+  ExecutionController: {
+    executeAction: mockExecuteAction
+  }
+}));
+
 // Define stable mock instances at the top
 let mockActionLog = [];
 const mockQueueAction = vi.fn((action) => {
   // Simulate adding the action to the log
-  mockActionLog.push({ ...action, id: mockActionLog.length });
-  return mockActionLog.length - 1;
+  const actionId = mockActionLog.length;
+  mockActionLog.push({ ...action, id: actionId });
+  return actionId;
 });
 const mockUpdateAction = vi.fn((index, updatedAction) => {
-  mockActionLog[index] = updatedAction;
+  if (mockActionLog[index]) {
+    mockActionLog[index] = { ...mockActionLog[index], ...updatedAction };
+  }
 });
 
 vi.mock('../../../src/core/store/logStore', () => ({
@@ -19,13 +32,9 @@ vi.mock('../../../src/core/store/logStore', () => ({
   }
 }));
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { dispatchAction } from '../../../src/lib/services/TriggerDispatcher';
 import { useLogStore } from '../../../src/core/store/logStore';
 import { ExecutionController } from '../../../src/lib/services/ExecutionController';
-
-// Mock the ExecutionController static method
-vi.spyOn(ExecutionController, 'executeAction').mockImplementation(() => Promise.resolve());
 
 // Suppress console.error during tests to avoid confusion from expected error logs
 beforeAll(() => {
@@ -41,7 +50,7 @@ describe('FrameSync Integration', () => {
     mockQueueAction.mockClear();
     mockUpdateAction.mockClear();
     mockActionLog = [];
-    ExecutionController.executeAction.mockClear();
+    mockExecuteAction.mockClear();
   });
 
   it('should dispatch and execute a Plaid transfer action', async () => {
@@ -65,7 +74,7 @@ describe('FrameSync Integration', () => {
     };
 
     const mockResult = { status: 'success' };
-    ExecutionController.executeAction.mockResolvedValue(mockResult);
+    mockExecuteAction.mockResolvedValue(mockResult);
 
     // Act
     await dispatchAction(mockRule, mockTransaction);
@@ -84,7 +93,7 @@ describe('FrameSync Integration', () => {
       })
     );
 
-    expect(ExecutionController.executeAction).toHaveBeenCalledWith(
+    expect(mockExecuteAction).toHaveBeenCalledWith(
       'PLAID_TRANSFER',
       expect.objectContaining({
         amount: 100,
@@ -95,7 +104,7 @@ describe('FrameSync Integration', () => {
     );
 
     expect(mockUpdateAction).toHaveBeenCalledWith(
-      expect.any(Number),
+      0, // First action in the log
       expect.objectContaining({
         status: 'success'
       })
@@ -123,28 +132,26 @@ describe('FrameSync Integration', () => {
     };
 
     const mockError = new Error('Transfer failed');
-    ExecutionController.executeAction.mockRejectedValue(mockError);
+    mockExecuteAction.mockRejectedValue(mockError);
 
     // Act & Assert
-    let error = null;
-    try {
-      await dispatchAction(mockRule, mockTransaction);
-    } catch (e) {
-      error = e;
-      // Diagnostic output
-      console.log('🧪 mockUpdateAction call count:', mockUpdateAction.mock.calls.length);
-      console.log('🧪 mockQueueAction call count:', mockQueueAction.mock.calls.length);
-      console.log('🧪 mockUpdateAction args:', mockUpdateAction.mock.calls);
-      console.log('🧪 mockQueueAction args:', mockQueueAction.mock.calls);
-      if (error) {
-        console.log('❌ Full error object:', error);
-        console.log('❌ Error message:', error.message);
-        console.log('❌ Error name:', error.name);
-      }
-    }
-    expect(mockQueueAction).toHaveBeenCalled();
+    await expect(dispatchAction(mockRule, mockTransaction)).rejects.toThrow('Transfer failed');
+    
+    expect(mockQueueAction).toHaveBeenCalledWith(
+      expect.objectContaining({
+        ruleId: 'rule_123',
+        actionType: 'PLAID_TRANSFER',
+        payload: expect.objectContaining({
+          amount: 100,
+          sourceAccount: 'acc_123',
+          destinationAccount: 'acc_456',
+          transactionId: 'tx_789'
+        })
+      })
+    );
+    
+    // Should not update action on failure
     expect(mockUpdateAction).not.toHaveBeenCalled();
-    expect(error && error.message).toBe('Transfer failed');
   });
 
   it('should handle internal actions', async () => {
@@ -167,7 +174,7 @@ describe('FrameSync Integration', () => {
     };
 
     const mockResult = { status: 'success' };
-    ExecutionController.executeAction.mockResolvedValue(mockResult);
+    mockExecuteAction.mockResolvedValue(mockResult);
 
     // Act
     await dispatchAction(mockRule, mockTransaction);
@@ -185,9 +192,17 @@ describe('FrameSync Integration', () => {
       })
     );
 
-    expect(ExecutionController.executeAction).toHaveBeenCalled();
+    expect(mockExecuteAction).toHaveBeenCalledWith(
+      'ADJUST_GOAL',
+      expect.objectContaining({
+        goalId: 'goal_123',
+        adjustment: 100,
+        transactionId: 'tx_789'
+      })
+    );
+    
     expect(mockUpdateAction).toHaveBeenCalledWith(
-      expect.any(Number),
+      0, // First action in the log
       expect.objectContaining({
         status: 'success'
       })
