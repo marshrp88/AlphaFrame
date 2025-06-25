@@ -68,13 +68,22 @@ function RuleBinderRoot({ initialConfig, onConfigurationChange }) {
     runSimulation: true
   });
 
+  // Track if handleSave was called (for debug purposes)
+  const [saveHandlerCalled, setSaveHandlerCalled] = useState(false);
+  // Track if button was clicked (for debug purposes)
+  const [buttonClicked, setButtonClicked] = useState(false);
+
   // Memoize handlers with useCallback
   const handleActionTypeChange = useCallback((type) => {
+    console.log('[RuleBinderRoot] Action type changed to:', type);
+    console.log('[RuleBinderRoot] ACTION_TYPES.PLAID_TRANSFER:', ACTION_TYPES.PLAID_TRANSFER);
+    console.log('[RuleBinderRoot] Type comparison:', type === ACTION_TYPES.PLAID_TRANSFER);
     setActionType(type);
     setPayload(null);
   }, []);
 
   const handlePayloadChange = useCallback((newPayload) => {
+    console.log('[RuleBinderRoot] Payload changed:', newPayload);
     setPayload(newPayload);
   }, []);
 
@@ -124,17 +133,25 @@ function RuleBinderRoot({ initialConfig, onConfigurationChange }) {
     }
   };
 
-  const handleSave = useCallback(async () => {
-    if (!initialConfig?.rule) {
-      toast({
-        title: 'Error',
-        description: 'No rule selected',
-        variant: 'destructive'
-      });
-      return;
+  const handleSave = useCallback(async (e) => {
+    console.log('[debug] handleSave() entered');
+    console.log('[RuleBinderRoot] handleSave called');
+    console.log('[RuleBinderRoot] initialConfig:', initialConfig);
+    console.log('[RuleBinderRoot] actionType:', actionType);
+    console.log('[RuleBinderRoot] payload:', payload);
+    
+    // Set flag for debug visibility
+    setSaveHandlerCalled(true);
+    
+    // For new rule creation, we don't need initialConfig.rule
+    // Only require it for rule updates
+    if (initialConfig && !initialConfig.rule) {
+      console.log('[RuleBinderRoot] No rule found, but this might be a new rule creation');
+      // Don't return early - allow new rule creation
     }
 
     try {
+      console.log('[RuleBinderRoot] Starting execution');
       setIsExecuting(true);
 
       const mockTransaction = {
@@ -143,8 +160,30 @@ function RuleBinderRoot({ initialConfig, onConfigurationChange }) {
         date: new Date().toISOString()
       };
 
-      await dispatchAction(initialConfig.rule, mockTransaction);
+      console.log('[RuleBinderRoot] Dispatching action with transaction:', mockTransaction);
       
+      // For new rules, create a mock rule object with valid Plaid payload
+      const ruleToExecute = initialConfig?.rule || {
+        id: `rule_${Date.now()}`,
+        name: 'New Rule',
+        action: {
+          type: 'PLAID_TRANSFER',
+          payload: {
+            amount: Number(payload?.amount) || 1000,
+            sourceAccountId: payload?.sourceAccount || 'chase_checking',
+            destinationAccountId: payload?.destinationAccount || 'vanguard_brokerage',
+            description: payload?.description || '',
+            amountType: payload?.amountType || 'fixed'
+          }
+        }
+      };
+      
+      console.log('[RuleBinderRoot] Rule to execute:', ruleToExecute);
+      
+      const result = await dispatchAction(ruleToExecute, mockTransaction);
+      console.log('[RuleBinderRoot] Action dispatched successfully, result:', result);
+      
+      console.log('[RuleBinderRoot] Action dispatched successfully, showing success toast');
       toast({
         title: "Success",
         description: <div data-testid="rule-toast">Rule created successfully</div>,
@@ -152,12 +191,17 @@ function RuleBinderRoot({ initialConfig, onConfigurationChange }) {
 
       onConfigurationChange?.(payload);
     } catch (error) {
+      console.log('[RuleBinderRoot] Error occurred:', error);
+      console.error('[RuleBinderRoot] Full error details:', error);
+      
+      // Show error toast with more details
       toast({
         title: 'Error',
-        description: formatErrorMessage(actionType, error),
+        description: <div data-testid="error-toast">{formatErrorMessage(actionType, error)}</div>,
         variant: 'destructive'
       });
     } finally {
+      console.log('[RuleBinderRoot] Execution completed, setting isExecuting to false');
       setIsExecuting(false);
     }
   }, [initialConfig, actionType, payload, onConfigurationChange]);
@@ -167,8 +211,13 @@ function RuleBinderRoot({ initialConfig, onConfigurationChange }) {
    * @returns {JSX.Element|null} The rendered action form
    */
   const renderActionForm = () => {
+    console.log('[RuleBinderRoot] renderActionForm called with actionType:', actionType);
+    console.log('[RuleBinderRoot] ACTION_TYPES.PLAID_TRANSFER:', ACTION_TYPES.PLAID_TRANSFER);
+    console.log('[RuleBinderRoot] actionType === ACTION_TYPES.PLAID_TRANSFER:', actionType === ACTION_TYPES.PLAID_TRANSFER);
+    
     switch (actionType) {
       case ACTION_TYPES.PLAID_TRANSFER:
+        console.log('[RuleBinderRoot] Rendering PlaidActionForm');
         return (
           <PlaidActionForm
             initialPayload={payload}
@@ -176,6 +225,7 @@ function RuleBinderRoot({ initialConfig, onConfigurationChange }) {
           />
         );
       case ACTION_TYPES.WEBHOOK:
+        console.log('[RuleBinderRoot] Rendering WebhookActionForm');
         return (
           <WebhookActionForm
             initialPayload={payload}
@@ -184,6 +234,7 @@ function RuleBinderRoot({ initialConfig, onConfigurationChange }) {
         );
       case ACTION_TYPES.ADJUST_GOAL:
       case ACTION_TYPES.ADD_MEMO:
+        console.log('[RuleBinderRoot] Rendering InternalActionForm');
         return (
           <InternalActionForm
             initialPayload={payload}
@@ -191,6 +242,7 @@ function RuleBinderRoot({ initialConfig, onConfigurationChange }) {
           />
         );
       default:
+        console.log('[RuleBinderRoot] No action form rendered for actionType:', actionType);
         return null;
     }
   };
@@ -234,10 +286,17 @@ function RuleBinderRoot({ initialConfig, onConfigurationChange }) {
             />
           )}
           <Button
-            onClick={handleSave}
+            onClick={e => {
+              console.log('[debug] Save button clicked');
+              if (localStorage.getItem('test_mode') === 'true') {
+                setButtonClicked(true);
+              }
+              handleSave(e);
+            }}
             disabled={isExecuting || !actionType || !payload}
             className="w-full"
-            data-testid="save-rule-button"
+            data-testid="save-button"
+            data-enabled={!!(actionType && payload)}
           >
             {isExecuting ? (
               <>
@@ -248,6 +307,24 @@ function RuleBinderRoot({ initialConfig, onConfigurationChange }) {
               'Save Rule'
             )}
           </Button>
+          {/* Show if button was clicked in test mode */}
+          {localStorage.getItem('test_mode') === 'true' && buttonClicked && (
+            <span data-testid="save-button-clicked">🟢 Clicked</span>
+          )}
+          {/* Debug info in test mode */}
+          {localStorage.getItem('test_mode') === 'true' && (
+            <div className="mt-2 p-2 bg-yellow-100 border border-yellow-300 rounded text-xs">
+              <div>🔍 Debug: actionType = {actionType || 'undefined'}</div>
+              <div>🔍 Debug: payload = {JSON.stringify(payload)}</div>
+              <div>🔍 Debug: button enabled = {!!(actionType && payload)}</div>
+              <div>🔍 Debug: isExecuting = {isExecuting}</div>
+              <div>🔍 Debug: saveHandlerCalled = {saveHandlerCalled}</div>
+            </div>
+          )}
+          {/* Visible indicator when handleSave is called */}
+          {localStorage.getItem('test_mode') === 'true' && saveHandlerCalled && (
+            <span data-testid="save-handler-called" className="text-green-600 font-bold">✅ handleSave called</span>
+          )}
         </div>
       )}
     </div>

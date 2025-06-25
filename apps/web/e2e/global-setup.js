@@ -1,47 +1,54 @@
 /**
- * Global Setup for E2E Tests
- * 
- * This file configures the test environment before running E2E tests.
- * It sets up mocks, authentication state, and browser API stubs.
+ * Global setup for Playwright tests
+ * This runs once before all tests and ensures the server is ready
  */
 
-const { chromium } = require('@playwright/test');
+import { chromium } from '@playwright/test';
 
-async function globalSetup(config) {
-  console.log('[Global Setup] Starting test environment setup');
+async function globalSetup() {
+  console.log('🌐 Starting global setup...');
   
-  // Launch browser to set up test state
+  // Launch browser to test server connectivity
   const browser = await chromium.launch();
   const context = await browser.newContext();
   const page = await context.newPage();
   
-  try {
-    // Wait for server to be ready
-    console.log('[Global Setup] Waiting for server to be ready...');
-    await page.goto('http://localhost:5175', { waitUntil: 'networkidle', timeout: 30000 });
-    
-    // Set test mode in localStorage
-    await page.evaluate(() => {
-      localStorage.setItem('test_mode', 'true');
-      console.log('[Global Setup] test_mode set to true');
-    });
-    
-    // Verify test mode is set
-    const testMode = await page.evaluate(() => localStorage.getItem('test_mode'));
-    console.log('[Global Setup] Verified test_mode:', testMode);
-    
-    // Test that the app loads correctly
-    await page.waitForSelector('#root', { timeout: 10000 });
-    console.log('[Global Setup] App root element found');
-    
-  } catch (error) {
-    console.error('[Global Setup] Error during setup:', error.message);
-    throw error;
-  } finally {
-    await browser.close();
+  // Wait for server to be ready with retries
+  let serverReady = false;
+  let attempts = 0;
+  const maxAttempts = 10;
+  
+  while (!serverReady && attempts < maxAttempts) {
+    try {
+      console.log(`🔄 Attempt ${attempts + 1}/${maxAttempts}: Checking server...`);
+      await page.goto('http://localhost:5173', { timeout: 10000 });
+      
+      // Wait for the app to be fully loaded
+      await page.waitForSelector('#root', { timeout: 15000 });
+      
+      // Check if the app is responsive
+      const title = await page.title();
+      console.log(`✅ Server ready! Page title: ${title}`);
+      serverReady = true;
+      
+    } catch (error) {
+      attempts++;
+      console.log(`❌ Attempt ${attempts} failed: ${error.message}`);
+      
+      if (attempts < maxAttempts) {
+        console.log(`⏳ Waiting 2 seconds before retry...`);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+    }
   }
   
-  console.log('[Global Setup] Test environment setup complete');
+  await browser.close();
+  
+  if (!serverReady) {
+    throw new Error(`Server failed to start after ${maxAttempts} attempts`);
+  }
+  
+  console.log('✅ Global setup completed successfully');
 }
 
-module.exports = globalSetup; 
+export default globalSetup; 

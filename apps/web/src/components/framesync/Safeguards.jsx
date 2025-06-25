@@ -83,7 +83,7 @@ function SafeguardsComponent({ value, onChange }) {
           </div>
           <Switch
             id="require-confirmation"
-            data-testid="safeguards-toggle"
+            data-testid="require-confirmation"
             checked={value.requireConfirmation}
             onCheckedChange={(checked) => handleChange('requireConfirmation', checked)}
           />

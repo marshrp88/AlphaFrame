@@ -1,0 +1,47 @@
+🌐 Starting global setup...
+🔄 Attempt 1/10: Checking server...
+✅ Server ready! Page title: Vite + React
+✅ Global setup completed successfully
+
+Running 1 test using 1 worker
+
+[1A[2K[1/1] [chromium] › e2e\simple-component.spec.js:4:1 › should render basic components
+[1A[2K[chromium] › e2e\simple-component.spec.js:4:1 › should render basic components
+✅ Rules page loaded
+
+[1A[2K✅ Create rule button found
+
+[1A[2K✅ Create rule button clicked
+
+[1A[2K✅ Action selector found
+
+[1A[2KAvailable options: [
+  [32m'Plaid TransferTransfer funds between connected bank accounts'[39m,
+  [32m'WebhookSend data to an external service via webhook'[39m,
+  [32m'Adjust GoalModify financial goal parameters'[39m,
+  [32m'Add MemoAdd a note to a transaction'[39m
+]
+
+[1A[2K✅ PLAID_TRANSFER selected
+
+[1A[2KForm elements found: [33m3[39m
+
+[1A[2K✅ Screenshot saved as simple-test-result.png
+
+[1A[2KPage content length: [33m14525[39m
+
+[1A[2KPage content preview: <!DOCTYPE html><html lang="en"><head>
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh";
+injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;</script>
+
+    <script type="module" src="/@vite/client"></script>
+
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="/vite.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vite + React</title>
+  <style type
+
+[1A[2K  1 passed (8.3s)

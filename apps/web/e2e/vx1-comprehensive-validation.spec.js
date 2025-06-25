@@ -38,7 +38,7 @@ test.describe('AlphaFrame VX.1 E2E Comprehensive Validation', () => {
 
     // --- Pre-Validation Setup ---
     await test.step('Simulate login and navigate to onboarding', async () => {
-        await page.goto('http://localhost:5178/');
+        await page.goto('http://localhost:5173/');
         
         // Programmatically set the authentication state in localStorage
         // This bypasses the need for UI login and external redirects.
