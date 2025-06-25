@@ -1,0 +1,316 @@
+/* WhatsNext.css - Dynamic recommendation component styling */
+
+.whats-next {
+  background: var(--color-surface-elevated);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--elevation-2);
+  border: 1px solid var(--color-border);
+}
+
+/* Header */
+.whats-next-header {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.whats-next-header h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.whats-next-header p {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* Loading State */
+.whats-next-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.whats-next-loading .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--color-border);
+  border-top: 4px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: var(--spacing-md);
+}
+
+.whats-next-loading p {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+}
+
+/* Empty State */
+.whats-next-empty {
+  text-align: center;
+  padding: var(--spacing-xl);
+}
+
+.whats-next-empty h3 {
+  font-size: var(--font-size-xl);
+  color: var(--color-success);
+  margin-bottom: var(--spacing-md);
+}
+
+.whats-next-empty p {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+}
+
+/* Primary Recommendation */
+.primary-recommendation {
+  margin-bottom: var(--spacing-xl);
+}
+
+.recommendation-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  border: 1px solid var(--color-border);
+  transition: all 0.2s ease;
+}
+
+.recommendation-card.primary {
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary-lighter));
+  border: 2px solid var(--color-primary);
+  box-shadow: var(--elevation-3);
+}
+
+.recommendation-card.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--elevation-4);
+}
+
+.recommendation-card.secondary {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.recommendation-card.secondary:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--elevation-2);
+}
+
+/* Recommendation Header */
+.recommendation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.recommendation-icon {
+  font-size: var(--font-size-2xl);
+  margin-right: var(--spacing-sm);
+}
+
+.recommendation-meta {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+/* Priority Badges */
+.priority-badge {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.priority-high {
+  background: var(--color-error-light);
+  color: var(--color-error);
+}
+
+.priority-medium {
+  background: var(--color-warning-light);
+  color: var(--color-warning);
+}
+
+.priority-low {
+  background: var(--color-success-light);
+  color: var(--color-success);
+}
+
+/* Impact Indicator */
+.impact-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Recommendation Content */
+.recommendation-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.recommendation-description {
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0 0 var(--spacing-lg) 0;
+}
+
+/* Action Buttons */
+.action-button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.action-button.primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.action-button.primary:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--elevation-2);
+}
+
+.action-button.secondary {
+  background: var(--color-secondary);
+  color: white;
+}
+
+.action-button.secondary:hover:not(:disabled) {
+  background: var(--color-secondary-dark);
+  transform: translateY(-1px);
+}
+
+.action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Additional Recommendations */
+.additional-recommendations {
+  margin-top: var(--spacing-xl);
+}
+
+.additional-recommendations h3 {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+/* Progress Indicator */
+.progress-indicator {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: var(--spacing-sm);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
+  border-radius: var(--radius-sm);
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .whats-next {
+    padding: var(--spacing-lg);
+  }
+
+  .recommendation-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+
+  .recommendation-meta {
+    flex-wrap: wrap;
+  }
+
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recommendation-title {
+    font-size: var(--font-size-lg);
+  }
+
+  .whats-next-header h2 {
+    font-size: var(--font-size-xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .whats-next {
+    padding: var(--spacing-md);
+  }
+
+  .recommendation-card {
+    padding: var(--spacing-md);
+  }
+
+  .action-button {
+    width: 100%;
+    padding: var(--spacing-md);
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .recommendation-card.primary {
+    background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
+  }
+
+  .recommendation-card.secondary {
+    background: var(--color-surface-dark);
+    border-color: var(--color-border-dark);
+  }
+} 
