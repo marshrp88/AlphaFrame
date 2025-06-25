@@ -1,0 +1,187 @@
+/**
+ * CompositeCard.css - AlphaFrame Phase X Sprint 1
+ * 
+ * Purpose: Styles for the CompositeCard component using design tokens
+ * for consistent visual appearance and theme support.
+ * 
+ * Procedure:
+ * 1. Uses CSS custom properties from design-tokens.css
+ * 2. Implements hover effects and transitions
+ * 3. Supports multiple variants (default, elevated, outlined)
+ * 4. Provides responsive and accessible styling
+ * 
+ * Conclusion: Ensures the card component follows the design system
+ * and provides consistent user experience across the application.
+ */
+
+/* Import design tokens */
+@import '../../styles/design-tokens.css';
+
+/* Base card styles */
+.composite-card {
+  background-color: var(--color-surface);
+  border: var(--color-border-light);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-shadow);
+  padding: var(--card-padding);
+  transition: var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Card variants */
+.composite-card--default {
+  background-color: var(--color-surface);
+  border: var(--color-border-light);
+  box-shadow: var(--card-shadow);
+}
+
+.composite-card--elevated {
+  background-color: var(--color-surface);
+  border: var(--color-border-light);
+  box-shadow: var(--shadow-elevated);
+}
+
+.composite-card--outlined {
+  background-color: var(--color-surface);
+  border: 2px solid var(--color-border);
+  box-shadow: none;
+}
+
+/* Interactive card styles */
+.composite-card--interactive {
+  cursor: pointer;
+  user-select: none;
+}
+
+.composite-card--interactive:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-1px);
+}
+
+.composite-card--interactive:focus {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+.composite-card--interactive:active {
+  transform: translateY(0);
+  box-shadow: var(--card-shadow);
+}
+
+/* Card header */
+.composite-card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.composite-card__icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  font-size: var(--font-size-lg);
+}
+
+.composite-card__title-area {
+  flex: 1;
+  min-width: 0;
+}
+
+.composite-card__title {
+  margin: 0 0 var(--spacing-xs) 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  line-height: var(--line-height-tight);
+}
+
+.composite-card__subtitle {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+/* Card content */
+.composite-card__content {
+  color: var(--color-text);
+  line-height: var(--line-height-normal);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .composite-card {
+    padding: var(--spacing-md);
+  }
+  
+  .composite-card__header {
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .composite-card__title {
+    font-size: var(--font-size-md);
+  }
+  
+  .composite-card__subtitle {
+    font-size: var(--font-size-xs);
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .composite-card {
+    background-color: var(--color-surface);
+    border-color: var(--color-border);
+  }
+  
+  .composite-card__title {
+    color: var(--color-text);
+  }
+  
+  .composite-card__subtitle {
+    color: var(--color-text-secondary);
+  }
+  
+  .composite-card__icon {
+    color: var(--color-primary);
+  }
+}
+
+/* Focus management for accessibility */
+.composite-card:focus-within {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+/* Loading state */
+.composite-card--loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.composite-card--loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+} 
