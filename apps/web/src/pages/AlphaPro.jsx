@@ -7,6 +7,9 @@ import FeedbackModule from '../features/pro/components/FeedbackModule.jsx';
 const AlphaProDashboard = () => {
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Debug span for test diagnostics */}
+      <span data-testid="page-mounted" style={{ display: 'none' }}>AlphaPro Dashboard Mounted</span>
+      
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <div>

@@ -28,6 +28,9 @@ function Home() {
 
   return (
     <div className="p-4">
+      {/* Debug span for test diagnostics */}
+      <span data-testid="page-mounted" style={{ display: 'none' }}>Home Page Mounted</span>
+      
       <h1>Home Page</h1>
       <div className="mt-4">
         <h2>Financial State Test</h2>

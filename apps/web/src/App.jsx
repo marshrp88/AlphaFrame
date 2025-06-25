@@ -139,66 +139,80 @@ const App = () => {
             <Navigation />
             
             <main className="py-8">
-              <Routes>
-                {/* Public Routes */}
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/test-mount" element={<TestMount />} />
-                
-                {/* Protected Routes */}
-                <Route 
-                  path="/profile" 
-                  element={
-                    isTestMode ? <Profile /> : (
-                      <PrivateRoute>
-                        <Profile />
-                      </PrivateRoute>
-                    )
-                  } 
-                />
-                
-                <Route 
-                  path="/alphapro" 
-                  element={
-                    isTestMode ? <AlphaPro /> : (
-                      <PrivateRoute requiredRoles={['premium', 'admin']}>
-                        <AlphaPro />
-                      </PrivateRoute>
-                    )
-                  } 
-                />
-                
-                {/* RULES ROUTE - Direct mount without lazy loading or conditional guards */}
-                <Route 
-                  path="/rules" 
-                  element={
-                    (() => {
-                      console.log("[Router Debug] /rules route matched, isTestMode:", isTestMode);
-                      console.log("[Router Debug] About to render RulesPage directly");
-                      return <RulesPage />; // Direct mount - no lazy, no Suspense, no conditional guards
-                    })()
-                  } 
-                />
-                
-                {/* 404 Route */}
-                <Route 
-                  path="*" 
-                  element={
-                    <div className="flex items-center justify-center min-h-screen">
-                      <div className="text-center">
-                        <h1 className="text-4xl font-bold text-gray-900 mb-4">404</h1>
-                        <p className="text-gray-600 mb-4">Page not found</p>
-                        <Link 
-                          to="/" 
-                          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                        >
-                          Go Home
-                        </Link>
-                      </div>
+              {(() => {
+                try {
+                  return (
+                    <Routes>
+                      {/* Public Routes */}
+                      <Route path="/" element={<Home />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/test-mount" element={<TestMount />} />
+                      
+                      {/* Protected Routes */}
+                      <Route 
+                        path="/profile" 
+                        element={
+                          isTestMode ? <Profile /> : (
+                            <PrivateRoute>
+                              <Profile />
+                            </PrivateRoute>
+                          )
+                        } 
+                      />
+                      
+                      <Route 
+                        path="/alphapro" 
+                        element={
+                          isTestMode ? <AlphaPro /> : (
+                            <PrivateRoute requiredRoles={['premium', 'admin']}>
+                              <AlphaPro />
+                            </PrivateRoute>
+                          )
+                        } 
+                      />
+                      
+                      {/* RULES ROUTE - Direct mount without lazy loading or conditional guards */}
+                      <Route 
+                        path="/rules" 
+                        element={
+                          (() => {
+                            console.log("[Router Debug] /rules route matched, isTestMode:", isTestMode);
+                            console.log("[Router Debug] About to render RulesPage directly");
+                            return <RulesPage />; // Direct mount - no lazy, no Suspense, no conditional guards
+                          })()
+                        } 
+                      />
+                      
+                      {/* 404 Route */}
+                      <Route 
+                        path="*" 
+                        element={
+                          <div className="flex items-center justify-center min-h-screen">
+                            <div className="text-center">
+                              <h1 className="text-4xl font-bold text-gray-900 mb-4">404</h1>
+                              <p className="text-gray-600 mb-4">Page not found</p>
+                              <Link 
+                                to="/" 
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                              >
+                                Go Home
+                              </Link>
+                            </div>
+                          </div>
+                        } 
+                      />
+                    </Routes>
+                  );
+                } catch (err) {
+                  console.error("Error in App routing:", err);
+                  return (
+                    <div>
+                      <span data-testid="app-routing-error">{err?.message || "Unknown routing error"}</span>
+                      <pre>{err?.stack}</pre>
                     </div>
-                  } 
-                />
-              </Routes>
+                  );
+                }
+              })()}
             </main>
             
             {/* Footer */}

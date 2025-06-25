@@ -1,35 +1,17 @@
-import { defineConfig, devices } from '@playwright/test';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './e2e',
-  testMatch: '**/*.spec.js',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 3 : 2,
+  retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'http://localhost:5173',
+    baseURL: 'http://localhost:5175',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    storageState: {
-      cookies: [],
-      origins: [
-        {
-          origin: 'http://localhost:5173',
-          localStorage: [
-            { name: 'test_mode', value: 'true' }
-          ]
-        }
-      ]
-    },
-    actionTimeout: 30000,
-    navigationTimeout: 30000,
   },
   projects: [
     {
@@ -47,7 +29,7 @@ export default defineConfig({
   ],
   webServer: {
     command: 'pnpm dev',
-    url: 'http://localhost:5173',
+    url: 'http://localhost:5175',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
     env: {
@@ -60,5 +42,4 @@ export default defineConfig({
       VITE_PLAID_ENV: 'sandbox'
     }
   },
-  globalSetup: join(__dirname, './e2e/global-setup.js'),
 });

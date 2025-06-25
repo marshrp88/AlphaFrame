@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/ui/Select";
-import { Label } from '@/components/ui/Label';
+import { Label } from '@/shared/ui/Label';
 
 // Action categories and their options
 const ACTION_CATEGORIES = {
@@ -28,7 +28,8 @@ const ACTION_CATEGORIES = {
   'Internal Actions': [
     { value: 'ADJUST_GOAL', label: 'Adjust Goal' },
     { value: 'UPDATE_BUDGET', label: 'Update Budget' },
-    { value: 'MODIFY_CATEGORY', label: 'Modify Category' }
+    { value: 'MODIFY_CATEGORY', label: 'Modify Category' },
+    { value: 'ADD_MEMO', label: 'Add Memo' }
   ]
 };
 
@@ -76,24 +77,34 @@ const ACTION_TYPES = {
  * @returns {JSX.Element} The rendered component
  */
 function ActionSelectorComponent({ value, onChange }) {
+  console.log('[ActionSelector] Current value:', value);
+  console.log('[ActionSelector] Available options:', Object.keys(ACTION_TYPES));
+  
+  const handleChange = (newValue) => {
+    console.log('[ActionSelector] onChange called with:', newValue);
+    onChange(newValue);
+  };
+
   return (
     <div className="space-y-2">
       <Label htmlFor="action-type">Action Type</Label>
-      <Select value={value} onValueChange={onChange}>
+      <Select value={value} onValueChange={handleChange}>
         <SelectTrigger id="action-type" data-testid="action-selector">
           <SelectValue placeholder="Select an action type" />
         </SelectTrigger>
         <SelectContent>
           {Object.entries(ACTION_TYPES).map(([type, { label, description }]) => (
             <SelectItem key={type} value={type}>
-              <div className="flex flex-col">
-                <span className="font-medium">{label}</span>
-                <span className="text-sm text-muted-foreground">{description}</span>
-              </div>
+              {label} - {description}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
+      
+      {/* Debug span to show current selection */}
+      <div className="p-2 bg-yellow-100 border border-yellow-300 rounded text-xs" data-testid="action-selector-debug">
+        ActionSelector Debug: value={value || 'undefined'} | options={Object.keys(ACTION_TYPES).join(', ')}
+      </div>
     </div>
   );
 }

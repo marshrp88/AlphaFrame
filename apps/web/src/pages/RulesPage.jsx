@@ -108,17 +108,31 @@ export default function RulesPage() {
             >
               Cancel
             </Button>
-            <RuleBinderRoot
-              initialConfig={{
-                rule: currentRule,
-                currentState: {
-                  checking_account_balance: 6000,
-                  savings_account_balance: 15000,
-                  credit_score: 750
-                }
-              }}
-              onConfigurationChange={handleConfigurationChange}
-            />
+            {(() => {
+              try {
+                return (
+                  <RuleBinderRoot
+                    initialConfig={{
+                      rule: currentRule,
+                      currentState: {
+                        checking_account_balance: 6000,
+                        savings_account_balance: 15000,
+                        credit_score: 750
+                      }
+                    }}
+                    onConfigurationChange={handleConfigurationChange}
+                  />
+                );
+              } catch (err) {
+                console.error("Error rendering RuleBinderRoot:", err);
+                return (
+                  <div>
+                    <span data-testid="rulespage-render-error">{err?.message || "Unknown error"}</span>
+                    <pre>{err?.stack}</pre>
+                  </div>
+                );
+              }
+            })()}
           </div>
         )}
       </div>
