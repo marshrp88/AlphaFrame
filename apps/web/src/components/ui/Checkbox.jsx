@@ -16,6 +16,7 @@
 
 import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
+import { motion } from 'framer-motion';
 import './Checkbox.css';
 
 /**
@@ -120,39 +121,69 @@ export const Checkbox = forwardRef(({
   };
 
   return (
-    <div className="checkbox__container">
-      <label className={checkboxClasses}>
-        <input
-          ref={ref}
-          type="checkbox"
-          checked={checked}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          disabled={disabled}
-          required={required}
-          name={name}
-          value={value}
-          className={inputClasses}
-          aria-invalid={error ? 'true' : 'false'}
-          {...props}
-        />
-        
-        <span className="checkbox__control">
-          {renderCheckmark()}
-        </span>
+    <div className={checkboxClasses}>
+      <motion.div
+        className="checkbox-container"
+        onClick={() => !disabled && onChange?.(!checked)}
+        onKeyDown={handleKeyDown}
+        tabIndex={disabled ? -1 : 0}
+        role="checkbox"
+        aria-checked={checked}
+        aria-required={required}
+        aria-invalid={!!error}
+        whileHover={{ scale: disabled ? 1 : 1.05 }}
+        whileTap={{ scale: disabled ? 1 : 0.95 }}
+      >
+        <motion.div
+          className="checkbox-input"
+          initial={false}
+          animate={{
+            backgroundColor: checked ? 'var(--color-primary)' : 'var(--color-surface)',
+            borderColor: error ? 'var(--color-error)' : checked ? 'var(--color-primary)' : 'var(--color-border)'
+          }}
+          transition={{ duration: 0.2 }}
+        >
+          <motion.svg
+            className="checkbox-icon"
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {indeterminate ? (
+              <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            ) : (
+              <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            )}
+          </motion.svg>
+        </motion.div>
         
         {label && (
-          <span className="checkbox__label">
+          <motion.span 
+            className="checkbox-label"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+          >
             {label}
-            {required && <span className="checkbox__required" aria-label="required">*</span>}
-          </span>
+            {required && <span className="checkbox-required">*</span>}
+          </motion.span>
         )}
-      </label>
+      </motion.div>
       
       {error && (
-        <div className="checkbox__error">
+        <motion.span 
+          className="checkbox-error-message"
+          initial={{ opacity: 0, y: -5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
           {error}
-        </div>
+        </motion.span>
       )}
     </div>
   );

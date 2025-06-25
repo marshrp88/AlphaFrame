@@ -16,6 +16,7 @@
 
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { motion } from 'framer-motion';
 import './ComponentShowcase.css';
 
 // Import all components from index
@@ -36,404 +37,292 @@ import {
  */
 export function ComponentShowcase() {
   // State for interactive examples
-  const [modalOpen, setModalOpen] = useState(false);
-  const [dropdownValue, setDropdownValue] = useState('');
-  const [selectValue, setSelectValue] = useState('');
-  const [checkboxValue, setCheckboxValue] = useState(false);
-  const [inputValue, setInputValue] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [selectedDropdown, setSelectedDropdown] = useState(null);
+  const [selectedSelect, setSelectedSelect] = useState('');
+  const [checkboxState, setCheckboxState] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
 
   // Sample data
-  const dropdownOptions = [
-    { value: 'option1', label: 'Option 1' },
-    { value: 'option2', label: 'Option 2' },
-    { value: 'option3', label: 'Option 3' },
-    { value: 'option4', label: 'Option 4' }
+  const dropdownItems = [
+    { value: 'option1', label: 'Option 1', description: 'First option' },
+    { value: 'option2', label: 'Option 2', description: 'Second option' },
+    { value: 'option3', label: 'Option 3', description: 'Third option' }
   ];
 
   const selectOptions = [
-    { value: 'apple', label: 'Apple' },
-    { value: 'banana', label: 'Banana' },
-    { value: 'cherry', label: 'Cherry' },
-    { value: 'date', label: 'Date' }
+    { value: 'savings', label: 'Savings Account' },
+    { value: 'checking', label: 'Checking Account' },
+    { value: 'investment', label: 'Investment Account' }
   ];
 
-  const tabsData = [
-    {
-      id: 'overview',
-      label: 'Overview',
-      content: (
-        <div className="showcase__section">
-          <h3>Design System Overview</h3>
-          <p>Welcome to the AlphaFrame Design System showcase. This demonstrates all components built with design tokens for consistent styling.</p>
-          <CompositeCard>
-            <h4>Key Features</h4>
-            <ul>
-              <li>Design token-based styling</li>
-              <li>Accessibility compliance</li>
-              <li>Dark mode support</li>
-              <li>Responsive design</li>
-              <li>TypeScript support</li>
-            </ul>
-          </CompositeCard>
-        </div>
-      )
-    },
-    {
-      id: 'components',
-      label: 'Components',
-      content: (
-        <div className="showcase__section">
-          <h3>All Components</h3>
-          <p>Explore all available components with interactive examples.</p>
-        </div>
-      )
-    },
-    {
-      id: 'tokens',
-      label: 'Design Tokens',
-      content: (
-        <div className="showcase__section">
-          <h3>Design Tokens</h3>
-          <p>All components use CSS custom properties for consistent theming.</p>
-          <CompositeCard>
-            <h4>Available Tokens</h4>
-            <div className="token-grid">
-              <div className="token-item">
-                <span className="token-name">--color-primary-500</span>
-                <span className="token-value">#3b82f6</span>
-              </div>
-              <div className="token-item">
-                <span className="token-name">--spacing-md</span>
-                <span className="token-value">1rem</span>
-              </div>
-              <div className="token-item">
-                <span className="token-name">--border-radius-md</span>
-                <span className="token-value">0.5rem</span>
-              </div>
-              <div className="token-item">
-                <span className="token-name">--font-size-base</span>
-                <span className="token-value">1rem</span>
-              </div>
-            </div>
-          </CompositeCard>
-        </div>
-      )
-    }
+  const tabs = [
+    { id: 'overview', label: 'Overview', content: 'Overview content here' },
+    { id: 'details', label: 'Details', content: 'Details content here' },
+    { id: 'settings', label: 'Settings', content: 'Settings content here' }
   ];
 
   return (
-    <div className="component-showcase">
-      <header className="showcase__header">
+    <motion.div 
+      className="component-showcase"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.header 
+        className="showcase-header"
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.1 }}
+      >
         <h1>AlphaFrame Design System</h1>
-        <p>Phase X Sprint 2 - Advanced Components</p>
-      </header>
+        <p>Phase X - Motion Layer & Final Polish</p>
+      </motion.header>
 
-      <Tabs
-        tabs={tabsData}
-        defaultTab="overview"
-        onTabChange={setActiveTab}
-        variant="pills"
-        size="lg"
-      />
-
-      {activeTab === 'components' && (
-        <div className="showcase__content">
-          {/* Modal Component */}
-          <section className="showcase__section">
-            <h2>Modal Component</h2>
-            <p>A flexible modal component with backdrop, animations, and accessibility features.</p>
-            
-            <div className="showcase__examples">
-              <PrimaryButton
-                variant="primary"
-                size="md"
-                onClick={() => setModalOpen(true)}
-              >
-                Open Modal
-              </PrimaryButton>
-            </div>
-
-            <Modal
-              isOpen={modalOpen}
-              onClose={() => setModalOpen(false)}
-              title="Example Modal"
-              size="md"
-              footer={
-                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
-                  <PrimaryButton
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => setModalOpen(false)}
-                  >
-                    Cancel
-                  </PrimaryButton>
-                  <PrimaryButton
-                    variant="primary"
-                    size="sm"
-                    onClick={() => setModalOpen(false)}
-                  >
-                    Confirm
-                  </PrimaryButton>
-                </div>
-              }
-            >
-              <p>This is an example modal with custom content. It demonstrates the modal component's capabilities including:</p>
-              <ul>
-                <li>Backdrop click to close</li>
-                <li>Escape key to close</li>
-                <li>Focus management</li>
-                <li>Custom footer actions</li>
-              </ul>
-            </Modal>
-          </section>
-
-          {/* Dropdown Component */}
-          <section className="showcase__section">
-            <h2>Dropdown Component</h2>
-            <p>A searchable dropdown with keyboard navigation and multiple selection support.</p>
-            
-            <div className="showcase__examples">
-              <div className="example-row">
-                <Dropdown
-                  options={dropdownOptions}
-                  value={dropdownValue}
-                  onChange={setDropdownValue}
-                  placeholder="Select an option..."
-                  label="Basic Dropdown"
-                  searchable
-                />
+      <motion.section 
+        className="showcase-section"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
+        <h2>Design Tokens</h2>
+        <div className="token-grid">
+          <div className="token-category">
+            <h3>Colors</h3>
+            <div className="color-tokens">
+              <div className="color-swatch" style={{ backgroundColor: 'var(--color-primary)' }}>
+                <span>Primary</span>
               </div>
-              
-              <div className="example-row">
-                <Dropdown
-                  options={dropdownOptions}
-                  value={dropdownValue}
-                  onChange={setDropdownValue}
-                  placeholder="Select multiple..."
-                  label="Multiple Selection"
-                  multiple
-                  searchable
-                />
+              <div className="color-swatch" style={{ backgroundColor: 'var(--color-secondary)' }}>
+                <span>Secondary</span>
+              </div>
+              <div className="color-swatch" style={{ backgroundColor: 'var(--color-success)' }}>
+                <span>Success</span>
+              </div>
+              <div className="color-swatch" style={{ backgroundColor: 'var(--color-error)' }}>
+                <span>Error</span>
               </div>
             </div>
-          </section>
-
-          {/* Tabs Component */}
-          <section className="showcase__section">
-            <h2>Tabs Component</h2>
-            <p>Flexible tabs with multiple variants and orientations.</p>
-            
-            <div className="showcase__examples">
-              <Tabs
-                tabs={[
-                  {
-                    id: 'default',
-                    label: 'Default',
-                    content: <p>Default tab content with underline variant.</p>
-                  },
-                  {
-                    id: 'pills',
-                    label: 'Pills',
-                    content: <p>Pills variant tab content.</p>
-                  },
-                  {
-                    id: 'with-icon',
-                    label: 'With Icon',
-                    icon: '📊',
-                    content: <p>Tab with icon and badge.</p>,
-                    badge: '3'
-                  }
-                ]}
-                variant="default"
-                size="md"
-              />
+          </div>
+          
+          <div className="token-category">
+            <h3>Spacing</h3>
+            <div className="spacing-tokens">
+              <div className="spacing-item" style={{ width: 'var(--spacing-xs)' }}>XS</div>
+              <div className="spacing-item" style={{ width: 'var(--spacing-sm)' }}>SM</div>
+              <div className="spacing-item" style={{ width: 'var(--spacing-md)' }}>MD</div>
+              <div className="spacing-item" style={{ width: 'var(--spacing-lg)' }}>LG</div>
             </div>
-          </section>
-
-          {/* Select Component */}
-          <section className="showcase__section">
-            <h2>Select Component</h2>
-            <p>A native select replacement with enhanced styling and functionality.</p>
-            
-            <div className="showcase__examples">
-              <div className="example-row">
-                <Select
-                  options={selectOptions}
-                  value={selectValue}
-                  onChange={setSelectValue}
-                  placeholder="Choose a fruit..."
-                  label="Fruit Selection"
-                  clearable
-                />
-              </div>
-              
-              <div className="example-row">
-                <Select
-                  options={selectOptions}
-                  value={selectValue}
-                  onChange={setSelectValue}
-                  placeholder="Select multiple fruits..."
-                  label="Multiple Fruits"
-                  multiple
-                  clearable
-                />
-              </div>
-            </div>
-          </section>
-
-          {/* Checkbox Component */}
-          <section className="showcase__section">
-            <h2>Checkbox Component</h2>
-            <p>Custom checkbox with support for indeterminate state and validation.</p>
-            
-            <div className="showcase__examples">
-              <div className="example-row">
-                <Checkbox
-                  checked={checkboxValue}
-                  onChange={(e) => setCheckboxValue(e.target.checked)}
-                  label="Accept terms and conditions"
-                  size="md"
-                />
-              </div>
-              
-              <div className="example-row">
-                <Checkbox
-                  checked={true}
-                  label="Small checkbox"
-                  size="sm"
-                />
-              </div>
-              
-              <div className="example-row">
-                <Checkbox
-                  checked={false}
-                  label="Large checkbox"
-                  size="lg"
-                />
-              </div>
-              
-              <div className="example-row">
-                <Checkbox
-                  checked={false}
-                  label="Disabled checkbox"
-                  disabled
-                />
-              </div>
-              
-              <div className="example-row">
-                <Checkbox
-                  checked={false}
-                  label="Checkbox with error"
-                  error="This field is required"
-                />
-              </div>
-            </div>
-          </section>
-
-          {/* Input Field Component */}
-          <section className="showcase__section">
-            <h2>Input Field Component</h2>
-            <p>Enhanced input field with validation, prefixes, and suffixes.</p>
-            
-            <div className="showcase__examples">
-              <div className="example-row">
-                <InputField
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Enter your name..."
-                  label="Name"
-                  required
-                />
-              </div>
-              
-              <div className="example-row">
-                <InputField
-                  type="email"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Enter your email..."
-                  label="Email"
-                  prefix="📧"
-                  error="Please enter a valid email address"
-                />
-              </div>
-              
-              <div className="example-row">
-                <InputField
-                  type="password"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Enter your password..."
-                  label="Password"
-                  suffix="👁️"
-                />
-              </div>
-            </div>
-          </section>
-
-          {/* Primary Button Component */}
-          <section className="showcase__section">
-            <h2>Primary Button Component</h2>
-            <p>Versatile button component with multiple variants and states.</p>
-            
-            <div className="showcase__examples">
-              <div className="example-row">
-                <PrimaryButton variant="primary" size="sm">
-                  Small Primary
-                </PrimaryButton>
-                <PrimaryButton variant="primary" size="md">
-                  Medium Primary
-                </PrimaryButton>
-                <PrimaryButton variant="primary" size="lg">
-                  Large Primary
-                </PrimaryButton>
-              </div>
-              
-              <div className="example-row">
-                <PrimaryButton variant="secondary" size="md">
-                  Secondary
-                </PrimaryButton>
-                <PrimaryButton variant="outline" size="md">
-                  Outline
-                </PrimaryButton>
-                <PrimaryButton variant="ghost" size="md">
-                  Ghost
-                </PrimaryButton>
-              </div>
-              
-              <div className="example-row">
-                <PrimaryButton variant="primary" size="md" loading>
-                  Loading
-                </PrimaryButton>
-                <PrimaryButton variant="primary" size="md" disabled>
-                  Disabled
-                </PrimaryButton>
-              </div>
-            </div>
-          </section>
-
-          {/* Composite Card Component */}
-          <section className="showcase__section">
-            <h2>Composite Card Component</h2>
-            <p>Flexible card component for content organization.</p>
-            
-            <div className="showcase__examples">
-              <CompositeCard>
-                <h3>Card Title</h3>
-                <p>This is a basic card with some content. Cards are great for organizing information and creating visual hierarchy.</p>
-                <div style={{ marginTop: '1rem' }}>
-                  <PrimaryButton variant="primary" size="sm">
-                    Action
-                  </PrimaryButton>
-                </div>
-              </CompositeCard>
-            </div>
-          </section>
+          </div>
         </div>
-      )}
-    </div>
+      </motion.section>
+
+      <motion.section 
+        className="showcase-section"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.3 }}
+      >
+        <h2>Composite Card</h2>
+        <div className="card-demo">
+          <CompositeCard
+            title="Financial Overview"
+            subtitle="Your current financial status"
+            icon="💰"
+            actions={[
+              { label: 'View Details', onClick: () => console.log('View Details') },
+              { label: 'Edit', onClick: () => console.log('Edit') }
+            ]}
+          >
+            <p>This card demonstrates the composite design pattern with motion animations.</p>
+          </CompositeCard>
+        </div>
+      </motion.section>
+
+      <motion.section 
+        className="showcase-section"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.4 }}
+      >
+        <h2>Primary Button</h2>
+        <div className="button-demo">
+          <div className="button-row">
+            <PrimaryButton variant="primary" size="small">Small</PrimaryButton>
+            <PrimaryButton variant="primary" size="medium">Medium</PrimaryButton>
+            <PrimaryButton variant="primary" size="large">Large</PrimaryButton>
+          </div>
+          <div className="button-row">
+            <PrimaryButton variant="secondary">Secondary</PrimaryButton>
+            <PrimaryButton variant="outline">Outline</PrimaryButton>
+            <PrimaryButton variant="ghost">Ghost</PrimaryButton>
+          </div>
+          <div className="button-row">
+            <PrimaryButton loading>Loading</PrimaryButton>
+            <PrimaryButton disabled>Disabled</PrimaryButton>
+          </div>
+        </div>
+      </motion.section>
+
+      <motion.section 
+        className="showcase-section"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
+        <h2>Input Field</h2>
+        <div className="input-demo">
+          <InputField
+            label="Email Address"
+            placeholder="Enter your email"
+            type="email"
+            required
+          />
+          <InputField
+            label="Password"
+            placeholder="Enter your password"
+            type="password"
+            error="Password is required"
+          />
+          <InputField
+            label="Amount"
+            placeholder="0.00"
+            type="number"
+            prefix="$"
+            suffix="USD"
+          />
+        </div>
+      </motion.section>
+
+      <motion.section 
+        className="showcase-section"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.6 }}
+      >
+        <h2>Modal</h2>
+        <PrimaryButton onClick={() => setShowModal(true)}>
+          Open Modal
+        </PrimaryButton>
+        
+        <Modal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          title="Motion Demo Modal"
+          size="medium"
+        >
+          <p>This modal demonstrates smooth enter/exit animations with backdrop interactions.</p>
+          <div className="modal-actions">
+            <PrimaryButton onClick={() => setShowModal(false)}>
+              Close
+            </PrimaryButton>
+          </div>
+        </Modal>
+      </motion.section>
+
+      <motion.section 
+        className="showcase-section"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.7 }}
+      >
+        <h2>Dropdown</h2>
+        <Dropdown
+          items={dropdownItems}
+          onSelect={setSelectedDropdown}
+          placeholder="Select an option"
+        />
+        {selectedDropdown && (
+          <p>Selected: {selectedDropdown.label}</p>
+        )}
+      </motion.section>
+
+      <motion.section 
+        className="showcase-section"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.8 }}
+      >
+        <h2>Tabs</h2>
+        <Tabs
+          tabs={tabs}
+          defaultTab="overview"
+          onTabChange={setActiveTab}
+        />
+      </motion.section>
+
+      <motion.section 
+        className="showcase-section"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.9 }}
+      >
+        <h2>Select</h2>
+        <Select
+          options={selectOptions}
+          value={selectedSelect}
+          onChange={setSelectedSelect}
+          placeholder="Choose account type"
+          searchable
+        />
+      </motion.section>
+
+      <motion.section 
+        className="showcase-section"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 1.0 }}
+      >
+        <h2>Checkbox</h2>
+        <div className="checkbox-demo">
+          <Checkbox
+            checked={checkboxState}
+            onChange={setCheckboxState}
+            label="I agree to the terms and conditions"
+          />
+          <Checkbox
+            label="Subscribe to newsletter"
+            indeterminate
+          />
+          <Checkbox
+            label="Disabled option"
+            disabled
+          />
+        </div>
+      </motion.section>
+
+      <motion.section 
+        className="showcase-section"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 1.1 }}
+      >
+        <h2>Motion Presets</h2>
+        <div className="motion-demo">
+          <motion.div
+            className="motion-example"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Hover & Tap
+          </motion.div>
+          <motion.div
+            className="motion-example"
+            animate={{ 
+              x: [0, 100, 0],
+              rotate: [0, 180, 360]
+            }}
+            transition={{ 
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            Animated
+          </motion.div>
+        </div>
+      </motion.section>
+    </motion.div>
   );
 }
 

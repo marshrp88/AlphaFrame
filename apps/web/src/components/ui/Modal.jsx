@@ -17,6 +17,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import './Modal.css';
 
 /**
@@ -138,58 +139,77 @@ export function Modal({
   ].filter(Boolean).join(' ');
 
   const modalContent = (
-    <div
-      className="modal__backdrop"
-      onClick={handleBackdropClick}
-      aria-hidden="true"
-    >
-      <div
-        ref={modalRef}
-        className={modalClasses}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={title ? 'modal-title' : undefined}
-        aria-describedby={ariaLabel ? undefined : 'modal-description'}
-        aria-label={ariaLabel}
-        tabIndex={-1}
-        {...props}
-      >
-        <div className={contentClasses}>
-          {/* Header */}
-          {(title || showCloseButton) && (
-            <div className="modal__header">
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="modal-backdrop"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          onClick={handleBackdropClick}
+        >
+          <motion.div
+            className={`modal-container modal-${size}`}
+            initial={{ 
+              opacity: 0, 
+              scale: 0.9, 
+              y: 20 
+            }}
+            animate={{ 
+              opacity: 1, 
+              scale: 1, 
+              y: 0 
+            }}
+            exit={{ 
+              opacity: 0, 
+              scale: 0.9, 
+              y: 20 
+            }}
+            transition={{ 
+              duration: 0.3,
+              ease: [0.25, 0.46, 0.45, 0.94]
+            }}
+          >
+            <div className="modal-header">
               {title && (
-                <h2 id="modal-title" className="modal__title">
+                <motion.h2 
+                  className="modal-title"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                >
                   {title}
-                </h2>
+                </motion.h2>
               )}
               {showCloseButton && (
-                <button
-                  type="button"
-                  className="modal__close-button"
+                <motion.button
+                  className="modal-close"
                   onClick={handleCloseClick}
-                  aria-label="Close modal"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, rotate: -90 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  transition={{ delay: 0.2 }}
                 >
-                  <span aria-hidden="true">×</span>
-                </button>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </motion.button>
               )}
             </div>
-          )}
-
-          {/* Body */}
-          <div id="modal-description" className="modal__body">
-            {children}
-          </div>
-
-          {/* Footer */}
-          {footer && (
-            <div className="modal__footer">
-              {footer}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+            <motion.div 
+              className="modal-content"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+            >
+              {children}
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 
   // Use portal to render modal at the top level

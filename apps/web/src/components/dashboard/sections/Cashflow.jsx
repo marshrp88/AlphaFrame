@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { entranceAnimations, listAnimations } from '../../../lib/animations/animationPresets';
 import './Cashflow.css';
 
 /**
@@ -70,7 +72,7 @@ const Cashflow = ({ data, userContext }) => {
     .slice(0, 3);
 
   return (
-    <div className={`cashflow-section ${isVisible ? 'visible' : ''}`}>
+    <motion.div className={`cashflow-section ${isVisible ? 'visible' : ''}`} {...entranceAnimations.slideUp}>
       <header className="section-header">
         <h3>Cash Flow</h3>
         <div className="period-selector">
@@ -90,25 +92,23 @@ const Cashflow = ({ data, userContext }) => {
       </header>
 
       {/* Cash Flow Overview */}
-      <div className="cashflow-overview">
+      <motion.div className="cashflow-overview" {...listAnimations.staggerContainer}>
         <div className="flow-metrics">
-          <div className="metric income">
+          <motion.div className="metric income" {...listAnimations.staggerItem}>
             <div className="metric-icon">💰</div>
             <div className="metric-content">
               <h4>Income</h4>
               <p className="amount">${income.toLocaleString()}</p>
             </div>
-          </div>
-
-          <div className="metric expenses">
+          </motion.div>
+          <motion.div className="metric expenses" {...listAnimations.staggerItem}>
             <div className="metric-icon">💸</div>
             <div className="metric-content">
               <h4>Expenses</h4>
               <p className="amount">${expenses.toLocaleString()}</p>
             </div>
-          </div>
-
-          <div className="metric net-flow">
+          </motion.div>
+          <motion.div className="metric net-flow" {...listAnimations.staggerItem}>
             <div className="metric-icon">📊</div>
             <div className="metric-content">
               <h4>Net Flow</h4>
@@ -116,7 +116,7 @@ const Cashflow = ({ data, userContext }) => {
                 {netFlow >= 0 ? '+' : ''}${netFlow.toLocaleString()}
               </p>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Cash Flow Health Indicator */}
@@ -134,7 +134,7 @@ const Cashflow = ({ data, userContext }) => {
             {isHealthy ? 'Healthy' : 'Needs Attention'} • {cashFlowRatio.toFixed(1)}% expenses
           </p>
         </div>
-      </div>
+      </motion.div>
 
       {/* Savings Rate */}
       <div className="savings-rate">
@@ -225,7 +225,7 @@ const Cashflow = ({ data, userContext }) => {
           )}
         </ul>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

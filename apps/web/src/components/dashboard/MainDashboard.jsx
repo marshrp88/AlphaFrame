@@ -8,6 +8,8 @@ import RecentChanges from './sections/RecentChanges';
 import ActionQueue from './sections/ActionQueue';
 import WhatsNext from './WhatsNext';
 import './MainDashboard.css';
+import { motion } from 'framer-motion';
+import { entranceAnimations, listAnimations } from '../../lib/animations/animationPresets';
 
 /**
  * MainDashboard - The central hub for financial clarity and actionable insights
@@ -57,27 +59,27 @@ const MainDashboard = () => {
 
   if (loading) {
     return (
-      <div className="dashboard-loading">
+      <motion.div className="dashboard-loading" {...entranceAnimations.fadeIn}>
         <div className="loading-spinner"></div>
         <p>Loading your financial insights...</p>
-      </div>
+      </motion.div>
     );
   }
 
   if (error) {
     return (
-      <div className="dashboard-error">
+      <motion.div className="dashboard-error" {...entranceAnimations.fadeIn}>
         <h3>Unable to load dashboard</h3>
         <p>{error.message}</p>
         <button onClick={() => window.location.reload()}>
           Try Again
         </button>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="main-dashboard">
+    <motion.div className="main-dashboard" {...entranceAnimations.fadeIn}>
       <header className="dashboard-header">
         <h1>Financial Dashboard</h1>
         <p className="dashboard-subtitle">
@@ -86,65 +88,65 @@ const MainDashboard = () => {
       </header>
 
       {/* Primary Action Section */}
-      <section className="dashboard-primary-action">
+      <motion.section className="dashboard-primary-action" {...entranceAnimations.slideUp}>
         <WhatsNext 
           financialState={financialState}
           userContext={userContext}
         />
-      </section>
+      </motion.section>
 
       {/* Main Dashboard Grid */}
-      <div className="dashboard-grid">
+      <motion.div className="dashboard-grid" {...listAnimations.staggerContainer}>
         {/* Cashflow Section */}
         {dashboardConfig?.sections?.cashflow?.visible && (
-          <section className="dashboard-section cashflow-section">
+          <motion.section className="dashboard-section cashflow-section" {...listAnimations.staggerItem}>
             <Cashflow 
               data={financialState?.cashflow}
               userContext={userContext}
             />
-          </section>
+          </motion.section>
         )}
 
         {/* Simulation Insights */}
         {dashboardConfig?.sections?.insights?.visible && (
-          <section className="dashboard-section insights-section">
+          <motion.section className="dashboard-section insights-section" {...listAnimations.staggerItem}>
             <SimulationInsights 
               data={financialState?.insights}
               userContext={userContext}
             />
-          </section>
+          </motion.section>
         )}
 
         {/* Net Worth Trajectory */}
         {dashboardConfig?.sections?.networth?.visible && (
-          <section className="dashboard-section networth-section">
+          <motion.section className="dashboard-section networth-section" {...listAnimations.staggerItem}>
             <NetWorthTrajectory 
               data={financialState?.netWorth}
               userContext={userContext}
             />
-          </section>
+          </motion.section>
         )}
 
         {/* Recent Changes */}
         {dashboardConfig?.sections?.changes?.visible && (
-          <section className="dashboard-section changes-section">
+          <motion.section className="dashboard-section changes-section" {...listAnimations.staggerItem}>
             <RecentChanges 
               data={financialState?.recentChanges}
               userContext={userContext}
             />
-          </section>
+          </motion.section>
         )}
 
         {/* Action Queue */}
         {dashboardConfig?.sections?.actions?.visible && (
-          <section className="dashboard-section actions-section">
+          <motion.section className="dashboard-section actions-section" {...listAnimations.staggerItem}>
             <ActionQueue 
               data={financialState?.actionQueue}
               userContext={userContext}
             />
-          </section>
+          </motion.section>
         )}
-      </div>
+      </motion.div>
 
       {/* Dashboard Footer */}
       <footer className="dashboard-footer">
@@ -156,7 +158,7 @@ const MainDashboard = () => {
           Refresh Data
         </button>
       </footer>
-    </div>
+    </motion.div>
   );
 };
 

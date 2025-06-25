@@ -16,6 +16,7 @@
 
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { motion, AnimatePresence } from 'framer-motion';
 import './Tabs.css';
 
 /**
@@ -132,7 +133,7 @@ export function Tabs({
     ].filter(Boolean).join(' ');
 
     return (
-      <button
+      <motion.button
         key={tab.id}
         className={tabClasses}
         onClick={() => handleTabClick(tab.id)}
@@ -143,6 +144,11 @@ export function Tabs({
         aria-controls={`panel-${tab.id}`}
         id={`tab-${tab.id}`}
         tabIndex={isActive ? 0 : -1}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: tab.id ? tabs.indexOf(tab) * 0.1 : 0 }}
       >
         {tab.icon && (
           <span className="tabs__tab-icon" aria-hidden="true">
@@ -155,7 +161,7 @@ export function Tabs({
             {tab.badge}
           </span>
         )}
-      </button>
+      </motion.button>
     );
   };
 
@@ -169,16 +175,26 @@ export function Tabs({
     ].filter(Boolean).join(' ');
 
     return (
-      <div
-        key={tab.id}
-        className={panelClasses}
-        role="tabpanel"
-        id={`panel-${tab.id}`}
-        aria-labelledby={`tab-${tab.id}`}
-        hidden={!isActive}
-      >
-        {isActive && tab.content}
-      </div>
+      <AnimatePresence mode="wait">
+        {isActive && (
+          <motion.div
+            key={tab.id}
+            className={panelClasses}
+            role="tabpanel"
+            id={`panel-${tab.id}`}
+            aria-labelledby={`tab-${tab.id}`}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ 
+              duration: 0.3,
+              ease: [0.25, 0.46, 0.45, 0.94]
+            }}
+          >
+            {tab.content}
+          </motion.div>
+        )}
+      </AnimatePresence>
     );
   };
 
@@ -197,7 +213,23 @@ export function Tabs({
       </div>
       
       <div className="tabs__content">
-        {tabs.map(renderTabPanel)}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            className="tabs__panel"
+            role="tabpanel"
+            id={`panel-${activeTab}`}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ 
+              duration: 0.3,
+              ease: [0.25, 0.46, 0.45, 0.94]
+            }}
+          >
+            {activeTabContent}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );

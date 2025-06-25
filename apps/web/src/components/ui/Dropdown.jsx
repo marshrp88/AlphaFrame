@@ -16,6 +16,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { motion, AnimatePresence } from 'framer-motion';
 import './Dropdown.css';
 
 /**
@@ -236,13 +237,21 @@ export function Dropdown({
       ].filter(Boolean).join(' ');
 
       return (
-        <div
+        <motion.div
           key={option.value}
           className={optionClasses}
           onClick={() => !disabled && handleOptionSelect(option)}
           onMouseEnter={() => setFocusedIndex(index)}
           role="option"
           aria-selected={isSelected}
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: index * 0.05 }}
+          whileHover={{ 
+            backgroundColor: 'var(--color-surface-hover)',
+            x: 4
+          }}
+          whileTap={{ scale: 0.98 }}
         >
           {multiple && (
             <input
@@ -256,7 +265,7 @@ export function Dropdown({
           {isSelected && !multiple && (
             <span className="dropdown__checkmark" aria-hidden="true">✓</span>
           )}
-        </div>
+        </motion.div>
       );
     });
   };
@@ -271,8 +280,7 @@ export function Dropdown({
       )}
       
       <div ref={dropdownRef} className={dropdownClasses} {...props}>
-        <button
-          type="button"
+        <motion.div
           className={triggerClasses}
           onClick={toggleDropdown}
           onKeyDown={handleKeyDown}
@@ -280,36 +288,58 @@ export function Dropdown({
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           aria-labelledby={label ? 'dropdown-label' : undefined}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
         >
           <span className="dropdown__selected-text">
             {renderSelectedText()}
           </span>
-          <span className="dropdown__arrow" aria-hidden="true">
-            {isOpen ? '▲' : '▼'}
-          </span>
-        </button>
+          <motion.svg 
+            className="dropdown__arrow" 
+            width="12" 
+            height="12" 
+            viewBox="0 0 24 24" 
+            fill="none"
+            animate={{ rotate: isOpen ? 180 : 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </motion.svg>
+        </motion.div>
 
-        {isOpen && (
-          <div className="dropdown__menu" role="listbox">
-            {searchable && (
-              <div className="dropdown__search">
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                  placeholder="Search options..."
-                  className="dropdown__search-input"
-                  onKeyDown={handleKeyDown}
-                />
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              className="dropdown__menu"
+              initial={{ opacity: 0, y: -10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.95 }}
+              transition={{ 
+                duration: 0.2,
+                ease: [0.25, 0.46, 0.45, 0.94]
+              }}
+              role="listbox"
+            >
+              {searchable && (
+                <div className="dropdown__search">
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    placeholder="Search options..."
+                    className="dropdown__search-input"
+                    onKeyDown={handleKeyDown}
+                  />
+                </div>
+              )}
+              
+              <div ref={optionsRef} className="dropdown__options">
+                {renderOptions()}
               </div>
-            )}
-            
-            <div ref={optionsRef} className="dropdown__options">
-              {renderOptions()}
-            </div>
-          </div>
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {error && (
