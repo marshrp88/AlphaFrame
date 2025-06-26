@@ -17,9 +17,10 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../../../shared/ui/Button.jsx';
 import { Card } from '../../../shared/ui/Card.jsx';
-import { Shield, CreditCard, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
+import { Shield, CreditCard, ArrowRight, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { initializePlaid, createLinkToken, exchangePublicToken, getAccounts } from '../../../lib/services/syncEngine.js';
 import { config } from '../../../lib/config.js';
+import { useToast } from '../../../components/ui/use-toast.jsx';
 
 /**
  * Plaid connection step component
@@ -29,6 +30,8 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
   const [accounts, setAccounts] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [error, setError] = useState(null);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const { toast } = useToast();
 
   // Check for existing connection data
   useEffect(() => {
@@ -45,8 +48,16 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
   const handleConnectBank = async () => {
     setConnectionStatus('connecting');
     setError(null);
+    setIsConnecting(true);
 
     try {
+      // Show connecting toast
+      toast({
+        title: "Connecting to Bank",
+        description: "Opening secure connection to your bank...",
+        variant: "default"
+      });
+
       // Initialize Plaid client
       await initializePlaid(
         config.plaid.clientId,
@@ -75,6 +86,15 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
     } catch (error) {
       setError('Failed to connect to your bank. Please try again.');
       setConnectionStatus('failed');
+      
+      // Show error toast
+      toast({
+        title: "Connection Failed",
+        description: "Unable to establish connection with your bank. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsConnecting(false);
     }
   };
 
@@ -83,6 +103,13 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
    */
   const handlePlaidSuccess = async (publicToken) => {
     try {
+      // Show processing toast
+      toast({
+        title: "Processing Connection",
+        description: "Securely processing your bank connection...",
+        variant: "default"
+      });
+
       // Exchange public token for access token
       const tokenResponse = await exchangePublicToken(publicToken);
       
@@ -101,9 +128,23 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
       
       localStorage.setItem('plaid_connection', JSON.stringify(connectionData));
       
+      // Show success toast
+      toast({
+        title: "Bank Connected!",
+        description: `Successfully connected ${accountsData.length} account(s).`,
+        variant: "default"
+      });
+      
     } catch (error) {
       setError('Failed to complete bank connection. Please try again.');
       setConnectionStatus('failed');
+      
+      // Show error toast
+      toast({
+        title: "Connection Error",
+        description: "Failed to complete bank connection. Please try again.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -114,6 +155,13 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
     if (err) {
       setError('Bank connection was cancelled or failed.');
       setConnectionStatus('failed');
+      
+      // Show error toast
+      toast({
+        title: "Connection Cancelled",
+        description: "Bank connection was cancelled or failed.",
+        variant: "destructive"
+      });
     } else {
       setConnectionStatus('idle');
     }
@@ -124,6 +172,13 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
    */
   const handleAccountSelect = (account) => {
     setSelectedAccount(account);
+    
+    // Show selection toast
+    toast({
+      title: "Account Selected",
+      description: `${account.name} selected for AlphaFrame.`,
+      variant: "default"
+    });
   };
 
   /**
@@ -202,13 +257,27 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
       {connectionStatus === 'connecting' && (
         <Card className="p-6">
           <div className="text-center">
-            <div className="animate-spin mx-auto w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mb-4"></div>
+            <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+              <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+            </div>
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
               Connecting to Your Bank
             </h2>
-            <p className="text-gray-600">
+            <p className="text-gray-600 mb-4">
               Please complete the secure connection in the popup window.
             </p>
+            
+            {/* Progress indicators */}
+            <div className="flex justify-center space-x-2 mb-4">
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+              <div className="w-2 h-2 bg-blue-300 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+              <div className="w-2 h-2 bg-blue-300 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+            </div>
+            
+            <div className="text-sm text-gray-500">
+              <p>🔒 Secure connection in progress</p>
+              <p>⏳ Please wait while we establish the connection</p>
+            </div>
           </div>
         </Card>
       )}
