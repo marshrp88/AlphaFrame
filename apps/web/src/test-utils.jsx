@@ -306,10 +306,6 @@ export const verifyDownloadOperations = (spies) => {
  * Verify that a service mock is properly applied
  */
 export const verifyServiceMock = (service, methodName) => {
-  console.log(`🔧 Mock verification - ${service.constructor.name}.${methodName}:`, 
-    typeof service[methodName], 
-    service[methodName].mock ? 'is mocked' : 'NOT MOCKED'
-  );
   return service[methodName].mock !== undefined;
 };
 

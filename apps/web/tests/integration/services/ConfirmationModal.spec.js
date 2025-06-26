@@ -111,9 +111,6 @@ vi.mock('../../../src/lib/store/logStore', () => ({
 // ✅ Now import after all mocks are defined
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { ExecutionController } from '@/lib/services/ExecutionController';
-import { useUIStore } from '@/core/store/uiStore';
-import { runSimulation } from '@/lib/services/SimulationService';
-import { useFinancialStateStore } from '@/core/store/financialStateStore';
 
 describe('Confirmation Modal Integration', () => {
   beforeEach(() => {

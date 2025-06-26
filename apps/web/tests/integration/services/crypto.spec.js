@@ -3,13 +3,13 @@ import { deriveKey, encrypt, decrypt, generateSalt } from '../../../src/core/ser
 
 // --- Correct function-shaped mock for tweetnacl ---
 vi.mock('tweetnacl', () => {
-  const secretbox = function (message, nonce, key) {
+  const secretbox = function () {
     // Mock encrypted message as Uint8Array
     return new Uint8Array([1, 2, 3]);
   };
   secretbox.keyLength = 32;
   secretbox.nonceLength = 24;
-  secretbox.open = function (box, nonce, key) {
+  secretbox.open = function () {
     // Return the decrypted message if inputs match expected mock format
     return new Uint8Array([100, 101, 102]); // mock decrypted
   };

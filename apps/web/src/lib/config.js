@@ -143,8 +143,6 @@ export const initializeConfig = () => {
   const validation = validateConfig();
   
   if (!validation.isValid) {
-    console.error('Configuration validation failed:', validation.errors);
-    
     // In production, we should fail fast
     if (isProduction()) {
       throw new Error('Invalid configuration for production environment');
@@ -214,8 +212,9 @@ export const getSecureConfig = () => {
   };
 };
 
-// Log configuration status on module load (but don't crash)
-console.log('🔧 Configuration module loaded');
-console.log('🔧 Environment:', config.env);
-console.log('🔧 Plaid integration:', config.plaid.clientId ? 'enabled' : 'disabled');
-console.log('🔧 Auth integration:', config.auth.domain ? 'enabled' : 'disabled'); 
+// Comment out all console statements
+// console.log('Loading configuration...');
+// console.log('🔧 Configuration module loaded');
+// console.log('🔧 Environment:', config.env);
+// console.log('🔧 Plaid integration:', config.plaid.clientId ? 'enabled' : 'disabled');
+// console.log('🔧 Auth integration:', config.auth.domain ? 'enabled' : 'disabled'); 

@@ -16,7 +16,7 @@ import './SimulationInsights.css';
  * Conclusion: Users understand the long-term impact of their
  * financial decisions and can make informed choices.
  */
-const SimulationInsights = ({ data, userContext }) => {
+const SimulationInsights = ({ data }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [selectedScenario, setSelectedScenario] = useState('current');
 
@@ -96,6 +96,13 @@ const SimulationInsights = ({ data, userContext }) => {
               key={scenario}
               className={`scenario-card ${selectedScenario === scenario ? 'active' : ''}`}
               onClick={() => setSelectedScenario(scenario)}
+              tabIndex={0}
+              role="button"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  setSelectedScenario(scenario);
+                }
+              }}
             >
               <div className="scenario-header">
                 <span className="scenario-icon">{getScenarioIcon(scenario)}</span>

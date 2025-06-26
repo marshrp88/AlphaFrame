@@ -68,13 +68,11 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
         token: linkTokenResponse.link_token,
         onSuccess: handlePlaidSuccess,
         onExit: handlePlaidExit,
-        onEvent: handlePlaidEvent
       });
 
       handler.open();
 
     } catch (error) {
-      console.error('Plaid connection failed:', error);
       setError('Failed to connect to your bank. Please try again.');
       setConnectionStatus('failed');
     }
@@ -83,7 +81,7 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
   /**
    * Handle successful Plaid connection
    */
-  const handlePlaidSuccess = async (publicToken, metadata) => {
+  const handlePlaidSuccess = async (publicToken) => {
     try {
       // Exchange public token for access token
       const tokenResponse = await exchangePublicToken(publicToken);
@@ -99,13 +97,11 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
         accessToken: tokenResponse.access_token,
         itemId: tokenResponse.item_id,
         accounts: accountsData,
-        metadata
       };
       
       localStorage.setItem('plaid_connection', JSON.stringify(connectionData));
       
     } catch (error) {
-      console.error('Token exchange failed:', error);
       setError('Failed to complete bank connection. Please try again.');
       setConnectionStatus('failed');
     }
@@ -114,20 +110,13 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
   /**
    * Handle Plaid exit
    */
-  const handlePlaidExit = (err, metadata) => {
+  const handlePlaidExit = (err) => {
     if (err) {
       setError('Bank connection was cancelled or failed.');
       setConnectionStatus('failed');
     } else {
       setConnectionStatus('idle');
     }
-  };
-
-  /**
-   * Handle Plaid events
-   */
-  const handlePlaidEvent = (eventName, metadata) => {
-    console.log('Plaid event:', eventName, metadata);
   };
 
   /**
@@ -252,6 +241,13 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
                 onClick={() => handleAccountSelect(account)}
+                tabIndex={0}
+                role="button"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleAccountSelect(account);
+                  }
+                }}
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -297,7 +293,7 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
             </h2>
             
             <p className="text-gray-600 mb-4">
-              {error || 'We couldn\'t connect to your bank. Please try again.'}
+              {error || 'We couldn&apos;t connect to your bank. Please try again.'}
             </p>
 
             <div className="space-x-3">

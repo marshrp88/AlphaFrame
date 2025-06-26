@@ -165,39 +165,6 @@ export function Tabs({
     );
   };
 
-  const renderTabPanel = (tab) => {
-    const isActive = tab.id === activeTab;
-
-    const panelClasses = [
-      'tabs__panel',
-      `tabs__panel--${orientation}`,
-      isActive && 'tabs__panel--active'
-    ].filter(Boolean).join(' ');
-
-    return (
-      <AnimatePresence mode="wait">
-        {isActive && (
-          <motion.div
-            key={tab.id}
-            className={panelClasses}
-            role="tabpanel"
-            id={`panel-${tab.id}`}
-            aria-labelledby={`tab-${tab.id}`}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ 
-              duration: 0.3,
-              ease: [0.25, 0.46, 0.45, 0.94]
-            }}
-          >
-            {tab.content}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    );
-  };
-
   if (tabs.length === 0) {
     return null;
   }

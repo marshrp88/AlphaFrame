@@ -24,7 +24,7 @@ import { PieChart, DollarSign, TrendingUp, ArrowRight, Plus, Trash2 } from 'luci
 /**
  * Budget setup step component
  */
-const Step3BudgetSetup = ({ onComplete, onSkip, data, isLoading }) => {
+const Step3BudgetSetup = ({ onComplete, data, isLoading }) => {
   const [budgetCategories, setBudgetCategories] = useState([]);
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalBudget, setTotalBudget] = useState(0);
@@ -156,7 +156,7 @@ const Step3BudgetSetup = ({ onComplete, onSkip, data, isLoading }) => {
           </h2>
           
           <p className="text-gray-600">
-            We've analyzed your spending patterns and created suggested budget categories. 
+            We&apos;ve analyzed your spending patterns and created suggested budget categories. 
             Customize them to match your financial goals.
           </p>
         </div>

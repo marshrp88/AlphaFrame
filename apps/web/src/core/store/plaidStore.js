@@ -74,7 +74,6 @@ const usePlaidStore = create(
           }
         }
       } catch (error) {
-        console.error('Failed to initialize Plaid connection:', error);
         set({
           error: error.message,
           isLoading: false
@@ -89,7 +88,7 @@ const usePlaidStore = create(
       set({ isConnecting: true, connectionError: null });
       
       try {
-        const { accessToken, itemId, accounts, institution } = connectionData;
+        const { accessToken, itemId, accounts } = connectionData;
         
         set({
           isConnected: true,
@@ -103,10 +102,7 @@ const usePlaidStore = create(
         
         // Sync transactions after successful connection
         get().syncTransactions();
-        
-        console.log('Plaid connection established:', { itemId, institution });
       } catch (error) {
-        console.error('Failed to connect to Plaid:', error);
         set({
           isConnecting: false,
           connectionError: error.message
@@ -134,8 +130,6 @@ const usePlaidStore = create(
         itemId: null,
         error: null
       });
-      
-      console.log('Plaid connection disconnected');
     },
 
     /**
@@ -143,7 +137,6 @@ const usePlaidStore = create(
      */
     syncTransactions: async (startDate = null, endDate = null) => {
       if (!get().isConnected) {
-        console.warn('Cannot sync transactions: not connected to Plaid');
         return;
       }
       
@@ -183,13 +176,10 @@ const usePlaidStore = create(
           // Update financial state store with new transactions
           const financialStore = useFinancialStateStore.getState();
           financialStore.addTransactions(processedTransactions);
-          
-          console.log(`Synced ${processedTransactions.length} transactions`);
         } else {
           throw new Error(result.error);
         }
       } catch (error) {
-        console.error('Failed to sync transactions:', error);
         set({
           syncError: error.message,
           isSyncing: false

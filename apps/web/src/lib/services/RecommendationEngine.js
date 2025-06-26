@@ -34,29 +34,28 @@ class RecommendationEngine {
       const recommendations = [];
       
       // Analyze emergency fund status
-      const emergencyFundRec = this.analyzeEmergencyFund(financialState, userContext);
+      const emergencyFundRec = this.analyzeEmergencyFund(financialState);
       if (emergencyFundRec) recommendations.push(emergencyFundRec);
 
       // Analyze debt situation
-      const debtRec = this.analyzeDebtSituation(financialState, userContext);
+      const debtRec = this.analyzeDebtSituation(financialState);
       if (debtRec) recommendations.push(debtRec);
 
       // Analyze spending patterns
-      const spendingRec = this.analyzeSpendingPatterns(financialState, userContext);
+      const spendingRec = this.analyzeSpendingPatterns(financialState);
       if (spendingRec) recommendations.push(spendingRec);
 
       // Analyze savings goals
-      const savingsRec = this.analyzeSavingsGoals(financialState, userContext);
+      const savingsRec = this.analyzeSavingsGoals(financialState);
       if (savingsRec) recommendations.push(savingsRec);
 
       // Analyze investment opportunities
-      const investmentRec = this.analyzeInvestmentOpportunities(financialState, userContext);
+      const investmentRec = this.analyzeInvestmentOpportunities(financialState);
       if (investmentRec) recommendations.push(investmentRec);
 
       // Sort by priority and impact
       return this.prioritizeRecommendations(recommendations);
     } catch (error) {
-      console.error('Failed to generate recommendations:', error);
       return this.getFallbackRecommendations();
     }
   }
@@ -64,13 +63,12 @@ class RecommendationEngine {
   /**
    * Analyze emergency fund status and generate recommendations
    */
-  analyzeEmergencyFund(financialState, userContext) {
-    const savings = financialState?.savings || 0;
+  analyzeEmergencyFund(financialState) {
     const monthlyExpenses = financialState?.monthlyExpenses || 0;
     const targetEmergencyFund = monthlyExpenses * 3; // 3 months of expenses
 
-    if (savings < targetEmergencyFund) {
-      const shortfall = targetEmergencyFund - savings;
+    if (financialState?.savings < targetEmergencyFund) {
+      const shortfall = targetEmergencyFund - (financialState?.savings || 0);
       const monthlyContribution = Math.min(monthlyExpenses * 0.1, shortfall / 6); // 10% of expenses or 6-month plan
 
       return {
@@ -78,11 +76,11 @@ class RecommendationEngine {
         title: 'Build Emergency Fund',
         description: `You need $${shortfall.toLocaleString()} more to reach a 3-month emergency fund. Start by saving $${monthlyContribution.toLocaleString()} monthly.`,
         priority: 'high',
-        impact: 'high',
-        action: 'setup-automated-savings',
-        icon: '🛡️',
-        completed: false,
-        progress: (savings / targetEmergencyFund) * 100
+        action: {
+          type: 'increase_savings',
+          amount: monthlyContribution,
+          category: 'savings'
+        }
       };
     }
 
@@ -92,7 +90,7 @@ class RecommendationEngine {
   /**
    * Analyze debt situation and generate recommendations
    */
-  analyzeDebtSituation(financialState, userContext) {
+  analyzeDebtSituation(financialState) {
     const debts = financialState?.debts || [];
     const totalDebt = debts.reduce((sum, debt) => sum + debt.balance, 0);
     const monthlyIncome = financialState?.monthlyIncome || 0;
@@ -133,7 +131,7 @@ class RecommendationEngine {
   /**
    * Analyze spending patterns and generate recommendations
    */
-  analyzeSpendingPatterns(financialState, userContext) {
+  analyzeSpendingPatterns(financialState) {
     const spending = financialState?.spending || {};
     const categories = Object.keys(spending);
     
@@ -167,7 +165,7 @@ class RecommendationEngine {
   /**
    * Analyze savings goals and generate recommendations
    */
-  analyzeSavingsGoals(financialState, userContext) {
+  analyzeSavingsGoals(financialState) {
     const savings = financialState?.savings || 0;
     const monthlyIncome = financialState?.monthlyIncome || 0;
     const savingsRate = financialState?.savingsRate || 0;
@@ -196,7 +194,7 @@ class RecommendationEngine {
   /**
    * Analyze investment opportunities
    */
-  analyzeInvestmentOpportunities(financialState, userContext) {
+  analyzeInvestmentOpportunities(financialState) {
     const savings = financialState?.savings || 0;
     const emergencyFund = financialState?.monthlyExpenses * 3 || 0;
     const excessSavings = savings - emergencyFund;
@@ -246,9 +244,6 @@ class RecommendationEngine {
    */
   static async trackEngagement(recommendationId, action) {
     try {
-      // In a real app, this would send to analytics service
-      console.log('Tracking engagement:', { recommendationId, action, timestamp: new Date() });
-      
       // Store locally for now
       const engagement = JSON.parse(localStorage.getItem('recommendation_engagement') || '{}');
       engagement[recommendationId] = {
@@ -258,7 +253,7 @@ class RecommendationEngine {
       };
       localStorage.setItem('recommendation_engagement', JSON.stringify(engagement));
     } catch (error) {
-      console.error('Failed to track engagement:', error);
+      // In a real app, this would send to analytics service
     }
   }
 

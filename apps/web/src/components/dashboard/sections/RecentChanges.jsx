@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './RecentChanges.css';
 
-const RecentChanges = ({ data, userContext }) => {
+const RecentChanges = ({ data }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {

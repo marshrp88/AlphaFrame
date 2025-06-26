@@ -109,7 +109,7 @@ export const executeWebhook = async (payload) => {
     const requestConfig = await prepareWebhookRequest(validatedPayload);
     
     // Execute with retry logic
-    const result = await executeWithRetry(requestConfig, validatedPayload);
+    const result = await executeWithRetry(requestConfig);
     
     await executionLogService.log('webhook.executed.success', {
       url: maskUrl(validatedPayload.url),
@@ -331,10 +331,9 @@ const prepareWebhookRequest = async (payload) => {
 /**
  * Execute webhook with retry logic
  * @param {Object} requestConfig - Request configuration
- * @param {Object} payload - Original payload for logging
  * @returns {Promise<Object>} Execution result
  */
-const executeWithRetry = async (requestConfig, payload) => {
+const executeWithRetry = async (requestConfig) => {
   let lastError;
   
   for (let attempt = 1; attempt <= WEBHOOK_CONFIG.maxRetries; attempt++) {
@@ -527,4 +526,7 @@ export const getWebhookStats = async () => {
     await executionLogService.logError('webhook.stats.retrieval.failed', error);
     throw new Error(`Failed to get webhook statistics: ${error.message}`);
   }
-}; 
+};
+
+// Comment out all console statements
+// console.log('Webhook service initialized'); 

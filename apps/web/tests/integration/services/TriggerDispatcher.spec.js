@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { queueAction, getActionQueue, clearActionQueue } from '@/lib/services/TriggerDispatcher';
 import { dispatchAction } from '@/lib/services/TriggerDispatcher';
-import { useLogStore } from '@/core/store/logStore';
 
 // Polyfill crypto.randomUUID for Node test environment
 if (!global.crypto) {

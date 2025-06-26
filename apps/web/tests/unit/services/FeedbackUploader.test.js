@@ -352,7 +352,7 @@ describe('FeedbackUploader', () => {
         dataSchemaVersion: '1'
       };
 
-      Object.entries(mockLocalStorage).forEach(([key, value]) => {
+      Object.entries(mockLocalStorage).forEach(() => {
         localStorage.getItem.mockImplementation((item) => {
           return mockLocalStorage[item] || null;
         });

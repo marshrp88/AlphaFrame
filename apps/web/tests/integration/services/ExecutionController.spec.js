@@ -55,7 +55,6 @@ vi.mock('@/lib/validation/schemas', () => ({
   }
 }));
 
-import { useFinancialStateStore } from '@/core/store/financialStateStore';
 import { ExecutionController } from '@/lib/services/ExecutionController';
 import { PermissionEnforcer } from '@/lib/services/PermissionEnforcer';
 

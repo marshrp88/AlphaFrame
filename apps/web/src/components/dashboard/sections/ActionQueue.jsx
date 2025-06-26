@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ActionQueue.css';
 
-const ActionQueue = ({ data, userContext }) => {
+const ActionQueue = ({ data }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {

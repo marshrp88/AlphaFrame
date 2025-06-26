@@ -75,7 +75,6 @@ export const OnboardingFlow = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [stepData, setStepData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [completedSteps, setCompletedSteps] = useState(new Set());
 
   // Check if user is already onboarded
   useEffect(() => {
@@ -91,7 +90,6 @@ export const OnboardingFlow = () => {
    */
   const handleStepComplete = (stepId, data) => {
     setStepData(prev => ({ ...prev, [stepId]: data }));
-    setCompletedSteps(prev => new Set([...prev, stepId]));
     
     if (stepId < ONBOARDING_STEPS.length) {
       setCurrentStep(stepId + 1);
@@ -164,7 +162,7 @@ export const OnboardingFlow = () => {
             Welcome to AlphaFrame
           </h1>
           <p className="text-gray-600">
-            Let's get you set up in just a few minutes
+            Let&apos;s get you set up in just a few minutes
           </p>
         </div>
 

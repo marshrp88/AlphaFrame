@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './NetWorthTrajectory.css';
 
-const NetWorthTrajectory = ({ data, userContext }) => {
+const NetWorthTrajectory = ({ data }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const NetWorthTrajectory = ({ data, userContext }) => {
     );
   }
 
-  const { current = 0, history = [], milestones = [] } = data;
+  const { current = 0, milestones = [] } = data;
 
   return (
     <div className={`networth-section ${isVisible ? 'visible' : ''}`}>

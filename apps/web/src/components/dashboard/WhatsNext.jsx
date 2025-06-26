@@ -34,7 +34,6 @@ const WhatsNext = ({ financialState, userContext }) => {
         const recs = await engine.generateRecommendations(financialState, userContext);
         setRecommendations(recs);
       } catch (error) {
-        console.error('Failed to generate recommendations:', error);
         // Fallback recommendations
         setRecommendations([
           {
@@ -125,7 +124,7 @@ const WhatsNext = ({ financialState, userContext }) => {
   return (
     <div className="whats-next">
       <header className="whats-next-header">
-        <h2>What's Next?</h2>
+        <h2>What&apos;s Next?</h2>
         <p>Your personalized financial action plan</p>
       </header>
 

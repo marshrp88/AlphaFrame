@@ -35,7 +35,6 @@ class PlaidService {
     const env = import.meta.env.VITE_PLAID_ENV || 'sandbox';
 
     if (!clientId || !secret) {
-      console.warn('Plaid credentials not configured. Using mock mode.');
       return;
     }
 
@@ -119,7 +118,6 @@ class PlaidService {
         itemId: response.data.item_id
       };
     } catch (error) {
-      console.error('Failed to exchange public token:', error);
       return {
         success: false,
         error: error.message || 'Failed to exchange public token'
@@ -147,7 +145,6 @@ class PlaidService {
         accounts: response.data.accounts
       };
     } catch (error) {
-      console.error('Failed to get account balances:', error);
       return {
         success: false,
         error: error.message || 'Failed to get account balances'
@@ -190,7 +187,6 @@ class PlaidService {
         accounts: response.data.accounts
       };
     } catch (error) {
-      console.error('Failed to get transactions:', error);
       return {
         success: false,
         error: error.message || 'Failed to get transactions'
@@ -213,7 +209,6 @@ class PlaidService {
       this.accessToken = decryptedToken;
       return true;
     } catch (error) {
-      console.error('Failed to load stored access token:', error);
       return false;
     }
   }

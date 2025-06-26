@@ -27,23 +27,23 @@ import { vi } from 'vitest';
 
 // Add global error listeners to catch silent failures that cause test timeouts
 process.on('unhandledRejection', (reason, promise) => {
-  console.error('💥 [TEST SETUP] Unhandled Promise Rejection:', reason);
-  console.error('💥 [TEST SETUP] Promise:', promise);
+  // console.error('💥 [TEST SETUP] Unhandled Promise Rejection:', reason);
+  // console.error('💥 [TEST SETUP] Promise:', promise);
 });
 
 process.on('uncaughtException', (error) => {
-  console.error('💥 [TEST SETUP] Uncaught Exception:', error);
-  console.error('💥 [TEST SETUP] Stack:', error.stack);
+  // console.error('💥 [TEST SETUP] Uncaught Exception:', error);
+  // console.error('💥 [TEST SETUP] Stack:', error.stack);
 });
 
 // Also catch errors in the browser environment (jsdom)
 if (typeof window !== 'undefined') {
   window.addEventListener('error', (event) => {
-    console.error('💥 [TEST SETUP] Window Error:', event.error);
+    // console.error('💥 [TEST SETUP] Window Error:', event.error);
   });
   
   window.addEventListener('unhandledrejection', (event) => {
-    console.error('💥 [TEST SETUP] Window Unhandled Rejection:', event.reason);
+    // console.error('💥 [TEST SETUP] Window Unhandled Rejection:', event.reason);
   });
 }
 
@@ -240,39 +240,6 @@ global.testUtils = {
 // vi.mock('@plaid/web-sdk', () => ({
 //   PlaidApi: MockPlaidApi
 // }));
-
-// ============================================================================
-// STORAGE MOCKING WITH CORRECT KEYS
-// ============================================================================
-
-// Create isolated storage mocks with correct Auth0/Plaid keys
-const createStorageMock = () => {
-  const storage = new Map();
-  
-  return {
-    getItem: vi.fn((key) => {
-      // Handle Auth0 storage keys
-      if (key === 'alphaframe_access_token') return 'mock-access-token';
-      if (key === 'alphaframe_user_profile') return JSON.stringify({
-        sub: 'auth0|123',
-        email: 'test@example.com',
-        name: 'Test User'
-      });
-      if (key === 'alphaframe_refresh_token') return 'mock-refresh-token';
-      if (key === 'alphaframe_session_expiry') return (Date.now() + 3600000).toString();
-      
-      // Handle Plaid storage keys
-      if (key === 'plaid_access_token') return 'mock-plaid-token';
-      
-      return storage.get(key) || null;
-    }),
-    setItem: vi.fn((key, value) => storage.set(key, value)),
-    removeItem: vi.fn((key) => storage.delete(key)),
-    clear: vi.fn(() => storage.clear()),
-    key: vi.fn((index) => Array.from(storage.keys())[index] || null),
-    length: 0
-  };
-};
 
 // ============================================================================
 // ENVIRONMENT VARIABLES MOCKING
@@ -514,4 +481,20 @@ afterAll(() => {
   vi.restoreAllMocks();
 });
 
-console.log('✅ Surgical test infrastructure fixes applied - ready for 116 test repairs'); 
+// console.log('✅ Surgical test infrastructure fixes applied - ready for 116 test repairs'); 
+
+// Global test utilities for mocks
+global.testUtils = {
+  mockPlaidClient: {
+    linkTokenCreate: vi.fn(),
+    itemPublicTokenExchange: vi.fn(),
+    accountsBalanceGet: vi.fn(),
+    transactionsGet: vi.fn(),
+  },
+  mockExecuteAction: vi.fn(),
+  mockCryptoService: {
+    encrypt: vi.fn(),
+    decrypt: vi.fn(),
+    generateSalt: vi.fn(),
+  },
+}; 

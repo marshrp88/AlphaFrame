@@ -17,7 +17,6 @@
 
 import React, { useState, useEffect } from 'react';
 import portfolioAnalyzer from '../lib/services/PortfolioAnalyzer.js';
-import executionLogService from '../lib/services/ExecutionLogService.js';
 import { Card } from './ui/Card.jsx';
 import { Button } from './ui/Button.jsx';
 import { Select } from './ui/Select.jsx';
@@ -175,6 +174,13 @@ const AllocationAdvisor = ({ currentHoldings = [], onRecommendationSelect }) => 
                   : 'border-gray-200 hover:border-gray-300'
               }`}
               onClick={() => handleModelChange(key)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  handleModelChange(key);
+                }
+              }}
             >
               <h3 className="font-semibold text-sm mb-2">{model.name}</h3>
               <p className="text-xs text-gray-600 mb-3">{model.description}</p>

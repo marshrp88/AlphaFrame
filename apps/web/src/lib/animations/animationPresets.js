@@ -301,7 +301,7 @@ export const gestureAnimations = {
   },
   // Pan gesture
   pan: {
-    onPan: (event, info) => {
+    onPan: () => {
       // Custom pan handling
     }
   }

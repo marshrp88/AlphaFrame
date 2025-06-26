@@ -63,7 +63,6 @@ const Profile = () => {
         });
       }
     } catch (error) {
-      console.error('Failed to refresh token:', error);
       setTokenInfo({ error: error.message });
     } finally {
       setIsRefreshingToken(false);
@@ -142,12 +141,12 @@ const Profile = () => {
             {/* User ID and Provider */}
             <div className="space-y-2">
               <div>
-                <label className="text-sm font-medium text-gray-500">User ID</label>
-                <p className="text-sm text-gray-900 font-mono">{user.sub}</p>
+                <label className="text-sm font-medium text-gray-500" htmlFor="userId">User ID</label>
+                <p className="text-sm text-gray-900 font-mono" id="userId">{user.sub}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-500">Provider</label>
-                <p className="text-sm text-gray-900 capitalize">
+                <label className="text-sm font-medium text-gray-500" htmlFor="provider">Provider</label>
+                <p className="text-sm text-gray-900 capitalize" id="provider">
                   {user.sub.split('|')[0]}
                 </p>
               </div>
@@ -218,20 +217,20 @@ const Profile = () => {
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div>
-                      <label className="text-gray-500">Token (truncated)</label>
-                      <p className="font-mono text-gray-900">{tokenInfo.token}</p>
+                      <label className="text-gray-500" htmlFor="token">Token (truncated)</label>
+                      <p className="font-mono text-gray-900" id="token">{tokenInfo.token}</p>
                     </div>
                     <div>
-                      <label className="text-gray-500">Expires At</label>
-                      <p className="text-gray-900">{tokenInfo.expiresAt}</p>
+                      <label className="text-gray-500" htmlFor="expiresAt">Expires At</label>
+                      <p className="text-gray-900" id="expiresAt">{tokenInfo.expiresAt}</p>
                     </div>
                     <div>
-                      <label className="text-gray-500">Issued At</label>
-                      <p className="text-gray-900">{tokenInfo.issuedAt}</p>
+                      <label className="text-gray-500" htmlFor="issuedAt">Issued At</label>
+                      <p className="text-gray-900" id="issuedAt">{tokenInfo.issuedAt}</p>
                     </div>
                     <div>
-                      <label className="text-gray-500">Audience</label>
-                      <p className="text-gray-900">{tokenInfo.audience}</p>
+                      <label className="text-gray-500" htmlFor="audience">Audience</label>
+                      <p className="text-gray-900" id="audience">{tokenInfo.audience}</p>
                     </div>
                   </div>
                 </>
@@ -271,8 +270,8 @@ const Profile = () => {
             <h3 className="text-lg font-semibold mb-4 text-yellow-800">Development Information</h3>
             <div className="space-y-2 text-sm">
               <p><strong>Environment:</strong> {config.env}</p>
-              <p><strong>Auth0 Domain:</strong> {config.auth0.domain || 'Not configured'}</p>
-              <p><strong>Client ID:</strong> {config.auth0.clientId ? 'Configured' : 'Not configured'}</p>
+              <p><strong>Auth0 Domain:</strong> {config.auth0.domain || '&quot;Not configured&quot;'}</p>
+              <p><strong>Client ID:</strong> {config.auth0.clientId ? '&quot;Configured&quot;' : '&quot;Not configured&quot;'}</p>
             </div>
           </Card>
         )}

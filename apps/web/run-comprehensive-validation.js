@@ -60,7 +60,7 @@ class ComprehensiveValidationRunner {
    */
   async runAuthenticationValidation() {
     console.log('\n🔑 Step 1: Authentication & Access Control Validation');
-    console.log('=' .repeat(60));
+    console.log('='.repeat(60));
     
     try {
       const authTest = new AuthValidationTest();
@@ -85,7 +85,7 @@ class ComprehensiveValidationRunner {
    */
   async runPlaidValidation() {
     console.log('\n💳 Step 2: Plaid Integration & Bank Data Synchronization');
-    console.log('=' .repeat(60));
+    console.log('='.repeat(60));
     
     try {
       const plaidTest = new PlaidValidationTest();
@@ -110,7 +110,7 @@ class ComprehensiveValidationRunner {
    */
   async runBudgetTimelineValidation() {
     console.log('\n📅 Step 3: BudgetService & TimelineSimulator Integration');
-    console.log('=' .repeat(60));
+    console.log('='.repeat(60));
     
     try {
       const budgetTimelineTest = new BudgetTimelineValidationTest();
@@ -135,7 +135,7 @@ class ComprehensiveValidationRunner {
    */
   async runRuleEngineValidation() {
     console.log('\n⚙️ Step 4: Rule Engine & Execution Automation');
-    console.log('=' .repeat(60));
+    console.log('='.repeat(60));
     
     try {
       // Test rule engine functionality
@@ -233,7 +233,7 @@ class ComprehensiveValidationRunner {
    */
   async runReportingValidation() {
     console.log('\n📊 Step 5: Narrative & Reporting Engine Validation');
-    console.log('=' .repeat(60));
+    console.log('='.repeat(60));
     
     try {
       let passedTests = 0;
@@ -307,7 +307,7 @@ class ComprehensiveValidationRunner {
    */
   async runUIEngineValidation() {
     console.log('\n📈 Step 6: UI-Engine Binding & Frontend E2E Testing');
-    console.log('=' .repeat(60));
+    console.log('='.repeat(60));
     
     try {
       let passedTests = 0;
@@ -389,7 +389,7 @@ class ComprehensiveValidationRunner {
    */
   async runAnalyticsValidation() {
     console.log('\n🚦 Step 7: Analytics & Execution Logging Validation');
-    console.log('=' .repeat(60));
+    console.log('='.repeat(60));
     
     try {
       let passedTests = 0;
@@ -461,7 +461,7 @@ class ComprehensiveValidationRunner {
    */
   async runBuildValidation() {
     console.log('\n💻 Step 8: Build & Production Environment Validation');
-    console.log('=' .repeat(60));
+    console.log('='.repeat(60));
     
     try {
       let passedTests = 0;
@@ -540,7 +540,7 @@ class ComprehensiveValidationRunner {
    */
   generateComprehensiveReport() {
     console.log('\n🎯 COMPREHENSIVE ALPHAFRAME VX.1 VALIDATION REPORT');
-    console.log('=' .repeat(80));
+    console.log('='.repeat(80));
     
     // Calculate overall statistics
     this.overallResults.totalTests = this.overallResults.testSuites.reduce((sum, suite) => 
@@ -585,10 +585,10 @@ class ComprehensiveValidationRunner {
    */
   async runComprehensiveValidation() {
     console.log('🚀 ALPHAFRAME VX.1 COMPREHENSIVE END-TO-END VALIDATION');
-    console.log('=' .repeat(80));
+    console.log('='.repeat(80));
     console.log('Goal: Validate complete readiness for real-world customer usage');
     console.log('Scope: Authentication, Plaid, Budget, Timeline, Rules, Reporting, UI, Analytics, Build');
-    console.log('=' .repeat(80));
+    console.log('='.repeat(80));
     
     const startTime = Date.now();
     
@@ -630,7 +630,7 @@ class ComprehensiveValidationRunner {
 export default ComprehensiveValidationRunner;
 
 // Run comprehensive validation if this file is executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.url === 'file://' + process.argv[1]) {
   const runner = new ComprehensiveValidationRunner();
   runner.runComprehensiveValidation().then(results => {
     console.log('\n🎯 Comprehensive Validation Complete');

@@ -43,7 +43,7 @@ const TRANSACTION_CATEGORIES = [
 /**
  * Transaction review step component
  */
-const Step2ReviewTransactions = ({ onComplete, onSkip, data, isLoading }) => {
+const Step2ReviewTransactions = ({ onComplete, onSkip, isLoading }) => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -162,7 +162,7 @@ const Step2ReviewTransactions = ({ onComplete, onSkip, data, isLoading }) => {
             Loading Your Transactions
           </h2>
           <p className="text-gray-600">
-            We're securely fetching your recent transactions...
+            We&apos;re securely fetching your recent transactions...
           </p>
         </div>
       </Card>
@@ -219,7 +219,7 @@ const Step2ReviewTransactions = ({ onComplete, onSkip, data, isLoading }) => {
           
           <p className="text-gray-600">
             We found {transactions.length} transactions from the last 30 days. 
-            Select the transactions you'd like to include in your budget.
+            Select the transactions you&apos;d like to include in your budget.
           </p>
         </div>
 

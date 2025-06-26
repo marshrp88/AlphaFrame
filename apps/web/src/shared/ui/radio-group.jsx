@@ -1,6 +1,6 @@
 import React from "react";
 
-export function RadioGroup({ children, value, onValueChange, className = '' }) {
+export function RadioGroup({ children, onValueChange, className = '' }) {
   return (
     <div 
       role="radiogroup" 

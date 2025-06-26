@@ -77,11 +77,7 @@ const ACTION_TYPES = {
  * @returns {JSX.Element} The rendered component
  */
 function ActionSelectorComponent({ value, onChange }) {
-  console.log('[ActionSelector] Current value:', value);
-  console.log('[ActionSelector] Available options:', Object.keys(ACTION_TYPES));
-  
   const handleChange = (newValue) => {
-    console.log('[ActionSelector] onChange called with:', newValue);
     onChange(newValue);
   };
 

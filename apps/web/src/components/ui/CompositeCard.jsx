@@ -66,6 +66,11 @@ export function CompositeCard({
       onClick={handleClick}
       role={interactive ? 'button' : undefined}
       tabIndex={interactive ? 0 : undefined}
+      onKeyDown={(event) => {
+        if (interactive && onClick && event.key === 'Enter') {
+          onClick(event);
+        }
+      }}
       {...props}
     >
       {(title || subtitle || icon) && (

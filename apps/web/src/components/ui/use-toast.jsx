@@ -33,13 +33,6 @@ export function ToastProvider({ children }) {
 
   const toast = useCallback(({ title, description, variant = "default" }) => {
     const id = Math.random().toString(36).substr(2, 9);
-    console.log('[Toast] Creating toast:', { id, title, description, variant });
-    console.log('[Toast] Description type:', typeof description);
-    console.log('[Toast] Description is React element:', React.isValidElement(description));
-    if (React.isValidElement(description)) {
-      console.log('[Toast] Description props:', description.props);
-    }
-    console.log('[toast] fired with message:', { title, description: typeof description === 'string' ? description : 'React element' });
     setToasts((prev) => [...prev, { id, title, description, variant }]);
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -76,10 +69,6 @@ export function useToast() {
  */
 function Toaster({ toasts }) {
   const isTest = import.meta.env.VITE_APP_ENV === 'test';
-  console.log('[Toaster] Rendering toasts:', toasts.length);
-  toasts.forEach((toast, index) => {
-    console.log(`[Toaster] Toast ${index}:`, { id: toast.id, title: toast.title, hasDescription: !!toast.description });
-  });
   
   return ReactDOM.createPortal(
     <div

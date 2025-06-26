@@ -1,10 +1,6 @@
 import React from 'react';
 
 export default function TestMount() {
-  console.log('[TestMount] Component rendered');
-  console.log('[TestMount] Environment:', import.meta.env.VITE_APP_ENV);
-  console.log('[TestMount] Timestamp:', new Date().toISOString());
-  
   return (
     <div 
       data-testid="mount-check"

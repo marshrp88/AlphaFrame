@@ -627,7 +627,7 @@ export const evaluateRule = (rule, transaction) => ruleEngine.evaluateRule(rule,
 export const executeRule = (rule, transaction) => ruleEngine.executeRule(rule, transaction);
 export const simulateRule = (rule, transaction) => ruleEngine.simulateRule(rule, transaction);
 export const validateRule = (rule) => ruleEngine.validateRule(rule);
-export const getMatchingRules = (transaction, allRules) => {
+export const getMatchingRules = (transaction) => {
   // Legacy function - now uses internal rule registry
   return ruleEngine.getMatchingRules(transaction);
 }; 

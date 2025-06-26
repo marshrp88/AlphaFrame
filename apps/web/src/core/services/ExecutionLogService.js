@@ -56,7 +56,6 @@ class ExecutionLogService {
       // Generate a salt and derive a key from a default password
       // In a real app, this would come from user authentication
       const salt = await generateSalt();
-      const defaultPassword = 'alphapro-default-key';
       this.encryptionKey = salt; // Simplified for demo - in real app use proper key derivation
     } catch (error) {
       console.error('Failed to initialize encryption:', error);

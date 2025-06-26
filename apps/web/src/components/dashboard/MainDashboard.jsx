@@ -30,7 +30,6 @@ const MainDashboard = () => {
   const { financialState, loading, error } = useFinancialState();
   const { userContext } = useUserContext();
   const [dashboardConfig, setDashboardConfig] = useState(null);
-  const [activeSection, setActiveSection] = useState('overview');
 
   // Load dashboard configuration based on user context
   useEffect(() => {

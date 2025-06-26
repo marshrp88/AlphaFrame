@@ -47,23 +47,6 @@ const FeedbackModule = () => {
       const executionLogs = await executionLogService.queryLogs();
       console.log('🧪 [FeedbackModule] queryLogs returned:', executionLogs);
       
-      // Generate narrative insights (placeholder for now)
-      const narrativeInsights = { 
-        placeholder: 'NarrativeService not yet implemented. This is a placeholder.', 
-        generatedAt: new Date().toISOString() 
-      };
-      
-      // Create comprehensive feedback report
-      const feedbackReport = { 
-        reportVersion: '1.0', 
-        generatedAt: new Date().toISOString(), 
-        source: 'AlphaPro FeedbackModule', 
-        data: { 
-          executionLogs, 
-          narrativeInsights 
-        } 
-      };
-      
       // TEMPORARILY DISABLED: DOM-heavy file download operations for test isolation
       // Convert to JSON and create downloadable file
       // const jsonString = JSON.stringify(feedbackReport, null, 2);
@@ -119,7 +102,7 @@ const FeedbackModule = () => {
           </div>
         )}
         <div className="space-y-2">
-          <h4 className="font-medium text-gray-900">What's included:</h4>
+          <h4 className="font-medium text-gray-900">What&apos;s included:</h4>
           <ul className="text-sm text-gray-600 space-y-1">
             <li>• Execution logs and system events</li>
             <li>• Narrative insights and analysis</li>

@@ -60,9 +60,6 @@ export function Button({
     icon: 'h-10 w-10'
   };
 
-  // Fallback to basic styling if Tailwind classes aren't available
-  const fallbackClasses = 'bg-blue-500 text-white hover:bg-blue-600 border border-gray-300 rounded px-4 py-2 font-medium';
-  
   const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`.trim();
 
   return (

@@ -15,15 +15,6 @@ function Home() {
       currentAmount: 0,
       deadline: '2024-12-31'
     });
-
-    // Log current state
-    const balance = getAccountBalance('test_account');
-    const goal = getGoal('test_goal');
-
-    console.log('Financial State Test:', {
-      balance,
-      goal
-    });
   }, []);
 
   return (

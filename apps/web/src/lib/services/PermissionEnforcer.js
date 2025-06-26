@@ -31,15 +31,6 @@ const ACTION_PERMISSIONS = {
 };
 
 /**
- * Checks if an action requires additional security measures
- * @param {Object} action - The action to check
- * @returns {boolean} Whether the action is high-risk
- */
-const isHighRiskAction = (action) => {
-  return HIGH_RISK_ACTIONS.includes(action.actionType);
-};
-
-/**
  * Prompts the user for their master password
  * @returns {Promise<string>} The entered password
  */
@@ -104,7 +95,6 @@ export class PermissionEnforcer {
 
       return { allowed: true };
     } catch (error) {
-      console.error('Permission check failed:', error);
       return {
         allowed: false,
         reason: 'Permission check failed'

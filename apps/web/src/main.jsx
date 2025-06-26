@@ -14,19 +14,12 @@
  * and monitoring for production-ready application.
  */
 
-console.log("🚀 main.jsx is loading...");
-
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Auth0Provider } from "@auth0/auth0-react";
 import App from "./App.jsx";
 import "./index.css";
 import { config } from "./lib/config.js";
-
-console.log("🔧 React imports successful");
-
-console.log("🧩 Attempting to import App.jsx...");
-console.log("🧩 App.jsx import successful");
 
 // Auth0 configuration
 const auth0Config = {
@@ -53,7 +46,6 @@ if (!auth0Config.domain || !auth0Config.clientId) {
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-console.log("�� React root created successfully");
 
 root.render(
   <React.StrictMode>
@@ -62,4 +54,3 @@ root.render(
     </Auth0Provider>
   </React.StrictMode>
 );
-console.log("✅ Real App mounted successfully with Auth0Provider");

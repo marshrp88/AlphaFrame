@@ -18,12 +18,8 @@ vi.mock('@/shared/ui/use-toast', () => ({
 
 // Mock the Select component for testability
 vi.mock('@/shared/ui/Select', () => ({
-  Select: ({ value, onValueChange, children }) => (
-    <select
-      data-testid="select"
-      value={value}
-      onChange={e => onValueChange?.(e.target.value)}
-    >
+  Select: ({ children }) => (
+    <select data-testid="select">
       {React.Children.map(children, child => {
         if (child && child.props && child.props.children) {
           return React.Children.map(child.props.children, grandChild => {
@@ -41,7 +37,7 @@ vi.mock('@/shared/ui/Select', () => ({
       })}
     </select>
   ),
-  SelectItem: ({ value, children }) => <>{children}</>,
+  SelectItem: ({ children }) => <>{children}</>,
   SelectTrigger: ({ children }) => <div>{children}</div>,
   SelectContent: ({ children }) => <div>{children}</div>,
   SelectValue: ({ placeholder }) => <span>{placeholder}</span>,
@@ -70,7 +66,7 @@ vi.mock('@/shared/ui/Label', () => ({
 }));
 
 vi.mock('@/shared/ui/radio-group', () => ({
-  RadioGroup: ({ value, onValueChange, children, ...props }) => (
+  RadioGroup: ({ children, ...props }) => (
     <div role="radiogroup" {...props}>
       {children}
     </div>

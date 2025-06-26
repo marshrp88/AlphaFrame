@@ -9,7 +9,6 @@ import { Input } from "@/shared/ui/Input";
 import { Label } from "@/shared/ui/Label";
 import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group";
 import { useAppStore } from '@/core/store/useAppStore';
-import { useToast } from "@/shared/ui/use-toast";
 
 /**
  * PlaidActionForm Component
@@ -18,12 +17,7 @@ import { useToast } from "@/shared/ui/use-toast";
  * @param {Function} props.onChange - Callback when form values change
  */
 export const PlaidActionForm = ({ initialPayload, onChange }) => {
-  console.log('[PlaidActionForm] Component rendering with initialPayload:', initialPayload);
-  
-  const { toast } = useToast();
   const accounts = useAppStore((state) => state.accounts) || [];
-  
-  console.log('[PlaidActionForm] Accounts from store:', accounts);
   
   // Ensure initialPayload is never null/undefined
   const safeInitialPayload = initialPayload || {};
@@ -35,8 +29,6 @@ export const PlaidActionForm = ({ initialPayload, onChange }) => {
     amount: safeInitialPayload.amount || '',
     description: safeInitialPayload.description || ''
   });
-
-  console.log('[PlaidActionForm] Form data state:', formData);
 
   const [errors, setErrors] = useState({});
 
@@ -65,7 +57,6 @@ export const PlaidActionForm = ({ initialPayload, onChange }) => {
   };
 
   const handleChange = (field, value) => {
-    console.log(`[PlaidActionForm] Field ${field} changed to:`, value);
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -74,10 +65,9 @@ export const PlaidActionForm = ({ initialPayload, onChange }) => {
 
   // Notify parent of changes
   useEffect(() => {
-    console.log('[PlaidActionForm] Calling onChange with formData:', formData);
     onChange?.(formData);
     validateForm();
-  }, [formData, onChange]);
+  }, [formData, onChange, validateForm]);
 
   const formatAccountOption = (account) => {
     const balance = account.balance?.toLocaleString('en-US', {

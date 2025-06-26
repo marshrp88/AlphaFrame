@@ -46,7 +46,6 @@ const PlaidLink = ({ onSuccess, onError, onExit, className = '', children }) => 
         throw new Error(result.error || 'Failed to create link token');
       }
     } catch (err) {
-      console.error('Plaid link token creation failed:', err);
       setError(err.message || 'Failed to initialize Plaid Link');
       
       // Call error callback if provided
@@ -67,14 +66,10 @@ const PlaidLink = ({ onSuccess, onError, onExit, className = '', children }) => 
     setError(null);
 
     try {
-      console.log('Plaid Link success:', { publicToken, metadata });
-      
       // Exchange public token for access token
       const result = await plaidService.exchangePublicToken(publicToken);
       
       if (result.success) {
-        console.log('Token exchange successful:', { itemId: result.itemId });
-        
         // Call success callback with account information
         if (onSuccess) {
           onSuccess({
@@ -88,7 +83,6 @@ const PlaidLink = ({ onSuccess, onError, onExit, className = '', children }) => 
         throw new Error(result.error || 'Failed to exchange token');
       }
     } catch (err) {
-      console.error('Plaid token exchange failed:', err);
       setError(err.message || 'Failed to complete bank connection');
       
       if (onError) {
@@ -103,8 +97,6 @@ const PlaidLink = ({ onSuccess, onError, onExit, className = '', children }) => 
    * Handle Plaid Link exit
    */
   const handleExit = useCallback((err, metadata) => {
-    console.log('Plaid Link exit:', { err, metadata });
-    
     if (err) {
       setError(err.display_message || err.error_message || 'Connection cancelled');
     }

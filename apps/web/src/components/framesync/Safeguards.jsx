@@ -127,7 +127,7 @@ function SafeguardsComponent({ value, onChange }) {
                   <InfoCircledIcon className="h-4 w-4 text-muted-foreground" />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Show a preview of the action's impact before execution</p>
+                  <p>Show a preview of the action&apos;s impact before execution</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

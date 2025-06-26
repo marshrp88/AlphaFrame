@@ -38,7 +38,6 @@ import './Checkbox.css';
 /**
  * Checkbox Component
  * @param {CheckboxProps} props - Component props
- * @param {React.Ref} ref - Forwarded ref
  * @returns {JSX.Element} The rendered checkbox component
  */
 export const Checkbox = forwardRef(({
@@ -50,17 +49,8 @@ export const Checkbox = forwardRef(({
   className = '',
   error,
   required = false,
-  name,
-  value,
-  indeterminate = false,
-  ...props
-}, ref) => {
-  const handleChange = (event) => {
-    if (!disabled && onChange) {
-      onChange(event);
-    }
-  };
-
+// eslint-disable-next-line no-unused-vars
+}, _ref) => {
   const handleKeyDown = (event) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
@@ -82,43 +72,9 @@ export const Checkbox = forwardRef(({
     `checkbox--${size}`,
     checked && 'checkbox--checked',
     disabled && 'checkbox--disabled',
-    indeterminate && 'checkbox--indeterminate',
     error && 'checkbox--error',
     className
   ].filter(Boolean).join(' ');
-
-  const inputClasses = [
-    'checkbox__input',
-    `checkbox__input--${size}`,
-    checked && 'checkbox__input--checked',
-    disabled && 'checkbox__input--disabled',
-    indeterminate && 'checkbox__input--indeterminate',
-    error && 'checkbox__input--error'
-  ].filter(Boolean).join(' ');
-
-  const renderCheckmark = () => {
-    if (indeterminate) {
-      return (
-        <span className="checkbox__indeterminate" aria-hidden="true">
-          <svg viewBox="0 0 16 16" fill="currentColor">
-            <rect x="3" y="7" width="10" height="2" rx="1" />
-          </svg>
-        </span>
-      );
-    }
-    
-    if (checked) {
-      return (
-        <span className="checkbox__checkmark" aria-hidden="true">
-          <svg viewBox="0 0 16 16" fill="currentColor">
-            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
-          </svg>
-        </span>
-      );
-    }
-    
-    return null;
-  };
 
   return (
     <div className={checkboxClasses}>
@@ -154,10 +110,10 @@ export const Checkbox = forwardRef(({
             exit={{ opacity: 0, scale: 0 }}
             transition={{ duration: 0.2 }}
           >
-            {indeterminate ? (
-              <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            ) : (
+            {checked ? (
               <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            ) : (
+              <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             )}
           </motion.svg>
         </motion.div>
@@ -199,9 +155,6 @@ Checkbox.propTypes = {
   className: PropTypes.string,
   error: PropTypes.string,
   required: PropTypes.bool,
-  name: PropTypes.string,
-  value: PropTypes.string,
-  indeterminate: PropTypes.bool
 };
 
 // Default props
@@ -211,7 +164,6 @@ Checkbox.defaultProps = {
   size: 'md',
   className: '',
   required: false,
-  indeterminate: false
 };
 
 // Display name for debugging

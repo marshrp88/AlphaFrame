@@ -4,12 +4,10 @@
  * Uses shadcn/ui form components
  */
 
-import { jsxDEV } from "react/jsx-dev-runtime";
 import { useState, useEffect } from 'react';
 import { Input } from "@/shared/ui/Input";
 import { Label } from "@/shared/ui/Label";
 import { Textarea } from "@/shared/ui/textarea";
-import { useToast } from "@/shared/ui/use-toast";
 
 /**
  * WebhookActionForm Component
@@ -27,7 +25,6 @@ export default function WebhookActionForm({ initialPayload, onChange }) {
   const [payload, setPayload] = useState(initialPayload?.payload || '');
   const [method, setMethod] = useState(initialPayload?.method || 'POST');
   const [errors, setErrors] = useState({});
-  const { toast } = useToast();
 
   // Validate URL format
   const validateUrl = (url) => {

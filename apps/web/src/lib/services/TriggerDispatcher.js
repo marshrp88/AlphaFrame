@@ -2,9 +2,9 @@
 // Service for dispatching triggers to the ExecutionController
 // Part of FrameSync - the execution and automation layer of AlphaFrame
 
-import { useLogStore } from '../../core/store/logStore';
 import { ExecutionController } from './ExecutionController';
 import { create } from 'zustand';
+import { useLogStore } from '../../core/store/logStore';
 
 /**
  * TriggerDispatcher Service
@@ -106,7 +106,6 @@ export class TriggerDispatcher {
    * @returns {string} The ID of the created trigger
    */
   static createTrigger(eventType, condition, actionType, actionPayload) {
-    const triggerId = crypto.randomUUID();
     const handler = async (event) => {
       if (condition(event)) {
         const actionId = useTriggerStore.getState().queueAction(actionType, actionPayload);
@@ -118,7 +117,7 @@ export class TriggerDispatcher {
 
     // Register the event handler
     window.addEventListener(eventType, handler);
-    return triggerId;
+    return crypto.randomUUID();
   }
 
   /**
@@ -192,25 +191,20 @@ const updateActionStatus = (actionId, result) => {
  * @returns {Promise<void>}
  */
 export const dispatchAction = async (rule, transaction) => {
-  try {
-    // Format the action payload
-    const payload = formatActionPayload(rule, transaction);
-    
-    // Queue the action in the logStore
-    const logStore = useLogStore.getState();
-    const actionId = logStore.queueAction(payload);
-    
-    // Execute the action immediately
-    const result = await ExecutionController.executeAction(payload.actionType, payload.payload);
-    
-    // Update the action status in the logStore
-    updateActionStatus(actionId, result);
-    
-    return result;
-  } catch (error) {
-    console.error('Action dispatch failed:', error);
-    throw error;
-  }
+  // Format the action payload
+  const payload = formatActionPayload(rule, transaction);
+  
+  // Queue the action in the logStore
+  const logStore = useLogStore.getState();
+  const actionId = logStore.queueAction(payload);
+  
+  // Execute the action immediately
+  const result = await ExecutionController.executeAction(payload.actionType, payload.payload);
+  
+  // Update the action status in the logStore
+  updateActionStatus(actionId, result);
+  
+  return result;
 };
 
 /**
@@ -219,15 +213,14 @@ export const dispatchAction = async (rule, transaction) => {
  */
 export const listenForEvents = (ruleEngineService) => {
   ruleEngineService.on('ruleTriggered', async (event) => {
-    try {
-      await dispatchAction(event.rule, event.transaction);
-    } catch (error) {
-      console.error('Failed to process rule trigger:', error);
-    }
+    await dispatchAction(event.rule, event.transaction);
   });
 };
 
 // Utility functions for testing and queue management
 export const queueAction = (action) => useTriggerStore.getState().queueAction(action.type, action);
 export const getActionQueue = () => useTriggerStore.getState().actionQueue;
-export const clearActionQueue = () => useTriggerStore.setState({ actionQueue: [] }); 
+export const clearActionQueue = () => useTriggerStore.setState({ actionQueue: [] });
+
+// Comment out all console statements
+// console.log('Trigger dispatcher initialized'); 

@@ -15,7 +15,7 @@
  * with comprehensive security and user management.
  */
 
-import { config, getFeatureFlag } from '../config.js';
+import { config } from '../config.js';
 import executionLogService from '../../core/services/ExecutionLogService.js';
 
 /**
@@ -91,48 +91,32 @@ let refreshToken = null;
  */
 export const initializeAuth = async () => {
   try {
-    console.log('🔐 AuthService.initializeAuth() called');
-    
     // Check if Auth0 is configured
     if (!AUTH0_CONFIG.domain || !AUTH0_CONFIG.clientId) {
-      console.warn('⚠️ Auth0 not configured - using mock authentication');
       return false;
     }
 
-    console.log('🔐 Loading existing session...');
     // Load existing session
     await loadSession();
     
-    console.log('🔐 Current user after loadSession:', currentUser);
-    console.log('🔐 Access token after loadSession:', accessToken);
-    
     // Check if session is still valid
     if (currentUser && accessToken) {
-      console.log('🔐 Validating existing session...');
       const isValid = await validateSession();
-      console.log('🔐 Session validation result:', isValid);
       
       if (isValid) {
         await executionLogService.log('auth.session.restored', {
           userId: currentUser.sub,
           email: currentUser.email
         });
-        console.log('✅ AuthService initialization successful - session restored');
         return true;
       } else {
         // Session expired, try to refresh
-        console.log('🔄 Session expired, attempting refresh...');
         await refreshSession();
       }
-    } else {
-      console.log('ℹ️ No existing session found');
     }
 
-    console.log('✅ AuthService initialization completed');
     return true;
   } catch (error) {
-    console.error('❌ AuthService.initializeAuth() ERROR:', error);
-    console.error('❌ Error stack:', error.stack);
     await executionLogService.logError('auth.initialization.failed', error);
     return false;
   }

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { feedbackAnimations, transitions } from '../../lib/animations/animationPresets';
+import { transitions } from '../../lib/animations/animationPresets';
 import './AnimatedToast.css';
 
 /**
@@ -50,14 +50,6 @@ const AnimatedToast = ({
       case 'warning': return 'var(--color-warning)';
       case 'info': return 'var(--color-primary)';
       default: return 'var(--color-primary)';
-    }
-  };
-
-  const getToastAnimation = (type) => {
-    switch (type) {
-      case 'success': return feedbackAnimations.successPulse;
-      case 'error': return feedbackAnimations.errorShake;
-      default: return feedbackAnimations.hoverLift;
     }
   };
 

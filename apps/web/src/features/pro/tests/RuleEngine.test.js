@@ -69,17 +69,13 @@ describe('RuleEngine', () => {
       date: '2024-01-15'
     };
     
-    try {
-      const ruleId = await ruleEngine.registerRule(simpleRule);
-      const registeredRule = ruleEngine.rules.get(ruleId);
-      const result = await ruleEngine.executeRule(registeredRule, simpleTransaction);
-      
-      expect(result).toBeDefined();
-      expect(typeof result.ruleId).toBe('string');
-    } catch (error) {
-      throw error;
-    }
-  }, 10000);
+    const ruleId = await ruleEngine.registerRule(simpleRule);
+    const registeredRule = ruleEngine.rules.get(ruleId);
+    const result = await ruleEngine.executeRule(registeredRule, simpleTransaction);
+    
+    expect(result).toBeDefined();
+    expect(typeof result.ruleId).toBe('string');
+  });
 
   // Simple simulateRule test with known-good inputs
   it('should simulate rule with minimal inputs - simulateRule test', async () => {
@@ -95,18 +91,14 @@ describe('RuleEngine', () => {
       date: '2024-01-15'
     };
     
-    try {
-      const ruleId = await ruleEngine.registerRule(simpleRule);
-      const registeredRule = ruleEngine.rules.get(ruleId);
-      const result = await ruleEngine.simulateRule(registeredRule, simpleTransaction);
-      
-      expect(result).toBeDefined();
-      expect(typeof result.ruleId).toBe('string');
-      expect(typeof result.wouldTrigger).toBe('boolean');
-    } catch (error) {
-      throw error;
-    }
-  }, 10000);
+    const ruleId = await ruleEngine.registerRule(simpleRule);
+    const registeredRule = ruleEngine.rules.get(ruleId);
+    const result = await ruleEngine.simulateRule(registeredRule, simpleTransaction);
+    
+    expect(result).toBeDefined();
+    expect(typeof result.ruleId).toBe('string');
+    expect(typeof result.wouldTrigger).toBe('boolean');
+  });
 
   // Simplified and valid transaction for testing
   const mockTransaction = {

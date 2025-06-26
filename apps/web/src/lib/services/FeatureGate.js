@@ -15,8 +15,8 @@
  * with comprehensive analytics and user experience control.
  */
 
-import { config, getFeatureFlag } from '../config.js';
 import executionLogService from '../../core/services/ExecutionLogService.js';
+import { getFeatureFlag } from '../config.js';
 
 /**
  * Feature flag definitions
@@ -177,7 +177,6 @@ export class FeatureGate {
    */
   isEnabled(featureKey) {
     if (!this.initialized) {
-      console.warn('FeatureGate not initialized, using default flags');
       return getFeatureFlag(featureKey) || false;
     }
 
@@ -331,7 +330,7 @@ export class FeatureGate {
   async loadUserFeatures() {
     try {
       // Start with environment-based flags
-      for (const [featureKey, feature] of Object.entries(FEATURE_FLAGS)) {
+      for (const [, feature] of Object.entries(FEATURE_FLAGS)) {
         const envEnabled = getFeatureFlag(feature.key);
         
         if (envEnabled) {

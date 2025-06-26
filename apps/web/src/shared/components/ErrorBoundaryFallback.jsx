@@ -28,7 +28,7 @@ import { AlertTriangle, RefreshCw, HelpCircle, Home } from 'lucide-react';
  * @param {string} props.componentStack - Component stack trace
  * @returns {JSX.Element} Error fallback UI
  */
-export const ErrorBoundaryFallback = ({ error, resetError, componentStack }) => {
+export const ErrorBoundaryFallback = ({ error, componentStack }) => {
   const handleReload = () => {
     window.location.reload();
   };
@@ -75,7 +75,7 @@ export const ErrorBoundaryFallback = ({ error, resetError, componentStack }) => 
           </h1>
           
           <p className="text-gray-600 mb-4">
-            Don't worry - your data is safe and secure. We've been notified of this issue and are working to fix it.
+            Don&apos;t worry - your data is safe and secure. We&apos;ve been notified of this issue and are working to fix it.
           </p>
         </div>
 

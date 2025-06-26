@@ -18,8 +18,6 @@ import { cn } from "@/lib/utils.js";
  * @returns {JSX.Element}
  */
 export const Button = React.forwardRef(({ 
-  variant = "default", 
-  size = "default", 
   className, 
   asChild = false, 
   ...props 

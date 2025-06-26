@@ -35,8 +35,8 @@ import { config } from "./lib/config.js";
 function DebugRouterLogger() {
   const location = useLocation();
   React.useEffect(() => {
-    console.log('[Router Debug] Current pathname:', location.pathname);
-    console.log('[Router Debug] Full location:', location);
+    // console.log('[Router Debug] Current pathname:', location.pathname);
+    // console.log('[Router Debug] Full location:', location);
   }, [location]);
   return null;
 }
@@ -45,8 +45,8 @@ const PlaidLink = () => {
   // TODO: This token must be fetched from your own backend server.
   const linkToken = null; 
 
-  const onSuccess = React.useCallback((public_token, metadata) => {
-    console.log("Plaid success:", public_token, metadata);
+  const onSuccess = React.useCallback(() => {
+    // console.log("Plaid success");
   }, []);
 
   const { open, ready } = usePlaidLink({
@@ -115,9 +115,9 @@ const App = () => {
   const { isLoading } = useAuth0();
   const isTestMode = import.meta.env.VITE_APP_ENV === 'test';
 
-  console.log("[App] Loaded in test mode:", isTestMode);
-  console.log("[App] RulesPage import:", typeof RulesPage);
-  console.log("[App] Full routing table being configured");
+  // console.log("[App] Loaded in test mode:", isTestMode);
+  // console.log("[App] RulesPage import:", typeof RulesPage);
+  // console.log("[App] Full routing table being configured");
 
   if (isLoading && !isTestMode) {
     return (
@@ -176,8 +176,8 @@ const App = () => {
                         path="/rules" 
                         element={
                           (() => {
-                            console.log("[Router Debug] /rules route matched, isTestMode:", isTestMode);
-                            console.log("[Router Debug] About to render RulesPage directly");
+                            // console.log("[Router Debug] /rules route matched, isTestMode:", isTestMode);
+                            // console.log("[Router Debug] About to render RulesPage directly");
                             return <RulesPage />; // Direct mount - no lazy, no Suspense, no conditional guards
                           })()
                         } 
@@ -204,7 +204,7 @@ const App = () => {
                     </Routes>
                   );
                 } catch (err) {
-                  console.error("Error in App routing:", err);
+                  // console.error("Error in App routing:", err);
                   return (
                     <div>
                       <span data-testid="app-routing-error">{err?.message || "Unknown routing error"}</span>

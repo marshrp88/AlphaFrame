@@ -2,13 +2,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import ruleEngine from '../../../src/lib/services/ruleEngine';
 import { RuleSchema } from '@/lib/validation/schemas';
 
-// Mock data for rules and state
-const mockState = {
-  checking_account_balance: 6000,
-  savings_account_balance: 12000,
-  credit_score: 750,
-};
-
 // CLUSTER 2 FIX: Proper transaction data with required fields
 const mockTransaction = {
   id: 'txn_123',

@@ -18,7 +18,7 @@ import './Cashflow.css';
  * Conclusion: Users understand their cash flow and can identify
  * opportunities to improve their financial situation.
  */
-const Cashflow = ({ data, userContext }) => {
+const Cashflow = ({ data }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState('month');
 

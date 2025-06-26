@@ -97,11 +97,9 @@ vi.mock('@/components/ui/badge.jsx', () => ({
 
 describe('FeedbackForm', () => {
   let mockFeedbackUploader;
-  let mockExecutionLogService;
 
   beforeEach(async () => {
     mockFeedbackUploader = (await import('../../../src/lib/services/FeedbackUploader.js')).default;
-    mockExecutionLogService = (await import('../../../src/core/services/ExecutionLogService.js')).default;
 
     vi.clearAllMocks();
 

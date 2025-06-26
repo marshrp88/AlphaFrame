@@ -44,7 +44,7 @@ export function TooltipProvider({ children }) {
  * @param {TooltipProps} props - Component props
  * @returns {JSX.Element} The rendered tooltip component
  */
-export function Tooltip({ children, open, onOpenChange }) {
+export function Tooltip({ children }) {
   return <>{children}</>;
 }
 

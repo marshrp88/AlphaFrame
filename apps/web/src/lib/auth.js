@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useAuthStore } from '../core/store/authStore.js';
 
 export const useAuth = () => {

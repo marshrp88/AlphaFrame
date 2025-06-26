@@ -7,8 +7,12 @@
  * This script provides a quick assessment of the test environment.
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 console.log('🔍 AlphaFrame VX.1 Test Infrastructure Status Check\n');
 

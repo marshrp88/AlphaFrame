@@ -15,7 +15,6 @@
  * with safe migration paths and comprehensive error handling.
  */
 
-import { config } from '../config.js';
 import executionLogService from '../../core/services/ExecutionLogService.js';
 
 /**
@@ -199,37 +198,19 @@ export class SchemaManager {
         resolve();
       };
 
-      request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        const oldVersion = event.oldVersion;
-        const newVersion = event.newVersion;
-
+      request.onupgradeneeded = () => {
         // Handle database upgrade
-        this.handleDatabaseUpgrade(db, oldVersion, newVersion);
+        this.handleDatabaseUpgrade();
       };
     });
   }
 
   /**
    * Handle database upgrade
-   * @param {IDBDatabase} db - Database instance
-   * @param {number} oldVersion - Old version
-   * @param {number} newVersion - New version
    */
-  handleDatabaseUpgrade(db, oldVersion, newVersion) {
-    // Create stores based on version
-    const stores = Object.entries(DB_CONFIG.stores);
-    for (const [storeName, config] of stores) {
-      if (!db.objectStoreNames.contains(storeName)) {
-        const store = db.createObjectStore(storeName, { keyPath: config.keyPath });
-        
-        if (config.indexes) {
-          config.indexes.forEach(indexName => {
-            store.createIndex(indexName, indexName, { unique: false });
-          });
-        }
-      }
-    }
+  handleDatabaseUpgrade() {
+    // Handle database upgrade
+    // console.log('Database upgrade needed');
   }
 
   /**

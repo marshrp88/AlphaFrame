@@ -49,14 +49,9 @@ export function Modal({
   size = 'md',
   closeOnBackdrop = true,
   closeOnEscape = true,
-  className = '',
-  footer,
   showCloseButton = true,
-  ariaLabel,
-  ...props
 }) {
   const [isVisible, setIsVisible] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
   const modalRef = useRef(null);
   const previousActiveElement = useRef(null);
 
@@ -64,7 +59,6 @@ export function Modal({
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
-      setIsAnimating(true);
       // Store the currently focused element
       previousActiveElement.current = document.activeElement;
       
@@ -75,10 +69,8 @@ export function Modal({
         }
       }, 100);
     } else {
-      setIsAnimating(true);
       setTimeout(() => {
         setIsVisible(false);
-        setIsAnimating(false);
         // Restore focus to the previous element
         if (previousActiveElement.current) {
           previousActiveElement.current.focus();
@@ -122,21 +114,6 @@ export function Modal({
   if (!isVisible && !isOpen) {
     return null;
   }
-
-  const modalClasses = [
-    'modal',
-    `modal--${size}`,
-    isAnimating && 'modal--animating',
-    isOpen && 'modal--open',
-    className
-  ].filter(Boolean).join(' ');
-
-  const contentClasses = [
-    'modal__content',
-    `modal__content--${size}`,
-    isAnimating && 'modal__content--animating',
-    isOpen && 'modal__content--open'
-  ].filter(Boolean).join(' ');
 
   const modalContent = (
     <AnimatePresence>
@@ -225,10 +202,7 @@ Modal.propTypes = {
   size: PropTypes.oneOf(['sm', 'md', 'lg', 'xl']),
   closeOnBackdrop: PropTypes.bool,
   closeOnEscape: PropTypes.bool,
-  className: PropTypes.string,
-  footer: PropTypes.node,
-  showCloseButton: PropTypes.bool,
-  ariaLabel: PropTypes.string
+  showCloseButton: PropTypes.bool
 };
 
 // Default props
@@ -236,8 +210,7 @@ Modal.defaultProps = {
   size: 'md',
   closeOnBackdrop: true,
   closeOnEscape: true,
-  showCloseButton: true,
-  className: ''
+  showCloseButton: true
 };
 
 export default Modal; 

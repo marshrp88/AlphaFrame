@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Card } from '../shared/ui/Card.jsx';
 import { Button } from '../shared/ui/Button.jsx';
 import { Badge } from '../shared/ui/badge.jsx';
@@ -47,8 +46,6 @@ const DASHBOARD_MODES = {
 };
 
 const DashboardPicker = ({ selectedMode, onModeChange, className = '' }) => {
-  const [previewMode, setPreviewMode] = useState(null);
-
   const handleModeSelect = (modeId) => {
     onModeChange(modeId);
   };

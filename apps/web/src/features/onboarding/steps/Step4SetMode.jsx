@@ -92,7 +92,7 @@ const DASHBOARD_MODES = [
 /**
  * Dashboard mode selection step component
  */
-const Step4SetMode = ({ onComplete, onSkip, data, isLoading }) => {
+const Step4SetMode = ({ onComplete, data, isLoading }) => {
   const [selectedMode, setSelectedMode] = useState(data?.selectedMode || 'overview');
   const [showPreview, setShowPreview] = useState(false);
 

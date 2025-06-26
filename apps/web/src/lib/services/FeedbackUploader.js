@@ -15,11 +15,10 @@
  * while maintaining complete privacy and zero-knowledge compliance.
  */
 
-import cryptoService from './crypto.js';
-import executionLogService from './ExecutionLogService.js';
-import budgetService from './BudgetService.js';
-import cashFlowService from './CashFlowService.js';
-import portfolioAnalyzer from './PortfolioAnalyzer.js';
+import cryptoService from '../../core/services/CryptoService.js';
+import executionLogService from '../../core/services/ExecutionLogService.js';
+import budgetService from '../../features/pro/services/BudgetService.js';
+import cashFlowService from '../../features/pro/services/CashFlowService.js';
 
 class FeedbackUploader {
   constructor() {
@@ -180,7 +179,6 @@ class FeedbackUploader {
       };
 
     } catch (error) {
-      console.error('Error encrypting snapshot:', error);
       // Fallback to unencrypted if encryption fails
       return {
         encrypted: false,
@@ -262,7 +260,6 @@ class FeedbackUploader {
       };
 
     } catch (error) {
-      console.error('Error generating financial summary:', error);
       return { error: 'Unable to generate financial summary' };
     }
   }
@@ -285,7 +282,6 @@ class FeedbackUploader {
       return preferences;
 
     } catch (error) {
-      console.error('Error collecting UI preferences:', error);
       return { error: 'Unable to collect UI preferences' };
     }
   }
@@ -319,7 +315,6 @@ class FeedbackUploader {
       return metrics;
 
     } catch (error) {
-      console.error('Error collecting performance metrics:', error);
       return { error: 'Unable to collect performance metrics' };
     }
   }
@@ -336,10 +331,9 @@ class FeedbackUploader {
       }
 
       const requiredFields = ['version', 'timestamp', 'category', 'feedback', 'metadata'];
-      return requiredFields.every(field => snapshotData.hasOwnProperty(field));
+      return requiredFields.every(field => Object.hasOwn(snapshotData, field));
 
     } catch (error) {
-      console.error('Error validating snapshot:', error);
       return false;
     }
   }
@@ -360,7 +354,6 @@ class FeedbackUploader {
       };
 
     } catch (error) {
-      console.error('Error calculating snapshot stats:', error);
       return { error: 'Unable to calculate statistics' };
     }
   }

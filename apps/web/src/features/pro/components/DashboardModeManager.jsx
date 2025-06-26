@@ -17,8 +17,6 @@ const DashboardModeManager = ({
     switchMode,
     getCurrentModeConfig,
     getAvailableModes,
-    getCurrentModePreferences,
-    updateModePreferences,
     getModeHistory,
     isModeSwitchAllowed,
     hasRequiredServices

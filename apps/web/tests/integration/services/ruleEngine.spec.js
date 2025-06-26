@@ -3,7 +3,6 @@ import {
   evaluateRule,
   executeRule,
   validateRule,
-  getMatchingRules,
 } from '../../../src/lib/services/ruleEngine.js';
 
 // CLUSTER 2 FIX: Proper transaction data with required fields

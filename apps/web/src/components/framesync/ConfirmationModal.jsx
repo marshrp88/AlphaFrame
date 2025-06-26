@@ -4,7 +4,7 @@
  * Uses shadcn/ui Dialog component
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -76,14 +76,12 @@ const ConfirmationModal = ({ isOpen, action, onConfirm, onCancel }) => {
     if (isOpen && action) {
       runSimulationPreview();
     }
-  }, [isOpen, action]);
+  }, [isOpen, action, runSimulationPreview]);
 
-  const runSimulationPreview = async () => {
+  const runSimulationPreview = useCallback(async () => {
     if (!action) return;
-
     setIsSimulating(true);
     setSimulationError(null);
-
     try {
       const result = await runSimulation(action, financialState);
       setSimulationResult(result);
@@ -93,7 +91,7 @@ const ConfirmationModal = ({ isOpen, action, onConfirm, onCancel }) => {
     } finally {
       setIsSimulating(false);
     }
-  };
+  }, [action, financialState]);
 
   if (!action) return null;
 

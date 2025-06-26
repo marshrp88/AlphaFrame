@@ -19,7 +19,11 @@ vi.mock('@/components/ui/Input', () => ({
   Input: (props) => <input {...props} />
 }));
 vi.mock('@/components/ui/Label', () => ({
-  Label: (props) => <label {...props} />
+  Label: ({ children, htmlFor, ...props }) => (
+    <label htmlFor={htmlFor} {...props}>
+      {children}
+    </label>
+  )
 }));
 vi.mock('@/components/ui/textarea', () => ({
   Textarea: (props) => <textarea {...props} />

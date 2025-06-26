@@ -41,7 +41,6 @@ export function ComponentShowcase() {
   const [selectedDropdown, setSelectedDropdown] = useState(null);
   const [selectedSelect, setSelectedSelect] = useState('');
   const [checkboxState, setCheckboxState] = useState(false);
-  const [activeTab, setActiveTab] = useState('overview');
 
   // Sample data
   const dropdownItems = [
@@ -247,7 +246,6 @@ export function ComponentShowcase() {
         <Tabs
           tabs={tabs}
           defaultTab="overview"
-          onTabChange={setActiveTab}
         />
       </motion.section>
 

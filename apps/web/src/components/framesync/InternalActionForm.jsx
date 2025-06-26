@@ -10,7 +10,6 @@ import { Input } from '@/shared/ui/Input';
 import { Label } from '@/shared/ui/Label';
 import Textarea from '@/shared/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
-import { useAppStore } from '@/core/store/useAppStore';
 
 /**
  * InternalActionForm Component Props
@@ -27,7 +26,6 @@ import { useAppStore } from '@/core/store/useAppStore';
 function InternalActionFormComponent({ initialPayload, onChange }) {
   // Always call hooks first, before any conditional logic
   const { toast } = useToast();
-  const goals = useAppStore(state => state.goals);
 
   // Defensive: ensure initialPayload is always an object
   const safeInitialPayload = initialPayload || {};
@@ -113,7 +111,6 @@ function InternalActionFormComponent({ initialPayload, onChange }) {
       </div>
     );
   } catch (err) {
-    console.error("Error in InternalActionForm:", err);
     return (
       <div>
         <span data-testid="internal-form-error">{err?.message || "Unknown error in InternalActionForm"}</span>

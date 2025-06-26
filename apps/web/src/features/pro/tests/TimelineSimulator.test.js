@@ -267,13 +267,6 @@ describe('TimelineSimulator', () => {
 
       const simulation = await timelineSimulator.simulateScenario(scenarioId);
 
-      // Debug: Log the actual event dates and months
-      console.log('Event 1:', event1.date, 'Month:', new Date(event1.date).getMonth());
-      console.log('Event 2:', event2.date, 'Month:', new Date(event2.date).getMonth());
-      console.log('Simulation start:', simulation.startDate, 'Month:', new Date(simulation.startDate).getMonth());
-      console.log('Simulation end:', simulation.endDate, 'Month:', new Date(simulation.endDate).getMonth());
-      simulation.events.forEach((e, i) => console.log(`Sim event ${i}:`, e.date, 'Month:', new Date(e.date).getMonth()));
-
       expect(simulation.events.length).toBeGreaterThanOrEqual(2);
       expect(simulation.summary.totalIncome).toBeGreaterThan(0);
       expect(simulation.summary.totalExpenses).toBeGreaterThan(0);

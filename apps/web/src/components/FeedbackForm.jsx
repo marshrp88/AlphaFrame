@@ -153,7 +153,6 @@ const FeedbackForm = () => {
       });
 
     } catch (error) {
-      console.error('Error generating feedback snapshot:', error);
       alert('Error generating snapshot. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -171,7 +170,6 @@ const FeedbackForm = () => {
       });
       alert('Snapshot exported successfully!');
     } catch (error) {
-      console.error('Error exporting snapshot:', error);
       alert('Error exporting snapshot. Please try again.');
     }
   };
@@ -188,7 +186,6 @@ const FeedbackForm = () => {
       });
       alert('Snapshot data copied to clipboard!');
     } catch (error) {
-      console.error('Error copying to clipboard:', error);
       alert('Error copying to clipboard. Please try again.');
     }
   };
@@ -242,6 +239,13 @@ const FeedbackForm = () => {
                       : getCategoryColor(category.color)
                   }`}
                   onClick={() => setSelectedCategory(category.id)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      setSelectedCategory(category.id);
+                    }
+                  }}
                 >
                   <div className="flex items-center space-x-3">
                     <span className="text-2xl">{category.icon}</span>
@@ -412,7 +416,7 @@ const FeedbackForm = () => {
             <p className="text-sm text-blue-700">
               Your feedback snapshot is encrypted and contains no personally identifiable information. 
               All data is processed locally and never automatically uploaded. You maintain full control 
-              over what data is included and how it's shared.
+              over what data is included and how it&apos;s shared.
             </p>
           </div>
         </div>

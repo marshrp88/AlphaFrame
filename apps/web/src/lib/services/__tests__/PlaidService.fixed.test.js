@@ -11,28 +11,25 @@
  * - CLUSTER 2 FIXES: Fixed success flag issues and proper mock setup
  */
 
-// CLUSTER 2 FIX: Mock Plaid SDK and CryptoService before imports
-const mockPlaidClient = {
-  linkTokenCreate: vi.fn(),
-  itemPublicTokenExchange: vi.fn(),
-  accountsBalanceGet: vi.fn(),
-  transactionsGet: vi.fn()
-};
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import * as CryptoService from '../../../core/services/CryptoService.js';
 
-vi.mock('plaid', () => ({
-  Configuration: vi.fn(),
-  PlaidApi: vi.fn(() => mockPlaidClient),
-  PlaidEnvironments: {
-    sandbox: 'https://sandbox.plaid.com'
-  }
-}));
+vi.mock('plaid', () => {
+  // Return a factory for PlaidApi that always returns the current global.testUtils.mockPlaidClient
+  return {
+    Configuration: vi.fn(),
+    PlaidApi: vi.fn(() => (global.testUtils && global.testUtils.mockPlaidClient) || {}),
+    PlaidEnvironments: {
+      sandbox: 'https://sandbox.plaid.com'
+    }
+  };
+});
 
-vi.mock('../../../../core/services/CryptoService.js', () => ({
+vi.mock('../../../core/services/CryptoService.js', () => ({
   encrypt: vi.fn().mockResolvedValue('encrypted_token'),
   decrypt: vi.fn().mockResolvedValue('decrypted_token')
 }));
 
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { PlaidService } from '../PlaidService.js';
 
 describe('PlaidService - Fixed', () => {
@@ -41,6 +38,17 @@ describe('PlaidService - Fixed', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    // Set up Plaid client mock for each test
+    if (!global.testUtils) global.testUtils = {};
+    global.testUtils.mockPlaidClient = {
+      linkTokenCreate: vi.fn(),
+      itemPublicTokenExchange: vi.fn(),
+      accountsBalanceGet: vi.fn(),
+      transactionsGet: vi.fn(),
+    };
+    // Set up CryptoService mocks using ESM import
+    CryptoService.encrypt = vi.fn().mockResolvedValue('encrypted_token');
+    CryptoService.decrypt = vi.fn().mockResolvedValue('decrypted_token');
 
     const createStorageMock = () => {
       let store = {};
@@ -58,8 +66,8 @@ describe('PlaidService - Fixed', () => {
     vi.stubEnv('VITE_PLAID_SECRET', 'test_secret');
     vi.stubEnv('VITE_PLAID_ENV', 'sandbox');
 
+    // Instantiate PlaidService after all mocks are set
     plaidService = new PlaidService();
-    plaidService.client = mockPlaidClient; // Manually assign the mocked client
   });
 
   afterEach(() => {
@@ -72,7 +80,6 @@ describe('PlaidService - Fixed', () => {
     });
 
     it('should support different environments', () => {
-      // The service doesn't expose environment property, so just check client exists
       expect(plaidService.client).toBeDefined();
     });
   });
@@ -228,7 +235,7 @@ describe('PlaidService - Fixed', () => {
     it('should load stored access token', async () => {
       // CLUSTER 2 FIX: Mock proper localStorage behavior
       mockStorage.getItem.mockReturnValue('encrypted_token');
-
+      // Explicitly mock decrypt to resolve to 'decrypted_token'
       const result = await plaidService.loadStoredAccessToken();
       // CLUSTER 2 FIX: loadStoredAccessToken returns boolean, not object with success property
       expect(result).toBe(true);

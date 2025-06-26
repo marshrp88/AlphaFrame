@@ -93,21 +93,21 @@ class BudgetService {
 
     // Distribute essential budget across essential categories
     const essentialCategories = Object.entries(this.categories)
-      .filter(([_, category]) => category.type === 'essential');
+      .filter(([, category]) => category.type === 'essential');
     
     const essentialPerCategory = essentialBudget / essentialCategories.length;
 
-    essentialCategories.forEach(([key, category]) => {
+    essentialCategories.forEach(([key]) => {
       this.categories[key].monthlyCap = essentialPerCategory;
     });
 
     // Distribute discretionary budget
     const discretionaryCategories = Object.entries(this.categories)
-      .filter(([_, category]) => category.type === 'discretionary');
+      .filter(([, category]) => category.type === 'discretionary');
     
     const discretionaryPerCategory = discretionaryBudget / discretionaryCategories.length;
 
-    discretionaryCategories.forEach(([key, category]) => {
+    discretionaryCategories.forEach(([key]) => {
       this.categories[key].monthlyCap = discretionaryPerCategory;
     });
 
@@ -347,7 +347,7 @@ class BudgetService {
     }
 
     // Check individual categories
-    Object.entries(forecast.categoryForecasts).forEach(([key, category]) => {
+    Object.entries(forecast.categoryForecasts).forEach(([, category]) => {
       if (category.status === 'over') {
         forecast.warnings.push({
           type: 'category_overspending',

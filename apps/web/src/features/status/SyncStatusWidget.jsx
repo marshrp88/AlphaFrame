@@ -80,7 +80,6 @@ export const SyncStatusWidget = () => {
       }
       
     } catch (error) {
-      console.error('Failed to load sync status:', error);
       setConnectionHealth('error');
       setError('Unable to check sync status');
     }
@@ -104,7 +103,6 @@ export const SyncStatusWidget = () => {
       }, 2000);
       
     } catch (error) {
-      console.error('Manual sync failed:', error);
       setSyncStatus('failed');
       setError('Sync failed. Please try again.');
       

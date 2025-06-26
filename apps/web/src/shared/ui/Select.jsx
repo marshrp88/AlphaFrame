@@ -21,7 +21,7 @@ export function Select({ value, onValueChange, children, ...props }) {
 }
 
 // Trigger is not needed for native <select>, but export for API compatibility
-export function SelectTrigger({ children }) {
+export function SelectTrigger() {
   // Not used in native select, but kept for compatibility
   return null;
 }

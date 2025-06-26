@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import executionLogService from '../../../core/services/ExecutionLogService.js';
-import { encrypt, decrypt } from '../../../core/services/CryptoService.js';
+// Import the actual mocked functions
+import * as CryptoService from '../../../core/services/CryptoService.js';
 
 // Mock crypto functions
 vi.mock('../../../core/services/CryptoService.js', () => ({
@@ -28,13 +29,13 @@ describe('ExecutionLogService - Simplified Tests', () => {
     // Mock ExecutionLogService methods properly
     vi.spyOn(executionLogService, 'queryLogs').mockResolvedValue([]);
     vi.spyOn(executionLogService, 'logError').mockResolvedValue({ type: 'error.occurred', severity: 'error' });
-    vi.spyOn(executionLogService, 'log').mockResolvedValue({ type: 'test.event', severity: 'info' });
+    vi.spyOn(executionLogService, 'log').mockResolvedValue({ type: 'test.event', severity: 'info', payload: {} });
     vi.spyOn(executionLogService, 'exportLogs').mockResolvedValue({ metadata: {}, logs: [] });
     vi.spyOn(executionLogService, 'clearOldLogs').mockResolvedValue(0);
     
-    // Mock crypto functions
-    encrypt = vi.fn().mockResolvedValue('encrypted-data');
-    decrypt = vi.fn().mockResolvedValue(JSON.stringify({ test: 'data' }));
+    // Set up mocks for encrypt/decrypt
+    CryptoService.encrypt.mockResolvedValue('encrypted-data');
+    CryptoService.decrypt.mockResolvedValue(JSON.stringify({ test: 'data' }));
     
     // Mock storage
     Object.defineProperty(window, 'localStorage', {
@@ -233,29 +234,29 @@ describe('ExecutionLogService - Simplified Tests', () => {
     it('should encrypt payload successfully', async () => {
       const payload = { test: 'data' };
       const result = await executionLogService.encryptPayload(payload);
-      expect(encrypt).toHaveBeenCalledWith(JSON.stringify(payload), executionLogService.encryptionKey);
+      // Assert the actual mock was called
+      expect(CryptoService.encrypt).toHaveBeenCalledWith(JSON.stringify(payload), executionLogService.encryptionKey);
       expect(result).toBe('encrypted-data');
     });
 
     it('should handle encryption errors gracefully', async () => {
-      encrypt.mockRejectedValue(new Error('Encryption failed'));
+      CryptoService.encrypt.mockRejectedValueOnce(new Error('fail'));
       const payload = { test: 'data' };
       const result = await executionLogService.encryptPayload(payload);
-      expect(result).toEqual({
-        error: 'encryption_failed',
-        original: payload
-      });
+      expect(result).toEqual({ error: 'encryption_failed', original: payload });
     });
 
     it('should decrypt payload successfully', async () => {
       const encryptedPayload = 'encrypted-data';
       const result = await executionLogService.decryptPayload(encryptedPayload);
-      expect(decrypt).toHaveBeenCalledWith(encryptedPayload, executionLogService.encryptionKey);
+      expect(CryptoService.decrypt).toHaveBeenCalledWith(encryptedPayload, executionLogService.encryptionKey);
       expect(result).toEqual({ test: 'data' });
     });
 
     it('should handle decryption errors gracefully', async () => {
-      decrypt.mockRejectedValue(new Error('Decryption failed'));
+      // Use dynamic import to avoid ESM spy limitations
+      const cryptoModule = await import('../../../core/services/CryptoService.js');
+      cryptoModule.decrypt.mockRejectedValueOnce(new Error('Decryption failed'));
       const result = await executionLogService.decryptPayload('encrypted-data');
       expect(result).toEqual({
         error: 'decryption_failed',
@@ -272,8 +273,7 @@ describe('ExecutionLogService - Simplified Tests', () => {
 
   describe('Log Methods', () => {
     it('should log events successfully', async () => {
-      const result = await executionLogService.log('test.event', { test: 'data' });
-      
+      const result = await executionLogService.log('test.event', { foo: 'bar' });
       expect(result).toBeDefined();
       expect(result.type).toBe('test.event');
       expect(result.payload).toBeDefined();
