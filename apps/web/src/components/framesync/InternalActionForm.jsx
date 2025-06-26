@@ -25,55 +25,56 @@ import { useAppStore } from '@/core/store/useAppStore';
  * @returns {JSX.Element} The rendered component
  */
 function InternalActionFormComponent({ initialPayload, onChange }) {
+  // Always call hooks first, before any conditional logic
+  const { toast } = useToast();
+  const goals = useAppStore(state => state.goals);
+
+  // Defensive: ensure initialPayload is always an object
+  const safeInitialPayload = initialPayload || {};
+
+  // Defensive: always define formData
+  const [formData, setFormData] = useState({
+    amount: safeInitialPayload.amount || '',
+    memo: safeInitialPayload.memo || '',
+    goalId: safeInitialPayload.goalId || ''
+  });
+
+  /**
+   * Handles changes to form input values
+   * @param {string} field - The field being changed
+   * @param {string|number} value - The new value
+   */
+  const handleChange = useCallback((field, value) => {
+    const newData = {
+      ...formData,
+      [field]: value
+    };
+    setFormData(newData);
+    onChange?.(newData);
+  }, [formData, onChange]);
+
+  /**
+   * Validates the form data
+   * @returns {boolean} Whether the form data is valid
+   */
+  const validateForm = useCallback(() => {
+    if (formData.amount && isNaN(Number(formData.amount))) {
+      toast({
+        title: 'Invalid Amount',
+        description: 'Please enter a valid number for the amount',
+        variant: 'destructive'
+      });
+      return false;
+    }
+    return true;
+  }, [formData.amount, toast]);
+
+  // Validate form data when it changes
+  useEffect(() => {
+    validateForm();
+  }, [validateForm]);
+
   try {
-    const { toast } = useToast();
-    const goals = useAppStore(state => state.goals);
-
-    // Defensive: ensure initialPayload is always an object
-    const safeInitialPayload = initialPayload || {};
-
-    // Defensive: always define formData
-    const [formData, setFormData] = useState({
-      amount: safeInitialPayload.amount || '',
-      memo: safeInitialPayload.memo || '',
-      goalId: safeInitialPayload.goalId || ''
-    });
-
-    /**
-     * Handles changes to form input values
-     * @param {string} field - The field being changed
-     * @param {string|number} value - The new value
-     */
-    const handleChange = useCallback((field, value) => {
-      const newData = {
-        ...formData,
-        [field]: value
-      };
-      setFormData(newData);
-      onChange?.(newData);
-    }, [formData, onChange]);
-
-    /**
-     * Validates the form data
-     * @returns {boolean} Whether the form data is valid
-     */
-    const validateForm = useCallback(() => {
-      if (formData.amount && isNaN(Number(formData.amount))) {
-        toast({
-          title: 'Invalid Amount',
-          description: 'Please enter a valid number for the amount',
-          variant: 'destructive'
-        });
-        return false;
-      }
-      return true;
-    }, [formData.amount, toast]);
-
-    // Validate form data when it changes
-    useEffect(() => {
-      validateForm();
-    }, [validateForm]);
-
     return (
       <div className="space-y-4">
         {/* Debug span to confirm InternalActionForm mounts */}

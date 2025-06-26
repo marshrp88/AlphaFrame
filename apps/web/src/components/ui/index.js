@@ -15,16 +15,16 @@
  */
 
 // Sprint 1 Components
-export { CompositeCard } from './CompositeCard';
-export { PrimaryButton } from './PrimaryButton';
-export { InputField } from './InputField';
+export { default as CompositeCard } from './CompositeCard.jsx';
+export { default as PrimaryButton } from './PrimaryButton.jsx';
+export { default as InputField } from './InputField.jsx';
 
 // Sprint 2 Components
-export { Modal } from './Modal';
-export { Dropdown } from './Dropdown';
-export { Tabs } from './Tabs';
-export { Select } from './Select';
-export { Checkbox } from './Checkbox';
+export { default as Modal } from './Modal.jsx';
+export { default as Dropdown } from './Dropdown.jsx';
+export { default as Tabs } from './Tabs.jsx';
+export { default as Select } from './Select.jsx';
+export { default as Checkbox } from './Checkbox.jsx';
 
 // Design Tokens (for reference)
 export const designTokens = {
@@ -97,14 +97,4 @@ export const designTokens = {
     dropdown: 'var(--z-index-dropdown, 100)',
     modal: 'var(--z-index-modal, 1000)'
   }
-};
-
-// Default exports for convenience
-export { default as CompositeCard } from './CompositeCard';
-export { default as PrimaryButton } from './PrimaryButton';
-export { default as InputField } from './InputField';
-export { default as Modal } from './Modal';
-export { default as Dropdown } from './Dropdown';
-export { default as Tabs } from './Tabs';
-export { default as Select } from './Select';
-export { default as Checkbox } from './Checkbox'; 
+}; 

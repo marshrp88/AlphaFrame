@@ -28,6 +28,16 @@ const PrivateRoute = ({
   fallbackComponent = null,
   redirectTo = '/login'
 }) => {
+  // Always call hooks first, before any conditional logic
+  const {
+    isAuthenticated,
+    isLoading,
+    user,
+    error
+  } = useAuth0();
+
+  const location = useLocation();
+
   // Bypass authentication in test mode
   const isTestMode = import.meta.env.VITE_APP_ENV === 'test';
   
@@ -43,15 +53,6 @@ const PrivateRoute = ({
     console.log('[PrivateRoute] Bypassing authentication for test mode');
     return children;
   }
-
-  const {
-    isAuthenticated,
-    isLoading,
-    user,
-    error
-  } = useAuth0();
-
-  const location = useLocation();
 
   // Show loading state
   if (isLoading) {
@@ -118,7 +119,7 @@ const PrivateRoute = ({
           <div className="text-center">
             <h2 className="text-xl font-semibold text-red-600 mb-2">Access Denied</h2>
             <p className="text-gray-600 mb-2">
-              You don't have the required role to access this page.
+              You don&apos;t have the required role to access this page.
             </p>
             <p className="text-sm text-gray-500">
               Required: {requiredRoles.join(', ')} | 
@@ -143,7 +144,7 @@ const PrivateRoute = ({
           <div className="text-center">
             <h2 className="text-xl font-semibold text-red-600 mb-2">Access Denied</h2>
             <p className="text-gray-600 mb-2">
-              You don't have the required permissions to access this page.
+              You don&apos;t have the required permissions to access this page.
             </p>
             <p className="text-sm text-gray-500">
               Required: {requiredPermissions.join(', ')} | 

@@ -64,7 +64,7 @@ class ReportCenter {
    * @returns {Object} Mode-specific report
    */
   async generateDashboardReport(mode, state) {
-    let report = { mode, summary: {}, details: {} };
+    const report = { mode, summary: {}, details: {} };
     switch (mode) {
       case 'Planner':
         report.summary = { budgets: state.budgets.length, rules: state.rules.length };
