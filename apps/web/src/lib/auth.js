@@ -1,19 +1,16 @@
-import { useState, useEffect } from 'react';
-import { useAuthStore } from '@/lib/store/authStore';
+import { useEffect } from 'react';
+import { useAuthStore } from '../core/store/authStore.js';
 
-/**
- * useAuth hook
- * Provides the user's authentication status and tier ('free' or 'pro').
- * This hook can be used in components to protect routes or show/hide features.
- */
-export function useAuth() {
-  // Get auth state from the store
-  const { isAuthenticated, user } = useAuthStore();
-  // Default to 'free' tier if not specified
-  const tier = user?.tier || 'free';
-  return { isAuthenticated, tier, user };
-}
+export const useAuth = () => {
+  const { isAuthenticated, login, logout, checkAuth } = useAuthStore();
 
-// Notes:
-// - This hook is used for route protection and feature gating.
-// - It is simple and easy to understand for a 10th-grade reader. 
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  return {
+    isAuthenticated,
+    login,
+    logout,
+  };
+};

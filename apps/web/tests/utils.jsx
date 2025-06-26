@@ -10,7 +10,7 @@ export const mockUIComponents = {
   SelectTrigger: vi.fn(({ children }) => <div>{children}</div>),
   SelectValue: vi.fn(({ placeholder }) => <span>{placeholder}</span>),
   SelectContent: vi.fn(({ children }) => <div>{children}</div>),
-  SelectItem: vi.fn(({ children, value }) => <option value={value}>{children}</option>),
+  SelectItem: vi.fn(({ children }) => <option>{children}</option>),
   Input: vi.fn(({ value, onChange, ...props }) => (
     <input value={value} onChange={onChange} {...props} />
   )),

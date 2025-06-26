@@ -29,7 +29,6 @@ const simulatePlaidTransfer = (action, financialState) => {
 const simulateGoalAdjustment = (action, financialState) => {
   const { goalId, adjustment } = action.payload;
   const goal = financialState.getGoal(goalId);
-  const currentProgress = goal.currentAmount / goal.targetAmount * 100;
   const newProgress = Math.min(100, ((goal.currentAmount + adjustment) / goal.targetAmount) * 100);
 
   return {
@@ -56,7 +55,6 @@ export const runSimulation = async (action, financialState) => {
         throw new Error(`Unsupported action type for simulation: ${action.actionType}`);
     }
   } catch (error) {
-    console.error('Simulation failed:', error);
     throw new Error(`Simulation failed: ${error.message}`);
   }
 }; 

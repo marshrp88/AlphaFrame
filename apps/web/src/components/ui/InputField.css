@@ -1,0 +1,258 @@
+/**
+ * InputField.css - AlphaFrame Phase X Sprint 1
+ * 
+ * Purpose: Styles for the InputField component using design tokens
+ * for consistent visual appearance across all AlphaFrame forms.
+ * 
+ * Procedure:
+ * 1. Uses CSS custom properties (design tokens) for all values
+ * 2. Implements responsive design with proper breakpoints
+ * 3. Provides smooth transitions and focus states
+ * 4. Ensures accessibility with proper focus indicators
+ * 
+ * Conclusion: Creates a polished, accessible input component
+ * that maintains visual consistency throughout the application.
+ */
+
+/* Container for the entire input field */
+.input-field__container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs, 0.5rem);
+  width: 100%;
+}
+
+/* Label styling */
+.input-field__label {
+  font-family: var(--font-family-primary, 'Inter', sans-serif);
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--color-gray-700, #374151);
+  line-height: var(--line-height-tight, 1.25);
+  cursor: pointer;
+}
+
+.input-field__required {
+  color: var(--color-red-600, #dc2626);
+  margin-left: var(--spacing-xs, 0.25rem);
+}
+
+/* Input wrapper for prefix/suffix positioning */
+.input-field__wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* Base input styles using design tokens */
+.input-field {
+  /* Layout and sizing */
+  width: 100%;
+  flex: 1;
+  
+  /* Typography */
+  font-family: var(--font-family-primary, 'Inter', sans-serif);
+  font-size: var(--font-size-base, 1rem);
+  line-height: var(--line-height-normal, 1.5);
+  
+  /* Visual styling */
+  background-color: var(--color-white, #ffffff);
+  border: 2px solid var(--color-gray-300, #d1d5db);
+  border-radius: var(--border-radius-md, 0.5rem);
+  color: var(--color-gray-900, #111827);
+  
+  /* Spacing */
+  padding: var(--spacing-sm, 0.75rem) var(--spacing-md, 1rem);
+  
+  /* Transitions */
+  transition: all var(--transition-duration-fast, 0.15s) var(--transition-easing, ease-in-out);
+  
+  /* Accessibility */
+  outline: none;
+}
+
+/* Input size variants */
+.input-field--sm {
+  padding: var(--spacing-xs, 0.5rem) var(--spacing-sm, 0.75rem);
+  font-size: var(--font-size-sm, 0.875rem);
+  min-height: 2rem;
+}
+
+.input-field--md {
+  padding: var(--spacing-sm, 0.75rem) var(--spacing-md, 1rem);
+  font-size: var(--font-size-base, 1rem);
+  min-height: 2.5rem;
+}
+
+.input-field--lg {
+  padding: var(--spacing-md, 1rem) var(--spacing-lg, 1.5rem);
+  font-size: var(--font-size-lg, 1.125rem);
+  min-height: 3rem;
+}
+
+/* Placeholder styling */
+.input-field::placeholder {
+  color: var(--color-gray-500, #6b7280);
+  opacity: 1;
+}
+
+/* Focus state */
+.input-field--focused {
+  border-color: var(--color-primary-500, #3b82f6);
+  box-shadow: 0 0 0 3px var(--color-primary-100, #dbeafe);
+}
+
+/* Error state */
+.input-field--error {
+  border-color: var(--color-red-500, #ef4444);
+  color: var(--color-red-900, #7f1d1d);
+}
+
+.input-field--error:focus {
+  border-color: var(--color-red-500, #ef4444);
+  box-shadow: 0 0 0 3px var(--color-red-100, #fee2e2);
+}
+
+/* Disabled state */
+.input-field--disabled {
+  background-color: var(--color-gray-100, #f3f4f6);
+  color: var(--color-gray-500, #6b7280);
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled, 0.5);
+}
+
+.input-field--disabled::placeholder {
+  color: var(--color-gray-400, #9ca3af);
+}
+
+/* Prefix and suffix styling */
+.input-field__prefix,
+.input-field__suffix {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-gray-500, #6b7280);
+  font-size: var(--font-size-base, 1rem);
+}
+
+.input-field__prefix {
+  padding-left: var(--spacing-md, 1rem);
+  padding-right: var(--spacing-xs, 0.5rem);
+}
+
+.input-field__suffix {
+  padding-right: var(--spacing-md, 1rem);
+  padding-left: var(--spacing-xs, 0.5rem);
+}
+
+/* Adjust input padding when prefix/suffix are present */
+.input-field--has-prefix {
+  padding-left: var(--spacing-xs, 0.5rem);
+}
+
+.input-field--has-suffix {
+  padding-right: var(--spacing-xs, 0.5rem);
+}
+
+/* Helper text styling */
+.input-field__helper {
+  font-family: var(--font-family-primary, 'Inter', sans-serif);
+  font-size: var(--font-size-sm, 0.875rem);
+  line-height: var(--line-height-tight, 1.25);
+  color: var(--color-gray-600, #4b5563);
+  margin-top: var(--spacing-xs, 0.25rem);
+}
+
+.input-field__helper--error {
+  color: var(--color-red-600, #dc2626);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .input-field--lg {
+    padding: var(--spacing-sm, 0.75rem) var(--spacing-md, 1rem);
+    font-size: var(--font-size-base, 1rem);
+    min-height: 2.5rem;
+  }
+  
+  .input-field--md {
+    padding: var(--spacing-xs, 0.5rem) var(--spacing-sm, 0.75rem);
+    font-size: var(--font-size-sm, 0.875rem);
+    min-height: 2rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .input-field__label {
+    color: var(--color-gray-300, #d1d5db);
+  }
+  
+  .input-field {
+    background-color: var(--color-gray-800, #1f2937);
+    border-color: var(--color-gray-600, #4b5563);
+    color: var(--color-gray-100, #f3f4f6);
+  }
+  
+  .input-field::placeholder {
+    color: var(--color-gray-400, #9ca3af);
+  }
+  
+  .input-field--focused {
+    border-color: var(--color-primary-400, #60a5fa);
+    box-shadow: 0 0 0 3px var(--color-primary-900, #1e3a8a);
+  }
+  
+  .input-field--error {
+    border-color: var(--color-red-400, #f87171);
+    color: var(--color-red-100, #fee2e2);
+  }
+  
+  .input-field--error:focus {
+    border-color: var(--color-red-400, #f87171);
+    box-shadow: 0 0 0 3px var(--color-red-900, #7f1d1d);
+  }
+  
+  .input-field--disabled {
+    background-color: var(--color-gray-700, #374151);
+    color: var(--color-gray-400, #9ca3af);
+  }
+  
+  .input-field__prefix,
+  .input-field__suffix {
+    color: var(--color-gray-400, #9ca3af);
+  }
+  
+  .input-field__helper {
+    color: var(--color-gray-400, #9ca3af);
+  }
+  
+  .input-field__helper--error {
+    color: var(--color-red-400, #f87171);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .input-field {
+    border-width: 3px;
+  }
+  
+  .input-field--focused {
+    border-color: var(--color-primary-600, #2563eb);
+    box-shadow: 0 0 0 4px var(--color-primary-200, #bfdbfe);
+  }
+  
+  .input-field--error {
+    border-color: var(--color-red-600, #dc2626);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .input-field {
+    transition: none;
+  }
+} 

@@ -1,96 +1,70 @@
 /**
- * ErrorBoundary Component
+ * ErrorBoundary.jsx - AlphaFrame VX.1 Finalization
  * 
- * A React error boundary component that catches JavaScript errors anywhere in the child
- * component tree and displays a fallback UI instead of crashing the whole app.
+ * Purpose: Global error boundary that catches React errors
+ * and displays user-friendly fallback UI with recovery options.
+ * 
+ * Procedure:
+ * 1. Catch JavaScript errors in component tree
+ * 2. Log errors to Sentry for debugging
+ * 3. Display ErrorBoundaryFallback component
+ * 4. Prevent app crashes and maintain user trust
+ * 
+ * Conclusion: Provides robust error handling and recovery
+ * for production-ready user experience.
  */
 
-import React from 'react';
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { AlertCircle } from 'lucide-react';
+import React from "react";
+import { ErrorBoundaryFallback } from "../shared/components/ErrorBoundaryFallback.jsx";
 
-/**
- * ErrorBoundary Component State
- * @typedef {Object} ErrorBoundaryState
- * @property {boolean} hasError - Whether an error has been caught
- * @property {Error|null} error - The caught error object
- */
-
-/**
- * ErrorBoundary Component Props
- * @typedef {Object} ErrorBoundaryProps
- * @property {React.ReactNode} children - Child components to render
- */
-
-/**
- * ErrorBoundary Component
- * @extends {React.Component<ErrorBoundaryProps, ErrorBoundaryState>}
- */
-export class ErrorBoundary extends React.Component {
+class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { 
+      hasError: false, 
+      error: null, 
+      componentStack: null 
+    };
   }
 
-  /**
-   * Static lifecycle method called when an error is thrown in a descendant component
-   * @param {Error} error - The error that was thrown
-   * @returns {ErrorBoundaryState} New state object
-   */
   static getDerivedStateFromError(error) {
     return { hasError: true, error };
   }
 
-  /**
-   * Lifecycle method called after an error has been thrown
-   * @param {Error} error - The error that was thrown
-   * @param {Object} errorInfo - Additional error information
-   */
   componentDidCatch(error, errorInfo) {
-    // Log error to error reporting service
-    console.error('Error caught by boundary:', error, errorInfo);
+    // Update state with component stack
+    this.setState({ componentStack: errorInfo.componentStack });
+    
+    // Log to Sentry if available
+    if (window.Sentry) {
+      window.Sentry.captureException(error, {
+        contexts: {
+          component: {
+            stack: errorInfo.componentStack
+          }
+        },
+        tags: {
+          errorType: 'react_error_boundary',
+          component: 'ErrorBoundary'
+        }
+      });
+    }
   }
-
-  /**
-   * Handles the refresh button click
-   */
-  handleRefresh = () => {
-    window.location.reload();
-  };
 
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center p-4">
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <div className="flex items-center space-x-2">
-                <AlertCircle className="h-6 w-6 text-red-500" />
-                <CardTitle>Something went wrong</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-muted-foreground">
-                We apologize for the inconvenience. An error has occurred in the application.
-              </p>
-              <div className="bg-muted p-4 rounded-md">
-                <p className="text-sm font-mono text-muted-foreground">
-                  {this.state.error?.message || 'Unknown error'}
-                </p>
-              </div>
-              <Button 
-                onClick={this.handleRefresh}
-                className="w-full"
-              >
-                Refresh Page
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+        <ErrorBoundaryFallback
+          error={this.state.error}
+          resetError={() => this.setState({ hasError: false, error: null, componentStack: null })}
+          componentStack={this.state.componentStack}
+        />
       );
     }
 
     return this.props.children;
   }
-} 
+}
+
+export default ErrorBoundary;
+export { ErrorBoundary }; 

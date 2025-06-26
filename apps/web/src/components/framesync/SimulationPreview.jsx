@@ -4,7 +4,7 @@
  * This helps users understand the potential outcomes of their actions
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Loader2 } from 'lucide-react';
@@ -28,17 +28,10 @@ function SimulationPreview({ actionType, payload, currentState }) {
   const [simulationResult, setSimulationResult] = useState(null);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (actionType && payload) {
-      runSimulationPreview();
-    }
-  }, [actionType, payload]);
-
-  const runSimulationPreview = async () => {
+  const runSimulationPreview = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
-      
       const result = await runSimulation(actionType, payload, currentState);
       setSimulationResult(result);
     } catch (err) {
@@ -46,14 +39,20 @@ function SimulationPreview({ actionType, payload, currentState }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [actionType, payload, currentState]);
+
+  useEffect(() => {
+    if (actionType && payload) {
+      runSimulationPreview();
+    }
+  }, [actionType, payload, runSimulationPreview]);
 
   if (!actionType || !payload) {
     return null;
   }
 
   return (
-    <Card className="mt-4">
+    <Card className="mt-4" data-testid="simulation-preview">
       <CardHeader>
         <CardTitle className="text-lg">Simulation Preview</CardTitle>
       </CardHeader>
@@ -104,4 +103,5 @@ function SimulationPreview({ actionType, payload, currentState }) {
   );
 }
 
-export default SimulationPreview; 
+export default SimulationPreview;
+export { SimulationPreview }; 

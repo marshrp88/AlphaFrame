@@ -1,0 +1,143 @@
+/**
+ * ProHeader.css
+ * 
+ * Purpose: Styles for the AlphaPro header component
+ * 
+ * Procedure:
+ * - Implements header layout with navigation
+ * - Supports different modes and responsive design
+ * - Includes accessibility features and focus management
+ * 
+ * Conclusion: Provides consistent header appearance
+ */
+
+.pro-header {
+  background: var(--color-header-background, #ffffff);
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+  padding: var(--spacing-md, 1rem);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.pro-header__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: var(--max-width, 1200px);
+  margin: 0 auto;
+  gap: var(--spacing-md, 1rem);
+}
+
+.pro-header__brand {
+  flex-shrink: 0;
+}
+
+.pro-header__logo {
+  text-decoration: none;
+  color: var(--color-primary, #2563eb);
+  font-weight: 700;
+  font-size: 1.25rem;
+  transition: color 0.2s ease-in-out;
+}
+
+.pro-header__logo:hover {
+  color: var(--color-secondary, #1e40af);
+}
+
+.pro-header__title {
+  flex: 1;
+  text-align: center;
+}
+
+.pro-header__title-text {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text, #111827);
+}
+
+.pro-header__nav {
+  flex-shrink: 0;
+}
+
+.pro-header__nav-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: var(--spacing-md, 1rem);
+}
+
+.pro-header__nav-link {
+  text-decoration: none;
+  color: var(--color-text-secondary, #6b7280);
+  font-weight: 500;
+  padding: var(--spacing-sm, 0.5rem);
+  border-radius: var(--border-radius-sm, 4px);
+  transition: all 0.2s ease-in-out;
+}
+
+.pro-header__nav-link:hover {
+  color: var(--color-text, #111827);
+  background: var(--color-button-hover, #f3f4f6);
+}
+
+.pro-header__nav-link:focus {
+  outline: 2px solid var(--color-focus, #007acc);
+  outline-offset: 2px;
+}
+
+/* Mode variants */
+.pro-header--planner {
+  --color-primary: #2563eb;
+  --color-secondary: #1e40af;
+}
+
+.pro-header--investor {
+  --color-primary: #059669;
+  --color-secondary: #047857;
+}
+
+.pro-header--minimalist {
+  --color-primary: #6b7280;
+  --color-secondary: #4b5563;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .pro-header {
+    --color-header-background: #1f2937;
+    --color-text: #f9fafb;
+    --color-text-secondary: #d1d5db;
+    --color-border: #4b5563;
+    --color-button-hover: #374151;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .pro-header__content {
+    flex-direction: column;
+    gap: var(--spacing-sm, 0.5rem);
+  }
+  
+  .pro-header__title-text {
+    font-size: 1.25rem;
+  }
+  
+  .pro-header__nav-list {
+    gap: var(--spacing-sm, 0.5rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .pro-header {
+    padding: var(--spacing-sm, 0.5rem);
+  }
+  
+  .pro-header__nav-list {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+} 

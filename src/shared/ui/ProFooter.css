@@ -1,0 +1,129 @@
+/**
+ * ProFooter.css
+ * 
+ * Purpose: Styles for the AlphaPro footer component
+ * 
+ * Procedure:
+ * - Implements footer layout with status and actions
+ * - Supports different modes and responsive design
+ * - Includes accessibility features
+ * 
+ * Conclusion: Provides consistent footer appearance
+ */
+
+.pro-footer {
+  background: var(--color-footer-background, #f9fafb);
+  border-top: 1px solid var(--color-border, #e5e7eb);
+  padding: var(--spacing-md, 1rem);
+  margin-top: auto;
+}
+
+.pro-footer__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: var(--max-width, 1200px);
+  margin: 0 auto;
+  gap: var(--spacing-md, 1rem);
+}
+
+.pro-footer__status {
+  flex: 1;
+}
+
+.pro-footer__status-text {
+  color: var(--color-text-secondary, #6b7280);
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+.pro-footer__actions {
+  display: flex;
+  gap: var(--spacing-sm, 0.5rem);
+  flex-shrink: 0;
+}
+
+.pro-footer__action-btn {
+  background: var(--color-button-background, #ffffff);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: var(--border-radius-sm, 4px);
+  padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #6b7280);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-family: inherit;
+}
+
+.pro-footer__action-btn:hover {
+  background: var(--color-button-hover, #f3f4f6);
+  color: var(--color-text, #111827);
+  border-color: var(--color-border-hover, #d1d5db);
+}
+
+.pro-footer__action-btn:focus {
+  outline: 2px solid var(--color-focus, #007acc);
+  outline-offset: 2px;
+}
+
+.pro-footer__action-btn:active {
+  transform: translateY(1px);
+}
+
+/* Mode variants */
+.pro-footer--planner {
+  --color-primary: #2563eb;
+  --color-secondary: #1e40af;
+}
+
+.pro-footer--investor {
+  --color-primary: #059669;
+  --color-secondary: #047857;
+}
+
+.pro-footer--minimalist {
+  --color-primary: #6b7280;
+  --color-secondary: #4b5563;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .pro-footer {
+    --color-footer-background: #1f2937;
+    --color-text: #f9fafb;
+    --color-text-secondary: #d1d5db;
+    --color-border: #4b5563;
+    --color-button-background: #374151;
+    --color-button-hover: #4b5563;
+    --color-border-hover: #6b7280;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .pro-footer__content {
+    flex-direction: column;
+    gap: var(--spacing-sm, 0.5rem);
+    text-align: center;
+  }
+  
+  .pro-footer__actions {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .pro-footer {
+    padding: var(--spacing-sm, 0.5rem);
+  }
+  
+  .pro-footer__actions {
+    flex-wrap: wrap;
+    gap: var(--spacing-xs, 0.25rem);
+  }
+  
+  .pro-footer__action-btn {
+    font-size: 0.75rem;
+    padding: var(--spacing-xs, 0.25rem);
+  }
+} 

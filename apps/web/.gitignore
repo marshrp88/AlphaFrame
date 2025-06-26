@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Environment files
+.env*
+!.env.example
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -22,3 +26,30 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files
+.env*
+!.env.example
+
+# Environment files
+.env*
+!.env.example
+
+# Ignore ESM files that break ESLint parsing
+run-comprehensive-validation.js
+src/components/Button.jsx
+src/components/Button.test.jsx
+src/core/services/ExecutionLogService.js
+src/features/pro/tests/DashboardModeManager.test.jsx
+src/features/pro/tests/ExecutionLogService.test.js
+src/features/pro/tests/FeedbackModule.test.jsx
+src/lib/services/ExecutionController.js
+src/lib/services/PermissionEnforcer.js
+src/lib/services/TriggerDispatcher.js
+src/pages/Home.jsx
+src/setupTests.js
+src/shared/ui/CardSection.jsx
+src/shared/ui/Icon.jsx
+src/shared/ui/ProFooter.jsx
+src/shared/ui/ProHeader.jsx
+src/shared/ui/ProPageLayout.jsx

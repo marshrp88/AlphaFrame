@@ -1,116 +1,128 @@
-// logStore.js
-// ActionLogLayer - A Zustand store for managing FrameSync action logs
-// Part of FrameSync - the execution and automation layer of AlphaFrame
+/**
+ * LogStore - Zustand store for managing action logs and execution history
+ * 
+ * Purpose: Centralized state management for FrameSync action execution logs,
+ * providing a persistent record of all rule executions and their outcomes.
+ * 
+ * Procedure:
+ * 1. Store action execution logs with timestamps and metadata
+ * 2. Provide methods to add, query, and clear logs
+ * 3. Maintain execution history for audit and debugging
+ * 4. Support filtering and searching through logs
+ * 
+ * Conclusion: Essential store for tracking FrameSync rule execution
+ * and providing transparency into automated financial actions.
+ */
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 /**
- * Action Log Entry Type
+ * Action Log Entry Structure
  * @typedef {Object} ActionLogEntry
  * @property {string} id - Unique identifier for the log entry
- * @property {string} actionType - Type of action executed
- * @property {Object} payload - Action configuration
- * @property {string} status - Current status of the action
- * @property {number} timestamp - Unix timestamp of when the action was executed
- * @property {Object} [result] - Result of the action execution
- * @property {string} [error] - Error message if the action failed
+ * @property {string} ruleId - ID of the rule that was executed
+ * @property {string} actionType - Type of action (PLAID_TRANSFER, WEBHOOK, etc.)
+ * @property {Object} payload - Action payload data
+ * @property {string} status - Execution status (success, failed, pending)
+ * @property {string} timestamp - ISO timestamp of execution
+ * @property {string} [error] - Error message if execution failed
+ * @property {Object} [result] - Execution result data
  */
 
 /**
- * Log Store State Type
+ * LogStore State Interface
  * @typedef {Object} LogStoreState
  * @property {ActionLogEntry[]} actionLog - Array of action log entries
- * @property {Function} addLogEntry - Function to add a new log entry
- * @property {Function} updateLogEntry - Function to update an existing log entry
- * @property {Function} clearLog - Function to clear the action log
+ * @property {Function} addLogEntry - Add a new log entry
+ * @property {Function} clearLogs - Clear all logs
+ * @property {Function} getLogsByRule - Get logs for a specific rule
+ * @property {Function} getLogsByStatus - Get logs by execution status
+ * @property {Function} getRecentLogs - Get recent logs with limit
  */
 
-/**
- * Creates a new log entry
- * @param {string} actionType - Type of action executed
- * @param {Object} payload - Action configuration
- * @returns {ActionLogEntry} The created log entry
- */
-const createLogEntry = (actionType, payload) => ({
-  id: crypto.randomUUID(),
-  actionType,
-  payload,
-  status: 'pending',
-  timestamp: Date.now()
-});
-
-/**
- * Log Store
- * Manages the action log state and provides methods for log manipulation
- */
 export const useLogStore = create(
   persist(
     (set, get) => ({
+      // Action log entries
       actionLog: [],
 
       /**
-       * Adds a new entry to the action log
-       * @param {string} actionType - Type of action executed
-       * @param {Object} payload - Action configuration
-       * @returns {string} The ID of the created log entry
+       * Add a new action log entry
+       * @param {ActionLogEntry} entry - The log entry to add
        */
-      addLogEntry: (actionType, payload) => {
-        const entry = createLogEntry(actionType, payload);
-        set(state => ({
-          actionLog: [entry, ...state.actionLog]
+      addLogEntry: (entry) => {
+        const newEntry = {
+          id: `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          timestamp: new Date().toISOString(),
+          ...entry
+        };
+
+        set((state) => ({
+          actionLog: [newEntry, ...state.actionLog]
         }));
-        return entry.id;
+
+        // Keep only last 1000 entries to prevent memory issues
+        const currentLogs = get().actionLog;
+        if (currentLogs.length > 1000) {
+          set({ actionLog: currentLogs.slice(0, 1000) });
+        }
       },
 
       /**
-       * Updates an existing log entry
-       * @param {string} id - ID of the log entry to update
-       * @param {Object} updates - Updates to apply to the entry
-       * @returns {boolean} Whether the update was successful
+       * Clear all action logs
        */
-      updateLogEntry: (id, updates) => {
-        set(state => ({
-          actionLog: state.actionLog.map(entry =>
-            entry.id === id
-              ? { ...entry, ...updates }
-              : entry
-          )
-        }));
-        return true;
-      },
-
-      /**
-       * Clears all entries from the action log
-       * @returns {void}
-       */
-      clearLog: () => {
+      clearLogs: () => {
         set({ actionLog: [] });
       },
 
       /**
-       * Gets the most recent log entries
-       * @param {number} [limit=10] - Maximum number of entries to return
-       * @returns {ActionLogEntry[]} Array of recent log entries
+       * Get logs for a specific rule
+       * @param {string} ruleId - The rule ID to filter by
+       * @returns {ActionLogEntry[]} Filtered log entries
        */
-      getRecentEntries: (limit = 10) => {
-        return get().actionLog.slice(0, limit);
+      getLogsByRule: (ruleId) => {
+        const { actionLog } = get();
+        return actionLog.filter(entry => entry.ruleId === ruleId);
       },
 
       /**
-       * Gets log entries for a specific action type
-       * @param {string} actionType - Type of action to filter by
-       * @returns {ActionLogEntry[]} Array of filtered log entries
+       * Get logs by execution status
+       * @param {string} status - The status to filter by
+       * @returns {ActionLogEntry[]} Filtered log entries
        */
-      getEntriesByType: (actionType) => {
-        return get().actionLog.filter(entry => entry.actionType === actionType);
+      getLogsByStatus: (status) => {
+        const { actionLog } = get();
+        return actionLog.filter(entry => entry.status === status);
+      },
+
+      /**
+       * Get recent logs with optional limit
+       * @param {number} limit - Maximum number of logs to return
+       * @returns {ActionLogEntry[]} Recent log entries
+       */
+      getRecentLogs: (limit = 50) => {
+        const { actionLog } = get();
+        return actionLog.slice(0, limit);
+      },
+
+      /**
+       * Get logs within a date range
+       * @param {Date} startDate - Start date for filtering
+       * @param {Date} endDate - End date for filtering
+       * @returns {ActionLogEntry[]} Filtered log entries
+       */
+      getLogsByDateRange: (startDate, endDate) => {
+        const { actionLog } = get();
+        return actionLog.filter(entry => {
+          const entryDate = new Date(entry.timestamp);
+          return entryDate >= startDate && entryDate <= endDate;
+        });
       }
     }),
     {
-      name: 'action-log',
-      partialize: (state) => ({ actionLog: state.actionLog })
+      name: 'alphaframe-action-logs',
+      version: 1
     }
   )
-);
-
-// Use this for storing and managing action logs. 
+); 

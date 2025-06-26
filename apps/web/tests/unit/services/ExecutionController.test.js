@@ -8,17 +8,17 @@ vi.mock('@/lib/services/PermissionEnforcer', () => ({
 }));
 
 // Mock useUIStore to provide showPasswordPrompt
-vi.mock('@/lib/store/uiStore', () => ({
+vi.mock('@/core/store/uiStore', () => ({
   useUIStore: {
-    getState: () => ({
+    getState: vi.fn(() => ({
       showPasswordPrompt: vi.fn(({ onConfirm }) => onConfirm('mock-password')),
       isSandboxMode: false
-    })
+    }))
   }
 }));
 
-// Mock SecureVault to prevent vault locked errors
-vi.mock('@/lib/services/secureVault', () => ({
+// Mock SecureVault to prevent vault locked errors - CLUSTER 4 FIX: Correct import path
+vi.mock('@/core/services/SecureVault', () => ({
   isUnlocked: vi.fn(() => true),
   get: vi.fn(() => ({ token: 'mock-plaid-token' }))
 }));

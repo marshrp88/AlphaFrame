@@ -6,11 +6,10 @@
  */
 
 import React, { memo, useCallback, useState, useEffect } from 'react';
-import { Input } from '@/components/ui/Input';
-import { Label } from '@/components/ui/Label';
-import Textarea from '@/components/ui/textarea';
+import { Input } from '@/shared/ui/Input';
+import { Label } from '@/shared/ui/Label';
+import Textarea from '@/shared/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
-import { useAppStore } from '@/store/useAppStore';
 
 /**
  * InternalActionForm Component Props
@@ -24,15 +23,18 @@ import { useAppStore } from '@/store/useAppStore';
  * @param {InternalActionFormProps} props - Component props
  * @returns {JSX.Element} The rendered component
  */
-function InternalActionFormComponent({ initialPayload = {}, onChange }) {
+function InternalActionFormComponent({ initialPayload, onChange }) {
+  // Always call hooks first, before any conditional logic
   const { toast } = useToast();
-  // Optimize Zustand selector to only get goals
-  const goals = useAppStore(state => state.goals);
-  
+
+  // Defensive: ensure initialPayload is always an object
+  const safeInitialPayload = initialPayload || {};
+
+  // Defensive: always define formData
   const [formData, setFormData] = useState({
-    amount: initialPayload.amount || '',
-    memo: initialPayload.memo || '',
-    goalId: initialPayload.goalId || ''
+    amount: safeInitialPayload.amount || '',
+    memo: safeInitialPayload.memo || '',
+    goalId: safeInitialPayload.goalId || ''
   });
 
   /**
@@ -70,40 +72,52 @@ function InternalActionFormComponent({ initialPayload = {}, onChange }) {
     validateForm();
   }, [validateForm]);
 
-  return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="amount">Amount</Label>
-        <Input
-          id="amount"
-          type="number"
-          value={formData.amount}
-          onChange={(e) => handleChange('amount', e.target.value)}
-          placeholder="Enter amount"
-        />
-      </div>
+  try {
+    return (
+      <div className="space-y-4">
+        {/* Debug span to confirm InternalActionForm mounts */}
+        <span data-testid="internal-form-debug">InternalActionForm mounted</span>
+        <div className="space-y-2">
+          <Label htmlFor="amount">Amount</Label>
+          <Input
+            id="amount"
+            type="number"
+            value={formData.amount}
+            onChange={(e) => handleChange('amount', e.target.value)}
+            placeholder="Enter amount"
+          />
+        </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="memo">Memo</Label>
-        <Textarea
-          id="memo"
-          value={formData.memo}
-          onChange={(e) => handleChange('memo', e.target.value)}
-          placeholder="Enter memo text"
-        />
-      </div>
+        <div className="space-y-2">
+          <Label htmlFor="memo">Memo</Label>
+          <Textarea
+            id="memo"
+            data-testid="memo-text"
+            value={formData.memo}
+            onChange={(e) => handleChange('memo', e.target.value)}
+            placeholder="Enter memo text"
+          />
+        </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="goalId">Goal ID</Label>
-        <Input
-          id="goalId"
-          value={formData.goalId}
-          onChange={(e) => handleChange('goalId', e.target.value)}
-          placeholder="Enter goal ID"
-        />
+        <div className="space-y-2">
+          <Label htmlFor="goalId">Goal ID</Label>
+          <Input
+            id="goalId"
+            value={formData.goalId}
+            onChange={(e) => handleChange('goalId', e.target.value)}
+            placeholder="Enter goal ID"
+          />
+        </div>
       </div>
-    </div>
-  );
+    );
+  } catch (err) {
+    return (
+      <div>
+        <span data-testid="internal-form-error">{err?.message || "Unknown error in InternalActionForm"}</span>
+        <pre>{err?.stack}</pre>
+      </div>
+    );
+  }
 }
 
 // Export memoized component

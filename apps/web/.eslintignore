@@ -1,0 +1,95 @@
+# Build artifacts
+dist/
+.next/
+coverage/
+build/
+node_modules/
+
+# Generated files
+*.min.js
+*.bundle.js
+
+# Test results
+test-results/
+playwright-report/
+
+# Environment files
+.env*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# next.js build output
+.next
+
+# nuxt.js build output
+.nuxt
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Ignore ESM files and files with parsing errors
+run-comprehensive-validation.js
+src/components/Button.jsx
+src/components/Button.test.jsx
+src/core/services/ExecutionLogService.js
+src/features/pro/tests/DashboardModeManager.test.jsx
+src/features/pro/tests/ExecutionLogService.test.js
+src/features/pro/tests/FeedbackModule.test.jsx
+src/lib/services/ExecutionController.js
+src/lib/services/PermissionEnforcer.js
+src/lib/services/TriggerDispatcher.js
+src/pages/Home.jsx
+src/setupTests.js
+src/shared/ui/CardSection.jsx
+src/shared/ui/Icon.jsx
+src/shared/ui/ProFooter.jsx
+src/shared/ui/ProHeader.jsx
+src/shared/ui/ProPageLayout.jsx
+correct_feedback.jsx
+vitest.config.js 

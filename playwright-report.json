@@ -1,0 +1,298 @@
+{
+  "config": {
+    "rootDir": "C:/Users/marsh/Desktop/AlphaFrame",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Users/marsh/Desktop/AlphaFrame/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/marsh/Desktop/AlphaFrame",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.53.0",
+    "workers": 6,
+    "webServer": null
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "Error: Cannot find module 'C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\features\\core\\store\\dashboardModeStore.js' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\features\\pro\\tests\\DashboardModeManager.test.jsx",
+      "stack": "Error: Cannot find module 'C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\features\\core\\store\\dashboardModeStore.js' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\features\\pro\\tests\\DashboardModeManager.test.jsx"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "Error: Cannot find module 'C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\features\\core\\services\\ExecutionLogService.js' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\features\\pro\\tests\\ExecutionLogService.test.js",
+      "stack": "Error: Cannot find module 'C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\features\\core\\services\\ExecutionLogService.js' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\features\\pro\\tests\\ExecutionLogService.test.js"
+    },
+    {
+      "message": "Error: Cannot find package '@/core' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\features\\pro\\tests\\FeedbackModule.test.jsx",
+      "stack": "Error: Cannot find package '@/core' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\features\\pro\\tests\\FeedbackModule.test.jsx"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "Error: Cannot find package '@/lib' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\components\\framesync\\RuleBinderRoot.jsx",
+      "stack": "Error: Cannot find package '@/lib' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\components\\framesync\\RuleBinderRoot.jsx"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "Error: Cannot find package '@/lib' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\components\\framesync\\RuleBinderRoot.jsx",
+      "stack": "Error: Cannot find package '@/lib' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\components\\framesync\\RuleBinderRoot.jsx"
+    },
+    {
+      "message": "Error: Cannot find package '@/components' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\components\\Button.spec.jsx",
+      "stack": "Error: Cannot find package '@/components' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\components\\Button.spec.jsx"
+    },
+    {
+      "message": "Error: Cannot find package '@/components' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\components\\Button.test.jsx",
+      "stack": "Error: Cannot find package '@/components' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\components\\Button.test.jsx"
+    },
+    {
+      "message": "Error: Cannot find package '@/components' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\components\\framesync\\InternalActionForm.spec.jsx",
+      "stack": "Error: Cannot find package '@/components' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\components\\framesync\\InternalActionForm.spec.jsx"
+    },
+    {
+      "message": "Error: Cannot find package '@/components' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\components\\framesync\\PlaidActionForm.spec.jsx",
+      "stack": "Error: Cannot find package '@/components' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\components\\framesync\\PlaidActionForm.spec.jsx"
+    },
+    {
+      "message": "Error: Cannot find package '@/components' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\components\\framesync\\WebhookActionForm.spec.jsx",
+      "stack": "Error: Cannot find package '@/components' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\components\\framesync\\WebhookActionForm.spec.jsx"
+    },
+    {
+      "message": "Error: Cannot find package '@/lib' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\integration\\services\\ConfirmationModal.spec.js",
+      "stack": "Error: Cannot find package '@/lib' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\integration\\services\\ConfirmationModal.spec.js"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "Error: Cannot find package '@/core' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\integration\\services\\ExecutionController.spec.js",
+      "stack": "Error: Cannot find package '@/core' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\integration\\services\\ExecutionController.spec.js"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "Error: Cannot find package '@/lib' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\integration\\services\\TriggerDispatcher.spec.js",
+      "stack": "Error: Cannot find package '@/lib' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\integration\\services\\TriggerDispatcher.spec.js"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "Error: Cannot find package '@/core' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\store\\useAppStore.spec.js",
+      "stack": "Error: Cannot find package '@/core' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\store\\useAppStore.spec.js"
+    },
+    {
+      "message": "Error: Cannot find package '@/lib' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\shared\\ui\\Button.jsx",
+      "stack": "Error: Cannot find package '@/lib' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\shared\\ui\\Button.jsx"
+    },
+    {
+      "message": "Error: Cannot find module 'C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\components\\ui\\switch.jsx' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\components\\FeedbackForm.jsx",
+      "stack": "Error: Cannot find module 'C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\components\\ui\\switch.jsx' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\components\\FeedbackForm.jsx"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)",
+      "stack": "TypeError: Cannot redefine property: Symbol($$jest-matchers-object)\n    at C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\@vitest+expect@3.2.4\\node_modules\\@vitest\\expect\\dist\\index.js:667:9"
+    },
+    {
+      "message": "Error: Cannot find module 'C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\lib\\services\\crypto.js' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\lib\\services\\FeedbackUploader.js",
+      "stack": "Error: Cannot find module 'C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\lib\\services\\crypto.js' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\src\\lib\\services\\FeedbackUploader.js"
+    },
+    {
+      "message": "Error: Cannot find package '@/lib' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\unit\\services\\PermissionEnforcer.spec.js",
+      "stack": "Error: Cannot find package '@/lib' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\unit\\services\\PermissionEnforcer.spec.js"
+    },
+    {
+      "message": "Error: Cannot find package '@/lib' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\unit\\services\\ruleEngine.spec.js",
+      "stack": "Error: Cannot find package '@/lib' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\unit\\services\\ruleEngine.spec.js"
+    },
+    {
+      "message": "Error: Cannot find package '@/core' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\unit\\store\\uiStore.spec.js",
+      "stack": "Error: Cannot find package '@/core' imported from C:\\Users\\marsh\\Desktop\\AlphaFrame\\apps\\web\\tests\\unit\\store\\uiStore.spec.js"
+    },
+    {
+      "message": "Error: Cannot find module '@/lib/utils.js'\nRequire stack:\n- C:\\Users\\marsh\\Desktop\\AlphaFrame\\src\\components\\Button.jsx\n- C:\\Users\\marsh\\Desktop\\AlphaFrame\\src\\components\\Button.test.jsx\n- C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\playwright@1.53.0\\node_modules\\playwright\\lib\\transform\\transform.js\n- C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\playwright@1.53.0\\node_modules\\playwright\\lib\\common\\configLoader.js\n- C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\playwright@1.53.0\\node_modules\\playwright\\lib\\program.js\n- C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\playwright@1.53.0\\node_modules\\playwright\\cli.js",
+      "stack": "Error: Cannot find module '@/lib/utils.js'\nRequire stack:\n- C:\\Users\\marsh\\Desktop\\AlphaFrame\\src\\components\\Button.jsx\n- C:\\Users\\marsh\\Desktop\\AlphaFrame\\src\\components\\Button.test.jsx\n- C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\playwright@1.53.0\\node_modules\\playwright\\lib\\transform\\transform.js\n- C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\playwright@1.53.0\\node_modules\\playwright\\lib\\common\\configLoader.js\n- C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\playwright@1.53.0\\node_modules\\playwright\\lib\\program.js\n- C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\playwright@1.53.0\\node_modules\\playwright\\cli.js\n    at Object.<anonymous> (C:\\Users\\marsh\\Desktop\\AlphaFrame\\src\\components\\Button.jsx:2:1)\n    at Object.<anonymous> (C:\\Users\\marsh\\Desktop\\AlphaFrame\\src\\components\\Button.test.jsx:2:1)",
+      "location": {
+        "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\src\\components\\Button.jsx",
+        "column": 1,
+        "line": 2
+      },
+      "snippet": "\u001b[90m   at \u001b[39msrc\\components\\Button.jsx:2\n\n\u001b[0m \u001b[90m 1 |\u001b[39m \u001b[36mimport\u001b[39m \u001b[33mReact\u001b[39m \u001b[36mfrom\u001b[39m \u001b[32m\"react\"\u001b[39m\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 2 |\u001b[39m \u001b[36mimport\u001b[39m { cn } \u001b[36mfrom\u001b[39m \u001b[32m\"@/lib/utils.js\"\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 3 |\u001b[39m\n \u001b[90m 4 |\u001b[39m \u001b[90m// The Button component is a reusable UI element that can be rendered as a button.\u001b[39m\n \u001b[90m 5 |\u001b[39m \u001b[90m// It uses React.forwardRef to allow parent components to pass a ref to the underlying DOM element.\u001b[39m\u001b[0m"
+    },
+    {
+      "message": "Error: Vitest cannot be imported in a CommonJS module using require(). Please use \"import\" instead.\n\nIf you are using \"import\" in your source code, then it's possible it was bundled into require() automatically by your bundler. In that case, do not bundle CommonJS output since it will never work with Vitest, or use dynamic import() which is available in all CommonJS modules.",
+      "stack": "Error: Vitest cannot be imported in a CommonJS module using require(). Please use \"import\" instead.\n\nIf you are using \"import\" in your source code, then it's possible it was bundled into require() automatically by your bundler. In that case, do not bundle CommonJS output since it will never work with Vitest, or use dynamic import() which is available in all CommonJS modules.\n    at Object.<anonymous> (C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\vitest@3.2.4_jsdom@24.0.0\\node_modules\\vitest\\index.cjs:1:7)\n    at Object.<anonymous> (C:\\Users\\marsh\\Desktop\\AlphaFrame\\src\\features\\pro\\tests\\DashboardModeManager.test.jsx:3:1)",
+      "location": {
+        "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\src\\features\\pro\\tests\\DashboardModeManager.test.jsx",
+        "column": 1,
+        "line": 3
+      },
+      "snippet": "\u001b[90m   at \u001b[39msrc\\features\\pro\\tests\\DashboardModeManager.test.jsx:3\n\n\u001b[0m \u001b[90m 1 |\u001b[39m \u001b[36mimport\u001b[39m \u001b[33mReact\u001b[39m \u001b[36mfrom\u001b[39m \u001b[32m'react'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 2 |\u001b[39m \u001b[36mimport\u001b[39m { render\u001b[33m,\u001b[39m screen\u001b[33m,\u001b[39m fireEvent\u001b[33m,\u001b[39m waitFor } \u001b[36mfrom\u001b[39m \u001b[32m'@testing-library/react'\u001b[39m\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 3 |\u001b[39m \u001b[36mimport\u001b[39m { describe\u001b[33m,\u001b[39m it\u001b[33m,\u001b[39m expect\u001b[33m,\u001b[39m vi\u001b[33m,\u001b[39m beforeEach } \u001b[36mfrom\u001b[39m \u001b[32m'vitest'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 4 |\u001b[39m \u001b[36mimport\u001b[39m \u001b[33mDashboardModeManager\u001b[39m \u001b[36mfrom\u001b[39m \u001b[32m'../components/DashboardModeManager'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 5 |\u001b[39m \u001b[36mimport\u001b[39m { useDashboardModeStore } \u001b[36mfrom\u001b[39m \u001b[32m'../../core/store/dashboardModeStore'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 6 |\u001b[39m \u001b[36mimport\u001b[39m { useExecutionLogService } \u001b[36mfrom\u001b[39m \u001b[32m'../../core/services/ExecutionLogService'\u001b[39m\u001b[33m;\u001b[39m\u001b[0m"
+    },
+    {
+      "message": "Error: Vitest cannot be imported in a CommonJS module using require(). Please use \"import\" instead.\n\nIf you are using \"import\" in your source code, then it's possible it was bundled into require() automatically by your bundler. In that case, do not bundle CommonJS output since it will never work with Vitest, or use dynamic import() which is available in all CommonJS modules.",
+      "stack": "Error: Vitest cannot be imported in a CommonJS module using require(). Please use \"import\" instead.\n\nIf you are using \"import\" in your source code, then it's possible it was bundled into require() automatically by your bundler. In that case, do not bundle CommonJS output since it will never work with Vitest, or use dynamic import() which is available in all CommonJS modules.\n    at Object.<anonymous> (C:\\Users\\marsh\\Desktop\\AlphaFrame\\node_modules\\.pnpm\\vitest@3.2.4_jsdom@24.0.0\\node_modules\\vitest\\index.cjs:1:7)\n    at Object.<anonymous> (C:\\Users\\marsh\\Desktop\\AlphaFrame\\src\\features\\pro\\tests\\ExecutionLogService.test.js:14:1)",
+      "location": {
+        "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\src\\features\\pro\\tests\\ExecutionLogService.test.js",
+        "column": 1,
+        "line": 14
+      },
+      "snippet": "\u001b[90m   at \u001b[39msrc\\features\\pro\\tests\\ExecutionLogService.test.js:14\n\n\u001b[0m \u001b[90m 12 |\u001b[39m \u001b[90m */\u001b[39m\n \u001b[90m 13 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m \u001b[36mimport\u001b[39m { describe\u001b[33m,\u001b[39m it\u001b[33m,\u001b[39m expect\u001b[33m,\u001b[39m beforeEach\u001b[33m,\u001b[39m afterEach\u001b[33m,\u001b[39m vi } \u001b[36mfrom\u001b[39m \u001b[32m'vitest'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m\n \u001b[90m 16 |\u001b[39m \u001b[90m// Mock CryptoService functions\u001b[39m\n \u001b[90m 17 |\u001b[39m vi\u001b[33m.\u001b[39mmock(\u001b[32m'../../core/services/CryptoService'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m ({\u001b[0m"
+    },
+    {
+      "message": "ReferenceError: describe is not defined",
+      "stack": "ReferenceError: describe is not defined\n    at Object.<anonymous> (C:\\Users\\marsh\\Desktop\\AlphaFrame\\src\\features\\pro\\tests\\FeedbackModule.test.jsx:1:1)",
+      "location": {
+        "file": "C:\\Users\\marsh\\Desktop\\AlphaFrame\\src\\features\\pro\\tests\\FeedbackModule.test.jsx",
+        "column": 1,
+        "line": 1
+      },
+      "snippet": "\u001b[90m   at \u001b[39msrc\\features\\pro\\tests\\FeedbackModule.test.jsx:1\n\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 1 |\u001b[39m describe(\u001b[32m'FeedbackModule'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n \u001b[90m   |\u001b[39m \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 2 |\u001b[39m   beforeEach(() \u001b[33m=>\u001b[39m {\n \u001b[90m 3 |\u001b[39m     \u001b[90m// --- FINAL FIX: Only mock click and setAttribute, do NOT overwrite el.style ---\u001b[39m\n \u001b[90m 4 |\u001b[39m     \u001b[36mconst\u001b[39m realCreateElement \u001b[33m=\u001b[39m document\u001b[33m.\u001b[39mcreateElement\u001b[33m.\u001b[39mbind(document)\u001b[33m;\u001b[39m\u001b[0m"
+    }
+  ],
+  "stats": {
+    "startTime": "2025-06-25T01:35:56.759Z",
+    "duration": 9571.015,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

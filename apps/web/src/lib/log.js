@@ -8,9 +8,15 @@
  * Each function wraps console.log with a formatted prefix.
  */
 export const log = {
-  info: (...args) => console.log('[INFO]', ...args),
-  warn: (...args) => console.warn('[WARN]', ...args),
-  error: (...args) => console.error('[ERROR]', ...args),
+  info: () => {
+    // console.log('[INFO]', ...args);
+  },
+  warn: () => {
+    // console.warn('[WARN]', ...args);
+  },
+  error: () => {
+    // console.error('[ERROR]', ...args);
+  },
 };
 
 // Notes:

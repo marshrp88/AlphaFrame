@@ -1,0 +1,909 @@
+🌐 Starting global setup...
+🔄 Attempt 1/10: Checking server...
+✅ Server ready! Page title: Vite + React
+✅ Global setup completed successfully
+
+Running 1 test using 1 worker
+
+[1A[2K[1/1] [chromium] › e2e\console-debug.spec.js:4:1 › should capture console logs
+[1A[2K[chromium] › e2e\console-debug.spec.js:4:1 › should capture console logs
+[BROWSER] debug: [vite] connecting...
+
+[1A[2K[BROWSER] debug: [vite] connected.
+
+[1A[2K[BROWSER] info: %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+
+[1A[2K[BROWSER] log: 🔧 Configuration module loaded
+
+[1A[2K[BROWSER] log: 🔧 Environment: development
+
+[1A[2K[BROWSER] log: 🔧 Plaid integration: enabled
+
+[1A[2K[BROWSER] log: 🔧 Auth integration: enabled
+
+[1A[2K[BROWSER] log: 🚀 main.jsx is loading...
+
+[1A[2K[BROWSER] log: 🔧 React imports successful
+
+[1A[2K[BROWSER] log: 🧩 Attempting to import App.jsx...
+
+[1A[2K[BROWSER] log: 🧩 App.jsx import successful
+
+[1A[2K[BROWSER] warning: ⚠️ Auth0 not configured - authentication will be disabled
+
+[1A[2K[BROWSER] warning: Please set VITE_AUTH0_DOMAIN and VITE_AUTH0_CLIENT_ID in your environment
+
+[1A[2K[BROWSER] log: �� React root created successfully
+
+[1A[2K[BROWSER] log: ✅ Real App mounted successfully with Auth0Provider
+
+[1A[2K[BROWSER] log: [App] Loaded in test mode: false
+
+[1A[2K[BROWSER] log: [App] RulesPage import: function
+
+[1A[2K[BROWSER] log: [App] Full routing table being configured
+
+[1A[2K[BROWSER] log: [App] Loaded in test mode: false
+
+[1A[2K[BROWSER] log: [App] RulesPage import: function
+
+[1A[2K[BROWSER] log: [App] Full routing table being configured
+
+[1A[2K[BROWSER] log: [App] Loaded in test mode: false
+
+[1A[2K[BROWSER] log: [App] RulesPage import: function
+
+[1A[2K[BROWSER] log: [App] Full routing table being configured
+
+[1A[2K[BROWSER] log: [Router Debug] /rules route matched, isTestMode: false
+
+[1A[2K[BROWSER] log: [Router Debug] About to render RulesPage directly
+
+[1A[2K[BROWSER] log: [App] Loaded in test mode: false
+
+[1A[2K[BROWSER] log: [App] RulesPage import: function
+
+[1A[2K[BROWSER] log: [App] Full routing table being configured
+
+[1A[2K[BROWSER] log: [Router Debug] /rules route matched, isTestMode: false
+
+[1A[2K[BROWSER] log: [Router Debug] About to render RulesPage directly
+
+[1A[2K[BROWSER] log: [RulesPage] Function invoked
+
+[1A[2K[BROWSER] log: [RulesPage] Environment: development
+
+[1A[2K[BROWSER] log: [RulesPage] Timestamp: 2025-06-25T02:15:36.070Z
+
+[1A[2K[BROWSER] log: [RulesPage] Rendering component, showRuleBinder: false
+
+[1A[2K[BROWSER] log: [RulesPage] Function invoked
+
+[1A[2K[BROWSER] log: [RulesPage] Environment: development
+
+[1A[2K[BROWSER] log: [RulesPage] Timestamp: 2025-06-25T02:15:36.071Z
+
+[1A[2K[BROWSER] log: [RulesPage] Rendering component, showRuleBinder: false
+
+[1A[2K[BROWSER] log: [ErrorCatcher] Attempting to render children
+
+[1A[2K[BROWSER] log: [ErrorCatcher] Attempting to render children
+
+[1A[2K[BROWSER] log: [Router Debug] Current pathname: /rules
+
+[1A[2K[BROWSER] log: [Router Debug] Full location: {pathname: /rules, search: , hash: , state: null, key: default}
+
+[1A[2K[BROWSER] log: [RulesPage] Component mounted
+
+[1A[2K[BROWSER] log: [RulesPage] Environment: development
+
+[1A[2K[BROWSER] log: [RulesPage] Test mode: true
+
+[1A[2K[BROWSER] log: [RulesPage] Mock state available: false
+
+[1A[2K[BROWSER] log: [RulesPage] Component state - showRuleBinder: false
+
+[1A[2K[BROWSER] log: [RulesPage] Component state - currentRule: null
+
+[1A[2K[BROWSER] log: [Router Debug] Current pathname: /rules
+
+[1A[2K[BROWSER] log: [Router Debug] Full location: {pathname: /rules, search: , hash: , state: null, key: default}
+
+[1A[2K[BROWSER] log: [RulesPage] Component mounted
+
+[1A[2K[BROWSER] log: [RulesPage] Environment: development
+
+[1A[2K[BROWSER] log: [RulesPage] Test mode: true
+
+[1A[2K[BROWSER] log: [RulesPage] Mock state available: false
+
+[1A[2K[BROWSER] log: [RulesPage] Component state - showRuleBinder: false
+
+[1A[2K[BROWSER] log: [RulesPage] Component state - currentRule: null
+
+[1A[2K[BROWSER] log: [RulesPage] Create rule button clicked
+
+[1A[2K[BROWSER] log: [RulesPage] Function invoked
+
+[1A[2K[BROWSER] log: [RulesPage] Environment: development
+
+[1A[2K[BROWSER] log: [RulesPage] Timestamp: 2025-06-25T02:15:36.263Z
+
+[1A[2K[BROWSER] log: [RulesPage] Rendering component, showRuleBinder: true
+
+[1A[2K[BROWSER] log: [RulesPage] Function invoked
+
+[1A[2K[BROWSER] log: [RulesPage] Environment: development
+
+[1A[2K[BROWSER] log: [RulesPage] Timestamp: 2025-06-25T02:15:36.263Z
+
+[1A[2K[BROWSER] log: [RulesPage] Rendering component, showRuleBinder: true
+
+[1A[2K[BROWSER] log: [ErrorCatcher] Attempting to render children
+
+[1A[2K[BROWSER] log: [ErrorCatcher] Attempting to render children
+
+[1A[2K[BROWSER] error: Warning: validateDOMNesting(...): %s cannot appear as a child of <%s>.%s%s%s <div> option   
+    at div
+    at option
+    at SelectItem (http://localhost:5173/src/shared/ui/Select.jsx?t=1750721835961:47:30)
+    at SelectContent (http://localhost:5173/src/shared/ui/Select.jsx?t=1750721835961:43:33)
+    at select
+    at Select (http://localhost:5173/src/shared/ui/Select.jsx?t=1750721835961:18:26)
+    at div
+    at ActionSelectorComponent (http://localhost:5173/src/components/framesync/ActionSelector.jsx?t=1750721835961:60:36)
+    at div
+    at div
+    at RuleBinderRoot (http://localhost:5173/src/components/framesync/RuleBinderRoot.jsx?t=1750817712024:41:27)
+    at div
+    at div
+    at ErrorCatcher (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:21:25)
+    at RulesPage (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:43:47)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3560:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3995:5)
+    at main
+    at div
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3938:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:4678:5)
+    at ToastProvider (http://localhost:5173/src/components/ui/use-toast.jsx:21:33)
+    at ErrorBoundary (http://localhost:5173/src/components/ErrorBoundary.jsx:8:5)
+    at App (http://localhost:5173/src/App.jsx?t=1750817712024:161:25)
+    at Auth0Provider (http://localhost:5173/node_modules/.vite/deps/@auth0_auth0-react.js?v=5128b56c:1281:23)
+
+[1A[2K[BROWSER] log: [RulesPage] Component mounted
+
+[1A[2K[BROWSER] log: [RulesPage] Environment: development
+
+[1A[2K[BROWSER] log: [RulesPage] Test mode: true
+
+[1A[2K[BROWSER] log: [RulesPage] Mock state available: false
+
+[1A[2K[BROWSER] log: [RulesPage] Component state - showRuleBinder: true
+
+[1A[2K[BROWSER] log: [RulesPage] Component state - currentRule: {id: rule_1750817736262, trigger: checking_account_balance > 5000, action: , enabled: true}
+
+[1A[2K[BROWSER] log: [RuleBinderRoot] Action type changed to: PLAID_TRANSFER
+
+[1A[2K[BROWSER] log: [RuleBinderRoot] ACTION_TYPES.PLAID_TRANSFER: PLAID_TRANSFER
+
+[1A[2K[BROWSER] log: [RuleBinderRoot] Type comparison: true
+
+[1A[2K[BROWSER] log: [RuleBinderRoot] renderActionForm called with actionType: PLAID_TRANSFER
+
+[1A[2K[BROWSER] log: [RuleBinderRoot] ACTION_TYPES.PLAID_TRANSFER: PLAID_TRANSFER
+
+[1A[2K[BROWSER] log: [RuleBinderRoot] actionType === ACTION_TYPES.PLAID_TRANSFER: true
+
+[1A[2K[BROWSER] log: [RuleBinderRoot] Rendering PlaidActionForm
+
+[1A[2K[BROWSER] log: [RuleBinderRoot] renderActionForm called with actionType: PLAID_TRANSFER
+
+[1A[2K[BROWSER] log: [RuleBinderRoot] ACTION_TYPES.PLAID_TRANSFER: PLAID_TRANSFER
+
+[1A[2K[BROWSER] log: [RuleBinderRoot] actionType === ACTION_TYPES.PLAID_TRANSFER: true
+
+[1A[2K[BROWSER] log: [RuleBinderRoot] Rendering PlaidActionForm
+
+[1A[2K[BROWSER] log: [PlaidActionForm] Component rendering with initialPayload: null
+
+[1A[2K[BROWSER] log: [PlaidActionForm] Accounts from store: [Object, Object, Object]
+
+[1A[2K[BROWSER] log: [PlaidActionForm] Form data state: {sourceAccount: , destinationAccount: , amountType: fixed, amount: , description: }
+
+[1A[2K[BROWSER] log: PlaidActionForm account options [Object, Object, Object]
+
+[1A[2K[BROWSER] log: [PlaidActionForm] Component rendering with initialPayload: null
+
+[1A[2K[BROWSER] log: [PlaidActionForm] Accounts from store: [Object, Object, Object]
+
+[1A[2K[BROWSER] log: [PlaidActionForm] Form data state: {sourceAccount: , destinationAccount: , amountType: fixed, amount: , description: }
+
+[1A[2K[BROWSER] log: PlaidActionForm account options [Object, Object, Object]
+
+[1A[2K[BROWSER] error: Warning: Unknown event handler property `%s`. It will be ignored.%s onCheckedChange 
+    at input
+    at Switch
+    at div
+    at div
+    at CardContent (http://localhost:5173/src/shared/ui/Card.jsx:30:31)
+    at div
+    at Card (http://localhost:5173/src/shared/ui/Card.jsx:18:24)
+    at SafeguardsComponent (http://localhost:5173/src/components/framesync/Safeguards.jsx?t=1750816600661:25:32)
+    at div
+    at div
+    at RuleBinderRoot (http://localhost:5173/src/components/framesync/RuleBinderRoot.jsx?t=1750817712024:41:27)
+    at div
+    at div
+    at ErrorCatcher (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:21:25)
+    at RulesPage (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:43:47)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3560:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3995:5)
+    at main
+    at div
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3938:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:4678:5)
+    at ToastProvider (http://localhost:5173/src/components/ui/use-toast.jsx:21:33)
+    at ErrorBoundary (http://localhost:5173/src/components/ErrorBoundary.jsx:8:5)
+    at App (http://localhost:5173/src/App.jsx?t=1750817712024:161:25)
+    at Auth0Provider (http://localhost:5173/node_modules/.vite/deps/@auth0_auth0-react.js?v=5128b56c:1281:23)
+
+[1A[2K[BROWSER] error: Warning: You provided a `checked` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultChecked`. Otherwise, set either `onChange` or `readOnly`.%s 
+    at input
+    at Switch
+    at div
+    at div
+    at CardContent (http://localhost:5173/src/shared/ui/Card.jsx:30:31)
+    at div
+    at Card (http://localhost:5173/src/shared/ui/Card.jsx:18:24)
+    at SafeguardsComponent (http://localhost:5173/src/components/framesync/Safeguards.jsx?t=1750816600661:25:32)
+    at div
+    at div
+    at RuleBinderRoot (http://localhost:5173/src/components/framesync/RuleBinderRoot.jsx?t=1750817712024:41:27)
+    at div
+    at div
+    at ErrorCatcher (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:21:25)
+    at RulesPage (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:43:47)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3560:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3995:5)
+    at main
+    at div
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3938:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:4678:5)
+    at ToastProvider (http://localhost:5173/src/components/ui/use-toast.jsx:21:33)
+    at ErrorBoundary (http://localhost:5173/src/components/ErrorBoundary.jsx:8:5)
+    at App (http://localhost:5173/src/App.jsx?t=1750817712024:161:25)
+    at Auth0Provider (http://localhost:5173/node_modules/.vite/deps/@auth0_auth0-react.js?v=5128b56c:1281:23)
+
+[1A[2K[BROWSER] error: Warning: You provided a `checked` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultChecked`. Otherwise, set either `onChange` or `readOnly`.%s 
+    at input
+    at Switch
+    at div
+    at div
+    at CardContent (http://localhost:5173/src/shared/ui/Card.jsx:30:31)
+    at div
+    at Card (http://localhost:5173/src/shared/ui/Card.jsx:18:24)
+    at SafeguardsComponent (http://localhost:5173/src/components/framesync/Safeguards.jsx?t=1750816600661:25:32)
+    at div
+    at div
+    at RuleBinderRoot (http://localhost:5173/src/components/framesync/RuleBinderRoot.jsx?t=1750817712024:41:27)
+    at div
+    at div
+    at ErrorCatcher (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:21:25)
+    at RulesPage (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:43:47)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3560:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3995:5)
+    at main
+    at div
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3938:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:4678:5)
+    at ToastProvider (http://localhost:5173/src/components/ui/use-toast.jsx:21:33)
+    at ErrorBoundary (http://localhost:5173/src/components/ErrorBoundary.jsx:8:5)
+    at App (http://localhost:5173/src/App.jsx?t=1750817712024:161:25)
+    at Auth0Provider (http://localhost:5173/node_modules/.vite/deps/@auth0_auth0-react.js?v=5128b56c:1281:23)
+
+[1A[2K[BROWSER] log: [PlaidActionForm] Component rendering with initialPayload: null
+
+[1A[2K[BROWSER] log: [PlaidActionForm] Accounts from store: [Object, Object, Object]
+
+[1A[2K[BROWSER] log: [PlaidActionForm] Form data state: {sourceAccount: , destinationAccount: , amountType: fixed, amount: , description: }
+
+[1A[2K[BROWSER] log: PlaidActionForm account options [Object, Object, Object]
+
+[1A[2K[BROWSER] log: [PlaidActionForm] Component rendering with initialPayload: null
+
+[1A[2K[BROWSER] log: [PlaidActionForm] Accounts from store: [Object, Object, Object]
+
+[1A[2K[BROWSER] log: [PlaidActionForm] Form data state: {sourceAccount: , destinationAccount: , amountType: fixed, amount: , description: }
+
+[1A[2K[BROWSER] log: PlaidActionForm account options [Object, Object, Object]
+
+[1A[2K
+📋 All console messages:
+
+[1A[2K1. [debug] [vite] connecting...
+
+[1A[2K2. [debug] [vite] connected.
+
+[1A[2K3. [info] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+
+[1A[2K4. [log] 🔧 Configuration module loaded
+
+[1A[2K5. [log] 🔧 Environment: development
+
+[1A[2K6. [log] 🔧 Plaid integration: enabled
+
+[1A[2K7. [log] 🔧 Auth integration: enabled
+
+[1A[2K8. [log] 🚀 main.jsx is loading...
+
+[1A[2K9. [log] 🔧 React imports successful
+
+[1A[2K10. [log] 🧩 Attempting to import App.jsx...
+
+[1A[2K11. [log] 🧩 App.jsx import successful
+
+[1A[2K12. [warning] ⚠️ Auth0 not configured - authentication will be disabled
+
+[1A[2K13. [warning] Please set VITE_AUTH0_DOMAIN and VITE_AUTH0_CLIENT_ID in your environment
+
+[1A[2K14. [log] �� React root created successfully
+
+[1A[2K15. [log] ✅ Real App mounted successfully with Auth0Provider
+
+[1A[2K16. [log] [App] Loaded in test mode: false
+
+[1A[2K17. [log] [App] RulesPage import: function
+
+[1A[2K18. [log] [App] Full routing table being configured
+
+[1A[2K19. [log] [App] Loaded in test mode: false
+
+[1A[2K20. [log] [App] RulesPage import: function
+
+[1A[2K21. [log] [App] Full routing table being configured
+
+[1A[2K22. [log] [App] Loaded in test mode: false
+
+[1A[2K23. [log] [App] RulesPage import: function
+
+[1A[2K24. [log] [App] Full routing table being configured
+
+[1A[2K25. [log] [Router Debug] /rules route matched, isTestMode: false
+
+[1A[2K26. [log] [Router Debug] About to render RulesPage directly
+
+[1A[2K27. [log] [App] Loaded in test mode: false
+
+[1A[2K28. [log] [App] RulesPage import: function
+
+[1A[2K29. [log] [App] Full routing table being configured
+
+[1A[2K30. [log] [Router Debug] /rules route matched, isTestMode: false
+
+[1A[2K31. [log] [Router Debug] About to render RulesPage directly
+
+[1A[2K32. [log] [RulesPage] Function invoked
+
+[1A[2K33. [log] [RulesPage] Environment: development
+
+[1A[2K34. [log] [RulesPage] Timestamp: 2025-06-25T02:15:36.070Z
+
+[1A[2K35. [log] [RulesPage] Rendering component, showRuleBinder: false
+
+[1A[2K36. [log] [RulesPage] Function invoked
+
+[1A[2K37. [log] [RulesPage] Environment: development
+
+[1A[2K38. [log] [RulesPage] Timestamp: 2025-06-25T02:15:36.071Z
+
+[1A[2K39. [log] [RulesPage] Rendering component, showRuleBinder: false
+
+[1A[2K40. [log] [ErrorCatcher] Attempting to render children
+
+[1A[2K41. [log] [ErrorCatcher] Attempting to render children
+
+[1A[2K42. [log] [Router Debug] Current pathname: /rules
+
+[1A[2K43. [log] [Router Debug] Full location: {pathname: /rules, search: , hash: , state: null, key: default}
+
+[1A[2K44. [log] [RulesPage] Component mounted
+
+[1A[2K45. [log] [RulesPage] Environment: development
+
+[1A[2K46. [log] [RulesPage] Test mode: true
+
+[1A[2K47. [log] [RulesPage] Mock state available: false
+
+[1A[2K48. [log] [RulesPage] Component state - showRuleBinder: false
+
+[1A[2K49. [log] [RulesPage] Component state - currentRule: null
+
+[1A[2K50. [log] [Router Debug] Current pathname: /rules
+
+[1A[2K51. [log] [Router Debug] Full location: {pathname: /rules, search: , hash: , state: null, key: default}
+
+[1A[2K52. [log] [RulesPage] Component mounted
+
+[1A[2K53. [log] [RulesPage] Environment: development
+
+[1A[2K54. [log] [RulesPage] Test mode: true
+
+[1A[2K55. [log] [RulesPage] Mock state available: false
+
+[1A[2K56. [log] [RulesPage] Component state - showRuleBinder: false
+
+[1A[2K57. [log] [RulesPage] Component state - currentRule: null
+
+[1A[2K58. [log] [RulesPage] Create rule button clicked
+
+[1A[2K59. [log] [RulesPage] Function invoked
+
+[1A[2K60. [log] [RulesPage] Environment: development
+
+[1A[2K61. [log] [RulesPage] Timestamp: 2025-06-25T02:15:36.263Z
+
+[1A[2K62. [log] [RulesPage] Rendering component, showRuleBinder: true
+
+[1A[2K63. [log] [RulesPage] Function invoked
+
+[1A[2K64. [log] [RulesPage] Environment: development
+
+[1A[2K65. [log] [RulesPage] Timestamp: 2025-06-25T02:15:36.263Z
+
+[1A[2K66. [log] [RulesPage] Rendering component, showRuleBinder: true
+
+[1A[2K67. [log] [ErrorCatcher] Attempting to render children
+
+[1A[2K68. [log] [ErrorCatcher] Attempting to render children
+
+[1A[2K69. [error] Warning: validateDOMNesting(...): %s cannot appear as a child of <%s>.%s%s%s <div> option   
+    at div
+    at option
+    at SelectItem (http://localhost:5173/src/shared/ui/Select.jsx?t=1750721835961:47:30)
+    at SelectContent (http://localhost:5173/src/shared/ui/Select.jsx?t=1750721835961:43:33)
+    at select
+    at Select (http://localhost:5173/src/shared/ui/Select.jsx?t=1750721835961:18:26)
+    at div
+    at ActionSelectorComponent (http://localhost:5173/src/components/framesync/ActionSelector.jsx?t=1750721835961:60:36)
+    at div
+    at div
+    at RuleBinderRoot (http://localhost:5173/src/components/framesync/RuleBinderRoot.jsx?t=1750817712024:41:27)
+    at div
+    at div
+    at ErrorCatcher (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:21:25)
+    at RulesPage (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:43:47)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3560:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3995:5)
+    at main
+    at div
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3938:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:4678:5)
+    at ToastProvider (http://localhost:5173/src/components/ui/use-toast.jsx:21:33)
+    at ErrorBoundary (http://localhost:5173/src/components/ErrorBoundary.jsx:8:5)
+    at App (http://localhost:5173/src/App.jsx?t=1750817712024:161:25)
+    at Auth0Provider (http://localhost:5173/node_modules/.vite/deps/@auth0_auth0-react.js?v=5128b56c:1281:23)
+
+[1A[2K70. [log] [RulesPage] Component mounted
+
+[1A[2K71. [log] [RulesPage] Environment: development
+
+[1A[2K72. [log] [RulesPage] Test mode: true
+
+[1A[2K73. [log] [RulesPage] Mock state available: false
+
+[1A[2K74. [log] [RulesPage] Component state - showRuleBinder: true
+
+[1A[2K75. [log] [RulesPage] Component state - currentRule: {id: rule_1750817736262, trigger: checking_account_balance > 5000, action: , enabled: true}
+
+[1A[2K76. [log] [RuleBinderRoot] Action type changed to: PLAID_TRANSFER
+
+[1A[2K77. [log] [RuleBinderRoot] ACTION_TYPES.PLAID_TRANSFER: PLAID_TRANSFER
+
+[1A[2K78. [log] [RuleBinderRoot] Type comparison: true
+
+[1A[2K79. [log] [RuleBinderRoot] renderActionForm called with actionType: PLAID_TRANSFER
+
+[1A[2K80. [log] [RuleBinderRoot] ACTION_TYPES.PLAID_TRANSFER: PLAID_TRANSFER
+
+[1A[2K81. [log] [RuleBinderRoot] actionType === ACTION_TYPES.PLAID_TRANSFER: true
+
+[1A[2K82. [log] [RuleBinderRoot] Rendering PlaidActionForm
+
+[1A[2K83. [log] [RuleBinderRoot] renderActionForm called with actionType: PLAID_TRANSFER
+
+[1A[2K84. [log] [RuleBinderRoot] ACTION_TYPES.PLAID_TRANSFER: PLAID_TRANSFER
+
+[1A[2K85. [log] [RuleBinderRoot] actionType === ACTION_TYPES.PLAID_TRANSFER: true
+
+[1A[2K86. [log] [RuleBinderRoot] Rendering PlaidActionForm
+
+[1A[2K87. [log] [PlaidActionForm] Component rendering with initialPayload: null
+
+[1A[2K88. [log] [PlaidActionForm] Accounts from store: [Object, Object, Object]
+
+[1A[2K89. [log] [PlaidActionForm] Form data state: {sourceAccount: , destinationAccount: , amountType: fixed, amount: , description: }
+
+[1A[2K90. [log] PlaidActionForm account options [Object, Object, Object]
+
+[1A[2K91. [log] [PlaidActionForm] Component rendering with initialPayload: null
+
+[1A[2K92. [log] [PlaidActionForm] Accounts from store: [Object, Object, Object]
+
+[1A[2K93. [log] [PlaidActionForm] Form data state: {sourceAccount: , destinationAccount: , amountType: fixed, amount: , description: }
+
+[1A[2K94. [log] PlaidActionForm account options [Object, Object, Object]
+
+[1A[2K95. [error] Warning: Unknown event handler property `%s`. It will be ignored.%s onCheckedChange 
+    at input
+    at Switch
+    at div
+    at div
+    at CardContent (http://localhost:5173/src/shared/ui/Card.jsx:30:31)
+    at div
+    at Card (http://localhost:5173/src/shared/ui/Card.jsx:18:24)
+    at SafeguardsComponent (http://localhost:5173/src/components/framesync/Safeguards.jsx?t=1750816600661:25:32)
+    at div
+    at div
+    at RuleBinderRoot (http://localhost:5173/src/components/framesync/RuleBinderRoot.jsx?t=1750817712024:41:27)
+    at div
+    at div
+    at ErrorCatcher (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:21:25)
+    at RulesPage (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:43:47)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3560:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3995:5)
+    at main
+    at div
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3938:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:4678:5)
+    at ToastProvider (http://localhost:5173/src/components/ui/use-toast.jsx:21:33)
+    at ErrorBoundary (http://localhost:5173/src/components/ErrorBoundary.jsx:8:5)
+    at App (http://localhost:5173/src/App.jsx?t=1750817712024:161:25)
+    at Auth0Provider (http://localhost:5173/node_modules/.vite/deps/@auth0_auth0-react.js?v=5128b56c:1281:23)
+
+[1A[2K96. [error] Warning: You provided a `checked` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultChecked`. Otherwise, set either `onChange` or `readOnly`.%s 
+    at input
+    at Switch
+    at div
+    at div
+    at CardContent (http://localhost:5173/src/shared/ui/Card.jsx:30:31)
+    at div
+    at Card (http://localhost:5173/src/shared/ui/Card.jsx:18:24)
+    at SafeguardsComponent (http://localhost:5173/src/components/framesync/Safeguards.jsx?t=1750816600661:25:32)
+    at div
+    at div
+    at RuleBinderRoot (http://localhost:5173/src/components/framesync/RuleBinderRoot.jsx?t=1750817712024:41:27)
+    at div
+    at div
+    at ErrorCatcher (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:21:25)
+    at RulesPage (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:43:47)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3560:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3995:5)
+    at main
+    at div
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3938:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:4678:5)
+    at ToastProvider (http://localhost:5173/src/components/ui/use-toast.jsx:21:33)
+    at ErrorBoundary (http://localhost:5173/src/components/ErrorBoundary.jsx:8:5)
+    at App (http://localhost:5173/src/App.jsx?t=1750817712024:161:25)
+    at Auth0Provider (http://localhost:5173/node_modules/.vite/deps/@auth0_auth0-react.js?v=5128b56c:1281:23)
+
+[1A[2K97. [error] Warning: You provided a `checked` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultChecked`. Otherwise, set either `onChange` or `readOnly`.%s 
+    at input
+    at Switch
+    at div
+    at div
+    at CardContent (http://localhost:5173/src/shared/ui/Card.jsx:30:31)
+    at div
+    at Card (http://localhost:5173/src/shared/ui/Card.jsx:18:24)
+    at SafeguardsComponent (http://localhost:5173/src/components/framesync/Safeguards.jsx?t=1750816600661:25:32)
+    at div
+    at div
+    at RuleBinderRoot (http://localhost:5173/src/components/framesync/RuleBinderRoot.jsx?t=1750817712024:41:27)
+    at div
+    at div
+    at ErrorCatcher (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:21:25)
+    at RulesPage (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:43:47)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3560:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3995:5)
+    at main
+    at div
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3938:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:4678:5)
+    at ToastProvider (http://localhost:5173/src/components/ui/use-toast.jsx:21:33)
+    at ErrorBoundary (http://localhost:5173/src/components/ErrorBoundary.jsx:8:5)
+    at App (http://localhost:5173/src/App.jsx?t=1750817712024:161:25)
+    at Auth0Provider (http://localhost:5173/node_modules/.vite/deps/@auth0_auth0-react.js?v=5128b56c:1281:23)
+
+[1A[2K98. [log] [PlaidActionForm] Component rendering with initialPayload: null
+
+[1A[2K99. [log] [PlaidActionForm] Accounts from store: [Object, Object, Object]
+
+[1A[2K100. [log] [PlaidActionForm] Form data state: {sourceAccount: , destinationAccount: , amountType: fixed, amount: , description: }
+
+[1A[2K101. [log] PlaidActionForm account options [Object, Object, Object]
+
+[1A[2K102. [log] [PlaidActionForm] Component rendering with initialPayload: null
+
+[1A[2K103. [log] [PlaidActionForm] Accounts from store: [Object, Object, Object]
+
+[1A[2K104. [log] [PlaidActionForm] Form data state: {sourceAccount: , destinationAccount: , amountType: fixed, amount: , description: }
+
+[1A[2K105. [log] PlaidActionForm account options [Object, Object, Object]
+
+[1A[2K
+🎯 PlaidActionForm related logs:
+
+[1A[2K1. [error] Warning: validateDOMNesting(...): %s cannot appear as a child of <%s>.%s%s%s <div> option   
+    at div
+    at option
+    at SelectItem (http://localhost:5173/src/shared/ui/Select.jsx?t=1750721835961:47:30)
+    at SelectContent (http://localhost:5173/src/shared/ui/Select.jsx?t=1750721835961:43:33)
+    at select
+    at Select (http://localhost:5173/src/shared/ui/Select.jsx?t=1750721835961:18:26)
+    at div
+    at ActionSelectorComponent (http://localhost:5173/src/components/framesync/ActionSelector.jsx?t=1750721835961:60:36)
+    at div
+    at div
+    at RuleBinderRoot (http://localhost:5173/src/components/framesync/RuleBinderRoot.jsx?t=1750817712024:41:27)
+    at div
+    at div
+    at ErrorCatcher (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:21:25)
+    at RulesPage (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:43:47)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3560:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3995:5)
+    at main
+    at div
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3938:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:4678:5)
+    at ToastProvider (http://localhost:5173/src/components/ui/use-toast.jsx:21:33)
+    at ErrorBoundary (http://localhost:5173/src/components/ErrorBoundary.jsx:8:5)
+    at App (http://localhost:5173/src/App.jsx?t=1750817712024:161:25)
+    at Auth0Provider (http://localhost:5173/node_modules/.vite/deps/@auth0_auth0-react.js?v=5128b56c:1281:23)
+
+[1A[2K2. [log] [RuleBinderRoot] Action type changed to: PLAID_TRANSFER
+
+[1A[2K3. [log] [RuleBinderRoot] ACTION_TYPES.PLAID_TRANSFER: PLAID_TRANSFER
+
+[1A[2K4. [log] [RuleBinderRoot] Type comparison: true
+
+[1A[2K5. [log] [RuleBinderRoot] renderActionForm called with actionType: PLAID_TRANSFER
+
+[1A[2K6. [log] [RuleBinderRoot] ACTION_TYPES.PLAID_TRANSFER: PLAID_TRANSFER
+
+[1A[2K7. [log] [RuleBinderRoot] actionType === ACTION_TYPES.PLAID_TRANSFER: true
+
+[1A[2K8. [log] [RuleBinderRoot] Rendering PlaidActionForm
+
+[1A[2K9. [log] [RuleBinderRoot] renderActionForm called with actionType: PLAID_TRANSFER
+
+[1A[2K10. [log] [RuleBinderRoot] ACTION_TYPES.PLAID_TRANSFER: PLAID_TRANSFER
+
+[1A[2K11. [log] [RuleBinderRoot] actionType === ACTION_TYPES.PLAID_TRANSFER: true
+
+[1A[2K12. [log] [RuleBinderRoot] Rendering PlaidActionForm
+
+[1A[2K13. [log] [PlaidActionForm] Component rendering with initialPayload: null
+
+[1A[2K14. [log] [PlaidActionForm] Accounts from store: [Object, Object, Object]
+
+[1A[2K15. [log] [PlaidActionForm] Form data state: {sourceAccount: , destinationAccount: , amountType: fixed, amount: , description: }
+
+[1A[2K16. [log] PlaidActionForm account options [Object, Object, Object]
+
+[1A[2K17. [log] [PlaidActionForm] Component rendering with initialPayload: null
+
+[1A[2K18. [log] [PlaidActionForm] Accounts from store: [Object, Object, Object]
+
+[1A[2K19. [log] [PlaidActionForm] Form data state: {sourceAccount: , destinationAccount: , amountType: fixed, amount: , description: }
+
+[1A[2K20. [log] PlaidActionForm account options [Object, Object, Object]
+
+[1A[2K21. [error] Warning: Unknown event handler property `%s`. It will be ignored.%s onCheckedChange 
+    at input
+    at Switch
+    at div
+    at div
+    at CardContent (http://localhost:5173/src/shared/ui/Card.jsx:30:31)
+    at div
+    at Card (http://localhost:5173/src/shared/ui/Card.jsx:18:24)
+    at SafeguardsComponent (http://localhost:5173/src/components/framesync/Safeguards.jsx?t=1750816600661:25:32)
+    at div
+    at div
+    at RuleBinderRoot (http://localhost:5173/src/components/framesync/RuleBinderRoot.jsx?t=1750817712024:41:27)
+    at div
+    at div
+    at ErrorCatcher (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:21:25)
+    at RulesPage (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:43:47)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3560:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3995:5)
+    at main
+    at div
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3938:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:4678:5)
+    at ToastProvider (http://localhost:5173/src/components/ui/use-toast.jsx:21:33)
+    at ErrorBoundary (http://localhost:5173/src/components/ErrorBoundary.jsx:8:5)
+    at App (http://localhost:5173/src/App.jsx?t=1750817712024:161:25)
+    at Auth0Provider (http://localhost:5173/node_modules/.vite/deps/@auth0_auth0-react.js?v=5128b56c:1281:23)
+
+[1A[2K22. [error] Warning: You provided a `checked` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultChecked`. Otherwise, set either `onChange` or `readOnly`.%s 
+    at input
+    at Switch
+    at div
+    at div
+    at CardContent (http://localhost:5173/src/shared/ui/Card.jsx:30:31)
+    at div
+    at Card (http://localhost:5173/src/shared/ui/Card.jsx:18:24)
+    at SafeguardsComponent (http://localhost:5173/src/components/framesync/Safeguards.jsx?t=1750816600661:25:32)
+    at div
+    at div
+    at RuleBinderRoot (http://localhost:5173/src/components/framesync/RuleBinderRoot.jsx?t=1750817712024:41:27)
+    at div
+    at div
+    at ErrorCatcher (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:21:25)
+    at RulesPage (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:43:47)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3560:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3995:5)
+    at main
+    at div
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3938:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:4678:5)
+    at ToastProvider (http://localhost:5173/src/components/ui/use-toast.jsx:21:33)
+    at ErrorBoundary (http://localhost:5173/src/components/ErrorBoundary.jsx:8:5)
+    at App (http://localhost:5173/src/App.jsx?t=1750817712024:161:25)
+    at Auth0Provider (http://localhost:5173/node_modules/.vite/deps/@auth0_auth0-react.js?v=5128b56c:1281:23)
+
+[1A[2K23. [error] Warning: You provided a `checked` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultChecked`. Otherwise, set either `onChange` or `readOnly`.%s 
+    at input
+    at Switch
+    at div
+    at div
+    at CardContent (http://localhost:5173/src/shared/ui/Card.jsx:30:31)
+    at div
+    at Card (http://localhost:5173/src/shared/ui/Card.jsx:18:24)
+    at SafeguardsComponent (http://localhost:5173/src/components/framesync/Safeguards.jsx?t=1750816600661:25:32)
+    at div
+    at div
+    at RuleBinderRoot (http://localhost:5173/src/components/framesync/RuleBinderRoot.jsx?t=1750817712024:41:27)
+    at div
+    at div
+    at ErrorCatcher (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:21:25)
+    at RulesPage (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:43:47)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3560:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3995:5)
+    at main
+    at div
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3938:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:4678:5)
+    at ToastProvider (http://localhost:5173/src/components/ui/use-toast.jsx:21:33)
+    at ErrorBoundary (http://localhost:5173/src/components/ErrorBoundary.jsx:8:5)
+    at App (http://localhost:5173/src/App.jsx?t=1750817712024:161:25)
+    at Auth0Provider (http://localhost:5173/node_modules/.vite/deps/@auth0_auth0-react.js?v=5128b56c:1281:23)
+
+[1A[2K24. [log] [PlaidActionForm] Component rendering with initialPayload: null
+
+[1A[2K25. [log] [PlaidActionForm] Accounts from store: [Object, Object, Object]
+
+[1A[2K26. [log] [PlaidActionForm] Form data state: {sourceAccount: , destinationAccount: , amountType: fixed, amount: , description: }
+
+[1A[2K27. [log] PlaidActionForm account options [Object, Object, Object]
+
+[1A[2K28. [log] [PlaidActionForm] Component rendering with initialPayload: null
+
+[1A[2K29. [log] [PlaidActionForm] Accounts from store: [Object, Object, Object]
+
+[1A[2K30. [log] [PlaidActionForm] Form data state: {sourceAccount: , destinationAccount: , amountType: fixed, amount: , description: }
+
+[1A[2K31. [log] PlaidActionForm account options [Object, Object, Object]
+
+[1A[2K
+❌ Errors found:
+
+[1A[2K1. Warning: validateDOMNesting(...): %s cannot appear as a child of <%s>.%s%s%s <div> option   
+    at div
+    at option
+    at SelectItem (http://localhost:5173/src/shared/ui/Select.jsx?t=1750721835961:47:30)
+    at SelectContent (http://localhost:5173/src/shared/ui/Select.jsx?t=1750721835961:43:33)
+    at select
+    at Select (http://localhost:5173/src/shared/ui/Select.jsx?t=1750721835961:18:26)
+    at div
+    at ActionSelectorComponent (http://localhost:5173/src/components/framesync/ActionSelector.jsx?t=1750721835961:60:36)
+    at div
+    at div
+    at RuleBinderRoot (http://localhost:5173/src/components/framesync/RuleBinderRoot.jsx?t=1750817712024:41:27)
+    at div
+    at div
+    at ErrorCatcher (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:21:25)
+    at RulesPage (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:43:47)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3560:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3995:5)
+    at main
+    at div
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3938:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:4678:5)
+    at ToastProvider (http://localhost:5173/src/components/ui/use-toast.jsx:21:33)
+    at ErrorBoundary (http://localhost:5173/src/components/ErrorBoundary.jsx:8:5)
+    at App (http://localhost:5173/src/App.jsx?t=1750817712024:161:25)
+    at Auth0Provider (http://localhost:5173/node_modules/.vite/deps/@auth0_auth0-react.js?v=5128b56c:1281:23)
+
+[1A[2K2. Warning: Unknown event handler property `%s`. It will be ignored.%s onCheckedChange 
+    at input
+    at Switch
+    at div
+    at div
+    at CardContent (http://localhost:5173/src/shared/ui/Card.jsx:30:31)
+    at div
+    at Card (http://localhost:5173/src/shared/ui/Card.jsx:18:24)
+    at SafeguardsComponent (http://localhost:5173/src/components/framesync/Safeguards.jsx?t=1750816600661:25:32)
+    at div
+    at div
+    at RuleBinderRoot (http://localhost:5173/src/components/framesync/RuleBinderRoot.jsx?t=1750817712024:41:27)
+    at div
+    at div
+    at ErrorCatcher (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:21:25)
+    at RulesPage (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:43:47)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3560:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3995:5)
+    at main
+    at div
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3938:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:4678:5)
+    at ToastProvider (http://localhost:5173/src/components/ui/use-toast.jsx:21:33)
+    at ErrorBoundary (http://localhost:5173/src/components/ErrorBoundary.jsx:8:5)
+    at App (http://localhost:5173/src/App.jsx?t=1750817712024:161:25)
+    at Auth0Provider (http://localhost:5173/node_modules/.vite/deps/@auth0_auth0-react.js?v=5128b56c:1281:23)
+
+[1A[2K3. Warning: You provided a `checked` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultChecked`. Otherwise, set either `onChange` or `readOnly`.%s 
+    at input
+    at Switch
+    at div
+    at div
+    at CardContent (http://localhost:5173/src/shared/ui/Card.jsx:30:31)
+    at div
+    at Card (http://localhost:5173/src/shared/ui/Card.jsx:18:24)
+    at SafeguardsComponent (http://localhost:5173/src/components/framesync/Safeguards.jsx?t=1750816600661:25:32)
+    at div
+    at div
+    at RuleBinderRoot (http://localhost:5173/src/components/framesync/RuleBinderRoot.jsx?t=1750817712024:41:27)
+    at div
+    at div
+    at ErrorCatcher (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:21:25)
+    at RulesPage (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:43:47)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3560:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3995:5)
+    at main
+    at div
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3938:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:4678:5)
+    at ToastProvider (http://localhost:5173/src/components/ui/use-toast.jsx:21:33)
+    at ErrorBoundary (http://localhost:5173/src/components/ErrorBoundary.jsx:8:5)
+    at App (http://localhost:5173/src/App.jsx?t=1750817712024:161:25)
+    at Auth0Provider (http://localhost:5173/node_modules/.vite/deps/@auth0_auth0-react.js?v=5128b56c:1281:23)
+
+[1A[2K4. Warning: You provided a `checked` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultChecked`. Otherwise, set either `onChange` or `readOnly`.%s 
+    at input
+    at Switch
+    at div
+    at div
+    at CardContent (http://localhost:5173/src/shared/ui/Card.jsx:30:31)
+    at div
+    at Card (http://localhost:5173/src/shared/ui/Card.jsx:18:24)
+    at SafeguardsComponent (http://localhost:5173/src/components/framesync/Safeguards.jsx?t=1750816600661:25:32)
+    at div
+    at div
+    at RuleBinderRoot (http://localhost:5173/src/components/framesync/RuleBinderRoot.jsx?t=1750817712024:41:27)
+    at div
+    at div
+    at ErrorCatcher (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:21:25)
+    at RulesPage (http://localhost:5173/src/pages/RulesPage.jsx?t=1750817712024:43:47)
+    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3560:5)
+    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3995:5)
+    at main
+    at div
+    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:3938:15)
+    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=5128b56c:4678:5)
+    at ToastProvider (http://localhost:5173/src/components/ui/use-toast.jsx:21:33)
+    at ErrorBoundary (http://localhost:5173/src/components/ErrorBoundary.jsx:8:5)
+    at App (http://localhost:5173/src/App.jsx?t=1750817712024:161:25)
+    at Auth0Provider (http://localhost:5173/node_modules/.vite/deps/@auth0_auth0-react.js?v=5128b56c:1281:23)
+
+[1A[2K  1 passed (10.4s)

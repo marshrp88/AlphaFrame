@@ -6,8 +6,8 @@
  * and ensuring proper security measures are in place before any action execution.
  */
 
-import { useAuthStore } from '../store/authStore';
-import { useUIStore } from '../store/uiStore';
+import { useAuthStore } from '../../core/store/authStore';
+import { useUIStore } from '../../core/store/uiStore';
 
 /**
  * List of high-risk action types that require additional security measures
@@ -28,15 +28,6 @@ const ACTION_PERMISSIONS = {
   'WEBHOOK': ['webhook:execute'],
   'ADJUST_GOAL': ['goals:modify'],
   'ADD_MEMO': ['transactions:modify']
-};
-
-/**
- * Checks if an action requires additional security measures
- * @param {Object} action - The action to check
- * @returns {boolean} Whether the action is high-risk
- */
-const isHighRiskAction = (action) => {
-  return HIGH_RISK_ACTIONS.includes(action.actionType);
 };
 
 /**
@@ -104,7 +95,6 @@ export class PermissionEnforcer {
 
       return { allowed: true };
     } catch (error) {
-      console.error('Permission check failed:', error);
       return {
         allowed: false,
         reason: 'Permission check failed'
@@ -191,4 +181,6 @@ export class PermissionEnforcer {
       payload.memo.length <= 200
     );
   }
-} 
+}
+
+export const canExecuteAction = PermissionEnforcer.canExecuteAction; 

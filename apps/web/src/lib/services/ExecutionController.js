@@ -6,12 +6,14 @@
  * high-risk actions, confirmations, and error management.
  */
 
-import { useFinancialStateStore } from '../store/financialStateStore';
-import { useUIStore } from '../store/uiStore';
-import { get } from './secureVault';
+import { useFinancialStateStore } from '../../core/store/financialStateStore';
+import { useUIStore } from '../../core/store/uiStore';
+import { get } from '../../core/services/SecureVault';
 import { canExecuteAction } from './PermissionEnforcer';
-import { useLogStore } from "@/lib/store/logStore";
+import { useLogStore } from '../../core/store/logStore';
 import { ActionSchema } from '../validation/schemas';
+import { executeWebhook } from './WebhookService.js';
+import { sendEmail } from './NotificationService.js';
 
 const PLAID_API_BASE = 'https://api.plaid.com';
 
@@ -46,19 +48,16 @@ const requiresConfirmation = (actionType) => {
  * @returns {Promise<Object>} Result of the action
  */
 const handleInternalAction = async (action) => {
-  console.log('[HANDLER] Entered handleInternalAction:', action.type, action.payload);
   const store = useFinancialStateStore.getState();
   
   switch (action.type) {
     case 'ADJUST_GOAL':
-      console.log('[HANDLER] Calling adjustGoal with payload:', action.payload);
       return store.adjustGoal(action.payload);
     case 'UPDATE_BUDGET':
       return store.updateBudget(action.payload);
     case 'MODIFY_CATEGORY':
       return store.modifyCategory(action.payload);
     default:
-      console.warn('[HANDLER] Unhandled internal action:', action.type);
       throw new Error(`Unhandled internal action: ${action.type}`);
   }
 };
@@ -158,7 +157,6 @@ const handlePlaidTransfer = async (action) => {
 
     return transferResponse.json();
   } catch (error) {
-    console.error('Plaid transfer failed:', error);
     throw new Error(`Plaid transfer failed: ${error.message}`);
   }
 };
@@ -190,66 +188,67 @@ export class ExecutionController {
    * @throws {Error} If the action execution fails or is not permitted
    */
   static async executeAction(actionType, payload, confirmed = false) {
-    console.log('[EXECUTION] Received:', actionType, payload);
-
-    // Validate action payload using Zod
-    const validationData = { type: actionType, payload };
-    console.log('[ZOD DEBUG] Validating:', validationData);
-    const parsed = ActionSchema.safeParse(validationData);
-    if (!parsed.success) {
-      console.error('[ZOD ERROR]', parsed.error);
-      throw new Error('Invalid action payload.');
-    }
-
-    // Check for sandbox mode
-    const { isSandboxMode } = useUIStore.getState();
-    if (isSandboxMode) {
-      // In sandbox mode, log the action and return a mocked result
-      console.log('[SANDBOX] Action execution simulated:', { actionType, payload });
-      return { success: true, sandbox: true, actionType, payload };
-    }
-
-    // Check permissions
-    const permissionResult = await canExecuteAction(actionType);
-    if (!permissionResult.allowed) {
-      throw new Error(permissionResult.reason || 'Permission denied');
-    }
-
-    // Handle high-risk actions
-    if (requiresConfirmation(actionType) && !confirmed) {
-      const password = await promptForMasterPassword();
-      if (!password) {
-        throw new Error('Action cancelled by user');
+    try {
+      // console.log('Executing action:', actionType, payload);
+      
+      const validationData = { type: actionType, payload };
+      const parsed = ActionSchema.safeParse(validationData);
+      if (!parsed.success) {
+        throw new Error('Invalid action payload.');
       }
-      return this.executeAction(actionType, payload, true);
-    }
 
-    // Add diagnostic logs for internal action routing
-    console.log('[DEBUG] INTERNAL_ACTIONS =', INTERNAL_ACTIONS);
-    console.log('[DEBUG] actionType =', actionType);
-    console.log('[DEBUG] isInternal =', INTERNAL_ACTIONS.includes(actionType));
+      // Check for sandbox mode
+      const { isSandboxMode } = useUIStore.getState();
+      if (isSandboxMode) {
+        // In sandbox mode, log the action and return a mocked result
+        console.log('[SANDBOX] Action execution simulated:', { actionType, payload });
+        return { success: true, sandbox: true, actionType, payload };
+      }
 
-    // Handle internal actions
-    if (INTERNAL_ACTIONS.includes(actionType)) {
-      console.log('[EXECUTION] Handling internal action:', actionType);
-      return handleInternalAction({ type: actionType, payload });
-    }
+      // Check permissions
+      const permissionResult = await canExecuteAction(actionType);
+      if (!permissionResult.allowed) {
+        throw new Error(permissionResult.reason || 'Permission denied');
+      }
 
-    // Execute the appropriate action handler for non-internal actions
-    switch (actionType) {
-      case 'PLAID_TRANSFER':
-        return this.executePlaidTransfer(payload);
-      case 'WEBHOOK':
-        return this.handleWebhook(payload);
-      case 'SEND_EMAIL':
-      case 'SEND_NOTIFICATION':
-      case 'CREATE_ALERT':
-        return handleCommunicationAction({ actionType, payload });
-      case 'ADD_MEMO':
-        return this.handleMemoAddition(payload);
-      default:
-        console.warn('[EXECUTION] Unknown action type:', actionType);
-        throw new Error(`Unsupported action type: ${actionType}`);
+      // Handle high-risk actions
+      if (requiresConfirmation(actionType) && !confirmed) {
+        const password = await promptForMasterPassword();
+        if (!password) {
+          throw new Error('Action cancelled by user');
+        }
+        return this.executeAction(actionType, payload, true);
+      }
+
+      // Add diagnostic logs for internal action routing
+      console.log('[DEBUG] INTERNAL_ACTIONS =', INTERNAL_ACTIONS);
+      console.log('[DEBUG] actionType =', actionType);
+      console.log('[DEBUG] isInternal =', INTERNAL_ACTIONS.includes(actionType));
+
+      // Handle internal actions
+      if (INTERNAL_ACTIONS.includes(actionType)) {
+        console.log('[EXECUTION] Handling internal action:', actionType);
+        return handleInternalAction({ type: actionType, payload });
+      }
+
+      // Execute the appropriate action handler for non-internal actions
+      switch (actionType) {
+        case 'PLAID_TRANSFER':
+          return this.executePlaidTransfer(payload);
+        case 'WEBHOOK':
+          return this.handleWebhook(payload);
+        case 'SEND_EMAIL':
+        case 'SEND_NOTIFICATION':
+        case 'CREATE_ALERT':
+          return handleCommunicationAction({ actionType, payload });
+        case 'ADD_MEMO':
+          return this.handleMemoAddition(payload);
+        default:
+          console.warn('[EXECUTION] Unknown action type:', actionType);
+          throw new Error(`Unsupported action type: ${actionType}`);
+      }
+    } catch (error) {
+      throw new Error(`Action execution failed: ${error.message}`);
     }
   }
 
@@ -270,8 +269,39 @@ export class ExecutionController {
    * @private
    */
   static async handleWebhook(payload) {
-    // Implementation for webhook calls
-    return { success: true, webhookId: 'mock_webhook_id' };
+    try {
+      // Validate webhook payload
+      if (!payload.url) {
+        throw new Error('Webhook URL is required');
+      }
+
+      // Execute webhook using real service
+      const result = await executeWebhook(payload);
+      
+      // Log successful webhook execution
+      useLogStore.getState().queueAction({ 
+        type: 'WEBHOOK_EXECUTED', 
+        payload: { 
+          url: payload.url, 
+          result,
+          timestamp: Date.now() 
+        } 
+      });
+
+      return result;
+    } catch (error) {
+      // Log failed webhook execution
+      useLogStore.getState().queueAction({ 
+        type: 'WEBHOOK_FAILED', 
+        payload: { 
+          url: payload.url, 
+          error: error.message,
+          timestamp: Date.now() 
+        } 
+      });
+      
+      throw error;
+    }
   }
 
   /**
@@ -295,5 +325,41 @@ export class ExecutionController {
     // Implementation for memo additions
     useLogStore.getState().queueAction({ type: 'ADD_MEMO', payload: { memo: payload.memo, timestamp: Date.now() } });
     return { success: true, memoId: 'mock_memo_id' };
+  }
+
+  /**
+   * Handles communication actions (email, notifications)
+   * @param {Object} payload - The communication configuration
+   * @returns {Promise<Object>} The result of the communication
+   * @private
+   */
+  static async handleCommunicationAction({ actionType, payload: actionPayload }) {
+    try {
+      switch (actionType) {
+        case 'SEND_EMAIL':
+          return await sendEmail(actionPayload);
+        
+        case 'SEND_NOTIFICATION':
+          // For now, treat notifications as emails
+          return await sendEmail({
+            ...actionPayload,
+            template: actionPayload.template || 'notification'
+          });
+        
+        case 'CREATE_ALERT':
+          // Create in-app alert
+          useUIStore.getState().showAlert({
+            type: actionPayload.type || 'info',
+            message: actionPayload.message,
+            title: actionPayload.title
+          });
+          return { success: true, alertId: `alert_${Date.now()}` };
+        
+        default:
+          throw new Error(`Unsupported communication action: ${actionType}`);
+      }
+    } catch (error) {
+      throw new Error(`Communication action failed: ${error.message}`);
+    }
   }
 } 

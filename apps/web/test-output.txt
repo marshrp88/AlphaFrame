@@ -1,0 +1,70 @@
+
+> web@0.0.0 test C:\Users\marsh\Desktop\AlphaFrame\apps\web
+> vitest
+
+
+[1m[44m DEV [49m[22m [34mv3.2.4 [39m[90mC:/Users/marsh/Desktop/AlphaFrame/apps/web[39m
+
+ [31mΓ¥»[39m src/features/pro/tests/FeedbackModule.test.jsx [2m([22m[2m3 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 5136[2mms[22m[39m
+   [32mΓ£ô[39m FeedbackModule[2m > [22mrenders feedback module with correct title[32m 96[2mms[22m[39m
+   [32mΓ£ô[39m FeedbackModule[2m > [22mrenders generate button[32m 18[2mms[22m[39m
+[31m   [31m├ù[31m FeedbackModule[2m > [22mhandles report generation[39m[33m 5020[2mms[22m[39m
+[31m     ΓåÆ Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+ [32mΓ£ô[39m tests/app.import.test.js [2m([22m[2m1 test[22m[2m)[22m[33m 359[2mms[22m[39m
+   [33m[2mΓ£ô[22m[39m can import the App component with a mocked config [33m 357[2mms[22m[39m
+ [32mΓ£ô[39m tests/components/framesync/PlaidActionForm.spec.jsx [2m([22m[2m6 tests[22m[2m)[22m[32m 238[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/components/DashboardPicker.test.jsx [2m([22m[2m13 tests[22m[2m)[22m[33m 312[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/services/__tests__/AuthService.fixed.test.js [2m([22m[2m17 tests[22m[2m)[22m[32m 187[2mms[22m[39m
+ [32mΓ£ô[39m src/features/pro/tests/ExecutionLogService.simple.test.js [2m([22m[2m25 tests[22m[2m)[22m[32m 162[2mms[22m[39m
+ [32mΓ£ô[39m src/features/pro/tests/BudgetService.test.js [2m([22m[2m43 tests[22m[2m)[22m[32m 114[2mms[22m[39m
+ [32mΓ£ô[39m src/features/pro/tests/CashFlowService.test.js [2m([22m[2m43 tests[22m[2m)[22m[32m 152[2mms[22m[39m
+ [32mΓ£ô[39m tests/integration/services/financialStateStore.spec.js [2m([22m[2m9 tests[22m[2m)[22m[32m 76[2mms[22m[39m
+ [32mΓ£ô[39m tests/components/framesync/InternalActionForm.spec.jsx [2m([22m[2m5 tests[22m[2m)[22m[32m 122[2mms[22m[39m
+ [32mΓ£ô[39m tests/store/financialStateStore.spec.js [2m([22m[2m7 tests[22m[2m | [22m[33m1 skipped[39m[2m)[22m[32m 81[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/services/ExecutionLogService.test.js [2m([22m[2m22 tests[22m[2m)[22m[32m 69[2mms[22m[39m
+ [32mΓ£ô[39m src/features/pro/tests/TimelineSimulator.test.js [2m([22m[2m26 tests[22m[2m)[22m[32m 105[2mms[22m[39m
+ [32mΓ£ô[39m tests/components/Button.spec.jsx [2m([22m[2m1 test[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/services/__tests__/AuthService.test.js [2m([22m[2m9 tests[22m[2m)[22m[32m 65[2mms[22m[39m
+ [32mΓ£ô[39m src/features/pro/tests/RuleEngine.test.js [2m([22m[2m12 tests[22m[2m)[22m[32m 65[2mms[22m[39m
+ [32mΓ£ô[39m tests/integration/services/ExecutionController.spec.js [2m([22m[2m11 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32mΓ£ô[39m src/features/pro/tests/PortfolioAnalyzer.test.js [2m([22m[2m34 tests[22m[2m)[22m[32m 98[2mms[22m[39m
+ [32mΓ£ô[39m src/features/pro/tests/NarrativeService.test.js [2m([22m[2m23 tests[22m[2m)[22m[32m 60[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/services/__tests__/ruleEngine.test.js [2m([22m[2m6 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32mΓ£ô[39m tests/integration/services/secureVault.spec.js [2m([22m[2m12 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32mΓ£ô[39m tests/integration/services/ruleEngine.spec.js [2m([22m[2m6 tests[22m[2m)[22m[32m 44[2mms[22m[39m
+ [32mΓ£ô[39m tests/components/Button.test.jsx [2m([22m[2m1 test[22m[2m)[22m[32m 41[2mms[22m[39m
+ [32mΓ£ô[39m tests/integration/services/PermissionEnforcer.spec.js [2m([22m[2m10 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/services/ExecutionController.test.js [2m([22m[2m4 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/services/__tests__/ruleEngine.spec.js [2m([22m[2m6 tests[22m[2m)[22m[32m 44[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/services/__tests__/PlaidService.test.js [2m([22m[2m8 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [31mΓ¥»[39m tests/components/framesync/WebhookActionForm.spec.jsx [2m([22m[2m8 tests[22m[2m | [22m[31m4 failed[39m[2m)[22m[33m 25235[2mms[22m[39m
+   [32mΓ£ô[39m WebhookActionForm[2m > [22mrenders URL input with correct attributes[32m 113[2mms[22m[39m
+   [32mΓ£ô[39m WebhookActionForm[2m > [22mrenders method selector with correct options[32m 28[2mms[22m[39m
+   [32mΓ£ô[39m WebhookActionForm[2m > [22mrenders JSON payload textarea with correct attributes[32m 10[2mms[22m[39m
+[31m   [31m├ù[31m WebhookActionForm[2m > [22mvalidates URL input[39m[33m 10023[2mms[22m[39m
+[31m     ΓåÆ Test timed out in 10000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+[31m   [31m├ù[31m WebhookActionForm[2m > [22mvalidates JSON payload[39m[33m 5022[2mms[22m[39m
+[31m     ΓåÆ Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+[31m   [31m├ù[31m WebhookActionForm[2m > [22mformats valid JSON payload[39m[33m 5014[2mms[22m[39m
+[31m     ΓåÆ Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+[31m   [31m├ù[31m WebhookActionForm[2m > [22mcalls onChange with correct payload when form is valid[39m[33m 5012[2mms[22m[39m
+[31m     ΓåÆ Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+   [32mΓ£ô[39m WebhookActionForm[2m > [22mhandles initial payload correctly[32m 11[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/services/ruleEngine.spec.js [2m([22m[2m4 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32mΓ£ô[39m tests/integration/services/ConfirmationModal.spec.js [2m([22m[2m7 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32mΓ£ô[39m src/features/pro/tests/ReportCenter.test.js [2m([22m[2m6 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32mΓ£ô[39m tests/integration/services/syncEngine.spec.js [2m([22m[2m5 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32mΓ£ô[39m tests/integration/services/TriggerDispatcher.spec.js [2m([22m[2m4 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32mΓ£ô[39m tests/integration/services/crypto.spec.js [2m([22m[2m4 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32mΓ£ô[39m tests/integration/services/simulation.spec.js [2m([22m[2m6 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/services/PermissionEnforcer.spec.js [2m([22m[2m4 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32mΓ£ô[39m tests/store/useAppStore.spec.js [2m([22m[2m4 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/smoke.test.js [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m tests/unit/store/uiStore.spec.js [2m([22m[2m3 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m tests/simple.test.js [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m src/features/pro/tests/simple.test.js [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m

@@ -1,0 +1,409 @@
+/**
+ * Tabs.css - AlphaFrame Phase X Sprint 2
+ * 
+ * Purpose: Styles for the Tabs component using design tokens
+ * for consistent visual appearance and smooth interactions.
+ * 
+ * Procedure:
+ * 1. Uses CSS custom properties (design tokens) for all values
+ * 2. Implements smooth animations and transitions
+ * 3. Provides proper focus states and hover effects
+ * 4. Ensures accessibility with proper focus indicators
+ * 
+ * Conclusion: Creates a polished, accessible tabs component
+ * that maintains visual consistency throughout the application.
+ */
+
+/* Main tabs container */
+.tabs {
+  display: flex;
+  width: 100%;
+}
+
+.tabs--horizontal {
+  flex-direction: column;
+}
+
+.tabs--vertical {
+  flex-direction: row;
+}
+
+.tabs--disabled {
+  opacity: var(--opacity-disabled, 0.5);
+  pointer-events: none;
+}
+
+/* Tab list */
+.tabs__list {
+  display: flex;
+  border-bottom: 2px solid var(--color-gray-200, #e5e7eb);
+  background-color: var(--color-white, #ffffff);
+}
+
+.tabs__list--horizontal {
+  flex-direction: row;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tabs__list--horizontal::-webkit-scrollbar {
+  display: none;
+}
+
+.tabs__list--vertical {
+  flex-direction: column;
+  border-bottom: none;
+  border-right: 2px solid var(--color-gray-200, #e5e7eb);
+  min-width: 200px;
+}
+
+.tabs__list--pills {
+  border-bottom: none;
+  gap: var(--spacing-xs, 0.5rem);
+  padding: var(--spacing-sm, 0.75rem);
+}
+
+.tabs__list--underline {
+  border-bottom: 2px solid var(--color-gray-200, #e5e7eb);
+}
+
+/* Individual tab */
+.tabs__tab {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs, 0.5rem);
+  padding: var(--spacing-sm, 0.75rem) var(--spacing-md, 1rem);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-family-primary, 'Inter', sans-serif);
+  font-size: var(--font-size-base, 1rem);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--color-gray-600, #4b5563);
+  transition: all var(--transition-duration-fast, 0.15s) var(--transition-easing, ease-in-out);
+  white-space: nowrap;
+  position: relative;
+}
+
+.tabs__tab:hover:not(:disabled) {
+  color: var(--color-gray-900, #111827);
+  background-color: var(--color-gray-50, #f9fafb);
+}
+
+.tabs__tab:focus-visible {
+  outline: 2px solid var(--color-primary-500, #3b82f6);
+  outline-offset: -2px;
+}
+
+.tabs__tab--active {
+  color: var(--color-primary-600, #2563eb);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.tabs__tab--disabled {
+  color: var(--color-gray-400, #9ca3af);
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled, 0.5);
+}
+
+/* Default variant */
+.tabs__tab--default {
+  border-bottom: 2px solid transparent;
+}
+
+.tabs__tab--default.tabs__tab--active {
+  border-bottom-color: var(--color-primary-600, #2563eb);
+  background-color: var(--color-white, #ffffff);
+}
+
+/* Pills variant */
+.tabs__tab--pills {
+  border-radius: var(--border-radius-full, 9999px);
+  border: 1px solid transparent;
+}
+
+.tabs__tab--pills:hover:not(:disabled) {
+  background-color: var(--color-gray-100, #f3f4f6);
+  border-color: var(--color-gray-300, #d1d5db);
+}
+
+.tabs__tab--pills.tabs__tab--active {
+  background-color: var(--color-primary-600, #2563eb);
+  color: var(--color-white, #ffffff);
+  border-color: var(--color-primary-600, #2563eb);
+}
+
+.tabs__tab--pills.tabs__tab--active:hover {
+  background-color: var(--color-primary-700, #1d4ed8);
+  border-color: var(--color-primary-700, #1d4ed8);
+}
+
+/* Underline variant */
+.tabs__tab--underline {
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tabs__tab--underline:hover:not(:disabled) {
+  border-bottom-color: var(--color-gray-300, #d1d5db);
+}
+
+.tabs__tab--underline.tabs__tab--active {
+  border-bottom-color: var(--color-primary-600, #2563eb);
+}
+
+/* Tab sizes */
+.tabs__tab--sm {
+  padding: var(--spacing-xs, 0.5rem) var(--spacing-sm, 0.75rem);
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+.tabs__tab--md {
+  padding: var(--spacing-sm, 0.75rem) var(--spacing-md, 1rem);
+  font-size: var(--font-size-base, 1rem);
+}
+
+.tabs__tab--lg {
+  padding: var(--spacing-md, 1rem) var(--spacing-lg, 1.5rem);
+  font-size: var(--font-size-lg, 1.125rem);
+}
+
+/* Vertical orientation */
+.tabs__tab--vertical {
+  justify-content: flex-start;
+  text-align: left;
+  border-bottom: none;
+  border-right: 2px solid transparent;
+  margin-bottom: 0;
+  margin-right: -2px;
+}
+
+.tabs__tab--vertical.tabs__tab--active {
+  border-right-color: var(--color-primary-600, #2563eb);
+  background-color: var(--color-primary-50, #eff6ff);
+}
+
+.tabs__tab--vertical:hover:not(:disabled) {
+  background-color: var(--color-gray-50, #f9fafb);
+}
+
+/* Tab icon */
+.tabs__tab-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: var(--font-size-base, 1rem);
+}
+
+/* Tab label */
+.tabs__tab-label {
+  flex: 1;
+  text-align: left;
+}
+
+/* Tab badge */
+.tabs__tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 var(--spacing-xs, 0.5rem);
+  background-color: var(--color-gray-200, #e5e7eb);
+  color: var(--color-gray-700, #374151);
+  border-radius: var(--border-radius-full, 9999px);
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: var(--font-weight-medium, 500);
+  line-height: 1;
+}
+
+.tabs__tab--active .tabs__tab-badge {
+  background-color: var(--color-primary-100, #dbeafe);
+  color: var(--color-primary-700, #1d4ed8);
+}
+
+.tabs__tab--pills.tabs__tab--active .tabs__tab-badge {
+  background-color: var(--color-white, #ffffff);
+  color: var(--color-primary-600, #2563eb);
+}
+
+/* Tab content */
+.tabs__content {
+  flex: 1;
+  padding: var(--spacing-lg, 1.5rem);
+  background-color: var(--color-white, #ffffff);
+}
+
+.tabs__content--vertical {
+  padding-left: var(--spacing-lg, 1.5rem);
+}
+
+/* Tab panel */
+.tabs__panel {
+  display: none;
+  animation: tabFadeIn var(--transition-duration-fast, 0.15s) var(--transition-easing, ease-in-out);
+}
+
+.tabs__panel--active {
+  display: block;
+}
+
+@keyframes tabFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .tabs--vertical {
+    flex-direction: column;
+  }
+  
+  .tabs__list--vertical {
+    flex-direction: row;
+    border-right: none;
+    border-bottom: 2px solid var(--color-gray-200, #e5e7eb);
+    min-width: auto;
+    overflow-x: auto;
+  }
+  
+  .tabs__tab--vertical {
+    border-right: none;
+    border-bottom: 2px solid transparent;
+    margin-right: 0;
+    margin-bottom: -2px;
+  }
+  
+  .tabs__tab--vertical.tabs__tab--active {
+    border-right-color: transparent;
+    border-bottom-color: var(--color-primary-600, #2563eb);
+  }
+  
+  .tabs__content--vertical {
+    padding-left: var(--spacing-md, 1rem);
+    padding-top: var(--spacing-md, 1rem);
+  }
+  
+  .tabs__tab--lg {
+    padding: var(--spacing-sm, 0.75rem) var(--spacing-md, 1rem);
+    font-size: var(--font-size-base, 1rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .tabs__list--pills {
+    padding: var(--spacing-xs, 0.5rem);
+    gap: var(--spacing-xs, 0.25rem);
+  }
+  
+  .tabs__tab--md {
+    padding: var(--spacing-xs, 0.5rem) var(--spacing-sm, 0.75rem);
+    font-size: var(--font-size-sm, 0.875rem);
+  }
+  
+  .tabs__content {
+    padding: var(--spacing-md, 1rem);
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .tabs__list {
+    background-color: var(--color-gray-800, #1f2937);
+    border-bottom-color: var(--color-gray-700, #374151);
+  }
+  
+  .tabs__list--vertical {
+    border-right-color: var(--color-gray-700, #374151);
+  }
+  
+  .tabs__tab {
+    color: var(--color-gray-400, #9ca3af);
+  }
+  
+  .tabs__tab:hover:not(:disabled) {
+    color: var(--color-gray-200, #e5e7eb);
+    background-color: var(--color-gray-700, #374151);
+  }
+  
+  .tabs__tab--active {
+    color: var(--color-primary-400, #60a5fa);
+  }
+  
+  .tabs__tab--default.tabs__tab--active {
+    border-bottom-color: var(--color-primary-400, #60a5fa);
+    background-color: var(--color-gray-800, #1f2937);
+  }
+  
+  .tabs__tab--pills.tabs__tab--active {
+    background-color: var(--color-primary-600, #2563eb);
+    border-color: var(--color-primary-600, #2563eb);
+  }
+  
+  .tabs__tab--underline.tabs__tab--active {
+    border-bottom-color: var(--color-primary-400, #60a5fa);
+  }
+  
+  .tabs__tab--vertical.tabs__tab--active {
+    border-right-color: var(--color-primary-400, #60a5fa);
+    background-color: var(--color-primary-900, #1e3a8a);
+  }
+  
+  .tabs__tab--vertical:hover:not(:disabled) {
+    background-color: var(--color-gray-700, #374151);
+  }
+  
+  .tabs__tab-badge {
+    background-color: var(--color-gray-600, #4b5563);
+    color: var(--color-gray-200, #e5e7eb);
+  }
+  
+  .tabs__tab--active .tabs__tab-badge {
+    background-color: var(--color-primary-800, #1e40af);
+    color: var(--color-primary-200, #bfdbfe);
+  }
+  
+  .tabs__tab--pills.tabs__tab--active .tabs__tab-badge {
+    background-color: var(--color-gray-800, #1f2937);
+    color: var(--color-primary-400, #60a5fa);
+  }
+  
+  .tabs__content {
+    background-color: var(--color-gray-800, #1f2937);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .tabs__tab {
+    border-width: 2px;
+  }
+  
+  .tabs__tab:focus-visible {
+    border-width: 3px;
+  }
+  
+  .tabs__tab--active {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .tabs__tab,
+  .tabs__panel {
+    transition: none;
+  }
+  
+  .tabs__panel {
+    animation: none;
+  }
+} 

@@ -1,0 +1,250 @@
+/**
+ * Modal.css - AlphaFrame Phase X Sprint 2
+ * 
+ * Purpose: Styles for the Modal component using design tokens
+ * for consistent visual appearance and smooth animations.
+ * 
+ * Procedure:
+ * 1. Uses CSS custom properties (design tokens) for all values
+ * 2. Implements smooth enter/exit animations
+ * 3. Provides proper backdrop and focus management
+ * 4. Ensures accessibility with proper focus indicators
+ * 
+ * Conclusion: Creates a polished, accessible modal component
+ * that maintains visual consistency throughout the application.
+ */
+
+/* Backdrop */
+.modal__backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-index-modal, 1000);
+  padding: var(--spacing-md, 1rem);
+  opacity: 0;
+  transition: opacity var(--transition-duration-normal, 0.3s) var(--transition-easing, ease-in-out);
+}
+
+.modal__backdrop.modal--open {
+  opacity: 1;
+}
+
+/* Modal container */
+.modal {
+  background-color: var(--color-white, #ffffff);
+  border-radius: var(--border-radius-lg, 0.75rem);
+  box-shadow: var(--shadow-xl, 0 20px 25px -5px rgba(0, 0, 0, 0.1));
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.95) translateY(-20px);
+  opacity: 0;
+  transition: all var(--transition-duration-normal, 0.3s) var(--transition-easing, ease-in-out);
+}
+
+.modal--open {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* Modal sizes */
+.modal--sm {
+  width: 400px;
+}
+
+.modal--md {
+  width: 500px;
+}
+
+.modal--lg {
+  width: 700px;
+}
+
+.modal--xl {
+  width: 900px;
+}
+
+/* Modal content */
+.modal__content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 90vh;
+}
+
+/* Header */
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-lg, 1.5rem) var(--spacing-lg, 1.5rem) var(--spacing-md, 1rem);
+  border-bottom: 1px solid var(--color-gray-200, #e5e7eb);
+  flex-shrink: 0;
+}
+
+.modal__title {
+  font-family: var(--font-family-primary, 'Inter', sans-serif);
+  font-size: var(--font-size-xl, 1.25rem);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-gray-900, #111827);
+  margin: 0;
+  line-height: var(--line-height-tight, 1.25);
+}
+
+.modal__close-button {
+  background: none;
+  border: none;
+  padding: var(--spacing-xs, 0.5rem);
+  border-radius: var(--border-radius-md, 0.5rem);
+  cursor: pointer;
+  color: var(--color-gray-500, #6b7280);
+  font-size: var(--font-size-xl, 1.25rem);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-duration-fast, 0.15s) var(--transition-easing, ease-in-out);
+}
+
+.modal__close-button:hover {
+  background-color: var(--color-gray-100, #f3f4f6);
+  color: var(--color-gray-700, #374151);
+}
+
+.modal__close-button:focus-visible {
+  outline: 2px solid var(--color-primary-500, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* Body */
+.modal__body {
+  padding: var(--spacing-lg, 1.5rem);
+  overflow-y: auto;
+  flex: 1;
+  color: var(--color-gray-700, #374151);
+  line-height: var(--line-height-normal, 1.5);
+}
+
+/* Footer */
+.modal__footer {
+  padding: var(--spacing-md, 1rem) var(--spacing-lg, 1.5rem);
+  border-top: 1px solid var(--color-gray-200, #e5e7eb);
+  display: flex;
+  gap: var(--spacing-md, 1rem);
+  justify-content: flex-end;
+  flex-shrink: 0;
+  background-color: var(--color-gray-50, #f9fafb);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .modal__backdrop {
+    padding: var(--spacing-sm, 0.75rem);
+  }
+  
+  .modal--sm,
+  .modal--md,
+  .modal--lg,
+  .modal--xl {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .modal__header {
+    padding: var(--spacing-md, 1rem) var(--spacing-md, 1rem) var(--spacing-sm, 0.75rem);
+  }
+  
+  .modal__body {
+    padding: var(--spacing-md, 1rem);
+  }
+  
+  .modal__footer {
+    padding: var(--spacing-sm, 0.75rem) var(--spacing-md, 1rem);
+    flex-direction: column;
+  }
+  
+  .modal__title {
+    font-size: var(--font-size-lg, 1.125rem);
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .modal {
+    background-color: var(--color-gray-800, #1f2937);
+    border: 1px solid var(--color-gray-700, #374151);
+  }
+  
+  .modal__header {
+    border-bottom-color: var(--color-gray-700, #374151);
+  }
+  
+  .modal__title {
+    color: var(--color-gray-100, #f3f4f6);
+  }
+  
+  .modal__close-button {
+    color: var(--color-gray-400, #9ca3af);
+  }
+  
+  .modal__close-button:hover {
+    background-color: var(--color-gray-700, #374151);
+    color: var(--color-gray-200, #e5e7eb);
+  }
+  
+  .modal__body {
+    color: var(--color-gray-300, #d1d5db);
+  }
+  
+  .modal__footer {
+    border-top-color: var(--color-gray-700, #374151);
+    background-color: var(--color-gray-900, #111827);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .modal {
+    border: 2px solid var(--color-gray-900, #111827);
+  }
+  
+  .modal__close-button:focus-visible {
+    outline: 3px solid var(--color-primary-600, #2563eb);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .modal__backdrop,
+  .modal {
+    transition: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .modal__backdrop {
+    position: static;
+    background: none;
+    padding: 0;
+  }
+  
+  .modal {
+    box-shadow: none;
+    border: 1px solid black;
+    max-width: none;
+    max-height: none;
+  }
+  
+  .modal__close-button {
+    display: none;
+  }
+} 

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { unlock, set, get, lock, isUnlocked } from '../../../src/lib/services/secureVault';
+import { unlock, set, get, lock, isUnlocked } from '../../../src/core/services/SecureVault';
 
 // Mock localStorage
 const localStorageMock = (() => {
@@ -20,7 +20,7 @@ Object.defineProperty(window, 'localStorage', {
 });
 
 // Mock crypto service
-vi.mock('../../../src/lib/services/crypto', () => ({
+vi.mock('../../../src/core/services/CryptoService', () => ({
   deriveKey: vi.fn(() => 'derived-key'),
   encrypt: vi.fn(data => `encrypted-${data}`),
   decrypt: vi.fn(data => {

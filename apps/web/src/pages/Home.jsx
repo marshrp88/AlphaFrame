@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useFinancialStateStore } from '@/lib/store/financialStateStore';
+import { useFinancialStateStore } from '@/core/store/financialStateStore';
 
 function Home() {
   // Get store functions
@@ -15,19 +15,13 @@ function Home() {
       currentAmount: 0,
       deadline: '2024-12-31'
     });
-
-    // Log current state
-    const balance = getAccountBalance('test_account');
-    const goal = getGoal('test_goal');
-
-    console.log('Financial State Test:', {
-      balance,
-      goal
-    });
   }, []);
 
   return (
     <div className="p-4">
+      {/* Debug span for test diagnostics */}
+      <span data-testid="page-mounted" style={{ display: 'none' }}>Home Page Mounted</span>
+      
       <h1>Home Page</h1>
       <div className="mt-4">
         <h2>Financial State Test</h2>

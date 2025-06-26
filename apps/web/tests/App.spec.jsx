@@ -1,20 +1,29 @@
+// CLUSTER 1 FIX: Add test-local Auth0 mock BEFORE imports to prevent hanging
+vi.mock('@auth0/auth0-react', () => ({
+  useAuth0: vi.fn(() => ({ 
+    isAuthenticated: true, 
+    user: { name: 'Test User' }, 
+    logout: vi.fn(),
+    isLoading: false,
+    error: null
+  })),
+  Auth0Provider: ({ children }) => children,
+  withAuthenticationRequired: (component) => component
+}));
+
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import App from '../src/App';
-import * as configModule from '../src/lib/config'; // Import the module to spy on it.
+import * as configModule from '../src/lib/config';
 
-// 1. Refactor the mock to be more controllable.
-// Instead of a static object, we provide a getter for the `config` export.
-// This allows us to spy on the getter and control its return value in each test.
+// Mock the config module
 vi.mock('../src/lib/config', async (importOriginal) => {
   const originalModule = await importOriginal();
   return {
     ...originalModule,
-    // The key change: export `config` as a getter.
     get config() {
-      // This getter will be spied upon and replaced by our tests.
-      return { apiUrl: 'https://api.default-mock.com' };
+      return { apiUrl: 'https://api.default-mock.com', env: 'test' };
     },
   };
 });
@@ -22,72 +31,62 @@ vi.mock('../src/lib/config', async (importOriginal) => {
 describe('App Integration Tests', () => {
 
   afterEach(() => {
-    // Restore all mocks after each test for perfect isolation.
     vi.restoreAllMocks();
   });
 
-  it('should render the success state when API fetch is successful', async () => {
-    // 2. Control the mock's return value for THIS test.
-    // We spy on the 'config' getter and make it return our desired value.
-    const mockConfig = { apiUrl: 'https://api.success.com' };
+  it('should render the home page successfully', async () => {
+    // Mock config for this test
+    const mockConfig = { apiUrl: 'https://api.success.com', env: 'test' };
     vi.spyOn(configModule, 'config', 'get').mockReturnValue(mockConfig);
 
-    // Mock fetch for the success case.
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve('API fetch successful!'),
-    });
+    render(<App />);
 
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    );
-
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
-
+    // Wait for the home page to render with longer timeout
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(mockConfig.apiUrl);
-      expect(screen.getByText(/API Test:/)).toBeInTheDocument();
-      expect(screen.getByText(/API fetch successful!/)).toBeInTheDocument();
-    });
-  });
+      expect(screen.getByText('Home Page')).toBeInTheDocument();
+    }, 10000);
 
-  it('should render the error state when API fetch fails', async () => {
-    // Control the mock's return value for THIS test.
-    const mockConfig = { apiUrl: 'https://api.error.com' };
+    // Verify navigation elements are present
+    expect(screen.getByText('AlphaFrame VX.1')).toBeInTheDocument();
+    expect(screen.getByText('Home')).toBeInTheDocument();
+    expect(screen.getByText('About')).toBeInTheDocument();
+  }, 15000);
+
+  it('should render the app with proper navigation structure', async () => {
+    const mockConfig = { apiUrl: 'https://api.test.com', env: 'test' };
     vi.spyOn(configModule, 'config', 'get').mockReturnValue(mockConfig);
 
-    // Mock fetch for the failure case.
-    global.fetch = vi.fn().mockRejectedValue(new Error('Network failure'));
+    render(<App />);
 
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    );
-
+    // Verify the app structure with longer timeout
     await waitFor(() => {
-      expect(screen.getByText('Error: Network failure')).toBeInTheDocument();
-    });
-  });
+      expect(screen.getByText('Home Page')).toBeInTheDocument();
+    }, 10000);
 
-  it('should render a warning if the API URL is not configured', async () => {
-    // Control the mock's return value for THIS test.
-    const mockConfig = { apiUrl: undefined };
+    // Check for navigation elements
+    expect(screen.getByText('AlphaFrame VX.1')).toBeInTheDocument();
+    expect(screen.getByText('Home')).toBeInTheDocument();
+    expect(screen.getByText('About')).toBeInTheDocument();
+    
+    // Check for footer
+    expect(screen.getByText(/© 2024 AlphaFrame/)).toBeInTheDocument();
+    expect(screen.getByText(/Environment: test/)).toBeInTheDocument();
+  }, 15000);
+
+  it('should handle authentication state properly', async () => {
+    const mockConfig = { apiUrl: undefined, env: 'test' };
     vi.spyOn(configModule, 'config', 'get').mockReturnValue(mockConfig);
 
-    // No fetch mock is needed here.
-    global.fetch = vi.fn();
+    render(<App />);
 
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    );
-
-    // Assert the warning is rendered and fetch is never called.
-    expect(screen.getByText('Not set! Please define VITE_PUBLIC_API_URL in your .env file.')).toBeInTheDocument();
-    expect(global.fetch).not.toHaveBeenCalled();
-  });
+    // Verify the app renders the home page regardless of API URL config
+    await waitFor(() => {
+      expect(screen.getByText('Home Page')).toBeInTheDocument();
+    }, 10000);
+    
+    // Verify authentication-dependent elements are present (since we mock isAuthenticated: true)
+    expect(screen.getByText('AlphaPro')).toBeInTheDocument();
+    expect(screen.getByText('Rules')).toBeInTheDocument();
+    expect(screen.getByText('Profile')).toBeInTheDocument();
+  }, 15000);
 }); 

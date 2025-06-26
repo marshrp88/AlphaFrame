@@ -5,10 +5,9 @@
  */
 
 import { useState, useEffect } from 'react';
-import { Input } from '@/components/ui/Input';
-import { Label } from '@/components/ui/Label';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from "@/components/ui/use-toast";
+import { Input } from "@/shared/ui/Input";
+import { Label } from "@/shared/ui/Label";
+import { Textarea } from "@/shared/ui/textarea";
 
 /**
  * WebhookActionForm Component
@@ -26,7 +25,6 @@ export default function WebhookActionForm({ initialPayload, onChange }) {
   const [payload, setPayload] = useState(initialPayload?.payload || '');
   const [method, setMethod] = useState(initialPayload?.method || 'POST');
   const [errors, setErrors] = useState({});
-  const { toast } = useToast();
 
   // Validate URL format
   const validateUrl = (url) => {
@@ -170,4 +168,7 @@ export default function WebhookActionForm({ initialPayload, onChange }) {
       </div>
     </div>
   );
-} 
+}
+
+export { WebhookActionForm }; 
+

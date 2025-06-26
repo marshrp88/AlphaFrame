@@ -1,0 +1,290 @@
+name: AlphaFrame Web CI/CD
+
+on:
+  push:
+    branches: ["main", "feat/vx1-restart", "feat/*", "fix/*"]
+  pull_request:
+    branches: ["main", "feat/vx1-restart"]
+
+env:
+  NODE_VERSION: "18"
+  PNPM_VERSION: "8"
+
+jobs:
+  # Security and Code Quality Checks
+  security_scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run security audit
+        run: pnpm audit --audit-level moderate
+
+      - name: Check for known vulnerabilities
+        run: |
+          if pnpm audit --audit-level moderate | grep -q "found"; then
+            echo "Security vulnerabilities found!"
+            exit 1
+          fi
+
+  # Code Quality and Linting
+  code_quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run ESLint
+        run: pnpm lint
+
+      - name: Run Prettier check
+        run: pnpm format --check
+
+      - name: Check for console.log statements
+        run: |
+          if grep -r "console\.log" src/ --include="*.js" --include="*.jsx"; then
+            echo "console.log statements found in production code!"
+            exit 1
+          fi
+
+  # Build and Test
+  build_and_test:
+    runs-on: ubuntu-latest
+    needs: [security_scan, code_quality]
+    strategy:
+      matrix:
+        node-version: [16, 18, 20]
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup environment variables
+        run: |
+          cp env.dev.example .env
+          echo "VITE_AUTH0_DOMAIN=test.auth0.com" >> .env
+          echo "VITE_AUTH0_CLIENT_ID=test-client-id" >> .env
+          echo "VITE_PLAID_CLIENT_ID=test-plaid-client" >> .env
+          echo "VITE_PLAID_SECRET=test-plaid-secret" >> .env
+          echo "VITE_PLAID_ENV=sandbox" >> .env
+
+      - name: Run unit tests
+        run: pnpm test -- --run --reporter=verbose
+        timeout-minutes: 10
+
+      - name: Run test coverage
+        run: pnpm test:coverage
+        timeout-minutes: 5
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+
+      - name: Build application
+        run: pnpm build
+        timeout-minutes: 5
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.node-version }}
+          path: dist/
+          retention-days: 7
+
+  # E2E Testing
+  e2e_tests:
+    runs-on: ubuntu-latest
+    needs: build_and_test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-18
+          path: dist/
+
+      - name: Setup environment for E2E
+        run: |
+          cp env.dev.example .env
+          echo "VITE_AUTH0_DOMAIN=test.auth0.com" >> .env
+          echo "VITE_AUTH0_CLIENT_ID=test-client-id" >> .env
+          echo "VITE_PLAID_CLIENT_ID=test-plaid-client" >> .env
+          echo "VITE_PLAID_SECRET=test-plaid-secret" >> .env
+          echo "VITE_PLAID_ENV=sandbox" >> .env
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run E2E tests
+        run: npx playwright test
+        timeout-minutes: 15
+
+      - name: Upload E2E test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+  # Performance Testing
+  performance:
+    runs-on: ubuntu-latest
+    needs: build_and_test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-18
+          path: dist/
+
+      - name: Start preview server
+        run: pnpm preview &
+        timeout-minutes: 2
+
+      - name: Run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli@0.12.x
+          lhci autorun
+        timeout-minutes: 10
+
+  # Deployment (Staging)
+  deploy_staging:
+    runs-on: ubuntu-latest
+    needs: [build_and_test, e2e_tests, performance]
+    if: github.ref == 'refs/heads/feat/vx1-restart' || github.ref == 'refs/heads/main'
+    environment: staging
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-18
+          path: dist/
+
+      - name: Deploy to staging
+        run: |
+          echo "Deploying to staging environment..."
+          # Add your staging deployment logic here
+          # Example: aws s3 sync dist/ s3://your-staging-bucket/
+          echo "Staging deployment completed"
+
+  # Deployment (Production)
+  deploy_production:
+    runs-on: ubuntu-latest
+    needs: [build_and_test, e2e_tests, performance]
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-18
+          path: dist/
+
+      - name: Deploy to production
+        run: |
+          echo "Deploying to production environment..."
+          # Add your production deployment logic here
+          # Example: aws s3 sync dist/ s3://your-production-bucket/
+          echo "Production deployment completed"
+
+      - name: Create release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Release v${{ github.run_number }}
+          body: |
+            Automated release for AlphaFrame VX.1
+            
+            Build: ${{ github.run_number }}
+            Commit: ${{ github.sha }}
+            Branch: ${{ github.ref }}
+          draft: false
+          prerelease: false
