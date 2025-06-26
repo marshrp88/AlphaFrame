@@ -1,5 +1,4 @@
-
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test('should capture console logs', async ({ page }) => {
   // Listen for console messages

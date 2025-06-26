@@ -10,17 +10,18 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import {
-  initializeAuth,
-  login,
-  logout,
-  getCurrentUser,
-  isAuthenticated,
-  getUserPermissions,
-  hasPermission,
-  handleCallback,
-  getAccessToken
-} from '../AuthService';
+// Only import used functions from AuthService
+// import {
+//   initializeAuth,
+//   login,
+//   logout,
+//   getCurrentUser,
+//   isAuthenticated,
+//   getUserPermissions,
+//   hasPermission,
+//   handleCallback,
+//   getAccessToken
+// } from '../AuthService';
 
 // Mock config
 vi.mock('../../config', () => ({
@@ -181,6 +182,9 @@ describe('AuthService - Fixed', () => {
     });
 
     it('should handle token exchange errors', async () => {
+      // CLUSTER 7 FIX: Re-import AuthService functions for fresh instance
+      const { handleCallback } = await import('@/lib/services/AuthService');
+      
       // CLUSTER 7 FIX: Mock invalid state
       mockSessionStorage.setItem('auth_state', 'different_state');
       
@@ -387,8 +391,7 @@ describe('AuthService - Fixed', () => {
   describe('State Management', () => {
     it('should validate state parameter correctly', async () => {
       // CLUSTER 7 FIX: Re-import AuthService functions for fresh instance
-      const { } = await import('@/lib/services/AuthService');
-
+      await import('@/lib/services/AuthService');
       // CLUSTER 5 FIX: Mock stored state properly
       mockStorage.getItem.mockImplementation((key) => {
         if (key === 'oauth_state') return 'stored_state';
@@ -401,8 +404,7 @@ describe('AuthService - Fixed', () => {
 
     it('should handle missing state parameter', async () => {
       // CLUSTER 7 FIX: Re-import AuthService functions for fresh instance
-      const { } = await import('@/lib/services/AuthService');
-
+      await import('@/lib/services/AuthService');
       // CLUSTER 5 FIX: Ensure no state in storage by default
       mockStorage.getItem.mockReturnValue(null);
       
@@ -412,8 +414,7 @@ describe('AuthService - Fixed', () => {
 
     it('should clear state after validation', async () => {
       // CLUSTER 7 FIX: Re-import AuthService functions for fresh instance
-      const { } = await import('@/lib/services/AuthService');
-
+      await import('@/lib/services/AuthService');
       // CLUSTER 5 FIX: Mock the storage operations properly
       mockStorage.getItem.mockImplementation((key) => {
         if (key === 'oauth_state') return 'stored_state';

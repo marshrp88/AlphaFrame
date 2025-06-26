@@ -238,7 +238,7 @@ const Profile = () => {
             </div>
           ) : (
             <p className="text-gray-500 text-sm">
-              Click "Refresh Token" to view current session information
+              Click &quot;Refresh Token&quot; to view current session information
             </p>
           )}
         </Card>

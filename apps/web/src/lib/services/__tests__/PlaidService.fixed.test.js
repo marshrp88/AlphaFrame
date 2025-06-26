@@ -47,8 +47,8 @@ describe('PlaidService - Fixed', () => {
       transactionsGet: vi.fn(),
     };
     // Set up CryptoService mocks using ESM import
-    CryptoService.encrypt = vi.fn().mockResolvedValue('encrypted_token');
-    CryptoService.decrypt = vi.fn().mockResolvedValue('decrypted_token');
+    vi.spyOn(CryptoService, 'encrypt').mockResolvedValue('encrypted_token');
+    vi.spyOn(CryptoService, 'decrypt').mockResolvedValue('decrypted_token');
 
     const createStorageMock = () => {
       let store = {};

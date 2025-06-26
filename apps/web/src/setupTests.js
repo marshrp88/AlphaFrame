@@ -26,23 +26,23 @@ import { vi } from 'vitest';
 // ============================================================================
 
 // Add global error listeners to catch silent failures that cause test timeouts
-process.on('unhandledRejection', (reason, promise) => {
+process.on('unhandledRejection', () => {
   // console.error('💥 [TEST SETUP] Unhandled Promise Rejection:', reason);
   // console.error('💥 [TEST SETUP] Promise:', promise);
 });
 
-process.on('uncaughtException', (error) => {
+process.on('uncaughtException', () => {
   // console.error('💥 [TEST SETUP] Uncaught Exception:', error);
   // console.error('💥 [TEST SETUP] Stack:', error.stack);
 });
 
 // Also catch errors in the browser environment (jsdom)
 if (typeof window !== 'undefined') {
-  window.addEventListener('error', (event) => {
+  window.addEventListener('error', () => {
     // console.error('💥 [TEST SETUP] Window Error:', event.error);
   });
   
-  window.addEventListener('unhandledrejection', (event) => {
+  window.addEventListener('unhandledrejection', () => {
     // console.error('💥 [TEST SETUP] Window Unhandled Rejection:', event.reason);
   });
 }

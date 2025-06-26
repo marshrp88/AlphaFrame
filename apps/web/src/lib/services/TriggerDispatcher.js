@@ -122,10 +122,9 @@ export class TriggerDispatcher {
 
   /**
    * Removes a previously created trigger
-   * @param {string} triggerId - The ID of the trigger to remove
    * @returns {boolean} Whether the trigger was successfully removed
    */
-  static removeTrigger(triggerId) {
+  static removeTrigger() {
     // Implementation for removing triggers
     return true;
   }

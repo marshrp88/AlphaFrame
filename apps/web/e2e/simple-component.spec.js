@@ -1,5 +1,4 @@
-
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test('should render basic components', async ({ page }) => {
   // Navigate to rules page

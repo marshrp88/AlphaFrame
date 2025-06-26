@@ -15,12 +15,12 @@ export const mockUIComponents = {
     <input value={value} onChange={onChange} {...props} />
   )),
   Label: vi.fn(({ children }) => <label>{children}</label>),
-  RadioGroup: vi.fn(({ children, value, onValueChange }) => (
+  RadioGroup: vi.fn(({ children, onValueChange }) => (
     <div onChange={(e) => onValueChange?.(e.target.value)}>{children}</div>
   )),
-  RadioGroupItem: vi.fn(({ value, children }) => (
+  RadioGroupItem: vi.fn(({ children }) => (
     <div>
-      <input type="radio" value={value} />
+      <input type="radio" />
       {children}
     </div>
   ))

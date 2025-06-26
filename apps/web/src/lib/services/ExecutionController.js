@@ -306,11 +306,10 @@ export class ExecutionController {
 
   /**
    * Handles goal adjustment actions
-   * @param {Object} payload - The goal adjustment configuration
    * @returns {Promise<Object>} The result of the goal adjustment
    * @private
    */
-  static async handleGoalAdjustment(payload) {
+  static async handleGoalAdjustment() {
     // Implementation for goal adjustments
     return { success: true, adjustmentId: 'mock_adjustment_id' };
   }
@@ -333,25 +332,25 @@ export class ExecutionController {
    * @returns {Promise<Object>} The result of the communication
    * @private
    */
-  static async handleCommunicationAction({ actionType, payload: actionPayload }) {
+  static async handleCommunicationAction({ actionType, payload }) {
     try {
       switch (actionType) {
         case 'SEND_EMAIL':
-          return await sendEmail(actionPayload);
+          return await sendEmail(payload);
         
         case 'SEND_NOTIFICATION':
           // For now, treat notifications as emails
           return await sendEmail({
-            ...actionPayload,
-            template: actionPayload.template || 'notification'
+            ...payload,
+            template: payload.template || 'notification'
           });
         
         case 'CREATE_ALERT':
           // Create in-app alert
           useUIStore.getState().showAlert({
-            type: actionPayload.type || 'info',
-            message: actionPayload.message,
-            title: actionPayload.title
+            type: payload.type || 'info',
+            message: payload.message,
+            title: payload.title
           });
           return { success: true, alertId: `alert_${Date.now()}` };
         

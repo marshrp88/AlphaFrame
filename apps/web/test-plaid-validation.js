@@ -16,9 +16,9 @@
  * and data integrity for production financial management.
  */
 
-import { initializePlaid, createLinkToken, exchangePublicToken, getAccounts, getTransactions, syncTransactions } from './src/lib/services/syncEngine.js';
+import { initializePlaid, createLinkToken, exchangePublicToken as _exchangePublicToken, getAccounts as _getAccounts, getTransactions as _getTransactions, syncTransactions as _syncTransactions } from './src/lib/services/syncEngine.js';
 import { config } from './src/lib/config.js';
-import { useFinancialStateStore } from './src/core/store/financialStateStore.js';
+import { useFinancialStateStore as _useFinancialStateStore } from './src/core/store/financialStateStore.js';
 
 /**
  * Plaid Integration Validation Test Suite

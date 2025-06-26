@@ -29,7 +29,7 @@ class RecommendationEngine {
   /**
    * Generate personalized recommendations based on financial state and user context
    */
-  async generateRecommendations(financialState, userContext) {
+  async generateRecommendations(financialState) {
     try {
       const recommendations = [];
       
@@ -166,7 +166,7 @@ class RecommendationEngine {
    * Analyze savings goals and generate recommendations
    */
   analyzeSavingsGoals(financialState) {
-    const savings = financialState?.savings || 0;
+    // const savings = financialState?.savings || 0;
     const monthlyIncome = financialState?.monthlyIncome || 0;
     const savingsRate = financialState?.savingsRate || 0;
 

@@ -226,7 +226,7 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
             </h2>
             
             <p className="text-gray-600">
-              We found {accounts.length} account{accounts.length !== 1 ? 's' : ''}. Select the account you'd like to use with AlphaFrame.
+              We found {accounts.length} account{accounts.length !== 1 ? 's' : ''}. Select the account you&apos;d like to use with AlphaFrame.
             </p>
           </div>
 
@@ -253,7 +253,7 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
                   <div>
                     <h3 className="font-medium text-gray-900">{account.name}</h3>
                     <p className="text-sm text-gray-500">
-                      {account.type} • {account.subtype} • ****{account.mask}
+                      {account.type} • {account.subtype} • *******{account.mask}
                     </p>
                   </div>
                   <div className="text-right">
