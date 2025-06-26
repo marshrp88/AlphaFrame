@@ -29,6 +29,7 @@ import Step3BudgetSetup from './steps/Step3BudgetSetup.jsx';
 import Step4SetMode from './steps/Step4SetMode.jsx';
 import { useAuthStore } from '../../core/store/authStore.js';
 import { useFinancialStateStore } from '../../core/store/financialStateStore.js';
+import { useToast } from '../../components/ui/use-toast.jsx';
 
 /**
  * Onboarding steps configuration
@@ -71,6 +72,7 @@ export const OnboardingFlow = () => {
   const navigate = useNavigate();
   const { user, updateUserProfile } = useAuthStore();
   const { initializeFinancialState } = useFinancialStateStore();
+  const { toast } = useToast();
   
   const [currentStep, setCurrentStep] = useState(1);
   const [stepData, setStepData] = useState({});
@@ -90,6 +92,14 @@ export const OnboardingFlow = () => {
    */
   const handleStepComplete = (stepId, data) => {
     setStepData(prev => ({ ...prev, [stepId]: data }));
+    
+    // Show success toast for step completion
+    const stepConfig = ONBOARDING_STEPS[stepId - 1];
+    toast({
+      title: "Step Complete!",
+      description: `${stepConfig.title} completed successfully.`,
+      variant: "default"
+    });
     
     if (stepId < ONBOARDING_STEPS.length) {
       setCurrentStep(stepId + 1);
@@ -111,6 +121,13 @@ export const OnboardingFlow = () => {
       // Mark user as onboarded
       await updateUserProfile({ onboarded: true });
       
+      // Show success toast
+      toast({
+        title: "Welcome to AlphaFrame!",
+        description: "Your account has been set up successfully. Let's get started!",
+        variant: "default"
+      });
+      
       // Redirect to dashboard
       navigate('/dashboard', { 
         state: { 
@@ -120,8 +137,12 @@ export const OnboardingFlow = () => {
       });
       
     } catch (error) {
-      console.error('Onboarding completion failed:', error);
-      // Handle error - could show error message or retry
+      // Show error toast
+      toast({
+        title: "Setup Error",
+        description: "There was an issue completing your setup. Please try again.",
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }
@@ -142,6 +163,13 @@ export const OnboardingFlow = () => {
   const handleSkipStep = () => {
     const currentStepConfig = ONBOARDING_STEPS[currentStep - 1];
     if (!currentStepConfig.required) {
+      // Show skip confirmation toast
+      toast({
+        title: "Step Skipped",
+        description: `${currentStepConfig.title} has been skipped. You can complete this later.`,
+        variant: "default"
+      });
+      
       handleStepComplete(currentStep, { skipped: true });
     }
   };
