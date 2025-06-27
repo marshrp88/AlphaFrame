@@ -1,5 +1,5 @@
 /**
- * App.jsx - AlphaFrame VX.1 Finalization
+ * App.jsx - AlphaFrame VX.1 Finalization with Performance Optimization
  * 
  * Purpose: Main application component with routing, authentication,
  * onboarding flow, and error boundaries for production readiness.
@@ -10,23 +10,18 @@
  * 3. Wrap components with error boundaries
  * 4. Handle authentication state and redirects
  * 5. Provide navigation and user experience
+ * 6. Implement lazy loading for performance optimization
  * 
  * Conclusion: Central application component that orchestrates
- * all user flows and ensures robust error handling.
+ * all user flows and ensures robust error handling with optimal performance.
  */
 
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { usePlaidLink } from 'react-plaid-link';
 import LoginButton from "./components/LoginButton.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
-import Profile from "./pages/Profile.jsx";
-import Home from "./pages/Home.jsx";
-import About from "./pages/About.jsx";
-import AlphaPro from "./pages/AlphaPro.jsx";
-import RulesPage from "./pages/RulesPage.jsx";
-import TestMount from "./pages/TestMount.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import { ToastProvider } from "./components/ui/use-toast.jsx";
 import { config } from "./lib/config.js";
@@ -38,59 +33,39 @@ import OnboardingFlow from './features/onboarding/OnboardingFlow.jsx';
 import NavBar from "./components/ui/NavBar.jsx";
 import StyledButton from "./components/ui/StyledButton.jsx";
 import CompositeCard from "./components/ui/CompositeCard.jsx";
+import DarkModeToggle from "./components/ui/DarkModeToggle.jsx";
+import PerformanceMonitor from "./components/ui/PerformanceMonitor.jsx";
 
 // Import styles
 import "./App.css";
 
-// Debug Router Logger to trace all route matches
-function DebugRouterLogger() {
-  const location = useLocation();
-  React.useEffect(() => {
-    // console.log('[Router Debug] Current pathname:', location.pathname);
-    // console.log('[Router Debug] Full location:', location);
-  }, [location]);
-  return null;
-}
+// Lazy load pages for performance optimization
+const Profile = lazy(() => import('./pages/Profile.jsx'));
+const Home = lazy(() => import('./pages/Home.jsx'));
+const About = lazy(() => import('./pages/About.jsx'));
+const AlphaPro = lazy(() => import('./pages/AlphaPro.jsx'));
+const RulesPage = lazy(() => import('./pages/RulesPage.jsx'));
+const TestMount = lazy(() => import('./pages/TestMount.jsx'));
 
-const PlaidLink = () => {
-  // TODO: This token must be fetched from your own backend server.
-  const linkToken = null; 
+// Loading component for lazy-loaded routes
+const PageLoader = () => (
+  <div className="page-loader">
+    <div className="loader-spinner"></div>
+    <p>Loading...</p>
+  </div>
+);
 
-  const onSuccess = React.useCallback(() => {
-    // console.log("Plaid success");
-  }, []);
-
-  const { open, ready } = usePlaidLink({
-    token: linkToken,
-    onSuccess,
-  });
-
-  return (
-    <button 
-      onClick={() => open()} 
-      disabled={!ready || !linkToken}
-      className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50"
-    >
-      Connect a bank account
-    </button>
-  );
-};
-
+// Navigation component with performance optimizations
 const Navigation = () => {
-  const { isAuthenticated } = useAuth0();
   const location = useLocation();
+  const { isAuthenticated, user } = useAuth0();
 
   const navigationItems = [
-    { label: 'Home', to: '/', icon: '🏠' },
-    { label: 'About', to: '/about', icon: 'ℹ️' },
-    { label: 'Dashboard', to: '/live-dashboard', icon: '📊' },
-    { label: 'Dashboard 2.0', to: '/dashboard2', icon: '🚀' },
-    { label: 'Onboarding', to: '/onboarding', icon: '🎯' },
-    ...(isAuthenticated ? [
-      { label: 'AlphaPro', to: '/alphapro', icon: '⭐' },
-      { label: 'Rules', to: '/rules', icon: '⚙️' },
-      { label: 'Profile', to: '/profile', icon: '👤' }
-    ] : [])
+    { path: '/', label: 'Home', icon: '🏠' },
+    { path: '/dashboard', label: 'Dashboard', icon: '📊' },
+    { path: '/rules', label: 'Rules', icon: '⚙️' },
+    { path: '/about', label: 'About', icon: 'ℹ️' },
+    { path: '/profile', label: 'Profile', icon: '👤' }
   ];
 
   return (
@@ -104,17 +79,14 @@ const Navigation = () => {
             </Link>
           </div>
           
-          <NavBar 
-            items={navigationItems}
-            currentPath={location.pathname}
-            className="navbar-main"
-          />
+          <NavBar items={navigationItems} currentPath={location.pathname} />
           
           <div className="navbar-actions">
+            <DarkModeToggle />
             {isAuthenticated ? (
               <StyledButton variant="secondary" size="sm">
                 <span className="user-avatar">👤</span>
-                <span className="user-name">Account</span>
+                <span className="user-name">{user?.name || 'Account'}</span>
               </StyledButton>
             ) : (
               <LoginButton />
@@ -126,15 +98,34 @@ const Navigation = () => {
   );
 };
 
+// Main App component with performance optimizations
 const App = () => {
-  const { isLoading } = useAuth0();
-  const isTestMode = import.meta.env.VITE_APP_ENV === 'test';
+  const { isLoading, error } = useAuth0();
 
-  if (isLoading && !isTestMode) {
+  // Show loading state
+  if (isLoading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p className="loading-text">Loading AlphaFrame...</p>
+      <div className="app-loading">
+        <div className="loading-container">
+          <div className="loader-spinner"></div>
+          <h2>Loading AlphaFrame</h2>
+          <p>Please wait while we initialize your experience...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="app-error">
+        <div className="error-container">
+          <h2>Authentication Error</h2>
+          <p>{error.message}</p>
+          <StyledButton onClick={() => window.location.reload()}>
+            Retry
+          </StyledButton>
+        </div>
       </div>
     );
   }
@@ -143,89 +134,89 @@ const App = () => {
     <ErrorBoundary>
       <ToastProvider>
         <Router>
-          <DebugRouterLogger />
-          <div className="app-wrapper">
+          <div className="app">
             <Navigation />
             
-            <main className="main-content">
-              <div className="content-container">
-                {(() => {
-                  try {
-                    return (
-                      <Routes>
-                        {/* Public Routes */}
-                        <Route path="/" element={<Home />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/test-mount" element={<TestMount />} />
-                        
-                        {/* Protected Routes */}
-                        <Route 
-                          path="/profile" 
-                          element={
-                            isTestMode ? <Profile /> : (
-                              <PrivateRoute>
-                                <Profile />
-                              </PrivateRoute>
-                            )
-                          } 
-                        />
-                        
-                        <Route 
-                          path="/alphapro" 
-                          element={
-                            isTestMode ? <AlphaPro /> : (
-                              <PrivateRoute requiredRoles={['premium', 'admin']}>
-                                <AlphaPro />
-                              </PrivateRoute>
-                            )
-                          } 
-                        />
-                        
-                        {/* RULES ROUTE - Direct mount without lazy loading or conditional guards */}
-                        <Route 
-                          path="/rules" 
-                          element={
-                            (() => {
-                              return <RulesPage />; // Direct mount - no lazy, no Suspense, no conditional guards
-                            })()
-                          } 
-                        />
-                        
-                        <Route path="/live-dashboard" element={<LiveFinancialDashboard />} />
-                        <Route path="/dashboard2" element={<Dashboard2 />} />
-                        <Route path="/onboarding" element={<OnboardingFlow />} />
-                        
-                        {/* 404 Route */}
-                        <Route 
-                          path="*" 
-                          element={
-                            <div className="error-page">
-                              <CompositeCard variant="elevated" className="error-card">
-                                <h1 className="error-title">404</h1>
-                                <p className="error-message">Page not found</p>
-                                <StyledButton as={Link} to="/" variant="primary">
-                                  Go Home
-                                </StyledButton>
-                              </CompositeCard>
-                            </div>
-                          } 
-                        />
-                      </Routes>
-                    );
-                  } catch (err) {
-                    return (
-                      <div className="error-page">
-                        <CompositeCard variant="elevated" className="error-card">
-                          <h1 className="error-title">Application Error</h1>
-                          <p className="error-message">{err?.message || "Unknown error occurred"}</p>
-                          <pre className="error-details">{err?.stack}</pre>
+            <main className="app-main">
+              <Suspense fallback={<PageLoader />}>
+                <Routes>
+                  {/* Public Routes */}
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about" element={<About />} />
+                  
+                  {/* Protected Routes */}
+                  <Route 
+                    path="/dashboard" 
+                    element={
+                      <PrivateRoute>
+                        <Dashboard2 />
+                      </PrivateRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/profile" 
+                    element={
+                      <PrivateRoute>
+                        <Profile />
+                      </PrivateRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/rules" 
+                    element={
+                      <PrivateRoute>
+                        <RulesPage />
+                      </PrivateRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/alphapro" 
+                    element={
+                      <PrivateRoute>
+                        <AlphaPro />
+                      </PrivateRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/test" 
+                    element={
+                      <PrivateRoute>
+                        <TestMount />
+                      </PrivateRoute>
+                    } 
+                  />
+                  
+                  {/* Onboarding Route */}
+                  <Route 
+                    path="/onboarding" 
+                    element={
+                      <PrivateRoute>
+                        <OnboardingFlow />
+                      </PrivateRoute>
+                    } 
+                  />
+                  
+                  {/* 404 Route */}
+                  <Route 
+                    path="*" 
+                    element={
+                      <div className="not-found">
+                        <CompositeCard>
+                          <h1>Page Not Found</h1>
+                          <p>The page you're looking for doesn't exist.</p>
+                          <StyledButton onClick={() => window.history.back()}>
+                            Go Back
+                          </StyledButton>
                         </CompositeCard>
                       </div>
-                    );
-                  }
-                })()}
-              </div>
+                    } 
+                  />
+                </Routes>
+              </Suspense>
             </main>
+            
+            {/* Development Performance Monitor */}
+            <PerformanceMonitor />
           </div>
         </Router>
       </ToastProvider>

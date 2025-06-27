@@ -1,8 +1,8 @@
 /**
- * Profile.jsx - Modern User Profile Management
+ * Profile.jsx - AlphaFrame VX.1 Consumer-Ready Profile Management
  * 
  * Purpose: Provides users with a clean, intuitive profile page with
- * Auth0 integration and modern UI components.
+ * Auth0 integration and modern design system components.
  * 
  * This component provides:
  * - User profile display and management
@@ -16,7 +16,7 @@
  * - Role-based UI elements
  * - Account management tools
  * - Session information display
- * - Modern UI components and design tokens
+ * - Modern design system components
  */
 
 import React, { useState } from 'react';
@@ -24,6 +24,8 @@ import { motion } from 'framer-motion';
 import { useAuth0 } from '@auth0/auth0-react';
 import StyledButton from '../components/ui/StyledButton';
 import CompositeCard from '../components/ui/CompositeCard';
+import InputField from '../components/ui/InputField';
+import StatusBadge from '../components/ui/StatusBadge';
 import PageLayout from '../components/PageLayout';
 import { useToast } from '../components/ui/use-toast.jsx';
 import { 
@@ -36,7 +38,11 @@ import {
   AlertCircle,
   Mail,
   Calendar,
-  Key
+  Key,
+  Edit,
+  Save,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import './Profile.css';
 
@@ -51,6 +57,8 @@ const Profile = () => {
 
   const [isRefreshingToken, setIsRefreshingToken] = useState(false);
   const [tokenInfo, setTokenInfo] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [showToken, setShowToken] = useState(false);
   const { toast } = useToast();
 
   // Handle logout
@@ -113,11 +121,13 @@ const Profile = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <div className="loading-container">
-            <RefreshCw className="loading-spinner" />
-            <h2>Loading Profile</h2>
-            <p>Please wait while we load your profile information...</p>
-          </div>
+          <CompositeCard>
+            <div className="loading-container">
+              <RefreshCw className="loading-spinner" />
+              <h2>Loading Profile</h2>
+              <p>Please wait while we load your profile information...</p>
+            </div>
+          </CompositeCard>
         </motion.div>
       </PageLayout>
     );
@@ -132,14 +142,16 @@ const Profile = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <div className="error-container">
-            <AlertCircle className="error-icon" />
-            <h2>Not Authenticated</h2>
-            <p>Please log in to view your profile.</p>
-            <StyledButton onClick={() => window.location.href = '/'}>
-              Go to Login
-            </StyledButton>
-          </div>
+          <CompositeCard>
+            <div className="error-container">
+              <AlertCircle className="error-icon" />
+              <h2>Not Authenticated</h2>
+              <p>Please log in to view your profile.</p>
+              <StyledButton onClick={() => window.location.href = '/'}>
+                Go to Login
+              </StyledButton>
+            </div>
+          </CompositeCard>
         </motion.div>
       </PageLayout>
     );
@@ -164,8 +176,8 @@ const Profile = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <h1>User Profile</h1>
-          <p>Manage your account and view your information</p>
+          <h1 className="profile-title">User Profile</h1>
+          <p className="profile-subtitle">Manage your account and view your information</p>
         </motion.div>
 
         {/* Profile Information */}
@@ -178,7 +190,16 @@ const Profile = () => {
           <CompositeCard>
             <div className="section-header">
               <User className="section-icon" />
-              <h2>Profile Information</h2>
+              <h2 className="section-title">Profile Information</h2>
+              <StyledButton
+                variant="secondary"
+                size="sm"
+                onClick={() => setIsEditing(!isEditing)}
+                className="edit-button"
+              >
+                {isEditing ? <Save size={16} /> : <Edit size={16} />}
+                {isEditing ? 'Save' : 'Edit'}
+              </StyledButton>
             </div>
             
             <div className="profile-grid">
@@ -197,83 +218,135 @@ const Profile = () => {
                 )}
                 
                 <div className="profile-basic-info">
-                  <h3>{user.name || 'No name provided'}</h3>
+                  <h3 className="profile-name">{user.name || 'No name provided'}</h3>
                   <p className="profile-email">{user.email}</p>
-                  {user.email_verified && (
-                    <span className="verification-badge">
-                      <CheckCircle size={14} />
+                  <div className="profile-status">
+                    <StatusBadge variant="success" size="sm">
+                      <CheckCircle size={12} />
                       Email Verified
-                    </span>
-                  )}
+                    </StatusBadge>
+                  </div>
                 </div>
               </div>
 
-              {/* User ID and Provider */}
+              {/* Profile Details */}
               <div className="profile-details">
-                <div className="detail-item">
-                  <label>User ID</label>
-                  <p className="detail-value">{user.sub}</p>
+                <div className="detail-row">
+                  <label className="detail-label">Full Name</label>
+                  {isEditing ? (
+                    <InputField
+                      type="text"
+                      value={user.name || ''}
+                      placeholder="Enter your full name"
+                      size="md"
+                    />
+                  ) : (
+                    <span className="detail-value">{user.name || 'Not provided'}</span>
+                  )}
                 </div>
-                <div className="detail-item">
-                  <label>Provider</label>
-                  <p className="detail-value capitalize">
-                    {user.sub.split('|')[0]}
-                  </p>
+
+                <div className="detail-row">
+                  <label className="detail-label">Email Address</label>
+                  <span className="detail-value">{user.email}</span>
+                </div>
+
+                <div className="detail-row">
+                  <label className="detail-label">User ID</label>
+                  <span className="detail-value user-id">{user.sub}</span>
+                </div>
+
+                <div className="detail-row">
+                  <label className="detail-label">Account Type</label>
+                  <StatusBadge variant="primary" size="sm">
+                    {userRoles.includes('admin') ? 'Administrator' : 'Standard User'}
+                  </StatusBadge>
                 </div>
               </div>
             </div>
           </CompositeCard>
         </motion.div>
 
-        {/* Roles and Permissions */}
+        {/* Security & Session Information */}
         <motion.div 
           className="profile-section"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <div className="permissions-grid">
-            {/* Roles */}
-            <CompositeCard>
-              <div className="section-header">
-                <Shield className="section-icon" />
-                <h3>Roles</h3>
-              </div>
-              {userRoles.length > 0 ? (
-                <div className="tags-container">
-                  {userRoles.map((role, index) => (
-                    <span key={index} className="role-tag">
-                      {role}
-                    </span>
-                  ))}
+          <CompositeCard>
+            <div className="section-header">
+              <Shield className="section-icon" />
+              <h2 className="section-title">Security & Session</h2>
+            </div>
+            
+            <div className="security-grid">
+              {/* Token Information */}
+              <div className="token-section">
+                <h3 className="subsection-title">Access Token</h3>
+                <div className="token-info">
+                  {tokenInfo ? (
+                    <div className="token-details">
+                      <div className="token-row">
+                        <span className="token-label">Token:</span>
+                        <div className="token-value-container">
+                          <span className="token-value">
+                            {showToken ? tokenInfo.token : '••••••••••••••••••••'}
+                          </span>
+                          <StyledButton
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setShowToken(!showToken)}
+                            className="token-toggle"
+                          >
+                            {showToken ? <EyeOff size={14} /> : <Eye size={14} />}
+                          </StyledButton>
+                        </div>
+                      </div>
+                      <div className="token-row">
+                        <span className="token-label">Expires:</span>
+                        <span className="token-value">{tokenInfo.expiresAt}</span>
+                      </div>
+                      <div className="token-row">
+                        <span className="token-label">Issued:</span>
+                        <span className="token-value">{tokenInfo.issuedAt}</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="no-token">No token information available</p>
+                  )}
+                  
+                  <StyledButton
+                    onClick={handleRefreshToken}
+                    disabled={isRefreshingToken}
+                    className="refresh-token-button"
+                  >
+                    <RefreshCw className={`refresh-icon ${isRefreshingToken ? 'spinning' : ''}`} />
+                    {isRefreshingToken ? 'Refreshing...' : 'Refresh Token'}
+                  </StyledButton>
                 </div>
-              ) : (
-                <p className="empty-state">No roles assigned</p>
-              )}
-            </CompositeCard>
+              </div>
 
-            {/* Permissions */}
-            <CompositeCard>
-              <div className="section-header">
-                <Settings className="section-icon" />
-                <h3>Permissions</h3>
-              </div>
-              {userPermissions.length > 0 ? (
-                <div className="tags-container">
-                  {userPermissions.map((permission, index) => (
-                    <span key={index} className="permission-tag">
-                      {permission}
+              {/* Session Information */}
+              <div className="session-section">
+                <h3 className="subsection-title">Session Information</h3>
+                <div className="session-info">
+                  <div className="session-row">
+                    <span className="session-label">Login Time:</span>
+                    <span className="session-value">
+                      {user.updated_at ? new Date(user.updated_at).toLocaleString() : 'Unknown'}
                     </span>
-                  ))}
+                  </div>
+                  <div className="session-row">
+                    <span className="session-label">Provider:</span>
+                    <span className="session-value">{user.sub?.split('|')[0] || 'Unknown'}</span>
+                  </div>
                 </div>
-              ) : (
-                <p className="empty-state">No permissions assigned</p>
-              )}
-            </CompositeCard>
-          </div>
+              </div>
+            </div>
+          </CompositeCard>
         </motion.div>
 
-        {/* Session Information */}
+        {/* Roles & Permissions */}
         <motion.div 
           className="profile-section"
           initial={{ opacity: 0, y: 20 }}
@@ -282,54 +355,43 @@ const Profile = () => {
         >
           <CompositeCard>
             <div className="section-header">
-              <Key className="section-icon" />
-              <h2>Session Information</h2>
+              <Settings className="section-icon" />
+              <h2 className="section-title">Roles & Permissions</h2>
             </div>
             
-            <div className="session-actions">
-              <StyledButton 
-                onClick={handleRefreshToken}
-                disabled={isRefreshingToken}
-                variant="secondary"
-              >
-                <RefreshCw className={isRefreshingToken ? 'spinning' : ''} />
-                {isRefreshingToken ? 'Refreshing...' : 'Refresh Token'}
-              </StyledButton>
-            </div>
-
-            {tokenInfo && (
-              <div className="token-info">
-                {tokenInfo.error ? (
-                  <div className="token-error">
-                    <AlertCircle size={16} />
-                    <span>Error: {tokenInfo.error}</span>
-                  </div>
-                ) : (
-                  <div className="token-details">
-                    <div className="token-item">
-                      <label>Token (truncated)</label>
-                      <p>{tokenInfo.token}</p>
-                    </div>
-                    <div className="token-item">
-                      <label>Expires At</label>
-                      <p>{tokenInfo.expiresAt}</p>
-                    </div>
-                    <div className="token-item">
-                      <label>Issued At</label>
-                      <p>{tokenInfo.issuedAt}</p>
-                    </div>
-                    <div className="token-item">
-                      <label>Audience</label>
-                      <p>{tokenInfo.audience}</p>
-                    </div>
-                    <div className="token-item">
-                      <label>Issuer</label>
-                      <p>{tokenInfo.issuer}</p>
-                    </div>
-                  </div>
-                )}
+            <div className="permissions-grid">
+              {/* Roles */}
+              <div className="roles-section">
+                <h3 className="subsection-title">User Roles</h3>
+                <div className="roles-list">
+                  {userRoles.length > 0 ? (
+                    userRoles.map((role, index) => (
+                      <StatusBadge key={index} variant="primary" size="sm">
+                        {role}
+                      </StatusBadge>
+                    ))
+                  ) : (
+                    <p className="no-roles">No roles assigned</p>
+                  )}
+                </div>
               </div>
-            )}
+
+              {/* Permissions */}
+              <div className="permissions-section">
+                <h3 className="subsection-title">Permissions</h3>
+                <div className="permissions-list">
+                  {userPermissions.length > 0 ? (
+                    userPermissions.map((permission, index) => (
+                      <StatusBadge key={index} variant="secondary" size="sm">
+                        {permission}
+                      </StatusBadge>
+                    ))
+                  ) : (
+                    <p className="no-permissions">No permissions assigned</p>
+                  )}
+                </div>
+              </div>
+            </div>
           </CompositeCard>
         </motion.div>
 
@@ -342,14 +404,21 @@ const Profile = () => {
         >
           <CompositeCard>
             <div className="section-header">
-              <Settings className="section-icon" />
-              <h2>Account Actions</h2>
+              <Key className="section-icon" />
+              <h2 className="section-title">Account Actions</h2>
             </div>
             
-            <div className="account-actions">
-              <StyledButton 
-                onClick={handleLogout}
+            <div className="actions-grid">
+              <StyledButton
+                variant="secondary"
+                onClick={() => window.open('https://auth0.com', '_blank')}
+              >
+                Manage Account
+              </StyledButton>
+              
+              <StyledButton
                 variant="destructive"
+                onClick={handleLogout}
                 className="logout-button"
               >
                 <LogOut size={16} />

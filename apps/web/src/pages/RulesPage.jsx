@@ -1,15 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import RuleBinderRoot from '../components/framesync/RuleBinderRoot';
-import StyledButton from '../components/ui/StyledButton';
-import PageLayout from '../components/PageLayout';
-import CompositeCard from '../components/ui/CompositeCard';
-import { useToast } from '../components/ui/use-toast.jsx';
-import { Plus, X, Settings } from 'lucide-react';
-import './RulesPage.css';
-
 /**
- * RulesPage - FrameSync Rules Management
+ * RulesPage.jsx - AlphaFrame VX.1 Consumer-Ready Rules Management
  * 
  * Purpose: Provides users with a clean, intuitive interface for creating
  * and managing automated financial rules using the FrameSync system.
@@ -20,10 +10,22 @@ import './RulesPage.css';
  * 3. Uses StyledButton for consistent button styling
  * 4. Applies motion animations for enhanced UX
  * 5. Integrates toast notifications for user feedback
+ * 6. Uses design system components for professional appearance
  * 
  * Conclusion: Delivers a cohesive, modern rules management interface
  * that guides users through rule creation and management.
  */
+
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import RuleBinderRoot from '../components/framesync/RuleBinderRoot';
+import StyledButton from '../components/ui/StyledButton';
+import CompositeCard from '../components/ui/CompositeCard';
+import StatusBadge from '../components/ui/StatusBadge';
+import PageLayout from '../components/PageLayout';
+import { useToast } from '../components/ui/use-toast.jsx';
+import { Plus, X, Settings, Zap, Shield, TrendingUp } from 'lucide-react';
+import './RulesPage.css';
 
 // Error Catcher Component to catch runtime exceptions
 const ErrorCatcher = ({ children }) => {
@@ -85,6 +87,7 @@ const RulesPage = () => {
     <PageLayout>
       <ErrorCatcher>
         <motion.div
+          className="rules-container"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -92,7 +95,10 @@ const RulesPage = () => {
           <CompositeCard>
             <div className="rules-header">
               <div className="rules-title-section">
-                <h1 className="rules-title">FrameSync Rules</h1>
+                <div className="rules-title-wrapper">
+                  <Zap className="rules-icon" />
+                  <h1 className="rules-title">FrameSync Rules</h1>
+                </div>
                 <p className="rules-subtitle">
                   Create automated rules to manage your finances intelligently
                 </p>
@@ -106,8 +112,9 @@ const RulesPage = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <p>🧪 Test Mode Active - Element Should Be Visible</p>
-                  <p>Background: Lime | Border: Red | Z-Index: 9999</p>
+                  <StatusBadge variant="warning" size="sm">
+                    🧪 Test Mode Active
+                  </StatusBadge>
                 </motion.div>
               )}
             </div>
@@ -130,23 +137,51 @@ const RulesPage = () => {
                   </StyledButton>
                 </div>
                 
-                <div className="rules-info">
-                  <div className="info-card">
-                    <Settings size={24} />
-                    <h3>What are FrameSync Rules?</h3>
-                    <p>
+                <div className="rules-info-grid">
+                  <CompositeCard variant="elevated" className="info-card">
+                    <div className="info-card-header">
+                      <Settings className="info-icon" />
+                      <h3 className="info-title">What are FrameSync Rules?</h3>
+                    </div>
+                    <p className="info-description">
                       FrameSync rules automatically monitor your financial data and 
                       execute actions when specific conditions are met. For example, 
                       automatically transfer money when your checking account balance 
                       exceeds a certain threshold.
                     </p>
-                  </div>
+                  </CompositeCard>
+
+                  <CompositeCard variant="elevated" className="info-card">
+                    <div className="info-card-header">
+                      <Shield className="info-icon" />
+                      <h3 className="info-title">Security & Safety</h3>
+                    </div>
+                    <p className="info-description">
+                      All rules are executed with bank-level security. You can review, 
+                      pause, or delete rules at any time. We never make changes without 
+                      your explicit approval.
+                    </p>
+                  </CompositeCard>
+
+                  <CompositeCard variant="elevated" className="info-card">
+                    <div className="info-card-header">
+                      <TrendingUp className="info-icon" />
+                      <h3 className="info-title">Smart Automation</h3>
+                    </div>
+                    <p className="info-description">
+                      Build intelligent rules that adapt to your financial patterns. 
+                      Save time and reduce stress with automated financial management 
+                      that works 24/7.
+                    </p>
+                  </CompositeCard>
                 </div>
                 
                 <div className="rules-status">
-                  <p className="status-text">Test: Rules Page Loaded</p>
+                  <StatusBadge variant="info" size="sm">
+                    Ready to create rules
+                  </StatusBadge>
                   <p className="timestamp">
-                    Component rendered at: {new Date().toISOString()}
+                    Last updated: {new Date().toLocaleString()}
                   </p>
                 </div>
               </motion.div>
@@ -158,6 +193,10 @@ const RulesPage = () => {
                 transition={{ duration: 0.5 }}
               >
                 <div className="builder-header">
+                  <div className="builder-title">
+                    <h2 className="builder-title-text">Create New Rule</h2>
+                    <p className="builder-subtitle">Configure your automated financial rule</p>
+                  </div>
                   <StyledButton 
                     onClick={handleCancel}
                     variant="secondary"
@@ -185,12 +224,17 @@ const RulesPage = () => {
                     );
                   } catch (err) {
                     return (
-                      <div className="error-container">
-                        <span data-testid="rulespage-render-error">
-                          {err?.message || "Unknown error"}
-                        </span>
-                        <pre className="error-stack">{err?.stack}</pre>
-                      </div>
+                      <CompositeCard className="error-container">
+                        <div className="error-content">
+                          <StatusBadge variant="error" size="sm">
+                            Error Loading Rule Builder
+                          </StatusBadge>
+                          <span data-testid="rulespage-render-error">
+                            {err?.message || "Unknown error"}
+                          </span>
+                          <pre className="error-stack">{err?.stack}</pre>
+                        </div>
+                      </CompositeCard>
                     );
                   }
                 })()}

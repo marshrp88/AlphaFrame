@@ -1,0 +1,306 @@
+/**
+ * PerformanceMonitor.css - AlphaFrame VX.1 Performance Monitor Styles
+ * 
+ * Purpose: Professional styling for the performance monitoring component
+ * with clear status indicators and responsive design.
+ * 
+ * Procedure:
+ * 1. Use design tokens for consistent styling
+ * 2. Implement status-based color coding
+ * 3. Add smooth animations and transitions
+ * 4. Ensure responsive design
+ * 5. Optimize for development environment
+ * 
+ * Conclusion: Creates a clear, informative performance monitoring
+ * interface that helps developers optimize application performance.
+ */
+
+@import '../../styles/design-tokens.css';
+
+/* ===== PERFORMANCE MONITOR ===== */
+
+.performance-monitor {
+  position: fixed;
+  bottom: var(--spacing-4);
+  right: var(--spacing-4);
+  width: 280px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-index-tooltip);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.performance-monitor:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-2px);
+}
+
+/* ===== STATUS-BASED STYLING ===== */
+
+.performance-monitor.excellent {
+  border-left: 4px solid var(--color-success-500);
+}
+
+.performance-monitor.good {
+  border-left: 4px solid var(--color-accent-500);
+}
+
+.performance-monitor.needs-improvement {
+  border-left: 4px solid var(--color-warning-500);
+}
+
+.performance-monitor.poor {
+  border-left: 4px solid var(--color-error-500);
+}
+
+/* ===== HEADER ===== */
+
+.performance-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-3);
+  background: var(--color-background-secondary);
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.performance-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.close-button {
+  padding: var(--spacing-1);
+  min-width: auto;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+}
+
+/* ===== METRICS ===== */
+
+.performance-metrics {
+  padding: var(--spacing-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+}
+
+.metric svg {
+  color: var(--color-primary-500);
+  flex-shrink: 0;
+}
+
+/* ===== SCORE INDICATOR ===== */
+
+.performance-score {
+  padding: var(--spacing-3);
+  border-top: 1px solid var(--color-border-primary);
+  background: var(--color-background-secondary);
+}
+
+.score-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-2);
+}
+
+.score-value {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.score-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Status-based score colors */
+.score-indicator.excellent .score-value {
+  color: var(--color-success-600);
+}
+
+.score-indicator.good .score-value {
+  color: var(--color-accent-600);
+}
+
+.score-indicator.needs-improvement .score-value {
+  color: var(--color-warning-600);
+}
+
+.score-indicator.poor .score-value {
+  color: var(--color-error-600);
+}
+
+/* ===== PERFORMANCE WARNING ===== */
+
+.performance-warning {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2);
+  background: var(--color-error-50);
+  border: 1px solid var(--color-error-200);
+  border-radius: var(--radius-sm);
+  color: var(--color-error-700);
+  font-size: var(--font-size-xs);
+}
+
+.dark-mode .performance-warning {
+  background: var(--color-error-900);
+  border-color: var(--color-error-700);
+  color: var(--color-error-300);
+}
+
+/* ===== ACTIONS ===== */
+
+.performance-actions {
+  padding: var(--spacing-3);
+  border-top: 1px solid var(--color-border-primary);
+  display: flex;
+  justify-content: center;
+}
+
+/* ===== ANIMATIONS ===== */
+
+.performance-monitor {
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+@media (max-width: 768px) {
+  .performance-monitor {
+    bottom: var(--spacing-2);
+    right: var(--spacing-2);
+    left: var(--spacing-2);
+    width: auto;
+  }
+  
+  .performance-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-2);
+  }
+  
+  .metric {
+    font-size: 10px;
+  }
+  
+  .score-value {
+    font-size: var(--font-size-base);
+  }
+}
+
+@media (max-width: 480px) {
+  .performance-monitor {
+    bottom: var(--spacing-1);
+    right: var(--spacing-1);
+    left: var(--spacing-1);
+    font-size: 10px;
+  }
+  
+  .performance-header {
+    padding: var(--spacing-2);
+  }
+  
+  .performance-metrics {
+    padding: var(--spacing-2);
+    grid-template-columns: 1fr;
+  }
+  
+  .performance-score {
+    padding: var(--spacing-2);
+  }
+  
+  .performance-actions {
+    padding: var(--spacing-2);
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+.performance-monitor:focus-within {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* ===== PRINT STYLES ===== */
+
+@media print {
+  .performance-monitor {
+    display: none;
+  }
+}
+
+/* ===== DARK MODE ENHANCEMENTS ===== */
+
+.dark-mode .performance-monitor {
+  background: var(--color-surface);
+  border-color: var(--color-border-primary);
+}
+
+.dark-mode .performance-header {
+  background: var(--color-background-secondary);
+}
+
+.dark-mode .performance-score {
+  background: var(--color-background-secondary);
+}
+
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .performance-monitor {
+    animation: none;
+    transition: none;
+  }
+  
+  .performance-monitor:hover {
+    transform: none;
+  }
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+
+@media (prefers-contrast: high) {
+  .performance-monitor {
+    border-width: 2px;
+  }
+  
+  .performance-monitor:focus-within {
+    outline-width: 3px;
+  }
+} 

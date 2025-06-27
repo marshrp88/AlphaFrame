@@ -1,0 +1,174 @@
+/**
+ * DarkModeToggle.css - AlphaFrame VX.1 Dark Mode Toggle Styles
+ * 
+ * Purpose: Professional styling for the dark mode toggle with
+ * smooth transitions and accessibility features.
+ * 
+ * Procedure:
+ * 1. Use design tokens for consistent styling
+ * 2. Implement smooth theme transitions
+ * 3. Add hover and focus states
+ * 4. Ensure accessibility compliance
+ * 5. Optimize for performance
+ * 
+ * Conclusion: Creates a polished dark mode toggle experience
+ * that provides clear visual feedback and smooth interactions.
+ */
+
+@import '../../styles/design-tokens.css';
+
+/* ===== DARK MODE TOGGLE ===== */
+
+.dark-mode-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-primary);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.dark-mode-toggle:hover {
+  background: var(--color-background-tertiary);
+  border-color: var(--color-primary-300);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.dark-mode-toggle:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+  border-color: var(--color-primary-500);
+}
+
+.dark-mode-toggle:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-xs);
+}
+
+/* ===== THEME ICON ===== */
+
+.theme-icon {
+  transition: all var(--transition-base);
+  color: var(--color-text-primary);
+}
+
+.dark-mode-toggle:hover .theme-icon {
+  color: var(--color-primary-600);
+  transform: scale(1.1);
+}
+
+/* ===== DARK MODE SPECIFIC STYLES ===== */
+
+.dark-mode .dark-mode-toggle {
+  background: var(--color-surface);
+  border-color: var(--color-border-primary);
+  color: var(--color-text-primary);
+}
+
+.dark-mode .dark-mode-toggle:hover {
+  background: var(--color-background-tertiary);
+  border-color: var(--color-primary-600);
+}
+
+.dark-mode .theme-icon {
+  color: var(--color-text-primary);
+}
+
+.dark-mode .dark-mode-toggle:hover .theme-icon {
+  color: var(--color-primary-400);
+}
+
+/* ===== ANIMATION UTILITIES ===== */
+
+.dark-mode-toggle {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .dark-mode-toggle,
+  .theme-icon {
+    transition: none;
+  }
+  
+  .dark-mode-toggle:hover {
+    transform: none;
+  }
+  
+  .dark-mode-toggle:hover .theme-icon {
+    transform: none;
+  }
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+
+@media (prefers-contrast: high) {
+  .dark-mode-toggle {
+    border-width: 2px;
+  }
+  
+  .dark-mode-toggle:focus {
+    outline-width: 3px;
+  }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+@media (max-width: 768px) {
+  .dark-mode-toggle {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .theme-icon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dark-mode-toggle {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .theme-icon {
+    width: 12px;
+    height: 12px;
+  }
+} 

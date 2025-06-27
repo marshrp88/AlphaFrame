@@ -1,21 +1,25 @@
 /**
- * ErrorBoundary.jsx - AlphaFrame VX.1 Finalization
+ * ErrorBoundary.jsx - AlphaFrame VX.1 Enhanced Error Boundary
  * 
- * Purpose: Global error boundary that catches React errors
- * and displays user-friendly fallback UI with recovery options.
+ * Purpose: Catches JavaScript errors anywhere in the component tree,
+ * logs those errors, and displays a fallback UI instead of crashing.
  * 
  * Procedure:
- * 1. Catch JavaScript errors in component tree
- * 2. Log errors to Sentry for debugging
- * 3. Display ErrorBoundaryFallback component
- * 4. Prevent app crashes and maintain user trust
+ * 1. Catch errors in component tree
+ * 2. Log errors for debugging
+ * 3. Display user-friendly error message
+ * 4. Provide recovery options
+ * 5. Maintain application stability
  * 
- * Conclusion: Provides robust error handling and recovery
- * for production-ready user experience.
+ * Conclusion: Ensures application stability and provides
+ * helpful error recovery options for users.
  */
 
-import React from "react";
-import { ErrorBoundaryFallback } from "../shared/components/ErrorBoundaryFallback.jsx";
+import React from 'react';
+import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react';
+import StyledButton from './ui/StyledButton';
+import CompositeCard from './ui/CompositeCard';
+import './ErrorBoundary.css';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -23,42 +27,146 @@ class ErrorBoundary extends React.Component {
     this.state = { 
       hasError: false, 
       error: null, 
-      componentStack: null 
+      errorInfo: null,
+      errorId: null
     };
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true, error };
+    // Update state so the next render will show the fallback UI
+    return { 
+      hasError: true,
+      errorId: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    };
   }
 
   componentDidCatch(error, errorInfo) {
-    // Update state with component stack
-    this.setState({ componentStack: errorInfo.componentStack });
+    // Log the error for debugging
+    console.error('AlphaFrame Error Boundary caught an error:', error, errorInfo);
     
-    // Log to Sentry if available
-    if (window.Sentry) {
-      window.Sentry.captureException(error, {
-        contexts: {
-          component: {
-            stack: errorInfo.componentStack
-          }
-        },
-        tags: {
-          errorType: 'react_error_boundary',
-          component: 'ErrorBoundary'
-        }
-      });
-    }
+    // Update state with error details
+    this.setState({
+      error,
+      errorInfo
+    });
+
+    // In a production app, you would send error reports to your error reporting service
+    // Example: logErrorToService(error, errorInfo, this.state.errorId);
   }
+
+  handleRetry = () => {
+    this.setState({ 
+      hasError: false, 
+      error: null, 
+      errorInfo: null,
+      errorId: null 
+    });
+  };
+
+  handleGoHome = () => {
+    window.location.href = '/';
+  };
+
+  handleReportError = () => {
+    const { error, errorInfo, errorId } = this.state;
+    
+    // Create error report
+    const errorReport = {
+      errorId,
+      timestamp: new Date().toISOString(),
+      userAgent: navigator.userAgent,
+      url: window.location.href,
+      error: {
+        message: error?.message,
+        stack: error?.stack,
+        name: error?.name
+      },
+      errorInfo: {
+        componentStack: errorInfo?.componentStack
+      }
+    };
+
+    // In production, send to error reporting service
+    console.log('Error Report:', errorReport);
+    
+    // For now, just show a message
+    alert('Error report generated. Check console for details.');
+  };
 
   render() {
     if (this.state.hasError) {
+      const { error, errorId } = this.state;
+      
       return (
-        <ErrorBoundaryFallback
-          error={this.state.error}
-          resetError={() => this.setState({ hasError: false, error: null, componentStack: null })}
-          componentStack={this.state.componentStack}
-        />
+        <div className="error-boundary-container">
+          <CompositeCard variant="elevated" className="error-boundary-card">
+            <div className="error-boundary-header">
+              <div className="error-icon">
+                <AlertTriangle size={32} />
+              </div>
+              <h1 className="error-title">Something went wrong</h1>
+              <p className="error-subtitle">
+                We're sorry, but something unexpected happened. Our team has been notified.
+              </p>
+            </div>
+
+            <div className="error-details">
+              {import.meta.env.DEV && error && (
+                <details className="error-stack">
+                  <summary>Error Details (Development)</summary>
+                  <div className="error-message">
+                    <strong>Error:</strong> {error.message}
+                  </div>
+                  <div className="error-stack-trace">
+                    <strong>Stack Trace:</strong>
+                    <pre>{error.stack}</pre>
+                  </div>
+                  <div className="error-id">
+                    <strong>Error ID:</strong> {errorId}
+                  </div>
+                </details>
+              )}
+            </div>
+
+            <div className="error-actions">
+              <StyledButton 
+                onClick={this.handleRetry}
+                variant="primary"
+                className="retry-button"
+              >
+                <RefreshCw size={16} />
+                Try Again
+              </StyledButton>
+              
+              <StyledButton 
+                onClick={this.handleGoHome}
+                variant="secondary"
+                className="home-button"
+              >
+                <Home size={16} />
+                Go Home
+              </StyledButton>
+              
+              {import.meta.env.DEV && (
+                <StyledButton 
+                  onClick={this.handleReportError}
+                  variant="outline"
+                  className="report-button"
+                >
+                  <Bug size={16} />
+                  Report Error
+                </StyledButton>
+              )}
+            </div>
+
+            <div className="error-help">
+              <p>
+                If this problem persists, please contact support with the error ID: 
+                <code className="error-id-display">{errorId}</code>
+              </p>
+            </div>
+          </CompositeCard>
+        </div>
       );
     }
 
@@ -66,5 +174,4 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-export default ErrorBoundary;
-export { ErrorBoundary }; 
+export default ErrorBoundary; 

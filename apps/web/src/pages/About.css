@@ -1,0 +1,496 @@
+/**
+ * About.css - AlphaFrame VX.1 Consumer-Ready About Page Styles
+ * 
+ * Purpose: Professional styling for the about page with design system
+ * integration, responsive layout, and accessibility features.
+ * 
+ * Procedure:
+ * 1. Use design tokens for consistent styling
+ * 2. Implement responsive grid layouts
+ * 3. Add smooth animations and transitions
+ * 4. Ensure accessibility and mobile optimization
+ * 
+ * Conclusion: Creates a polished, professional about page experience
+ * that builds trust and provides clear information hierarchy.
+ */
+
+@import '../styles/design-tokens.css';
+
+/* ===== ABOUT CONTAINER ===== */
+
+.about-container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: var(--spacing-6);
+  min-height: 100vh;
+  background: var(--color-background-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+/* ===== HERO SECTION ===== */
+
+.about-hero {
+  margin-bottom: var(--spacing-8);
+}
+
+.hero-card {
+  background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-700));
+  color: var(--color-white);
+  border: none;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  padding: var(--spacing-8);
+  text-align: center;
+}
+
+.hero-title {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-4);
+  line-height: var(--line-height-tight);
+  font-family: var(--font-family-primary);
+}
+
+.hero-subtitle {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-6);
+  opacity: 0.9;
+  line-height: var(--line-height-relaxed);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-badges {
+  display: flex;
+  gap: var(--spacing-3);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ===== SECTION HEADERS ===== */
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-6);
+  padding-bottom: var(--spacing-4);
+  border-bottom: 1px solid var(--color-border-secondary);
+}
+
+.section-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--color-primary-600);
+  flex-shrink: 0;
+}
+
+.section-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+  font-family: var(--font-family-primary);
+}
+
+/* ===== MISSION SECTION ===== */
+
+.mission-section {
+  margin-bottom: var(--spacing-8);
+}
+
+.mission-card {
+  padding: var(--spacing-6);
+}
+
+.mission-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.mission-text {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+  text-align: center;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mission-values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-6);
+}
+
+.value-item {
+  text-align: center;
+  padding: var(--spacing-4);
+  background: var(--color-background-tertiary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-secondary);
+}
+
+.value-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--color-primary-600);
+  margin: 0 auto var(--spacing-3);
+}
+
+.value-item h3 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-2);
+  font-family: var(--font-family-primary);
+}
+
+.value-item p {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+}
+
+/* ===== TECH SECTION ===== */
+
+.tech-section {
+  margin-bottom: var(--spacing-8);
+}
+
+.tech-card {
+  padding: var(--spacing-6);
+}
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-6);
+}
+
+.tech-category {
+  padding: var(--spacing-4);
+  background: var(--color-background-tertiary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-secondary);
+}
+
+.tech-category-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-3);
+  font-family: var(--font-family-primary);
+}
+
+.tech-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+
+/* ===== TEAM SECTION ===== */
+
+.team-section {
+  margin-bottom: var(--spacing-8);
+}
+
+.team-card {
+  padding: var(--spacing-6);
+}
+
+.team-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.team-intro {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+  text-align: center;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.team-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-6);
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+  background: var(--color-background-tertiary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-secondary);
+}
+
+.stat-icon {
+  width: 32px;
+  height: 32px;
+  color: var(--color-primary-600);
+  flex-shrink: 0;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-number {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-1) 0;
+  font-family: var(--font-family-primary);
+}
+
+.stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* ===== CONTACT SECTION ===== */
+
+.contact-section {
+  margin-bottom: var(--spacing-8);
+}
+
+.contact-card {
+  padding: var(--spacing-6);
+}
+
+.contact-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.contact-text {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+  text-align: center;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.contact-item {
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  padding: var(--spacing-3);
+  background: var(--color-background-tertiary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-secondary);
+}
+
+.contact-item strong {
+  color: var(--color-primary-600);
+  margin-right: var(--spacing-2);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+@media (max-width: 1024px) {
+  .mission-values {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-4);
+  }
+  
+  .tech-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-4);
+  }
+  
+  .team-stats {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-4);
+  }
+}
+
+@media (max-width: 768px) {
+  .about-container {
+    padding: var(--spacing-4);
+    gap: var(--spacing-6);
+  }
+  
+  .hero-content {
+    padding: var(--spacing-6);
+  }
+  
+  .hero-title {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .hero-subtitle {
+    font-size: var(--font-size-lg);
+  }
+  
+  .hero-badges {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .mission-values {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+  }
+  
+  .tech-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+  }
+  
+  .team-stats {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .hero-subtitle {
+    font-size: var(--font-size-base);
+  }
+  
+  .section-title {
+    font-size: var(--font-size-xl);
+  }
+  
+  .value-item {
+    padding: var(--spacing-3);
+  }
+  
+  .value-icon {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .stat-item {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-2);
+  }
+  
+  .stat-icon {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* ===== DARK MODE SUPPORT ===== */
+
+@media (prefers-color-scheme: dark) {
+  .value-item,
+  .tech-category,
+  .stat-item,
+  .contact-item {
+    background: var(--color-surface);
+    border-color: var(--color-border-primary);
+  }
+}
+
+/* ===== ANIMATION UTILITIES ===== */
+
+.about-container {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+.about-container:focus-within {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.value-item:focus-within,
+.tech-category:focus-within,
+.stat-item:focus-within,
+.contact-item:focus-within {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-lg);
+}
+
+/* ===== PRINT STYLES ===== */
+
+@media print {
+  .about-container {
+    background: white;
+    padding: 0;
+  }
+  
+  .hero-card {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .value-item,
+  .tech-category,
+  .stat-item,
+  .contact-item {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+} 
