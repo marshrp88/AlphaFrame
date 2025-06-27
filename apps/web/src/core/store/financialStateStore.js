@@ -150,4 +150,7 @@ export const useFinancialStateStore = create(
       })
     }
   )
-); 
+);
+
+// Export alias for backward compatibility
+export const useFinancialState = useFinancialStateStore; 

@@ -28,7 +28,7 @@ import './Card.css';
  * - className: string
  * - ...rest: other div props
  */
-export default function Card({
+function Card({
   variant = 'base',
   status,
   header,
@@ -117,4 +117,8 @@ export function CardContent({ children, className = '', ...props }) {
       {children}
     </div>
   );
-} 
+}
+
+// Export both default and named Card for backward compatibility
+export { Card };
+export default Card; 
