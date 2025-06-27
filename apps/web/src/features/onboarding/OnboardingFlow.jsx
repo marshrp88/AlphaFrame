@@ -1,16 +1,16 @@
 /**
- * OnboardingFlow.jsx - AlphaFrame VX.1 Finalization
+ * OnboardingFlow.jsx - AlphaFrame VX.1 Consumer-Ready Onboarding
  * 
  * Purpose: Complete first-time user onboarding experience
  * that guides users through bank connection, transaction review,
- * budget setup, and dashboard configuration.
+ * budget setup, and dashboard configuration with professional styling.
  * 
  * Procedure:
  * 1. Detect first-time users and redirect to onboarding
- * 2. Guide through Plaid bank connection
- * 3. Review imported transactions
- * 4. Set up initial budget categories
- * 5. Choose default dashboard mode
+ * 2. Guide through Plaid bank connection with enhanced UI
+ * 3. Review imported transactions with better visualization
+ * 4. Set up initial budget categories with intuitive interface
+ * 5. Choose default dashboard mode with clear options
  * 6. Mark user as onboarded and redirect to dashboard
  * 
  * Conclusion: Ensures users have a complete setup
@@ -19,10 +19,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card } from '../../shared/ui/Card.jsx';
-import { Button } from '../../shared/ui/Button.jsx';
-import { Progress } from '../../shared/ui/Progress.jsx';
-import { CheckCircle, ArrowRight, ArrowLeft } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import CompositeCard from '../../components/ui/CompositeCard.jsx';
+import StyledButton from '../../components/ui/StyledButton.jsx';
+import { CheckCircle, ArrowRight, ArrowLeft, Sparkles, Shield, Zap } from 'lucide-react';
 import Step1PlaidConnect from './steps/Step1PlaidConnect.jsx';
 import Step2ReviewTransactions from './steps/Step2ReviewTransactions.jsx';
 import Step3BudgetSetup from './steps/Step3BudgetSetup.jsx';
@@ -30,6 +30,7 @@ import Step4SetMode from './steps/Step4SetMode.jsx';
 import { useAuthStore } from '../../core/store/authStore.js';
 import { useFinancialStateStore } from '../../core/store/financialStateStore.js';
 import { useToast } from '../../components/ui/use-toast.jsx';
+import './OnboardingFlow.css';
 
 /**
  * Onboarding steps configuration
@@ -40,28 +41,36 @@ const ONBOARDING_STEPS = [
     title: 'Connect Your Bank',
     description: 'Securely connect your bank account to import transactions',
     component: Step1PlaidConnect,
-    required: true
+    required: true,
+    icon: Shield,
+    color: 'var(--color-primary-600)'
   },
   {
     id: 2,
     title: 'Review Transactions',
     description: 'Review and categorize your imported transactions',
     component: Step2ReviewTransactions,
-    required: true
+    required: true,
+    icon: CheckCircle,
+    color: 'var(--color-success-600)'
   },
   {
     id: 3,
     title: 'Set Up Budget',
     description: 'Create your first budget categories and limits',
     component: Step3BudgetSetup,
-    required: true
+    required: true,
+    icon: Zap,
+    color: 'var(--color-warning-600)'
   },
   {
     id: 4,
     title: 'Choose Dashboard',
     description: 'Select your preferred dashboard view',
     component: Step4SetMode,
-    required: false
+    required: false,
+    icon: Sparkles,
+    color: 'var(--color-secondary-600)'
   }
 ];
 
@@ -81,7 +90,7 @@ export const OnboardingFlow = () => {
   // Check if user is already onboarded
   useEffect(() => {
     if (user?.onboarded) {
-      navigate('/dashboard');
+      navigate('/dashboard2');
     }
   }, [user, navigate]);
 
@@ -129,7 +138,7 @@ export const OnboardingFlow = () => {
       });
       
       // Redirect to dashboard
-      navigate('/dashboard', { 
+      navigate('/dashboard2', { 
         state: { 
           welcome: true,
           onboardingComplete: true 
@@ -182,129 +191,138 @@ export const OnboardingFlow = () => {
   const isLastStep = currentStep === ONBOARDING_STEPS.length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-4xl p-6">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome to AlphaFrame
-          </h1>
-          <p className="text-gray-600">
-            Let&apos;s get you set up in just a few minutes
-          </p>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-gray-700">
-              Step {currentStep} of {ONBOARDING_STEPS.length}
-            </span>
-            <span className="text-sm text-gray-500">
-              {Math.round(progress)}% Complete
-            </span>
-          </div>
-          <Progress value={progress} className="w-full" />
-        </div>
-
-        {/* Step Indicators */}
-        <div className="flex justify-between mb-8">
-          {ONBOARDING_STEPS.map((step, index) => (
-            <div
-              key={step.id}
-              className={`flex items-center ${
-                index < ONBOARDING_STEPS.length - 1 ? 'flex-1' : ''
-              }`}
+    <div className="onboarding-container">
+      <div className="onboarding-background">
+        <div className="onboarding-content">
+          <CompositeCard variant="elevated" className="onboarding-card">
+            {/* Header */}
+            <motion.div 
+              className="onboarding-header"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
             >
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                  step.id < currentStep
-                    ? 'bg-green-500 text-white'
-                    : step.id === currentStep
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-200 text-gray-500'
-                }`}
-              >
-                {step.id < currentStep ? (
-                  <CheckCircle className="w-5 h-5" />
-                ) : (
-                  step.id
+              <div className="onboarding-logo">
+                <Sparkles size={32} color="var(--color-primary-600)" />
+                <h1 className="onboarding-title">Welcome to AlphaFrame</h1>
+              </div>
+              <p className="onboarding-subtitle">
+                Let's get you set up in just a few minutes
+              </p>
+            </motion.div>
+
+            {/* Progress Indicator */}
+            <motion.div 
+              className="onboarding-progress"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <div className="progress-steps">
+                {ONBOARDING_STEPS.map((step, index) => {
+                  const isActive = currentStep === step.id;
+                  const isCompleted = currentStep > step.id;
+                  const IconComponent = step.icon;
+                  
+                  return (
+                    <motion.div
+                      key={step.id}
+                      className={`progress-step ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}`}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                    >
+                      <div className="step-indicator">
+                        {isCompleted ? (
+                          <CheckCircle size={20} color="var(--color-success-600)" />
+                        ) : (
+                          <IconComponent size={20} color={isActive ? step.color : 'var(--color-text-tertiary)'} />
+                        )}
+                      </div>
+                      <div className="step-info">
+                        <span className="step-title">{step.title}</span>
+                        <span className="step-description">{step.description}</span>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+              
+              <div className="progress-bar">
+                <motion.div 
+                  className="progress-fill"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progress}%` }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                />
+              </div>
+            </motion.div>
+
+            {/* Step Content */}
+            <motion.div 
+              className="onboarding-step-content"
+              key={currentStep}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.4 }}
+            >
+              <AnimatePresence mode="wait">
+                <CurrentStepComponent
+                  key={currentStep}
+                  onComplete={(data) => handleStepComplete(currentStep, data)}
+                  data={stepData[currentStep]}
+                  isLoading={isLoading}
+                />
+              </AnimatePresence>
+            </motion.div>
+
+            {/* Navigation */}
+            <motion.div 
+              className="onboarding-navigation"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <div className="nav-left">
+                {canGoBack && (
+                  <StyledButton
+                    variant="secondary"
+                    onClick={handlePreviousStep}
+                    disabled={isLoading}
+                  >
+                    <ArrowLeft size={16} />
+                    Previous
+                  </StyledButton>
                 )}
               </div>
-              <div className="ml-3 flex-1">
-                <div className="text-sm font-medium text-gray-900">
-                  {step.title}
-                </div>
-                <div className="text-xs text-gray-500">
-                  {step.description}
-                </div>
+              
+              <div className="nav-right">
+                {canSkip && (
+                  <StyledButton
+                    variant="outline"
+                    onClick={handleSkipStep}
+                    disabled={isLoading}
+                  >
+                    Skip
+                  </StyledButton>
+                )}
+                
+                {isLastStep ? (
+                  <StyledButton
+                    variant="primary"
+                    onClick={handleOnboardingComplete}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Completing...' : 'Complete Setup'}
+                    <ArrowRight size={16} />
+                  </StyledButton>
+                ) : null}
               </div>
-              {index < ONBOARDING_STEPS.length - 1 && (
-                <div className="flex-1 h-px bg-gray-200 mx-4" />
-              )}
-            </div>
-          ))}
+            </motion.div>
+          </CompositeCard>
         </div>
-
-        {/* Current Step Content */}
-        <div className="mb-8">
-          <CurrentStepComponent
-            onComplete={(data) => handleStepComplete(currentStep, data)}
-            onSkip={handleSkipStep}
-            data={stepData[currentStep]}
-            isLoading={isLoading}
-          />
-        </div>
-
-        {/* Navigation */}
-        <div className="flex justify-between items-center">
-          <Button
-            onClick={handlePreviousStep}
-            disabled={!canGoBack || isLoading}
-            variant="outline"
-            className="flex items-center"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Previous
-          </Button>
-
-          <div className="flex space-x-2">
-            {canSkip && (
-              <Button
-                onClick={handleSkipStep}
-                disabled={isLoading}
-                variant="outline"
-              >
-                Skip
-              </Button>
-            )}
-            
-            {isLastStep && (
-              <Button
-                onClick={handleOnboardingComplete}
-                disabled={isLoading}
-                className="flex items-center"
-              >
-                {isLoading ? 'Completing...' : 'Complete Setup'}
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            )}
-          </div>
-        </div>
-
-        {/* Help Text */}
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-500">
-            Need help? Contact our support team at{' '}
-            <a
-              href="mailto:support@alphaframe.com"
-              className="text-blue-600 hover:text-blue-800"
-            >
-              support@alphaframe.com
-            </a>
-          </p>
-        </div>
-      </Card>
+      </div>
     </div>
   );
 };

@@ -1,0 +1,356 @@
+/**
+ * OnboardingFlow.css - AlphaFrame VX.1 Consumer-Ready Onboarding
+ * 
+ * Purpose: Professional styling for the onboarding flow with
+ * smooth animations, clear progress indicators, and intuitive navigation.
+ * 
+ * Procedure:
+ * 1. Use design tokens for consistent styling
+ * 2. Implement smooth animations and transitions
+ * 3. Create clear visual hierarchy and progress indicators
+ * 4. Ensure responsive design for all screen sizes
+ * 
+ * Conclusion: Provides a polished, professional onboarding experience
+ * that builds trust and guides users effectively.
+ */
+
+@import '../../styles/design-tokens.css';
+
+/* ===== ONBOARDING CONTAINER ===== */
+
+.onboarding-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--color-primary-50), var(--color-secondary-50));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-4);
+}
+
+.onboarding-background {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.onboarding-content {
+  width: 100%;
+}
+
+.onboarding-card {
+  padding: var(--spacing-8);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--color-border-primary);
+}
+
+/* ===== ONBOARDING HEADER ===== */
+
+.onboarding-header {
+  text-align: center;
+  margin-bottom: var(--spacing-8);
+}
+
+.onboarding-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-4);
+}
+
+.onboarding-title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-primary);
+  margin: 0;
+}
+
+.onboarding-subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+}
+
+/* ===== PROGRESS INDICATOR ===== */
+
+.onboarding-progress {
+  margin-bottom: var(--spacing-8);
+}
+
+.progress-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.progress-step.active {
+  background: var(--color-primary-50);
+  border: 2px solid var(--color-primary-200);
+}
+
+.progress-step.completed {
+  background: var(--color-success-50);
+  border: 2px solid var(--color-success-200);
+}
+
+.progress-step:not(.active):not(.completed) {
+  background: var(--color-background-tertiary);
+  border: 2px solid var(--color-border-secondary);
+}
+
+.step-indicator {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-white);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+}
+
+.progress-step.active .step-indicator {
+  box-shadow: var(--shadow-md);
+  transform: scale(1.1);
+}
+
+.progress-step.completed .step-indicator {
+  background: var(--color-success-100);
+  box-shadow: var(--shadow-md);
+}
+
+.step-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.step-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+}
+
+.step-description {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-tight);
+}
+
+/* ===== PROGRESS BAR ===== */
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--color-background-tertiary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary-500), var(--color-primary-600));
+  border-radius: var(--radius-full);
+  transition: width var(--transition-base);
+}
+
+/* ===== STEP CONTENT ===== */
+
+.onboarding-step-content {
+  margin-bottom: var(--spacing-8);
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== NAVIGATION ===== */
+
+.onboarding-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.nav-left,
+.nav-right {
+  display: flex;
+  gap: var(--spacing-3);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+@media (max-width: 768px) {
+  .onboarding-container {
+    padding: var(--spacing-3);
+  }
+  
+  .onboarding-card {
+    padding: var(--spacing-6);
+  }
+  
+  .onboarding-title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .onboarding-subtitle {
+    font-size: var(--font-size-base);
+  }
+  
+  .progress-steps {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-3);
+  }
+  
+  .progress-step {
+    flex-direction: row;
+    text-align: left;
+    padding: var(--spacing-4);
+  }
+  
+  .step-info {
+    flex: 1;
+  }
+  
+  .onboarding-navigation {
+    flex-direction: column;
+    gap: var(--spacing-4);
+  }
+  
+  .nav-left,
+  .nav-right {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .onboarding-card {
+    padding: var(--spacing-4);
+  }
+  
+  .onboarding-title {
+    font-size: var(--font-size-xl);
+  }
+  
+  .step-indicator {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .step-title {
+    font-size: var(--font-size-xs);
+  }
+  
+  .step-description {
+    font-size: 10px;
+  }
+}
+
+/* ===== DARK MODE SUPPORT ===== */
+
+@media (prefers-color-scheme: dark) {
+  .onboarding-container {
+    background: linear-gradient(135deg, var(--color-primary-900), var(--color-secondary-900));
+  }
+  
+  .onboarding-card {
+    background: var(--color-surface);
+    border-color: var(--color-border-primary);
+  }
+  
+  .progress-step.active {
+    background: var(--color-primary-900);
+    border-color: var(--color-primary-700);
+  }
+  
+  .progress-step.completed {
+    background: var(--color-success-900);
+    border-color: var(--color-success-700);
+  }
+  
+  .progress-step:not(.active):not(.completed) {
+    background: var(--color-surface);
+    border-color: var(--color-border-primary);
+  }
+  
+  .step-indicator {
+    background: var(--color-surface);
+  }
+  
+  .progress-step.completed .step-indicator {
+    background: var(--color-success-900);
+  }
+  
+  .progress-bar {
+    background: var(--color-surface);
+  }
+}
+
+/* ===== ANIMATION UTILITIES ===== */
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+.onboarding-container:focus-within {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.progress-step:focus-within {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-lg);
+}
+
+/* ===== PRINT STYLES ===== */
+
+@media print {
+  .onboarding-container {
+    background: white;
+    min-height: auto;
+  }
+  
+  .onboarding-card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+  
+  .onboarding-navigation {
+    display: none;
+  }
+} 
