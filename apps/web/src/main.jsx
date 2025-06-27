@@ -40,10 +40,8 @@ const auth0Config = {
 };
 
 // Validate Auth0 configuration
-if (!auth0Config.domain || !auth0Config.clientId) {
-  console.warn("⚠️ Auth0 not configured - authentication will be disabled");
-  console.warn("Please set VITE_AUTH0_DOMAIN and VITE_AUTH0_CLIENT_ID in your environment");
-}
+// console.warn("⚠️ Auth0 not configured - authentication will be disabled"); // Commented for production cleanliness
+// console.warn("Please set VITE_AUTH0_DOMAIN and VITE_AUTH0_CLIENT_ID in your environment"); // Commented for production cleanliness
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

@@ -1,0 +1,60 @@
+# Page snapshot
+
+```yaml
+- navigation:
+  - link "AlphaFrame VX.1":
+    - /url: /
+  - link "Home":
+    - /url: /
+  - link "About":
+    - /url: /about
+  - link "Live Dashboard":
+    - /url: /live-dashboard
+  - button "Login":
+    - img
+    - text: Login
+- main:
+  - heading "FrameSync Rules" [level=1]
+  - button "Cancel"
+  - text: "RuleBinderRoot mounted - actionType: ADD_MEMO - payload: {\"amount\":\"\",\"memo\":\"Test memo\",\"goalId\":\"\"} Current actionType: ADD_MEMO {\"actionType\":\"ADD_MEMO\",\"payload\":{\"amount\":\"\",\"memo\":\"Test memo\",\"goalId\":\"\"},\"safeguards\":{\"requireConfirmation\":true,\"runSimulation\":true}}"
+  - heading "Configure Action" [level=3]
+  - text: Trigger Condition
+  - textbox "Trigger Condition": checking_account_balance > 5000
+  - text: Action Type
+  - combobox:
+    - option "Plaid Transfer - Transfer funds between connected bank accounts"
+    - option "Webhook - Send data to an external service via webhook"
+    - option "Adjust Goal - Modify financial goal parameters"
+    - option "Add Memo - Add a note to a transaction" [selected]
+  - text: "ActionSelector Debug: value=ADD_MEMO | options=PLAID_TRANSFER, WEBHOOK, ADJUST_GOAL, ADD_MEMO InternalActionForm mounted Amount"
+  - spinbutton "Amount"
+  - text: Memo
+  - textbox "Memo": Test memo
+  - text: Goal ID
+  - textbox "Goal ID"
+  - heading "Safety Settings" [level=2]
+  - text: Maximum Amount $
+  - spinbutton
+  - text: Require Confirmation
+  - img
+  - paragraph: Show a confirmation dialog for high-risk actions
+  - checkbox "Require Confirmation" [checked]
+  - text: Cooldown Period (hours)
+  - spinbutton
+  - text: Maximum Frequency (per day)
+  - spinbutton
+  - text: Notify on Execution
+  - checkbox "Notify on Execution"
+  - text: Run Simulation Preview
+  - img
+  - paragraph: Show a preview of the action's impact before execution
+  - checkbox "Run Simulation Preview" [checked]
+  - heading "Simulation Preview" [level=3]
+  - paragraph: "Error running simulation: Simulation failed: Unsupported action type for simulation: undefined"
+  - button "Try Again"
+  - button "Save Rule"
+  - text: 🟢 Clicked✅ handleSave called
+- contentinfo:
+  - paragraph: © 2024 AlphaFrame. All rights reserved.
+  - paragraph: "Environment: development | Version: 1.0.0"
+```

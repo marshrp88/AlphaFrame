@@ -129,8 +129,8 @@ export function ComponentShowcase() {
             subtitle="Your current financial status"
             icon="💰"
             actions={[
-              { label: 'View Details', onClick: () => console.log('View Details') },
-              { label: 'Edit', onClick: () => console.log('Edit') }
+              { label: 'View Details', onClick: () => {/* console.log('View Details'); */} },
+              { label: 'Edit', onClick: () => {/* console.log('Edit'); */} }
             ]}
           >
             <p>This card demonstrates the composite design pattern with motion animations.</p>

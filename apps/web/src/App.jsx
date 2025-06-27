@@ -30,6 +30,7 @@ import TestMount from "./pages/TestMount.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import { ToastProvider } from "./components/ui/use-toast.jsx";
 import { config } from "./lib/config.js";
+import LiveFinancialDashboard from './components/dashboard/LiveFinancialDashboard';
 
 // Debug Router Logger to trace all route matches
 function DebugRouterLogger() {
@@ -83,6 +84,9 @@ const Navigation = () => {
               </Link>
               <Link to="/about" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
                 About
+              </Link>
+              <Link to="/live-dashboard" className="text-gray-700 hover:text-indigo-700 px-3 py-2 rounded-md text-sm font-medium">
+                Live Dashboard
               </Link>
               {isAuthenticated && (
                 <>
@@ -182,6 +186,8 @@ const App = () => {
                           })()
                         } 
                       />
+                      
+                      <Route path="/live-dashboard" element={<LiveFinancialDashboard />} />
                       
                       {/* 404 Route */}
                       <Route 

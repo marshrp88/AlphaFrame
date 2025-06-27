@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/shared/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/shared/ui/Card';
-import executionLogService from '@/core/services/ExecutionLogService';
+// import { executionLogService } from '@/core/services/ExecutionLogService'; // Commented out - not currently used
 
 /**
  * FeedbackModule Component
@@ -27,25 +27,25 @@ const FeedbackModule = () => {
   const [success, setSuccess] = useState(false);
 
   // Diagnostic: Log when component mounts
-  useEffect(() => {
-    console.log('🧪 [FeedbackModule] mounted');
-  }, []);
+  // useEffect(() => {
+  //   console.log('🧪 [FeedbackModule] mounted');
+  // }, []);
 
   // Diagnostic: Log state changes
-  useEffect(() => {
-    console.log('🧪 [FeedbackModule] state:', { isGenerating, error, success });
-  }, [isGenerating, error, success]);
+  // useEffect(() => {
+  //   console.log('🧪 [FeedbackModule] state:', { isGenerating, error, success });
+  // }, [isGenerating, error, success]);
 
   const handleGenerateReport = async () => {
-    console.log('🧪 [FeedbackModule] handleGenerateReport ENTRY - handler called!');
+    // console.log('🧪 [FeedbackModule] handleGenerateReport ENTRY - handler called!');
     setIsGenerating(true);
     setError(null);
     setSuccess(false);
 
     try {
       // Collect execution logs
-      const executionLogs = await executionLogService.queryLogs();
-      console.log('🧪 [FeedbackModule] queryLogs returned:', executionLogs);
+      // const executionLogs = await executionLogService.queryLogs(); // Commented out - not currently used
+      // console.log('🧪 [FeedbackModule] queryLogs returned:', executionLogs);
       
       // TEMPORARILY DISABLED: DOM-heavy file download operations for test isolation
       // Convert to JSON and create downloadable file
@@ -61,11 +61,11 @@ const FeedbackModule = () => {
       // document.body.removeChild(link);
       // URL.revokeObjectURL(url);
       
-      console.log('🧪 [FeedbackModule] DOM operations disabled - setting success state');
+      // console.log('🧪 [FeedbackModule] DOM operations disabled - setting success state');
       setSuccess(true);
-      console.log('🧪 [FeedbackModule] Report generation completed successfully');
+      // console.log('🧪 [FeedbackModule] Report generation completed successfully');
     } catch (err) {
-      console.error('🧪 [FeedbackModule] Failed to generate feedback report:', err);
+      // console.error('🧪 [FeedbackModule] Failed to generate feedback report:', err);
       setError('Could not generate the report. Please check the console for details.');
     } finally {
       setIsGenerating(false);
@@ -75,7 +75,7 @@ const FeedbackModule = () => {
   const handleReset = () => {
     setError(null);
     setSuccess(false);
-    console.log('🧪 [FeedbackModule] Reset clicked');
+    // console.log('🧪 [FeedbackModule] Reset clicked');
   };
 
   return (
@@ -89,13 +89,13 @@ const FeedbackModule = () => {
       <CardContent className="space-y-4">
         {error && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-            {console.log('🧪 [FeedbackModule] Rendering error message:', error)}
+            {/* {console.log('🧪 [FeedbackModule] Rendering error message:', error)} */}
             <p className="text-red-700 text-sm">{error}</p>
           </div>
         )}
         {success && (
           <div className="p-3 bg-green-50 border border-green-200 rounded-md">
-            {console.log('🧪 [FeedbackModule] Rendering success message')}
+            {/* {console.log('🧪 [FeedbackModule] Rendering success message')} */}
             <p className="text-green-700 text-sm">
               ✅ Feedback report generated and downloaded successfully!
             </p>

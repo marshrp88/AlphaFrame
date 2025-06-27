@@ -149,11 +149,11 @@ export const initializeConfig = () => {
     }
     
     // In development, log warnings but continue
-    console.warn('Continuing with missing configuration - features may be disabled');
+    // console.warn('Continuing with missing configuration - features may be disabled'); // Commented for production cleanliness
   }
   
   if (validation.warnings.length > 0) {
-    console.warn('Configuration warnings:', validation.warnings);
+    // console.warn('Configuration warnings:', validation.warnings); // Commented for production cleanliness
   }
   
   return validation;

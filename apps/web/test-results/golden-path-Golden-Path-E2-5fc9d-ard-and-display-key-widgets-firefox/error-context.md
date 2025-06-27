@@ -1,12 +1,26 @@
 # Page snapshot
 
 ```yaml
-- heading "Unable to connect" [level=1]
-- paragraph: Firefox can’t establish a connection to the server at localhost:5176.
-- paragraph
-- list:
-  - listitem: The site could be temporarily unavailable or too busy. Try again in a few moments.
-  - listitem: If you are unable to load any pages, check your computer’s network connection.
-  - listitem: If your computer or network is protected by a firewall or proxy, make sure that Nightly is permitted to access the web.
-- button "Try Again"
+- navigation:
+  - link "AlphaFrame VX.1":
+    - /url: /
+  - link "Home":
+    - /url: /
+  - link "About":
+    - /url: /about
+  - link "Live Dashboard":
+    - /url: /live-dashboard
+  - button "Login":
+    - img
+    - text: Login
+- main:
+  - heading "Home Page" [level=1]
+  - heading "Financial State Test" [level=2]
+  - paragraph: Check the console for store integration test results
+  - paragraph: "Current Balance: $1000"
+  - paragraph: "Goal: Test Goal"
+  - paragraph: "Progress: $0 / $5000"
+- contentinfo:
+  - paragraph: © 2024 AlphaFrame. All rights reserved.
+  - paragraph: "Environment: development | Version: 1.0.0"
 ```

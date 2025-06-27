@@ -89,7 +89,7 @@ const Step2ReviewTransactions = ({ onComplete, onSkip, isLoading }) => {
       setTransactions(processedTransactions);
       
     } catch (error) {
-      console.error('Failed to load transactions:', error);
+      // console.error('Failed to load transactions:', error); // Commented for production cleanliness
       setError('Failed to load transactions. Please try again.');
     } finally {
       setLoading(false);

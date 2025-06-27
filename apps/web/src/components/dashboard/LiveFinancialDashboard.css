@@ -1,0 +1,398 @@
+/**
+ * LiveFinancialDashboard.css
+ * 
+ * Purpose: Provides modern, responsive styling for the live financial dashboard
+ * with smooth animations and professional visual design.
+ * 
+ * Procedure:
+ * 1. Defines grid layout for dashboard components
+ * 2. Implements smooth animations and transitions
+ * 3. Provides responsive design for different screen sizes
+ * 4. Uses design tokens for consistent styling
+ * 
+ * Conclusion: Creates a polished, professional dashboard that feels
+ * modern and trustworthy.
+ */
+
+.live-financial-dashboard {
+  padding: var(--spacing-lg);
+  background: var(--color-background);
+  min-height: 100vh;
+}
+
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.status-text {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.last-update {
+  margin-left: auto;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.dashboard-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.dashboard-card h3 {
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: var(--spacing-sm);
+}
+
+/* Account Balances */
+.account-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.account-item:last-child {
+  border-bottom: none;
+}
+
+.account-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.account-name {
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.account-balance {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.account-meta {
+  text-align: right;
+}
+
+.last-updated {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+/* Market Data */
+.market-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.market-item:last-child {
+  border-bottom: none;
+}
+
+.market-index {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.index-name {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.index-value {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.market-change {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacing-xs);
+}
+
+.change-value {
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+}
+
+.change-amount {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+/* Portfolio Value */
+.portfolio-summary {
+  text-align: center;
+  padding: var(--spacing-lg) 0;
+}
+
+.total-value {
+  margin-bottom: var(--spacing-md);
+}
+
+.value-label {
+  display: block;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.value-amount {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.daily-change {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+}
+
+.change-percent {
+  font-weight: 600;
+  font-size: var(--font-size-lg);
+}
+
+/* Recent Transactions */
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.transaction-item:last-child {
+  border-bottom: none;
+}
+
+.transaction-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.transaction-description {
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.transaction-account {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  text-transform: capitalize;
+}
+
+.transaction-amount {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacing-xs);
+}
+
+.amount {
+  font-weight: 600;
+  font-size: var(--font-size-md);
+}
+
+.transaction-time {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+/* Live Alerts */
+.alert-item {
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  border-radius: var(--radius-md);
+  border-left: 4px solid;
+  background: var(--color-surface);
+}
+
+.alert-item.warning {
+  border-left-color: var(--color-warning);
+  background: var(--color-warning-subtle);
+}
+
+.alert-item.error {
+  border-left-color: var(--color-error);
+  background: var(--color-error-subtle);
+}
+
+.alert-item.info {
+  border-left-color: var(--color-info);
+  background: var(--color-info-subtle);
+}
+
+.alert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xs);
+}
+
+.alert-title {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.alert-severity {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 2px var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.alert-message {
+  margin: var(--spacing-xs) 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.alert-time {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .live-financial-dashboard {
+    padding: var(--spacing-md);
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .dashboard-card {
+    padding: var(--spacing-md);
+  }
+
+  .connection-status {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+
+  .last-update {
+    margin-left: 0;
+  }
+
+  .value-amount {
+    font-size: var(--font-size-xl);
+  }
+
+  .market-item,
+  .account-item,
+  .transaction-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+
+  .market-change,
+  .transaction-amount {
+    align-items: flex-start;
+  }
+}
+
+/* Animation Enhancements */
+.dashboard-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading States */
+.dashboard-card.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-card.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { left: -100%; }
+  100% { left: 100%; }
+} 

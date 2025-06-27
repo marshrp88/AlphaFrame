@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/ui/Select";
-import { Label } from '@/shared/ui/Label';
+import Label from '@/shared/ui/Label';
 
 // Action categories and their options
 const ACTION_CATEGORIES = {

@@ -76,10 +76,10 @@ const WhatsNext = ({ financialState, userContext }) => {
           window.location.href = '/dashboard/debt-strategy';
           break;
         default:
-          console.log('Action not implemented:', recommendation.action);
+          // console.log('Action not implemented:', recommendation.action); // Commented for production cleanliness
       }
     } catch (error) {
-      console.error('Failed to execute action:', error);
+      // console.error('Failed to execute action:', error); // Commented for production cleanliness
     }
   };
 

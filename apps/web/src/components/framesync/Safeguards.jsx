@@ -6,7 +6,7 @@
 
 import React, { memo, useCallback } from 'react';
 import { Input } from "@/shared/ui/Input";
-import { Label } from "@/shared/ui/Label";
+import Label from "@/shared/ui/Label";
 import { Switch } from "@/shared/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/Card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';

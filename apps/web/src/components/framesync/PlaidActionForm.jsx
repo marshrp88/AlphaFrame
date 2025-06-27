@@ -6,7 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import { Input } from "@/shared/ui/Input";
-import { Label } from "@/shared/ui/Label";
+import Label from "@/shared/ui/Label";
 import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group";
 import { useAppStore } from '@/core/store/useAppStore';
 
@@ -78,7 +78,7 @@ export const PlaidActionForm = ({ initialPayload, onChange }) => {
   };
 
   // Before rendering the Select, log the options
-  console.log('PlaidActionForm account options', accounts);
+  // console.log('PlaidActionForm account options', accounts); // Commented for production cleanliness
 
   return (
     <div className="space-y-4">

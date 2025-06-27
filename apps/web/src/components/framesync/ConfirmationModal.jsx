@@ -86,8 +86,8 @@ const ConfirmationModal = ({ isOpen, action, onConfirm, onCancel }) => {
       const result = await runSimulation(action, financialState);
       setSimulationResult(result);
     } catch (error) {
-      console.error('Simulation failed:', error);
-      setSimulationError(error.message);
+      // console.error('Simulation failed:', error); // Commented for production cleanliness
+      setSimulationError('Failed to run simulation');
     } finally {
       setIsSimulating(false);
     }

@@ -8,6 +8,8 @@
     - /url: /
   - link "About":
     - /url: /about
+  - link "Live Dashboard":
+    - /url: /live-dashboard
   - button "Login":
     - img
     - text: Login
@@ -67,7 +69,7 @@
   - paragraph: "Error running simulation: Simulation failed: Unsupported action type for simulation: undefined"
   - button "Try Again"
   - button "Save Rule"
-  - text: "🟢 Clicked 🔍 Debug: actionType = PLAID_TRANSFER 🔍 Debug: payload = {\"sourceAccount\":\"chase_checking\",\"destinationAccount\":\"vanguard_brokerage\",\"amountType\":\"fixed\",\"amount\":\"1000\",\"description\":\"\"} 🔍 Debug: button enabled = 🔍 Debug: isExecuting = 🔍 Debug: saveHandlerCalled = ✅ handleSave called"
+  - text: 🟢 Clicked✅ handleSave called
 - contentinfo:
   - paragraph: © 2024 AlphaFrame. All rights reserved.
   - paragraph: "Environment: development | Version: 1.0.0"

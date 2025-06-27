@@ -18,7 +18,7 @@ import React, { useState } from 'react';
 import { Button } from '../../../shared/ui/Button.jsx';
 import { Card } from '../../../shared/ui/Card.jsx';
 import { RadioGroup, RadioGroupItem } from '../../../shared/ui/radio-group.jsx';
-import { Label } from '../../../shared/ui/Label.jsx';
+import Label from '../../../shared/ui/Label.jsx';
 import { 
   BarChart3, 
   PieChart, 

@@ -8,6 +8,8 @@
     - /url: /
   - link "About":
     - /url: /about
+  - link "Live Dashboard":
+    - /url: /live-dashboard
   - button "Login":
     - img
     - text: Login

@@ -6,7 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import { Input } from "@/shared/ui/Input";
-import { Label } from "@/shared/ui/Label";
+import Label from "@/shared/ui/Label";
 import { Textarea } from "@/shared/ui/textarea";
 
 /**

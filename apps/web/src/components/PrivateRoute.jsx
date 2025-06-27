@@ -17,7 +17,7 @@
  * - Secure redirect handling
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Navigate, useLocation } from 'react-router-dom';
 
@@ -42,15 +42,13 @@ const PrivateRoute = ({
   const isTestMode = import.meta.env.VITE_APP_ENV === 'test';
   
   // Diagnostic logging
-  useEffect(() => {
-    console.log('[PrivateRoute] Component mounted');
-    console.log('[PrivateRoute] Test mode:', isTestMode);
-    console.log('[PrivateRoute] Environment:', import.meta.env.VITE_APP_ENV);
-    console.log('[PrivateRoute] localStorage test_mode:', localStorage.getItem('test_mode'));
-  }, [isTestMode]);
+  // console.log('[PrivateRoute] Component mounted'); // Commented for production cleanliness
+  // console.log('[PrivateRoute] Test mode:', isTestMode); // Commented for production cleanliness
+  // console.log('[PrivateRoute] Environment:', import.meta.env.VITE_APP_ENV); // Commented for production cleanliness
+  // console.log('[PrivateRoute] localStorage test_mode:', localStorage.getItem('test_mode')); // Commented for production cleanliness
   
   if (isTestMode) {
-    console.log('[PrivateRoute] Bypassing authentication for test mode');
+    // console.log('[PrivateRoute] Bypassing authentication for test mode'); // Commented for production cleanliness
     return children;
   }
 
@@ -67,8 +65,8 @@ const PrivateRoute = ({
   }
 
   // Handle authentication errors
+  // console.error('Authentication error:', error); // Commented for production cleanliness
   if (error) {
-    console.error('Authentication error:', error);
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
