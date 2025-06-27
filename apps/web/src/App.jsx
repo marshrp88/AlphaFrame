@@ -31,6 +31,7 @@ import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import { ToastProvider } from "./components/ui/use-toast.jsx";
 import { config } from "./lib/config.js";
 import LiveFinancialDashboard from './components/dashboard/LiveFinancialDashboard';
+import Dashboard2 from './components/dashboard/Dashboard2.jsx';
 
 // Import design system components
 import NavBar from "./components/ui/NavBar.jsx";
@@ -82,6 +83,7 @@ const Navigation = () => {
     { label: 'Home', to: '/', icon: '🏠' },
     { label: 'About', to: '/about', icon: 'ℹ️' },
     { label: 'Dashboard', to: '/live-dashboard', icon: '📊' },
+    { label: 'Dashboard 2.0', to: '/dashboard2', icon: '🚀' },
     ...(isAuthenticated ? [
       { label: 'AlphaPro', to: '/alphapro', icon: '⭐' },
       { label: 'Rules', to: '/rules', icon: '⚙️' },
@@ -188,6 +190,7 @@ const App = () => {
                         />
                         
                         <Route path="/live-dashboard" element={<LiveFinancialDashboard />} />
+                        <Route path="/dashboard2" element={<Dashboard2 />} />
                         
                         {/* 404 Route */}
                         <Route 

@@ -38,43 +38,43 @@ const WhatsNext = ({ financialState, userContext }) => {
     if (cashflow?.netFlow < 0) {
       return {
         title: "Address Cash Flow",
-        description: "Your expenses exceed income. Let's review your spending.",
+        description: "Your expenses exceed income. Let's review your spending patterns and identify areas for improvement.",
         priority: "high",
         action: "Review Budget",
         icon: AlertCircle,
-        color: "var(--color-border-error)"
+        color: "var(--color-error-600)"
       };
     }
     
     if (netWorth?.current < 10000) {
       return {
         title: "Build Emergency Fund",
-        description: "Focus on building your emergency savings first.",
+        description: "Focus on building your emergency savings to protect against unexpected expenses.",
         priority: "high",
         action: "Set Savings Goal",
         icon: Target,
-        color: "var(--color-accent-500)"
+        color: "var(--color-success-600)"
       };
     }
     
     if (insights?.currentTrajectory?.retirementAge > 65) {
       return {
         title: "Optimize Retirement",
-        description: "Your retirement age can be improved with better planning.",
+        description: "Your retirement age can be improved with better planning and investment strategies.",
         priority: "medium",
         action: "Review Strategy",
         icon: TrendingUp,
-        color: "var(--color-primary-500)"
+        color: "var(--color-primary-600)"
       };
     }
     
     return {
       title: "Stay on Track",
-      description: "You're doing great! Keep up the good financial habits.",
+      description: "You're doing great! Keep up the good financial habits and continue building wealth.",
       priority: "low",
       action: "View Progress",
       icon: CheckCircle,
-      color: "var(--color-accent-500)"
+      color: "var(--color-success-600)"
     };
   };
 
@@ -199,36 +199,38 @@ const QuickActions = () => {
 const RecentActivity = ({ data }) => {
   if (!data?.recentChanges?.changes) return null;
 
+  const activities = data.recentChanges.changes.slice(0, 5);
+
   return (
     <motion.div 
       className="recent-activity"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5, delay: 0.3 }}
+      transition={{ duration: 0.5, delay: 0.4 }}
     >
       <CompositeCard>
         <h3 className="section-title">Recent Activity</h3>
         <div className="activity-list">
-          {data.recentChanges.changes.slice(0, 3).map((change, index) => (
-            <motion.div 
-              key={index}
+          {activities.map((activity, index) => (
+            <motion.div
+              key={activity.id || index}
               className="activity-item"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.5 + index * 0.1 }}
             >
               <div className="activity-icon">
-                {change.type === 'income' && <TrendingUp size={16} />}
-                {change.type === 'expense' && <AlertCircle size={16} />}
-                {change.type === 'savings' && <Target size={16} />}
+                {activity.type === 'income' ? '💰' : 
+                 activity.type === 'expense' ? '💸' : 
+                 activity.type === 'investment' ? '📈' : '📊'}
               </div>
               <div className="activity-content">
-                <span className="activity-title">{change.title}</span>
-                <span className="activity-time">{change.timestamp}</span>
+                <div className="activity-title">{activity.description}</div>
+                <div className="activity-description">{activity.category}</div>
               </div>
-              <span className={`activity-amount ${change.amount >= 0 ? 'positive' : 'negative'}`}>
-                ${Math.abs(change.amount).toLocaleString()}
-              </span>
+              <div className="activity-time">
+                {new Date(activity.timestamp).toLocaleDateString()}
+              </div>
             </motion.div>
           ))}
         </div>
@@ -237,16 +239,17 @@ const RecentActivity = ({ data }) => {
   );
 };
 
-// Main Dashboard 2.0 Component
+// Main Dashboard Component
 const Dashboard2 = () => {
   const { financialState, loading, error } = useFinancialState();
   const { userContext } = useUserContext();
-  const { toast } = useToast();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const { toast } = useToast();
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
     try {
+      // Simulate refresh
       await new Promise(resolve => setTimeout(resolve, 1000));
       window.location.reload();
     } catch (err) {
@@ -262,62 +265,82 @@ const Dashboard2 = () => {
 
   if (loading) {
     return (
-      <motion.div 
-        className="dashboard-loading"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
-        <div className="loading-container">
-          <Loader2 className="loading-spinner" />
-          <h2>Loading Your Financial Dashboard</h2>
-          <p>We're gathering your latest financial insights...</p>
+      <div className="dashboard2-container">
+        <div className="dashboard2-header">
+          <h1 className="dashboard2-title">Financial Dashboard</h1>
+          <p className="dashboard2-subtitle">Loading your financial data...</p>
         </div>
-      </motion.div>
+        <CompositeCard>
+          <div style={{ textAlign: 'center', padding: 'var(--spacing-8)' }}>
+            <Loader2 className="animate-spin" size={48} />
+            <p style={{ marginTop: 'var(--spacing-4)' }}>Loading your financial dashboard...</p>
+          </div>
+        </CompositeCard>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <motion.div 
-        className="dashboard-error"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
-        <div className="error-container">
-          <AlertCircle className="error-icon" />
-          <h3>Unable to Load Dashboard</h3>
-          <p>{error.message}</p>
-          <StyledButton onClick={handleRefresh} disabled={isRefreshing}>
-            <RefreshCw className={isRefreshing ? 'spinning' : ''} />
-            {isRefreshing ? 'Refreshing...' : 'Try Again'}
-          </StyledButton>
+      <div className="dashboard2-container">
+        <div className="dashboard2-header">
+          <h1 className="dashboard2-title">Financial Dashboard</h1>
+          <p className="dashboard2-subtitle">Unable to load your data</p>
         </div>
-      </motion.div>
+        <CompositeCard>
+          <div style={{ textAlign: 'center', padding: 'var(--spacing-8)' }}>
+            <AlertCircle size={48} color="var(--color-error-600)" />
+            <p style={{ marginTop: 'var(--spacing-4)' }}>Error loading dashboard data</p>
+            <StyledButton onClick={handleRefresh} style={{ marginTop: 'var(--spacing-4)' }}>
+              Try Again
+            </StyledButton>
+          </div>
+        </CompositeCard>
+      </div>
     );
   }
 
   return (
     <motion.div 
-      className="dashboard-2"
+      className="dashboard2-container"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
+      transition={{ duration: 0.5 }}
     >
-      {/* Header */}
-      <header className="dashboard-header">
-        <h1>Financial Dashboard</h1>
-        <p>Your financial clarity and next steps</p>
-      </header>
+      <div className="dashboard2-header">
+        <h1 className="dashboard2-title">Financial Dashboard</h1>
+        <p className="dashboard2-subtitle">
+          Your financial clarity and next steps
+        </p>
+      </div>
 
       {/* WhatsNext Hero Section */}
-      <WhatsNext financialState={financialState} userContext={userContext} />
+      <WhatsNext 
+        financialState={financialState}
+        userContext={userContext}
+      />
 
       {/* Main Dashboard Grid */}
-      <div className="dashboard-grid">
+      <div className="dashboard2-grid">
         <FinancialSummary data={financialState} />
         <QuickActions />
         <RecentActivity data={financialState} />
       </div>
+
+      {/* Dashboard Footer */}
+      <footer className="dashboard2-footer">
+        <div className="footer-info">
+          Last updated: {new Date().toLocaleString()}
+        </div>
+        <button 
+          className="refresh-button"
+          onClick={handleRefresh}
+          disabled={isRefreshing}
+        >
+          <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+          {isRefreshing ? 'Refreshing...' : 'Refresh Data'}
+        </button>
+      </footer>
     </motion.div>
   );
 };
