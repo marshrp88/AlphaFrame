@@ -1,7 +1,8 @@
 /**
- * Profile.jsx
+ * Profile.jsx - Modern User Profile Management
  * 
- * Purpose: User profile page with Auth0 integration
+ * Purpose: Provides users with a clean, intuitive profile page with
+ * Auth0 integration and modern UI components.
  * 
  * This component provides:
  * - User profile display and management
@@ -15,13 +16,29 @@
  * - Role-based UI elements
  * - Account management tools
  * - Session information display
+ * - Modern UI components and design tokens
  */
 
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Button } from '../shared/ui/Button.jsx';
-import { Card } from '../shared/ui/Card.jsx';
-import { config } from '../lib/config.js';
+import StyledButton from '../components/ui/StyledButton';
+import CompositeCard from '../components/ui/CompositeCard';
+import PageLayout from '../components/PageLayout';
+import { useToast } from '../components/ui/use-toast.jsx';
+import { 
+  User, 
+  Shield, 
+  Settings, 
+  RefreshCw, 
+  LogOut, 
+  CheckCircle, 
+  AlertCircle,
+  Mail,
+  Calendar,
+  Key
+} from 'lucide-react';
+import './Profile.css';
 
 const Profile = () => {
   const {
@@ -34,6 +51,7 @@ const Profile = () => {
 
   const [isRefreshingToken, setIsRefreshingToken] = useState(false);
   const [tokenInfo, setTokenInfo] = useState(null);
+  const { toast } = useToast();
 
   // Handle logout
   const handleLogout = () => {
@@ -41,6 +59,12 @@ const Profile = () => {
       logoutParams: {
         returnTo: window.location.origin
       }
+    });
+    
+    toast({
+      title: "Logged Out",
+      description: "You have been successfully logged out.",
+      variant: "default"
     });
   };
 
@@ -61,9 +85,20 @@ const Profile = () => {
           audience: payload.aud,
           issuer: payload.iss
         });
+        
+        toast({
+          title: "Token Refreshed",
+          description: "Access token has been refreshed successfully.",
+          variant: "default"
+        });
       }
     } catch (error) {
       setTokenInfo({ error: error.message });
+      toast({
+        title: "Token Refresh Failed",
+        description: error.message,
+        variant: "destructive"
+      });
     } finally {
       setIsRefreshingToken(false);
     }
@@ -72,24 +107,41 @@ const Profile = () => {
   // Show loading state
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-gray-600">Loading profile...</p>
-        </div>
-      </div>
+      <PageLayout>
+        <motion.div 
+          className="profile-loading"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="loading-container">
+            <RefreshCw className="loading-spinner" />
+            <h2>Loading Profile</h2>
+            <p>Please wait while we load your profile information...</p>
+          </div>
+        </motion.div>
+      </PageLayout>
     );
   }
 
   // Show error if not authenticated
   if (!isAuthenticated || !user) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-red-600 mb-2">Not Authenticated</h2>
-          <p className="text-gray-600">Please log in to view your profile.</p>
-        </div>
-      </div>
+      <PageLayout>
+        <motion.div 
+          className="profile-error"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="error-container">
+            <AlertCircle className="error-icon" />
+            <h2>Not Authenticated</h2>
+            <p>Please log in to view your profile.</p>
+            <StyledButton onClick={() => window.location.href = '/'}>
+              Go to Login
+            </StyledButton>
+          </div>
+        </motion.div>
+      </PageLayout>
     );
   }
 
@@ -98,185 +150,216 @@ const Profile = () => {
   const userPermissions = user['https://alphaframe.com/permissions'] || [];
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="space-y-6">
+    <PageLayout>
+      <motion.div 
+        className="profile-container"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
         {/* Header */}
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">User Profile</h1>
-          <p className="text-gray-600">Manage your account and view your information</p>
-        </div>
+        <motion.div 
+          className="profile-header"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <h1>User Profile</h1>
+          <p>Manage your account and view your information</p>
+        </motion.div>
 
         {/* Profile Information */}
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Profile Information</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* User Avatar and Basic Info */}
-            <div className="flex items-center space-x-4">
-              {user.picture ? (
-                <img
-                  src={user.picture}
-                  alt={user.name || user.email}
-                  className="w-16 h-16 rounded-full border-4 border-gray-200"
-                />
-              ) : (
-                <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white text-xl font-bold">
-                  {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
-                </div>
-              )}
-              
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {user.name || 'No name provided'}
-                </h3>
-                <p className="text-gray-600">{user.email}</p>
-                {user.email_verified && (
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    ✓ Email Verified
-                  </span>
+        <motion.div 
+          className="profile-section"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          <CompositeCard>
+            <div className="section-header">
+              <User className="section-icon" />
+              <h2>Profile Information</h2>
+            </div>
+            
+            <div className="profile-grid">
+              {/* User Avatar and Basic Info */}
+              <div className="profile-avatar-section">
+                {user.picture ? (
+                  <img
+                    src={user.picture}
+                    alt={user.name || user.email}
+                    className="profile-avatar"
+                  />
+                ) : (
+                  <div className="profile-avatar-placeholder">
+                    {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
+                  </div>
                 )}
+                
+                <div className="profile-basic-info">
+                  <h3>{user.name || 'No name provided'}</h3>
+                  <p className="profile-email">{user.email}</p>
+                  {user.email_verified && (
+                    <span className="verification-badge">
+                      <CheckCircle size={14} />
+                      Email Verified
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
 
-            {/* User ID and Provider */}
-            <div className="space-y-2">
-              <div>
-                <label className="text-sm font-medium text-gray-500" htmlFor="userId">User ID</label>
-                <p className="text-sm text-gray-900 font-mono" id="userId">{user.sub}</p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-500" htmlFor="provider">Provider</label>
-                <p className="text-sm text-gray-900 capitalize" id="provider">
-                  {user.sub.split('|')[0]}
-                </p>
+              {/* User ID and Provider */}
+              <div className="profile-details">
+                <div className="detail-item">
+                  <label>User ID</label>
+                  <p className="detail-value">{user.sub}</p>
+                </div>
+                <div className="detail-item">
+                  <label>Provider</label>
+                  <p className="detail-value capitalize">
+                    {user.sub.split('|')[0]}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        </Card>
+          </CompositeCard>
+        </motion.div>
 
         {/* Roles and Permissions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Roles */}
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Roles</h3>
-            {userRoles.length > 0 ? (
-              <div className="space-y-2">
-                {userRoles.map((role, index) => (
-                  <span
-                    key={index}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-2 mb-2"
-                  >
-                    {role}
-                  </span>
-                ))}
+        <motion.div 
+          className="profile-section"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <div className="permissions-grid">
+            {/* Roles */}
+            <CompositeCard>
+              <div className="section-header">
+                <Shield className="section-icon" />
+                <h3>Roles</h3>
               </div>
-            ) : (
-              <p className="text-gray-500 text-sm">No roles assigned</p>
-            )}
-          </Card>
+              {userRoles.length > 0 ? (
+                <div className="tags-container">
+                  {userRoles.map((role, index) => (
+                    <span key={index} className="role-tag">
+                      {role}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <p className="empty-state">No roles assigned</p>
+              )}
+            </CompositeCard>
 
-          {/* Permissions */}
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Permissions</h3>
-            {userPermissions.length > 0 ? (
-              <div className="space-y-2">
-                {userPermissions.map((permission, index) => (
-                  <span
-                    key={index}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 mr-2 mb-2"
-                  >
-                    {permission}
-                  </span>
-                ))}
+            {/* Permissions */}
+            <CompositeCard>
+              <div className="section-header">
+                <Settings className="section-icon" />
+                <h3>Permissions</h3>
               </div>
-            ) : (
-              <p className="text-gray-500 text-sm">No permissions assigned</p>
-            )}
-          </Card>
-        </div>
+              {userPermissions.length > 0 ? (
+                <div className="tags-container">
+                  {userPermissions.map((permission, index) => (
+                    <span key={index} className="permission-tag">
+                      {permission}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <p className="empty-state">No permissions assigned</p>
+              )}
+            </CompositeCard>
+          </div>
+        </motion.div>
 
         {/* Session Information */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">Session Information</h3>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRefreshToken}
-              disabled={isRefreshingToken}
-            >
-              {isRefreshingToken ? 'Refreshing...' : 'Refresh Token'}
-            </Button>
-          </div>
-          
-          {tokenInfo ? (
-            <div className="space-y-3">
-              {tokenInfo.error ? (
-                <p className="text-red-600 text-sm">{tokenInfo.error}</p>
-              ) : (
-                <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <label className="text-gray-500" htmlFor="token">Token (truncated)</label>
-                      <p className="font-mono text-gray-900" id="token">{tokenInfo.token}</p>
+        <motion.div 
+          className="profile-section"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+        >
+          <CompositeCard>
+            <div className="section-header">
+              <Key className="section-icon" />
+              <h2>Session Information</h2>
+            </div>
+            
+            <div className="session-actions">
+              <StyledButton 
+                onClick={handleRefreshToken}
+                disabled={isRefreshingToken}
+                variant="secondary"
+              >
+                <RefreshCw className={isRefreshingToken ? 'spinning' : ''} />
+                {isRefreshingToken ? 'Refreshing...' : 'Refresh Token'}
+              </StyledButton>
+            </div>
+
+            {tokenInfo && (
+              <div className="token-info">
+                {tokenInfo.error ? (
+                  <div className="token-error">
+                    <AlertCircle size={16} />
+                    <span>Error: {tokenInfo.error}</span>
+                  </div>
+                ) : (
+                  <div className="token-details">
+                    <div className="token-item">
+                      <label>Token (truncated)</label>
+                      <p>{tokenInfo.token}</p>
                     </div>
-                    <div>
-                      <label className="text-gray-500" htmlFor="expiresAt">Expires At</label>
-                      <p className="text-gray-900" id="expiresAt">{tokenInfo.expiresAt}</p>
+                    <div className="token-item">
+                      <label>Expires At</label>
+                      <p>{tokenInfo.expiresAt}</p>
                     </div>
-                    <div>
-                      <label className="text-gray-500" htmlFor="issuedAt">Issued At</label>
-                      <p className="text-gray-900" id="issuedAt">{tokenInfo.issuedAt}</p>
+                    <div className="token-item">
+                      <label>Issued At</label>
+                      <p>{tokenInfo.issuedAt}</p>
                     </div>
-                    <div>
-                      <label className="text-gray-500" htmlFor="audience">Audience</label>
-                      <p className="text-gray-900" id="audience">{tokenInfo.audience}</p>
+                    <div className="token-item">
+                      <label>Audience</label>
+                      <p>{tokenInfo.audience}</p>
+                    </div>
+                    <div className="token-item">
+                      <label>Issuer</label>
+                      <p>{tokenInfo.issuer}</p>
                     </div>
                   </div>
-                </>
-              )}
-            </div>
-          ) : (
-            <p className="text-gray-500 text-sm">
-              Click &quot;Refresh Token&quot; to view current session information
-            </p>
-          )}
-        </Card>
+                )}
+              </div>
+            )}
+          </CompositeCard>
+        </motion.div>
 
         {/* Account Actions */}
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Account Actions</h3>
-          
-          <div className="flex flex-wrap gap-4">
-            <Button
-              variant="outline"
-              onClick={() => window.open('https://auth0.com/dashboard', '_blank')}
-            >
-              Manage Account
-            </Button>
-            
-            <Button
-              variant="destructive"
-              onClick={handleLogout}
-            >
-              Logout
-            </Button>
-          </div>
-        </Card>
-
-        {/* Environment Information */}
-        {config.env === 'development' && (
-          <Card className="p-6 bg-yellow-50 border-yellow-200">
-            <h3 className="text-lg font-semibold mb-4 text-yellow-800">Development Information</h3>
-            <div className="space-y-2 text-sm">
-              <p><strong>Environment:</strong> {config.env}</p>
-              <p><strong>Auth0 Domain:</strong> {config.auth0.domain || '&quot;Not configured&quot;'}</p>
-              <p><strong>Client ID:</strong> {config.auth0.clientId ? '&quot;Configured&quot;' : '&quot;Not configured&quot;'}</p>
+        <motion.div 
+          className="profile-section"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+        >
+          <CompositeCard>
+            <div className="section-header">
+              <Settings className="section-icon" />
+              <h2>Account Actions</h2>
             </div>
-          </Card>
-        )}
-      </div>
-    </div>
+            
+            <div className="account-actions">
+              <StyledButton 
+                onClick={handleLogout}
+                variant="destructive"
+                className="logout-button"
+              >
+                <LogOut size={16} />
+                Logout
+              </StyledButton>
+            </div>
+          </CompositeCard>
+        </motion.div>
+      </motion.div>
+    </PageLayout>
   );
 };
 

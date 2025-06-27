@@ -1,0 +1,359 @@
+/**
+ * Dashboard2.css - CSS Grid Layout for Next Generation Dashboard
+ * 
+ * Purpose: Provides modern, responsive CSS Grid layout for the Dashboard 2.0
+ * component with proper spacing, animations, and design token integration.
+ * 
+ * Procedure:
+ * 1. Implements CSS Grid for responsive layout
+ * 2. Uses design tokens for consistent styling
+ * 3. Provides smooth animations and transitions
+ * 4. Ensures mobile-first responsive design
+ * 
+ * Conclusion: Creates a cohesive, modern dashboard layout that scales
+ * across all device sizes and maintains visual consistency.
+ */
+
+/* Dashboard Container */
+.dashboard-2 {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+}
+
+/* Dashboard Header */
+.dashboard-header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.dashboard-header h1 {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.dashboard-header p {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* WhatsNext Hero Section */
+.whats-next-hero {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.hero-card {
+  background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-accent-50) 100%);
+  border: 1px solid var(--color-primary-200);
+}
+
+.hero-content {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-xl);
+}
+
+.hero-icon {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-light);
+}
+
+.hero-text {
+  flex: 1;
+}
+
+.hero-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xs);
+}
+
+.hero-description {
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: var(--line-height-relaxed);
+}
+
+.hero-action-button {
+  flex-shrink: 0;
+  padding: var(--spacing-md) var(--spacing-xl);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Main Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-2xl);
+}
+
+/* Section Titles */
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Financial Summary */
+.financial-summary {
+  grid-column: 1 / -1;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--spacing-lg);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+}
+
+.summary-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.summary-value {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+}
+
+.summary-value.positive {
+  color: var(--color-accent-600);
+}
+
+.summary-value.negative {
+  color: var(--color-border-error);
+}
+
+/* Quick Actions */
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.action-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.action-button:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-primary-300);
+  box-shadow: var(--shadow-light);
+  transform: translateY(-2px);
+}
+
+.action-icon {
+  font-size: var(--font-size-xl);
+  line-height: 1;
+}
+
+.action-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+}
+
+/* Recent Activity */
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+}
+
+.activity-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  color: var(--color-primary-500);
+}
+
+.activity-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.activity-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.activity-time {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.activity-amount {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.activity-amount.positive {
+  color: var(--color-accent-600);
+}
+
+.activity-amount.negative {
+  color: var(--color-border-error);
+}
+
+/* Loading States */
+.dashboard-loading,
+.dashboard-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+}
+
+.loading-container,
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  color: var(--color-primary-500);
+  animation: spin 1s linear infinite;
+}
+
+.error-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--color-border-error);
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard-2 {
+    padding: var(--spacing-md);
+  }
+  
+  .hero-content {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-md);
+  }
+  
+  .hero-action-button {
+    width: 100%;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .activity-item {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-sm);
+  }
+  
+  .activity-amount {
+    align-self: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header h1 {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .dashboard-header p {
+    font-size: var(--font-size-md);
+  }
+  
+  .hero-title {
+    font-size: var(--font-size-xl);
+  }
+  
+  .actions-grid {
+    grid-template-columns: 1fr;
+  }
+} 

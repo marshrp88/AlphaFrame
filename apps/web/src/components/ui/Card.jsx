@@ -15,34 +15,40 @@
  */
 
 import React from 'react';
+import './Card.css';
 
 /**
- * Card Component Props
- * @typedef {Object} CardProps
- * @property {React.ReactNode} children - Card content
- * @property {string} [className] - Additional CSS classes
- * @property {string} [variant] - Visual variant (default, elevated, outlined)
+ * Card - AlphaFrame Design System
+ * Props:
+ * - variant: 'base' | 'dashboard' | 'rule'
+ * - status: 'active' | 'inactive' | 'error' (for rule variant)
+ * - header: ReactNode
+ * - footer: ReactNode
+ * - children: content
+ * - className: string
+ * - ...rest: other div props
  */
-
-/**
- * Card Component
- * @param {CardProps} props - Component props
- * @returns {JSX.Element} The rendered card component
- */
-export function Card({ children, className = '', variant = 'default', ...props }) {
-  const baseClasses = 'bg-white rounded-lg border border-gray-200 shadow-sm';
-  
-  const variantClasses = {
-    default: 'bg-white border-gray-200 shadow-sm',
-    elevated: 'bg-white border-gray-200 shadow-lg',
-    outlined: 'bg-white border-gray-300 shadow-none'
-  };
-
-  const classes = `${baseClasses} ${variantClasses[variant]} ${className}`.trim();
+export default function Card({
+  variant = 'base',
+  status,
+  header,
+  footer,
+  children,
+  className = '',
+  ...rest
+}) {
+  const cardClass = [
+    'card',
+    `card--${variant}`,
+    status ? `card--${status}` : '',
+    className,
+  ].filter(Boolean).join(' ');
 
   return (
-    <div className={classes} {...props}>
-      {children}
+    <div className={cardClass} tabIndex={0} {...rest}>
+      {header && <div className="card__header">{header}</div>}
+      <div className="card__content">{children}</div>
+      {footer && <div className="card__footer">{footer}</div>}
     </div>
   );
 }
@@ -111,6 +117,4 @@ export function CardContent({ children, className = '', ...props }) {
       {children}
     </div>
   );
-}
-
-export default Card; 
+} 

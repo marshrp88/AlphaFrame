@@ -18,7 +18,7 @@
   /* ===== COLOR PALETTE ===== */
   
   /* Primary Colors */
-  --color-primary: #3B82F6;
+  --color-primary: #2A4D69;
   --color-primary-light: #60A5FA;
   --color-primary-dark: #2563EB;
   --color-primary-50: #EFF6FF;
@@ -31,6 +31,7 @@
   --color-primary-700: #1D4ED8;
   --color-primary-800: #1E40AF;
   --color-primary-900: #1E3A8A;
+  --color-primary-950: #172554;
 
   /* Secondary Colors */
   --color-secondary: #6366F1;
@@ -48,7 +49,7 @@
   --color-secondary-900: #312E81;
 
   /* Accent Colors */
-  --color-accent: #10B981;
+  --color-accent: #63ACE5;
   --color-accent-light: #34D399;
   --color-accent-dark: #059669;
   --color-accent-50: #ECFDF5;
@@ -73,11 +74,43 @@
   --color-neutral-700: #374151;
   --color-neutral-800: #1F2937;
   --color-neutral-900: #111827;
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+  --color-gray-950: #030712;
+
+  /* Success Colors */
+  --color-success-50: #ECFDF5;
+  --color-success-100: #D1FAE5;
+  --color-success-500: #10B981;
+  --color-success-600: #059669;
+  --color-success-700: #047857;
+
+  /* Warning Colors */
+  --color-warning-50: #FFFBEB;
+  --color-warning-100: #FEF3C7;
+  --color-warning-500: #F59E0B;
+  --color-warning-600: #D97706;
+  --color-warning-700: #B45309;
+
+  /* Error Colors */
+  --color-error-50: #FEF2F2;
+  --color-error-100: #FEE2E2;
+  --color-error-500: #EF4444;
+  --color-error-600: #DC2626;
+  --color-error-700: #B91C1C;
 
   /* ===== SEMANTIC COLORS ===== */
   
   /* Background Colors */
-  --color-bg: #F9FAFB;
+  --color-bg: #F7F9FB;
   --color-bg-secondary: var(--color-neutral-50);
   --color-bg-tertiary: var(--color-neutral-100);
   --color-surface: #FFFFFF;
@@ -86,28 +119,28 @@
   --color-surface-disabled: var(--color-neutral-100);
 
   /* Text Colors */
-  --color-text: #1F2937;
+  --color-text: #1A1A1A;
   --color-text-secondary: var(--color-neutral-600);
   --color-text-tertiary: var(--color-neutral-500);
   --color-text-disabled: var(--color-neutral-400);
   --color-text-inverse: #FFFFFF;
   --color-text-link: var(--color-primary-600);
   --color-text-link-hover: var(--color-primary-700);
-  --color-muted: #6B7280;
+  --color-muted: #7B8A99;
 
   /* Border Colors */
   --color-border: var(--color-neutral-200);
   --color-border-light: 1px solid #E5E7EB;
   --color-border-focus: var(--color-primary-500);
-  --color-border-error: #EF4444;
+  --color-border-error: #F44336;
   --color-border-success: var(--color-accent-500);
-  --color-border-warning: #F59E0B;
+  --color-border-warning: #FFC107;
 
   /* ===== SPACING SCALE ===== */
   
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing: 16px;
   --spacing-lg: 24px;
   --spacing-xl: 32px;
   --spacing-2xl: 48px;
@@ -121,10 +154,10 @@
 
   /* Font Sizes */
   --font-size-xs: 0.75rem;    /* 12px */
-  --font-size-sm: 0.875rem;   /* 14px */
-  --font-size-md: 1rem;       /* 16px */
-  --font-size-lg: 1.25rem;    /* 20px */
-  --font-size-xl: 1.5rem;     /* 24px */
+  --font-size-sm: 0.85rem;    /* 14px */
+  --font-size-md: 1.4rem;     /* 16px */
+  --font-size-lg: 1.8rem;     /* 20px */
+  --font-size-xl: 2.2rem;     /* 24px */
   --font-size-2xl: 1.875rem;  /* 30px */
   --font-size-3xl: 2.25rem;   /* 36px */
   --font-size-4xl: 3rem;      /* 48px */
@@ -146,9 +179,8 @@
   
   --radius-none: 0;
   --radius-sm: 4px;
-  --radius-base: 8px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius: 8px;
+  --radius-lg: 16px;
   --radius-xl: 16px;
   --radius-2xl: 24px;
   --radius-full: 9999px;
@@ -217,6 +249,91 @@
   --container-padding: var(--spacing-md);
   --grid-gap: var(--spacing-lg);
   --section-spacing: var(--spacing-2xl);
+
+  /* New tokens from the code block */
+  --color-success: #4CAF50;
+  --color-warning: #FFC107;
+  --color-error: #F44336;
+  --font-heading: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-size-base: 1rem;
+  --elevation-1: 0 1px 4px rgba(42,77,105,0.04);
+  --elevation-2: 0 4px 16px rgba(42,77,105,0.08);
+
+  /* AlphaFrame Design Tokens: Calm Confidence Brand System */
+
+  /* Font Families */
+  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+
+  /* Font Sizes */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 30px;
+  --text-4xl: 36px;
+  --text-5xl: 48px;
+
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Line Heights */
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+
+  /* Spacing */
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* Border Radius */
+  --radius-none: 0px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* Breakpoints */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* Animation & Motion */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ===== DARK MODE SUPPORT ===== */

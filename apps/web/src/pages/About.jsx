@@ -1,11 +1,12 @@
 import React from 'react'
+import PageLayout from '../components/PageLayout'
 
-function About() {
+const About = () => {
   return (
-    <div>
+    <PageLayout>
       <h1>About Page</h1>
       <p>This project demonstrates a clean React + Vite setup with Zustand and environment variables.</p>
-    </div>
+    </PageLayout>
   )
 }
 

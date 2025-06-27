@@ -1,25 +1,25 @@
 import React from 'react';
-import MainDashboard from '../components/dashboard/MainDashboard';
+import Dashboard2 from '../components/dashboard/Dashboard2';
 import PageLayout from '../components/PageLayout';
 import CompositeCard from '../components/ui/CompositeCard';
 
 /**
- * DashboardTest - Test page for dashboard components
+ * Dashboard2Test - Test page for Dashboard 2.0
  * 
- * Purpose: Provides a testing environment to verify dashboard
+ * Purpose: Provides a testing environment to verify Dashboard 2.0
  * components render correctly with mock data and interactions.
  * 
  * Procedure:
- * 1. Renders the main dashboard with test data
- * 2. Allows testing of all dashboard sections
+ * 1. Renders the new Dashboard 2.0 with test data
+ * 2. Allows testing of CSS Grid layout and WhatsNext hero
  * 3. Verifies responsive behavior and animations
  * 4. Tests component interactions and state changes
  * 
- * Conclusion: Ensures dashboard components work as expected
- * before integration into the main application.
+ * Conclusion: Ensures Dashboard 2.0 works as expected before
+ * integration into the main application.
  */
-const DashboardTest = () => {
-  // Mock financial state data for testing
+const Dashboard2Test = () => {
+  // Mock financial state data for testing Dashboard 2.0
   const mockFinancialState = {
     cashflow: {
       income: 7500,
@@ -167,20 +167,29 @@ const DashboardTest = () => {
     <PageLayout>
       <CompositeCard style={{ marginBottom: 'var(--spacing-lg)' }}>
         <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--font-size-xl)', marginBottom: 'var(--spacing-xs)' }}>
-          Dashboard Test Page
+          Dashboard 2.0 Test Page
         </h1>
         <p style={{ color: 'var(--color-muted)', fontSize: 'var(--font-size-base)' }}>
-          Testing dashboard components with mock data
+          Testing Dashboard 2.0 with CSS Grid layout and WhatsNext hero component
         </p>
       </CompositeCard>
-      <CompositeCard>
-        <MainDashboard 
-          financialState={mockFinancialState}
-          userContext={mockUserContext}
+      
+      {/* Mock the financial state store for testing */}
+      <div style={{ display: 'none' }}>
+        {/* This div contains the mock data that would normally come from the store */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.__MOCK_FINANCIAL_STATE__ = ${JSON.stringify(mockFinancialState)};
+              window.__MOCK_USER_CONTEXT__ = ${JSON.stringify(mockUserContext)};
+            `
+          }}
         />
-      </CompositeCard>
+      </div>
+      
+      <Dashboard2 />
     </PageLayout>
   );
 };
 
-export default DashboardTest; 
+export default Dashboard2Test; 
