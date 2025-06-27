@@ -1,0 +1,271 @@
+/**
+ * PlaidActionForm.css - AlphaFrame Design System Form Styling
+ * 
+ * Purpose: Professional styling for the refactored PlaidActionForm component
+ * using design tokens and consistent with the AlphaFrame design system.
+ * 
+ * Procedure:
+ * 1. Use design tokens for all styling values
+ * 2. Provide consistent form element styling
+ * 3. Implement proper error states and validation feedback
+ * 4. Ensure accessibility and responsive design
+ * 
+ * Conclusion: Creates a polished, professional form experience
+ * that integrates seamlessly with the AlphaFrame design system.
+ */
+
+@import '../../styles/design-tokens.css';
+
+/* ===== FORM CONTAINER ===== */
+
+.plaid-action-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ===== FORM SECTIONS ===== */
+
+.form-section {
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-section:last-child {
+  margin-bottom: 0;
+}
+
+/* ===== FORM LABELS ===== */
+
+.form-label {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+  font-family: var(--font-family-primary);
+}
+
+.form-label:focus-within {
+  color: var(--color-primary-600);
+}
+
+/* ===== FORM INPUTS ===== */
+
+.form-input,
+.form-select {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  font-family: var(--font-family-primary);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  transition: all var(--transition-base);
+  outline: none;
+}
+
+.form-input:focus,
+.form-select:focus {
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-100);
+}
+
+.form-input--error,
+.form-select--error {
+  border-color: var(--color-error-500);
+  box-shadow: 0 0 0 3px var(--color-error-100);
+}
+
+.form-input--error:focus,
+.form-select--error:focus {
+  border-color: var(--color-error-600);
+  box-shadow: 0 0 0 3px var(--color-error-100);
+}
+
+/* ===== AMOUNT INPUT GROUP ===== */
+
+.amount-input-group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.currency-symbol {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  padding: var(--spacing-md);
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-md);
+  border-right: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.amount-input-group .form-input {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  flex: 1;
+}
+
+/* ===== RADIO GROUP ===== */
+
+.radio-group {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-sm);
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-base);
+}
+
+.radio-option:hover {
+  background: var(--color-background-secondary);
+}
+
+.radio-option input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary-600);
+  cursor: pointer;
+}
+
+.radio-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-normal);
+  cursor: pointer;
+}
+
+/* ===== ERROR MESSAGES ===== */
+
+.form-error {
+  font-size: var(--text-sm);
+  color: var(--color-error-600);
+  margin-top: var(--spacing-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ===== FORM ACTIONS ===== */
+
+.form-actions {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--color-border-secondary);
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ===== DEBUG INFO ===== */
+
+.debug-info {
+  font-size: var(--text-xs);
+  line-height: var(--line-height-tight);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+@media (max-width: 768px) {
+  .plaid-action-form {
+    max-width: 100%;
+  }
+  
+  .radio-group {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .form-actions .styled-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-input,
+  .form-select {
+    padding: var(--spacing-sm);
+    font-size: var(--text-sm);
+  }
+  
+  .currency-symbol {
+    padding: var(--spacing-sm);
+    font-size: var(--text-base);
+  }
+}
+
+/* ===== DARK MODE SUPPORT ===== */
+
+@media (prefers-color-scheme: dark) {
+  .form-input,
+  .form-select {
+    background: var(--color-surface-dark);
+    border-color: var(--color-border-primary-dark);
+    color: var(--color-text-primary-dark);
+  }
+  
+  .form-input:focus,
+  .form-select:focus {
+    border-color: var(--color-primary-400);
+    box-shadow: 0 0 0 3px var(--color-primary-900);
+  }
+  
+  .currency-symbol {
+    background: var(--color-background-secondary-dark);
+    border-color: var(--color-border-primary-dark);
+    color: var(--color-text-secondary-dark);
+  }
+  
+  .radio-option:hover {
+    background: var(--color-background-secondary-dark);
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+.form-input:focus-visible,
+.form-select:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.radio-option input[type="radio"]:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ===== ANIMATIONS ===== */
+
+.form-input,
+.form-select,
+.radio-option {
+  transition: all var(--transition-base);
+}
+
+.form-error {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 
