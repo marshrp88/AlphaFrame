@@ -32,6 +32,14 @@ import { ToastProvider } from "./components/ui/use-toast.jsx";
 import { config } from "./lib/config.js";
 import LiveFinancialDashboard from './components/dashboard/LiveFinancialDashboard';
 
+// Import design system components
+import NavBar from "./components/ui/NavBar.jsx";
+import StyledButton from "./components/ui/StyledButton.jsx";
+import CompositeCard from "./components/ui/CompositeCard.jsx";
+
+// Import styles
+import "./App.css";
+
 // Debug Router Logger to trace all route matches
 function DebugRouterLogger() {
   const location = useLocation();
@@ -68,50 +76,49 @@ const PlaidLink = () => {
 
 const Navigation = () => {
   const { isAuthenticated } = useAuth0();
+  const location = useLocation();
+
+  const navigationItems = [
+    { label: 'Home', to: '/', icon: '🏠' },
+    { label: 'About', to: '/about', icon: 'ℹ️' },
+    { label: 'Dashboard', to: '/live-dashboard', icon: '📊' },
+    ...(isAuthenticated ? [
+      { label: 'AlphaPro', to: '/alphapro', icon: '⭐' },
+      { label: 'Rules', to: '/rules', icon: '⚙️' },
+      { label: 'Profile', to: '/profile', icon: '👤' }
+    ] : [])
+  ];
 
   return (
-    <nav className="bg-white shadow-lg">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center space-x-8">
-            <Link to="/" className="text-xl font-bold text-gray-900">
-              AlphaFrame VX.1
+    <header className="navbar-container">
+      <CompositeCard variant="elevated" className="navbar-card">
+        <div className="navbar-content">
+          <div className="navbar-brand">
+            <Link to="/" className="navbar-logo">
+              <span className="navbar-logo-text">AlphaFrame</span>
+              <span className="navbar-logo-version">VX.1</span>
             </Link>
-            
-            <div className="hidden md:flex space-x-4">
-              <Link to="/" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
-                Home
-              </Link>
-              <Link to="/about" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
-                About
-              </Link>
-              <Link to="/live-dashboard" className="text-gray-700 hover:text-indigo-700 px-3 py-2 rounded-md text-sm font-medium">
-                Live Dashboard
-              </Link>
-              {isAuthenticated && (
-                <>
-                  <Link to="/alphapro" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
-                    AlphaPro
-                  </Link>
-                  <Link to="/rules" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
-                    Rules
-                  </Link>
-                </>
-              )}
-            </div>
           </div>
           
-          <div className="flex items-center space-x-4">
-            {isAuthenticated && (
-              <Link to="/profile" className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
-                Profile
-              </Link>
+          <NavBar 
+            items={navigationItems}
+            currentPath={location.pathname}
+            className="navbar-main"
+          />
+          
+          <div className="navbar-actions">
+            {isAuthenticated ? (
+              <StyledButton variant="secondary" size="sm">
+                <span className="user-avatar">👤</span>
+                <span className="user-name">Account</span>
+              </StyledButton>
+            ) : (
+              <LoginButton />
             )}
-            <LoginButton />
           </div>
         </div>
-      </div>
-    </nav>
+      </CompositeCard>
+    </header>
   );
 };
 
@@ -119,17 +126,11 @@ const App = () => {
   const { isLoading } = useAuth0();
   const isTestMode = import.meta.env.VITE_APP_ENV === 'test';
 
-  // console.log("[App] Loaded in test mode:", isTestMode);
-  // console.log("[App] RulesPage import:", typeof RulesPage);
-  // console.log("[App] Full routing table being configured");
-
   if (isLoading && !isTestMode) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-gray-600">Loading AlphaFrame...</p>
-        </div>
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p className="loading-text">Loading AlphaFrame...</p>
       </div>
     );
   }
@@ -139,99 +140,86 @@ const App = () => {
       <ToastProvider>
         <Router>
           <DebugRouterLogger />
-          <div className="min-h-screen bg-gray-50">
+          <div className="app-wrapper">
             <Navigation />
             
-            <main className="py-8">
-              {(() => {
-                try {
-                  return (
-                    <Routes>
-                      {/* Public Routes */}
-                      <Route path="/" element={<Home />} />
-                      <Route path="/about" element={<About />} />
-                      <Route path="/test-mount" element={<TestMount />} />
-                      
-                      {/* Protected Routes */}
-                      <Route 
-                        path="/profile" 
-                        element={
-                          isTestMode ? <Profile /> : (
-                            <PrivateRoute>
-                              <Profile />
-                            </PrivateRoute>
-                          )
-                        } 
-                      />
-                      
-                      <Route 
-                        path="/alphapro" 
-                        element={
-                          isTestMode ? <AlphaPro /> : (
-                            <PrivateRoute requiredRoles={['premium', 'admin']}>
-                              <AlphaPro />
-                            </PrivateRoute>
-                          )
-                        } 
-                      />
-                      
-                      {/* RULES ROUTE - Direct mount without lazy loading or conditional guards */}
-                      <Route 
-                        path="/rules" 
-                        element={
-                          (() => {
-                            // console.log("[Router Debug] /rules route matched, isTestMode:", isTestMode);
-                            // console.log("[Router Debug] About to render RulesPage directly");
-                            return <RulesPage />; // Direct mount - no lazy, no Suspense, no conditional guards
-                          })()
-                        } 
-                      />
-                      
-                      <Route path="/live-dashboard" element={<LiveFinancialDashboard />} />
-                      
-                      {/* 404 Route */}
-                      <Route 
-                        path="*" 
-                        element={
-                          <div className="flex items-center justify-center min-h-screen">
-                            <div className="text-center">
-                              <h1 className="text-4xl font-bold text-gray-900 mb-4">404</h1>
-                              <p className="text-gray-600 mb-4">Page not found</p>
-                              <Link 
-                                to="/" 
-                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                              >
-                                Go Home
-                              </Link>
+            <main className="main-content">
+              <div className="content-container">
+                {(() => {
+                  try {
+                    return (
+                      <Routes>
+                        {/* Public Routes */}
+                        <Route path="/" element={<Home />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/test-mount" element={<TestMount />} />
+                        
+                        {/* Protected Routes */}
+                        <Route 
+                          path="/profile" 
+                          element={
+                            isTestMode ? <Profile /> : (
+                              <PrivateRoute>
+                                <Profile />
+                              </PrivateRoute>
+                            )
+                          } 
+                        />
+                        
+                        <Route 
+                          path="/alphapro" 
+                          element={
+                            isTestMode ? <AlphaPro /> : (
+                              <PrivateRoute requiredRoles={['premium', 'admin']}>
+                                <AlphaPro />
+                              </PrivateRoute>
+                            )
+                          } 
+                        />
+                        
+                        {/* RULES ROUTE - Direct mount without lazy loading or conditional guards */}
+                        <Route 
+                          path="/rules" 
+                          element={
+                            (() => {
+                              return <RulesPage />; // Direct mount - no lazy, no Suspense, no conditional guards
+                            })()
+                          } 
+                        />
+                        
+                        <Route path="/live-dashboard" element={<LiveFinancialDashboard />} />
+                        
+                        {/* 404 Route */}
+                        <Route 
+                          path="*" 
+                          element={
+                            <div className="error-page">
+                              <CompositeCard variant="elevated" className="error-card">
+                                <h1 className="error-title">404</h1>
+                                <p className="error-message">Page not found</p>
+                                <StyledButton as={Link} to="/" variant="primary">
+                                  Go Home
+                                </StyledButton>
+                              </CompositeCard>
                             </div>
-                          </div>
-                        } 
-                      />
-                    </Routes>
-                  );
-                } catch (err) {
-                  // console.error("Error in App routing:", err);
-                  return (
-                    <div>
-                      <span data-testid="app-routing-error">{err?.message || "Unknown routing error"}</span>
-                      <pre>{err?.stack}</pre>
-                    </div>
-                  );
-                }
-              })()}
-            </main>
-            
-            {/* Footer */}
-            <footer className="bg-white border-t border-gray-200 py-8">
-              <div className="max-w-7xl mx-auto px-4">
-                <div className="text-center text-gray-600">
-                  <p>&copy; 2024 AlphaFrame. All rights reserved.</p>
-                  <p className="text-sm mt-2">
-                    Environment: {config.env} | Version: 1.0.0
-                  </p>
-                </div>
+                          } 
+                        />
+                      </Routes>
+                    );
+                  } catch (err) {
+                    return (
+                      <div className="error-page">
+                        <CompositeCard variant="elevated" className="error-card">
+                          <h1 className="error-title">Application Error</h1>
+                          <p className="error-message">{err?.message || "Unknown error occurred"}</p>
+                          <pre className="error-details">{err?.stack}</pre>
+                        </CompositeCard>
+                      </div>
+                    );
+                  }
+                })()}
               </div>
-            </footer>
+            </main>
           </div>
         </Router>
       </ToastProvider>
