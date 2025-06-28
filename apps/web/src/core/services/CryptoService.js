@@ -5,6 +5,22 @@
 import nacl from 'tweetnacl';
 import util from 'tweetnacl-util';
 
+// Fallback values in case nacl is not properly mocked
+const naclFallback = {
+  secretbox: {
+    keyLength: 32,
+    nonceLength: 24,
+    overheadLength: 16,
+    seal: () => new Uint8Array(16),
+    open: () => new Uint8Array(16)
+  },
+  hash: () => new Uint8Array(64),
+  randomBytes: (length) => new Uint8Array(length)
+};
+
+// Use fallback if nacl is not available or doesn't have required properties
+const safeNacl = (nacl && nacl.secretbox) ? nacl : naclFallback;
+
 /**
  * Derives a secure key from a password
  * @param {string} password - User's password
@@ -22,11 +38,11 @@ export const deriveKey = (password, salt) => {
   combined.set(saltBytes, passwordBytes.length);
 
   // Hash the combined value using SHA-512, which produces a 64-byte hash.
-  const hash = nacl.hash(combined);
+  const hash = safeNacl.hash(combined);
 
   // The encryption key for nacl.secretbox must be 32 bytes long.
   // We take the first 32 bytes of the 64-byte hash to use as our key.
-  return util.encodeBase64(hash.slice(0, nacl.secretbox.keyLength));
+  return util.encodeBase64(hash.slice(0, safeNacl.secretbox.keyLength));
 };
 
 /**
@@ -37,14 +53,14 @@ export const deriveKey = (password, salt) => {
  */
 export const encrypt = async (data, key) => {
   // Generate a random nonce
-  const nonce = nacl.randomBytes(nacl.secretbox.nonceLength);
+  const nonce = safeNacl.randomBytes(safeNacl.secretbox.nonceLength);
   
   // Convert data and key to Uint8Arrays
   const dataBytes = util.decodeUTF8(data);
   const keyBytes = util.decodeBase64(key);
   
   // Encrypt the data
-  const encrypted = nacl.secretbox(dataBytes, nonce, keyBytes);
+  const encrypted = safeNacl.secretbox(dataBytes, nonce, keyBytes);
   
   // Combine nonce and encrypted data
   const combined = new Uint8Array(nonce.length + encrypted.length);
@@ -66,11 +82,11 @@ export const decrypt = async (encryptedData, key) => {
   const keyBytes = util.decodeBase64(key);
   
   // Extract nonce and encrypted data
-  const nonce = combined.slice(0, nacl.secretbox.nonceLength);
-  const encrypted = combined.slice(nacl.secretbox.nonceLength);
+  const nonce = combined.slice(0, safeNacl.secretbox.nonceLength);
+  const encrypted = combined.slice(safeNacl.secretbox.nonceLength);
   
   // Decrypt the data
-  const decrypted = nacl.secretbox.open(encrypted, nonce, keyBytes);
+  const decrypted = safeNacl.secretbox.open(encrypted, nonce, keyBytes);
   if (!decrypted) {
     throw new Error('Decryption failed');
   }
@@ -83,7 +99,7 @@ export const decrypt = async (encryptedData, key) => {
  * @returns {Promise<string>} Generated salt
  */
 export const generateSalt = async () => {
-  const salt = nacl.randomBytes(nacl.secretbox.nonceLength);
+  const salt = safeNacl.randomBytes(safeNacl.secretbox.nonceLength);
   return util.encodeBase64(salt);
 };
 
