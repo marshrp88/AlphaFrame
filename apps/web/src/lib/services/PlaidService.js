@@ -17,6 +17,7 @@
 
 import { Configuration, PlaidApi, PlaidEnvironments } from 'plaid';
 import { encrypt, decrypt } from '../../core/services/CryptoService.js';
+import env from '../env.js';
 
 class PlaidService {
   constructor() {
@@ -30,16 +31,16 @@ class PlaidService {
    * Uses sandbox credentials for development and testing
    */
   initializeClient() {
-    const clientId = import.meta.env.VITE_PLAID_CLIENT_ID;
-    const secret = import.meta.env.VITE_PLAID_SECRET;
-    const env = import.meta.env.VITE_PLAID_ENV || 'sandbox';
+    const clientId = env.VITE_PLAID_CLIENT_ID;
+    const secret = env.VITE_PLAID_SECRET;
+    const plaidEnv = env.VITE_PLAID_ENV || 'sandbox';
 
     if (!clientId || !secret) {
       return;
     }
 
     const configuration = new Configuration({
-      basePath: PlaidEnvironments[env],
+      basePath: PlaidEnvironments[plaidEnv],
       baseOptions: {
         headers: {
           'PLAID-CLIENT-ID': clientId,

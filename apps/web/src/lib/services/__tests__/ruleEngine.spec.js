@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from '@jest/globals';
 import ruleEngine from '../ruleEngine';
 
 // CLUSTER 2 FIX: Proper transaction data with required fields
@@ -12,11 +12,11 @@ const mockTransaction = {
 
 describe('ruleEngine', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('evaluateRule', () => {

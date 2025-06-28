@@ -62,26 +62,12 @@ export default function WebhookActionForm({ initialPayload, onChange }) {
 
   // Handle URL changes
   const handleUrlChange = (e) => {
-    const newUrl = e.target.value;
-    setUrl(newUrl);
-    const urlError = validateUrl(newUrl);
-    setErrors(prev => ({ ...prev, url: urlError }));
+    setUrl(e.target.value);
   };
 
   // Handle payload changes
   const handlePayloadChange = (e) => {
-    const newPayload = e.target.value;
-    setPayload(newPayload);
-    const jsonError = validateJson(newPayload);
-    setErrors(prev => ({ ...prev, payload: jsonError }));
-
-    // Format JSON if valid
-    if (!jsonError) {
-      const formatted = formatJson(newPayload);
-      if (formatted !== newPayload) {
-        setPayload(formatted);
-      }
-    }
+    setPayload(e.target.value);
   };
 
   // Handle method changes
@@ -89,11 +75,25 @@ export default function WebhookActionForm({ initialPayload, onChange }) {
     setMethod(e.target.value);
   };
 
-  // Validate URL on mount and whenever it changes
+  // Validate URL after url state changes
   useEffect(() => {
     const urlError = validateUrl(url);
     setErrors(prev => ({ ...prev, url: urlError }));
   }, [url]);
+
+  // Validate and format payload after payload state changes
+  useEffect(() => {
+    const jsonError = validateJson(payload);
+    setErrors(prev => ({ ...prev, payload: jsonError }));
+    // Format JSON if valid
+    if (!jsonError && payload) {
+      const formatted = formatJson(payload);
+      if (formatted !== payload) {
+        setPayload(formatted);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [payload]);
 
   // Notify parent of changes
   useEffect(() => {

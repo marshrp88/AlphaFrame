@@ -1,43 +1,43 @@
 // CLUSTER 1 FIX: Add test-local fetch mock BEFORE imports to prevent hanging
-global.fetch = vi.fn(() => Promise.resolve({ 
+global.fetch = jest.fn(() => Promise.resolve({ 
   json: () => Promise.resolve({ success: true }),
   ok: true 
 }));
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from '@jest/globals';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import WebhookActionForm from '@/components/framesync/WebhookActionForm';
 
 // Mock the toast
-vi.mock('@/components/ui/use-toast', () => ({
+jest.mock('@/components/ui/use-toast', () => ({
   useToast: () => ({
-    toast: vi.fn()
+    toast: jest.fn()
   })
 }));
 
-vi.mock('@/components/ui/Input', () => ({
+jest.mock('@/components/ui/Input', () => ({
   Input: (props) => <input {...props} />
 }));
-vi.mock('@/components/ui/Label', () => ({
+jest.mock('@/components/ui/Label', () => ({
   Label: ({ children, htmlFor, ...props }) => (
     <label htmlFor={htmlFor} {...props}>
       {children}
     </label>
   )
 }));
-vi.mock('@/components/ui/textarea', () => ({
+jest.mock('@/components/ui/textarea', () => ({
   Textarea: (props) => <textarea {...props} />
 }));
 
 describe('WebhookActionForm', () => {
-  const mockOnChange = vi.fn();
+  const mockOnChange = jest.fn();
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   it('renders URL input with correct attributes', () => {
@@ -172,5 +172,9 @@ describe('WebhookActionForm', () => {
     expect(screen.getByPlaceholderText('https://api.example.com/webhook')).toHaveValue(initialPayload.url);
     expect(screen.getByLabelText('Request Method')).toHaveValue(initialPayload.method);
     expect(screen.getByPlaceholderText('Enter JSON payload')).toHaveValue(initialPayload.payload);
+  });
+
+  it.skip('should be implemented', () => {
+    // Placeholder test
   });
 }); 

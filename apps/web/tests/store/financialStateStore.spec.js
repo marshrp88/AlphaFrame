@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from '@jest/globals';
 
 // Helper to wait for Zustand persist to flush
 async function waitForPersistedValue(key, expected, timeout = 1000) {
@@ -32,10 +32,10 @@ describe('Financial State Store', () => {
     // Per-test localStorage mock
     const localStore = {};
     localStorageMock = {
-      getItem: vi.fn((key) => localStore[key] || null),
-      setItem: vi.fn((key, val) => { localStore[key] = val; }),
-      removeItem: vi.fn((key) => { delete localStore[key]; }),
-      clear: vi.fn(() => { Object.keys(localStore).forEach(key => delete localStore[key]); }),
+      getItem: jest.fn((key) => localStore[key] || null),
+      setItem: jest.fn((key, val) => { localStore[key] = val; }),
+      removeItem: jest.fn((key) => { delete localStore[key]; }),
+      clear: jest.fn(() => { Object.keys(localStore).forEach(key => delete localStore[key]); }),
     };
     global.localStorage = localStorageMock;
     if (typeof window !== 'undefined') window.localStorage = localStorageMock;
@@ -43,10 +43,10 @@ describe('Financial State Store', () => {
     // Per-test sessionStorage mock
     const sessionStore = {};
     sessionStorageMock = {
-      getItem: vi.fn((key) => sessionStore[key] || null),
-      setItem: vi.fn((key, val) => { sessionStore[key] = val; }),
-      removeItem: vi.fn((key) => { delete sessionStore[key]; }),
-      clear: vi.fn(() => { Object.keys(sessionStore).forEach(key => delete sessionStore[key]); }),
+      getItem: jest.fn((key) => sessionStore[key] || null),
+      setItem: jest.fn((key, val) => { sessionStore[key] = val; }),
+      removeItem: jest.fn((key) => { delete sessionStore[key]; }),
+      clear: jest.fn(() => { Object.keys(sessionStore).forEach(key => delete sessionStore[key]); }),
     };
     global.sessionStorage = sessionStorageMock;
     if (typeof window !== 'undefined') window.sessionStorage = sessionStorageMock;
@@ -65,7 +65,12 @@ describe('Financial State Store', () => {
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.clearAllMocks();
+    jest.useRealTimers();
+    if (typeof globalThis.clearTimeout === 'function') {
+      jest.runOnlyPendingTimers();
+      jest.clearAllTimers();
+    }
     localStorageMock.clear();
     sessionStorageMock.clear();
   });
@@ -137,7 +142,7 @@ describe('Financial State Store', () => {
 
   describe('Persistence', () => {
     it.skip('should persist accounts, goals, and budgets', async () => {
-      const spy = vi.spyOn(localStorageMock, 'setItem');
+      const spy = jest.spyOn(localStorageMock, 'setItem');
       const accountId = 'acc_123';
       const goalId = 'goal_123';
       const categoryId = 'cat_123';

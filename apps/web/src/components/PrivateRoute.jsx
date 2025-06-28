@@ -20,6 +20,7 @@
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Navigate, useLocation } from 'react-router-dom';
+import env from '../lib/env.js';
 
 const PrivateRoute = ({ 
   children, 
@@ -39,7 +40,7 @@ const PrivateRoute = ({
   const location = useLocation();
 
   // Bypass authentication in test mode
-  const isTestMode = import.meta.env.VITE_APP_ENV === 'test';
+  const isTestMode = env.VITE_APP_ENV === 'test';
   
   // Diagnostic logging
   // console.log('[PrivateRoute] Component mounted'); // Commented for production cleanliness

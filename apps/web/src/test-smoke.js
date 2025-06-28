@@ -15,6 +15,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
+import env from './lib/env.js';
 
 // Test React 18 createRoot compatibility
 describe('React 18 Test Infrastructure', () => {
@@ -28,9 +29,9 @@ describe('React 18 Test Infrastructure', () => {
   });
 
   it('should access environment variables without errors', () => {
-    expect(import.meta.env.VITE_APP_ENV).toBe('test');
-    expect(import.meta.env.VITE_AUTH0_DOMAIN).toBe('test.auth0.com');
-    expect(import.meta.env.VITE_PLAID_CLIENT_ID).toBe('test_plaid_client_id');
+    expect(env.VITE_APP_ENV).toBe('test');
+    expect(env.VITE_AUTH0_DOMAIN).toBe('test.auth0.com');
+    expect(env.VITE_PLAID_CLIENT_ID).toBe('test_plaid_client_id');
   });
 
   it('should have localStorage mocked', () => {

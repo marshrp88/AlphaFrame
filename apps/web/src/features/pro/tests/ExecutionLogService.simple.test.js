@@ -1,13 +1,13 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from '@jest/globals';
 import executionLogService from '../../../core/services/ExecutionLogService.js';
 // Import the actual mocked functions
 import * as CryptoService from '../../../core/services/CryptoService.js';
 
 // Mock crypto functions
-vi.mock('../../../core/services/CryptoService.js', () => ({
-  encrypt: vi.fn(),
-  decrypt: vi.fn(),
-  generateSalt: vi.fn()
+jest.mock('../../../core/services/CryptoService.js', () => ({
+  encrypt: jest.fn(),
+  decrypt: jest.fn(),
+  generateSalt: jest.fn()
 }));
 
 // Define a constant, stable key for all tests in this suite.
@@ -18,7 +18,7 @@ describe('ExecutionLogService - Simplified Tests', () => {
   let originalDb;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     
     // Store original database reference
     originalDb = executionLogService.db;
@@ -27,11 +27,11 @@ describe('ExecutionLogService - Simplified Tests', () => {
     executionLogService.encryptionKey = TEST_ENCRYPTION_KEY;
 
     // Mock ExecutionLogService methods properly
-    vi.spyOn(executionLogService, 'queryLogs').mockResolvedValue([]);
-    vi.spyOn(executionLogService, 'logError').mockResolvedValue({ type: 'error.occurred', severity: 'error' });
-    vi.spyOn(executionLogService, 'log').mockResolvedValue({ type: 'test.event', severity: 'info', payload: {} });
-    vi.spyOn(executionLogService, 'exportLogs').mockResolvedValue({ metadata: {}, logs: [] });
-    vi.spyOn(executionLogService, 'clearOldLogs').mockResolvedValue(0);
+    jest.spyOn(executionLogService, 'queryLogs').mockResolvedValue([]);
+    jest.spyOn(executionLogService, 'logError').mockResolvedValue({ type: 'error.occurred', severity: 'error' });
+    jest.spyOn(executionLogService, 'log').mockResolvedValue({ type: 'test.event', severity: 'info', payload: {} });
+    jest.spyOn(executionLogService, 'exportLogs').mockResolvedValue({ metadata: {}, logs: [] });
+    jest.spyOn(executionLogService, 'clearOldLogs').mockResolvedValue(0);
     
     // Set up mocks for encrypt/decrypt
     CryptoService.encrypt.mockResolvedValue('encrypted-data');
@@ -40,53 +40,53 @@ describe('ExecutionLogService - Simplified Tests', () => {
     // Mock storage
     Object.defineProperty(window, 'localStorage', {
       value: {
-        getItem: vi.fn(),
-        setItem: vi.fn(),
-        removeItem: vi.fn(),
-        clear: vi.fn()
+        getItem: jest.fn(),
+        setItem: jest.fn(),
+        removeItem: jest.fn(),
+        clear: jest.fn()
       },
       writable: true
     });
     
     Object.defineProperty(window, 'sessionStorage', {
       value: {
-        getItem: vi.fn(),
-        setItem: vi.fn(),
-        removeItem: vi.fn(),
-        clear: vi.fn()
+        getItem: jest.fn(),
+        setItem: jest.fn(),
+        removeItem: jest.fn(),
+        clear: jest.fn()
       },
       writable: true
     });
     
     // Mock localStorage
     global.localStorage = {
-      getItem: vi.fn().mockReturnValue('test-user'),
-      setItem: vi.fn(),
-      removeItem: vi.fn()
+      getItem: jest.fn().mockReturnValue('test-user'),
+      setItem: jest.fn(),
+      removeItem: jest.fn()
     };
     
     // Mock IndexedDB
     global.indexedDB = {
-      open: vi.fn().mockReturnValue({
+      open: jest.fn().mockReturnValue({
         onupgradeneeded: null,
         onsuccess: null,
         onerror: null,
         result: {
-          createObjectStore: vi.fn().mockReturnValue({
-            createIndex: vi.fn()
+          createObjectStore: jest.fn().mockReturnValue({
+            createIndex: jest.fn()
           }),
-          transaction: vi.fn().mockReturnValue({
-            objectStore: vi.fn().mockReturnValue({
-              add: vi.fn().mockReturnValue({
+          transaction: jest.fn().mockReturnValue({
+            objectStore: jest.fn().mockReturnValue({
+              add: jest.fn().mockReturnValue({
                 onsuccess: () => {},
                 onerror: null
               }),
-              getAll: vi.fn().mockReturnValue({
+              getAll: jest.fn().mockReturnValue({
                 onsuccess: () => {},
                 onerror: null,
                 result: []
               }),
-              delete: vi.fn().mockReturnValue({
+              delete: jest.fn().mockReturnValue({
                 onsuccess: () => {},
                 onerror: null
               })
@@ -98,18 +98,18 @@ describe('ExecutionLogService - Simplified Tests', () => {
     
     // Mock database with proper error handling
     executionLogService.db = {
-      transaction: vi.fn().mockReturnValue({
-        objectStore: vi.fn().mockReturnValue({
-          add: vi.fn().mockReturnValue({
+      transaction: jest.fn().mockReturnValue({
+        objectStore: jest.fn().mockReturnValue({
+          add: jest.fn().mockReturnValue({
             onsuccess: () => {},
             onerror: null
           }),
-          getAll: vi.fn().mockReturnValue({
+          getAll: jest.fn().mockReturnValue({
             onsuccess: () => {},
             onerror: null,
             result: []
           }),
-          delete: vi.fn().mockReturnValue({
+          delete: jest.fn().mockReturnValue({
             onsuccess: () => {},
             onerror: null
           })
@@ -120,7 +120,7 @@ describe('ExecutionLogService - Simplified Tests', () => {
     };
     
     // Mock queryLogs method with proper async handling
-    vi.spyOn(executionLogService, 'queryLogs').mockImplementation(async (filters = {}) => {
+    jest.spyOn(executionLogService, 'queryLogs').mockImplementation(async (filters = {}) => {
       // Check if database is available
       if (!executionLogService.db) {
         throw new Error('Database not available');
@@ -157,7 +157,7 @@ describe('ExecutionLogService - Simplified Tests', () => {
     });
     
     // Mock the log method
-    vi.spyOn(executionLogService, 'log').mockImplementation(async (type, payload = {}, severity = 'info', meta = {}) => {
+    jest.spyOn(executionLogService, 'log').mockImplementation(async (type, payload = {}, severity = 'info', meta = {}) => {
       return {
         id: executionLogService.generateId(),
         timestamp: Date.now(),
@@ -175,7 +175,7 @@ describe('ExecutionLogService - Simplified Tests', () => {
     });
     
     // Mock exportLogs method
-    vi.spyOn(executionLogService, 'exportLogs').mockResolvedValue({
+    jest.spyOn(executionLogService, 'exportLogs').mockResolvedValue({
       metadata: {
         exportedAt: new Date().toISOString(),
         totalLogs: 0,
@@ -185,11 +185,11 @@ describe('ExecutionLogService - Simplified Tests', () => {
     });
     
     // Mock clearOldLogs method
-    vi.spyOn(executionLogService, 'clearOldLogs').mockResolvedValue(0);
+    jest.spyOn(executionLogService, 'clearOldLogs').mockResolvedValue(0);
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
     // Restore original database reference
     executionLogService.db = originalDb;
   });
@@ -331,7 +331,7 @@ describe('ExecutionLogService - Simplified Tests', () => {
     });
 
     it('should handle clear old logs errors', async () => {
-      vi.spyOn(executionLogService, 'queryLogs').mockResolvedValue([
+      jest.spyOn(executionLogService, 'queryLogs').mockResolvedValue([
         {
           id: 'old-log-1',
           timestamp: Date.now() - (31 * 24 * 60 * 60 * 1000), // 31 days old
@@ -392,7 +392,7 @@ describe('ExecutionLogService - Simplified Tests', () => {
       executionLogService.db = null;
       
       // Override the mock to check for null database
-      vi.spyOn(executionLogService, 'queryLogs').mockImplementation(async () => {
+      jest.spyOn(executionLogService, 'queryLogs').mockImplementation(async () => {
         if (!executionLogService.db) {
           throw new Error('Database not available');
         }
@@ -411,7 +411,7 @@ describe('ExecutionLogService - Simplified Tests', () => {
       executionLogService.db = null;
       
       // Override the mock to check for null database
-      vi.spyOn(executionLogService, 'clearOldLogs').mockImplementation(async () => {
+      jest.spyOn(executionLogService, 'clearOldLogs').mockImplementation(async () => {
         if (!executionLogService.db) {
           throw new Error('Database not available');
         }

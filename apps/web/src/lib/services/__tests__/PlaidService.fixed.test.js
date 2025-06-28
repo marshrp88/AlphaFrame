@@ -11,23 +11,23 @@
  * - CLUSTER 2 FIXES: Fixed success flag issues and proper mock setup
  */
 
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import * as CryptoService from '../../../core/services/CryptoService.js';
 
-vi.mock('plaid', () => {
+jest.mock('plaid', () => {
   // Return a factory for PlaidApi that always returns the current global.testUtils.mockPlaidClient
   return {
-    Configuration: vi.fn(),
-    PlaidApi: vi.fn(() => (global.testUtils && global.testUtils.mockPlaidClient) || {}),
+    Configuration: jest.fn(),
+    PlaidApi: jest.fn(() => (global.testUtils && global.testUtils.mockPlaidClient) || {}),
     PlaidEnvironments: {
       sandbox: 'https://sandbox.plaid.com'
     }
   };
 });
 
-vi.mock('../../../core/services/CryptoService.js', () => ({
-  encrypt: vi.fn().mockResolvedValue('encrypted_token'),
-  decrypt: vi.fn().mockResolvedValue('decrypted_token')
+jest.mock('../../../core/services/CryptoService.js', () => ({
+  encrypt: jest.fn().mockResolvedValue('encrypted_token'),
+  decrypt: jest.fn().mockResolvedValue('decrypted_token')
 }));
 
 import { PlaidService } from '../PlaidService.js';
@@ -37,41 +37,44 @@ describe('PlaidService - Fixed', () => {
   let mockStorage;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     // Set up Plaid client mock for each test
     if (!global.testUtils) global.testUtils = {};
     global.testUtils.mockPlaidClient = {
-      linkTokenCreate: vi.fn(),
-      itemPublicTokenExchange: vi.fn(),
-      accountsBalanceGet: vi.fn(),
-      transactionsGet: vi.fn(),
+      linkTokenCreate: jest.fn(),
+      itemPublicTokenExchange: jest.fn(),
+      accountsBalanceGet: jest.fn(),
+      transactionsGet: jest.fn(),
     };
     // Set up CryptoService mocks using ESM import
-    vi.spyOn(CryptoService, 'encrypt').mockResolvedValue('encrypted_token');
-    vi.spyOn(CryptoService, 'decrypt').mockResolvedValue('decrypted_token');
+    jest.spyOn(CryptoService, 'encrypt').mockResolvedValue('encrypted_token');
+    jest.spyOn(CryptoService, 'decrypt').mockResolvedValue('decrypted_token');
 
     const createStorageMock = () => {
       let store = {};
       return {
-        getItem: vi.fn((key) => store[key] || null),
-        setItem: vi.fn((key, value) => { store[key] = value; }),
-        removeItem: vi.fn((key) => { delete store[key]; }),
-        clear: vi.fn(() => { store = {}; })
+        getItem: jest.fn((key) => store[key] || null),
+        setItem: jest.fn((key, value) => { store[key] = value; }),
+        removeItem: jest.fn((key) => { delete store[key]; }),
+        clear: jest.fn(() => { store = {}; })
       };
     };
     mockStorage = createStorageMock();
     global.localStorage = mockStorage;
 
-    vi.stubEnv('VITE_PLAID_CLIENT_ID', 'test_client_id');
-    vi.stubEnv('VITE_PLAID_SECRET', 'test_secret');
-    vi.stubEnv('VITE_PLAID_ENV', 'sandbox');
+    // Replace vi.stubEnv('VITE_PLAID_CLIENT_ID', 'test_client_id');
+    process.env.VITE_PLAID_CLIENT_ID = 'test_client_id';
+    // Replace vi.stubEnv('VITE_PLAID_SECRET', 'test_secret');
+    process.env.VITE_PLAID_SECRET = 'test_secret';
+    // Replace vi.stubEnv('VITE_PLAID_ENV', 'sandbox');
+    process.env.VITE_PLAID_ENV = 'sandbox';
 
     // Instantiate PlaidService after all mocks are set
     plaidService = new PlaidService();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('Initialization', () => {

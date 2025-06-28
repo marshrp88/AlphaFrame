@@ -2,12 +2,12 @@
 const mockStorage = (() => {
   let store = {};
   return {
-    getItem: vi.fn((key) => store[key] || null),
-    setItem: vi.fn((key, val) => { 
+    getItem: jest.fn((key) => store[key] || null),
+    setItem: jest.fn((key, val) => { 
       store[key] = val; 
     }),
-    removeItem: vi.fn((key) => { delete store[key] }),
-    clear: vi.fn(() => { 
+    removeItem: jest.fn((key) => { delete store[key] }),
+    clear: jest.fn(() => { 
       store = {}; 
     })
   };
@@ -16,16 +16,16 @@ const mockStorage = (() => {
 Object.defineProperty(window, 'localStorage', { value: mockStorage });
 Object.defineProperty(global, 'localStorage', { value: mockStorage });
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from '@jest/globals';
 
 describe('Financial State Store', () => {
   beforeEach(() => {
     mockStorage.clear();
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('Account Management', () => {
@@ -125,7 +125,7 @@ describe('Financial State Store', () => {
 
   describe('Store Persistence', () => {
     it('should persist accounts, goals, and budgets', async () => {
-      const spy = vi.spyOn(mockStorage, 'setItem');
+      const spy = jest.spyOn(mockStorage, 'setItem');
       
       const { useFinancialStateStore } = await import('@/core/store/financialStateStore');
       

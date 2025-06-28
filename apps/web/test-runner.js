@@ -141,4 +141,13 @@ async function runAllTests() {
 runAllTests().catch(error => {
   console.error('💥 Test runner failed:', error);
   process.exit(1);
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
+  jest.useRealTimers();
+  if (typeof globalThis.clearTimeout === 'function') {
+    jest.runOnlyPendingTimers();
+    jest.clearAllTimers();
+  }
 }); 

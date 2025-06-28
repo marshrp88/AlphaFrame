@@ -14,68 +14,70 @@
  * while maintaining zero-knowledge compliance.
  */
 
+import env from './env.js';
+
 /**
  * Environment configuration object
  */
 export const config = {
   // Environment
-  env: import.meta.env.VITE_APP_ENV || 'development',
+  env: env.VITE_APP_ENV || 'development',
   
   // API Configuration
-  apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
+  apiUrl: env.VITE_API_URL || 'http://localhost:3000/api',
   
   // Plaid Configuration
   plaid: {
-    clientId: import.meta.env.VITE_PLAID_CLIENT_ID || null,
-    secret: import.meta.env.VITE_PLAID_SECRET || null,
-    env: import.meta.env.VITE_PLAID_ENV || 'sandbox'
+    clientId: env.VITE_PLAID_CLIENT_ID || null,
+    secret: env.VITE_PLAID_SECRET || null,
+    env: env.VITE_PLAID_ENV || 'sandbox'
   },
   
   // Auth0 Configuration (Primary Authentication)
   auth0: {
-    domain: import.meta.env.VITE_AUTH0_DOMAIN || null,
-    clientId: import.meta.env.VITE_AUTH0_CLIENT_ID || null,
-    audience: import.meta.env.VITE_AUTH0_AUDIENCE || null,
-    redirectUri: import.meta.env.VITE_AUTH0_REDIRECT_URI || 'http://localhost:5173'
+    domain: env.VITE_AUTH0_DOMAIN || null,
+    clientId: env.VITE_AUTH0_CLIENT_ID || null,
+    audience: env.VITE_AUTH0_AUDIENCE || null,
+    redirectUri: env.VITE_AUTH0_REDIRECT_URI || 'http://localhost:5173'
   },
   
   // Legacy Authentication Configuration (Fallback)
   auth: {
-    domain: import.meta.env.VITE_AUTH_DOMAIN || null,
-    clientId: import.meta.env.VITE_AUTH_CLIENT_ID || null,
-    audience: import.meta.env.VITE_AUTH_AUDIENCE || null
+    domain: env.VITE_AUTH_DOMAIN || null,
+    clientId: env.VITE_AUTH_CLIENT_ID || null,
+    audience: env.VITE_AUTH_AUDIENCE || null
   },
   
   // Webhook Configuration
   webhook: {
-    url: import.meta.env.VITE_WEBHOOK_URL || null,
-    secret: import.meta.env.VITE_WEBHOOK_SECRET || null
+    url: env.VITE_WEBHOOK_URL || null,
+    secret: env.VITE_WEBHOOK_SECRET || null
   },
   
   // Notification Configuration
   notifications: {
-    sendgridApiKey: import.meta.env.VITE_SENDGRID_API_KEY || null,
-    fromEmail: import.meta.env.VITE_NOTIFICATION_FROM_EMAIL || 'noreply@alphaframe.com'
+    sendgridApiKey: env.VITE_SENDGRID_API_KEY || null,
+    fromEmail: env.VITE_NOTIFICATION_FROM_EMAIL || 'noreply@alphaframe.com'
   },
   
   // Feature Flags
   features: {
-    betaMode: import.meta.env.VITE_ENABLE_BETA_MODE === 'true',
-    plaidIntegration: import.meta.env.VITE_ENABLE_PLAID_INTEGRATION === 'true',
-    webhooks: import.meta.env.VITE_ENABLE_WEBHOOKS === 'true',
-    notifications: import.meta.env.VITE_ENABLE_NOTIFICATIONS === 'true'
+    betaMode: env.VITE_ENABLE_BETA_MODE === 'true',
+    plaidIntegration: env.VITE_ENABLE_PLAID_INTEGRATION === 'true',
+    webhooks: env.VITE_ENABLE_WEBHOOKS === 'true',
+    notifications: env.VITE_ENABLE_NOTIFICATIONS === 'true'
   },
   
   // Logging Configuration
   logging: {
-    level: import.meta.env.VITE_LOG_LEVEL || 'info',
-    debugMode: import.meta.env.VITE_ENABLE_DEBUG_MODE === 'true'
+    level: env.VITE_LOG_LEVEL || 'info',
+    debugMode: env.VITE_ENABLE_DEBUG_MODE === 'true'
   },
   
   // Security Configuration
   security: {
-    encryptionKey: import.meta.env.VITE_ENCRYPTION_KEY || null,
-    jwtSecret: import.meta.env.VITE_JWT_SECRET || null
+    encryptionKey: env.VITE_ENCRYPTION_KEY || null,
+    jwtSecret: env.VITE_JWT_SECRET || null
   }
 };
 

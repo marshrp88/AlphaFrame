@@ -1,7 +1,7 @@
 // CLUSTER 1 FIX: Add test-local ExecutionController and ExecutionLogService mocks BEFORE imports
-vi.mock('../../../src/lib/services/ExecutionController', () => ({
+jest.mock('../../../src/lib/services/ExecutionController', () => ({
   ExecutionController: {
-    executeAction: vi.fn(async (actionType, payload, skipConfirmation = false) => {
+    executeAction: jest.fn(async (actionType, payload, skipConfirmation = false) => {
       console.log(`ExecutionController.executeAction called with:`, { actionType, payload, skipConfirmation });
       
       // CLUSTER 1 FIX: Simulate the actual flow with proper async handling
@@ -24,28 +24,28 @@ vi.mock('../../../src/lib/services/ExecutionController', () => ({
   }
 }));
 
-vi.mock('../../../src/core/services/ExecutionLogService.js', () => ({
+jest.mock('../../../src/core/services/ExecutionLogService.js', () => ({
   default: { 
-    log: vi.fn(),
-    logError: vi.fn(),
-    logAction: vi.fn()
+    log: jest.fn(),
+    logError: jest.fn(),
+    logAction: jest.fn()
   }
 }));
 
 // ✅ Define spies first, before any imports
-const showPasswordPromptSpy = vi.fn();
-const showConfirmationModalSpy = vi.fn();
-const hideConfirmationModalSpy = vi.fn();
+const showPasswordPromptSpy = jest.fn();
+const showConfirmationModalSpy = jest.fn();
+const hideConfirmationModalSpy = jest.fn();
 
 // ✅ Mock all dependencies before importing ExecutionController
-vi.mock('../../../src/lib/validation/schemas', () => ({
+jest.mock('../../../src/lib/validation/schemas', () => ({
   ActionSchema: {
-    safeParse: vi.fn(() => ({ success: true }))
+    safeParse: jest.fn(() => ({ success: true }))
   }
 }));
 
-vi.mock('../../../src/lib/services/secureVault', () => ({
-  get: vi.fn(() => 'mock-token')
+jest.mock('../../../src/lib/services/secureVault', () => ({
+  get: jest.fn(() => 'mock-token')
 }));
 
 // Mock global.fetch for Plaid API
@@ -54,7 +54,7 @@ const mockPlaidResponse = (data) => Promise.resolve({
   json: () => Promise.resolve(data),
 });
 beforeAll(() => {
-  vi.stubGlobal('fetch', vi.fn((url) => {
+  vi.stubGlobal('fetch', jest.fn((url) => {
     if (url.includes('/transfer/authorization/create')) {
       return mockPlaidResponse({ authorization_id: 'mock_auth_id' });
     }
@@ -65,61 +65,67 @@ beforeAll(() => {
   }));
 });
 afterEach(() => {
-  vi.restoreAllMocks();
+  jest.restoreAllMocks();
 });
 
 // ✅ Simplified UI store mock that returns the spy directly
-vi.mock('../../../src/lib/store/uiStore', () => ({
-  useUIStore: {
-    getState: vi.fn(() => ({
-      showConfirmationModal: showConfirmationModalSpy,
-      hideConfirmationModal: hideConfirmationModalSpy,
-      showPasswordPrompt: showPasswordPromptSpy,
-      isSandboxMode: false
-    }))
-  }
+jest.mock('../../../src/lib/store/uiStore', () => {
+  const showConfirmationModalSpy = jest.fn();
+  const hideConfirmationModalSpy = jest.fn();
+  const showPasswordPromptSpy = jest.fn();
+  
+  return {
+    useUIStore: {
+      getState: jest.fn(() => ({
+        showConfirmationModal: showConfirmationModalSpy,
+        hideConfirmationModal: hideConfirmationModalSpy,
+        showPasswordPrompt: showPasswordPromptSpy,
+        isSandboxMode: false
+      }))
+    }
+  };
+});
+
+jest.mock('../../../src/lib/services/PermissionEnforcer', () => ({
+  canExecuteAction: jest.fn(() => ({ allowed: true }))
 }));
 
-vi.mock('../../../src/lib/services/PermissionEnforcer', () => ({
-  canExecuteAction: vi.fn(() => ({ allowed: true }))
+jest.mock('../../../src/lib/services/SimulationService', () => ({
+  runSimulation: jest.fn()
 }));
 
-vi.mock('../../../src/lib/services/SimulationService', () => ({
-  runSimulation: vi.fn()
-}));
-
-vi.mock('../../../src/lib/store/financialStateStore', () => ({
+jest.mock('../../../src/lib/store/financialStateStore', () => ({
   useFinancialStateStore: {
-    getState: vi.fn(() => ({
-      getAccountBalance: vi.fn(),
-      getGoal: vi.fn(),
-      adjustGoal: vi.fn(() => ({ success: true })),
-      updateBudget: vi.fn(() => ({ success: true })),
-      modifyCategory: vi.fn(() => ({ success: true })),
+    getState: jest.fn(() => ({
+      getAccountBalance: jest.fn(),
+      getGoal: jest.fn(),
+      adjustGoal: jest.fn(() => ({ success: true })),
+      updateBudget: jest.fn(() => ({ success: true })),
+      modifyCategory: jest.fn(() => ({ success: true })),
     }))
   }
 }));
 
-vi.mock('../../../src/lib/store/logStore', () => ({
+jest.mock('../../../src/lib/store/logStore', () => ({
   useLogStore: {
-    getState: vi.fn(() => ({
-      queueAction: vi.fn()
+    getState: jest.fn(() => ({
+      queueAction: jest.fn()
     }))
   }
 }));
 
 // ✅ Now import after all mocks are defined
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from '@jest/globals';
 import { ExecutionController } from '@/lib/services/ExecutionController';
 
 describe('Confirmation Modal Integration', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     console.log('ConfirmationModal test starting...');
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
     console.log('ConfirmationModal test completed');
   });
 

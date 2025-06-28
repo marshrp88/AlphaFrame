@@ -1,33 +1,35 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from '@jest/globals';
 import { ExecutionController } from '../../../src/lib/services/ExecutionController';
 import { ActionSchema } from '../../../src/lib/validation/schemas';
 
 // Mock canExecuteAction to always allow
-vi.mock('@/lib/services/PermissionEnforcer', () => ({
-  canExecuteAction: vi.fn(() => Promise.resolve({ allowed: true }))
+jest.mock('@/lib/services/PermissionEnforcer', () => ({
+  canExecuteAction: jest.fn(() => Promise.resolve({ allowed: true }))
 }));
 
 // Mock useUIStore to provide showPasswordPrompt
-vi.mock('@/core/store/uiStore', () => ({
+jest.mock('@/core/store/uiStore', () => ({
   useUIStore: {
-    getState: vi.fn(() => ({
-      showPasswordPrompt: vi.fn(({ onConfirm }) => onConfirm('mock-password')),
+    getState: jest.fn(() => ({
+      showPasswordPrompt: jest.fn(({ onConfirm }) => onConfirm('mock-password')),
       isSandboxMode: false
     }))
   }
 }));
 
 // Mock SecureVault to prevent vault locked errors - CLUSTER 4 FIX: Correct import path
-vi.mock('@/core/services/SecureVault', () => ({
-  isUnlocked: vi.fn(() => true),
-  get: vi.fn(() => ({ token: 'mock-plaid-token' }))
+jest.mock('@/core/services/SecureVault', () => ({
+  isUnlocked: jest.fn(() => true),
+  get: jest.fn(() => ({ token: 'mock-plaid-token' }))
 }));
 
 // Mock global fetch for Plaid API calls
-vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({
+globalThis.fetch = jest.fn(() => Promise.resolve({
+  json: () => Promise.resolve({}),
+  text: () => Promise.resolve(''),
   ok: true,
-  json: () => Promise.resolve({ transfer_id: 'mock-transfer-id' })
-})));
+  status: 200
+}));
 
 it('sanity check', () => {
   expect(1 + 1).toBe(2);
@@ -35,7 +37,7 @@ it('sanity check', () => {
 
 describe('ExecutionController (unit)', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   it('should execute a PLAID_TRANSFER action and return success', async () => {

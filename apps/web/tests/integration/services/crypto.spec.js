@@ -1,8 +1,49 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { deriveKey, encrypt, decrypt, generateSalt } from '../../../src/core/services/CryptoService';
+import { describe, it, expect, beforeEach, vi } from '@jest/globals';
+
+// Mock tweetnacl and tweetnacl-util before importing the service
+jest.mock('tweetnacl', () => ({
+  secretbox: {
+    keyLength: 32,
+    nonceLength: 24,
+    overheadLength: 16,
+    seal: jest.fn((message, nonce, key) => {
+      const mockEncrypted = new Uint8Array(message.length + 16);
+      mockEncrypted.set(message);
+      mockEncrypted.set(new Uint8Array(16).fill(1), message.length);
+      return mockEncrypted;
+    }),
+    open: jest.fn((box, nonce, key) => {
+      if (box && box.length > 16) {
+        return box.slice(0, box.length - 16);
+      }
+      return null;
+    })
+  },
+  hash: jest.fn((message) => new Uint8Array(64).fill(0)),
+  randomBytes: jest.fn((length) => new Uint8Array(length).fill(42))
+}));
+
+jest.mock('tweetnacl-util', () => ({
+  encodeBase64: jest.fn((data) => {
+    if (data instanceof Uint8Array) {
+      return Buffer.from(data).toString('base64');
+    }
+    return 'mock-base64-encoded';
+  }),
+  decodeBase64: jest.fn((str) => new Uint8Array(Buffer.from(str, 'base64'))),
+  encodeUTF8: jest.fn((data) => {
+    if (data instanceof Uint8Array) {
+      return new TextDecoder().decode(data);
+    }
+    return 'mock-utf8-encoded';
+  }),
+  decodeUTF8: jest.fn((str) => new TextEncoder().encode(str))
+}));
+
+import { deriveKey, encrypt, decrypt, generateSalt } from '@/core/services/CryptoService';
 
 // --- Correct function-shaped mock for tweetnacl ---
-vi.mock('tweetnacl', () => {
+jest.mock('tweetnacl', () => {
   const secretbox = function () {
     // Mock encrypted message as Uint8Array
     return new Uint8Array([1, 2, 3]);
@@ -14,7 +55,7 @@ vi.mock('tweetnacl', () => {
     return new Uint8Array([100, 101, 102]); // mock decrypted
   };
   
-  const hash = vi.fn(() => new Uint8Array(64).fill(0)); // Mock hash function
+  const hash = jest.fn(() => new Uint8Array(64).fill(0)); // Mock hash function
   
   return {
     default: {

@@ -1,21 +1,13 @@
 /**
- * setupTests.js - Surgical Test Infrastructure Fixes for AlphaFrame VX.1
+ * setupTests.js - Fixed Test Infrastructure for AlphaFrame VX.1
  * 
- * Purpose: Fix all 116 test failures through infrastructure-only changes
+ * Purpose: Provide stable test environment with proper mocking
  * 
- * Surgical Fixes Applied:
- * - React 18 createRoot DOM container creation
- * - Auth0 SDK complete mocking with correct storage keys
- * - Plaid SDK complete mocking with all API methods
- * - Storage isolation per test (no shared state)
- * - Proper async handling and timeout management
- * - Mock cleanup and restoration between tests
- * 
- * CLUSTER 1 FIX: Temporarily commented out global mocks to prevent conflicts
- * with per-test mocks that are causing timeout/hanging issues.
- * 
- * CLUSTER 2 FIX: Removed harmful global createRoot mock that interferes with
- * React Testing Library's natural DOM handling.
+ * Fixes Applied:
+ * - Enabled global Auth0 and Plaid mocks
+ * - Fixed test isolation and timing issues
+ * - Proper mock cleanup between tests
+ * - Stable DOM and environment setup
  */
 
 import '@testing-library/jest-dom';
@@ -48,48 +40,7 @@ if (typeof window !== 'undefined') {
 }
 
 // ============================================================================
-// REACT 18 CREATE ROOT FIXES - REMOVED HARMFUL GLOBAL MOCK
-// ============================================================================
-
-// --- FIX: Commented out global createRoot mock that interferes with React Testing Library ---
-// This mock was causing "Target container is not a DOM element" errors by overriding
-// the natural DOM setup that React Testing Library expects.
-
-// Create DOM container for React 18 createRoot
-// const createTestContainer = () => {
-//   const container = document.createElement('div');
-//   container.id = 'root';
-//   document.body.appendChild(container);
-//   return container;
-// };
-
-// Mock React 18 createRoot with proper DOM handling
-// const mockCreateRoot = vi.fn((container) => {
-//   if (!container) {
-//     container = createTestContainer();
-//   }
-//   
-//   return {
-//     render: vi.fn((element) => {
-//       if (container) {
-//         container.innerHTML = '<div data-testid="rendered-component"></div>';
-//       }
-//     }),
-//     unmount: vi.fn(() => {
-//       if (container) {
-//         container.innerHTML = '';
-//       }
-//     })
-//   };
-// });
-
-// Mock ReactDOM with stable implementation
-// vi.mock('react-dom/client', () => ({
-//   createRoot: mockCreateRoot
-// }));
-
-// ============================================================================
-// AUTH0 SDK COMPLETE MOCKING - TEMPORARILY COMMENTED FOR CLUSTER 1 FIX
+// AUTH0 SDK COMPLETE MOCKING - ENABLED
 // ============================================================================
 
 // Mock Auth0 with correct storage keys and stable behavior
@@ -109,15 +60,15 @@ const createAuth0Mock = () => {
 
 const mockAuth0 = createAuth0Mock();
 
-// TEMPORARILY COMMENTED OUT - CAUSING CONFLICTS WITH PER-TEST MOCKS
-// vi.mock('@auth0/auth0-react', () => ({
-//   useAuth0: vi.fn(() => mockAuth0),
-//   Auth0Provider: ({ children }) => children,
-//   withAuthenticationRequired: (component) => component
-// }));
+// ENABLED: Global Auth0 mock
+vi.mock('@auth0/auth0-react', () => ({
+  useAuth0: vi.fn(() => mockAuth0),
+  Auth0Provider: ({ children }) => children,
+  withAuthenticationRequired: (component) => component
+}));
 
 // ============================================================================
-// PLAID SDK COMPLETE MOCKING - TEMPORARILY COMMENTED FOR CLUSTER 1 FIX
+// PLAID SDK COMPLETE MOCKING - ENABLED
 // ============================================================================
 
 // Mock Plaid SDK with all required methods
@@ -230,16 +181,10 @@ const mockPlaidClient = createPlaidMock();
 // Mock PlaidApi constructor to return our mock client
 const MockPlaidApi = vi.fn(() => mockPlaidClient);
 
-// Ensure the mock is properly exposed globally
-global.testUtils = {
-  mockPlaidClient,
-  MockPlaidApi
-};
-
-// TEMPORARILY COMMENTED OUT - CAUSING CONFLICTS WITH PER-TEST MOCKS
-// vi.mock('@plaid/web-sdk', () => ({
-//   PlaidApi: MockPlaidApi
-// }));
+// ENABLED: Global Plaid mock
+vi.mock('@plaid/web-sdk', () => ({
+  PlaidApi: MockPlaidApi
+}));
 
 // ============================================================================
 // ENVIRONMENT VARIABLES MOCKING
@@ -361,26 +306,11 @@ global.console = {
   debug: vi.fn()
 };
 
-// Mock window.matchMedia
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: vi.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  })),
-});
-
 // ============================================================================
-// TEST ISOLATION & TIMING CONTROLS
+// TEST ISOLATION & TIMING CONTROLS - FIXED
 // ============================================================================
 
-// Global test isolation setup
+// Global test isolation setup - REMOVED FAKE TIMERS
 beforeEach(() => {
   // Clear all mocks before each test
   vi.clearAllMocks();
@@ -389,14 +319,11 @@ beforeEach(() => {
   // Reset any imported singletons
   vi.resetModules();
   
-  // Use fake timers for better control
-  vi.useFakeTimers();
+  // DO NOT use fake timers - they cause issues with async operations
+  // vi.useFakeTimers();
 });
 
 afterEach(() => {
-  // Restore real timers
-  vi.useRealTimers();
-  
   // Clean up any remaining mocks
   vi.restoreAllMocks();
 });
@@ -435,34 +362,6 @@ const ensureMockPersistence = () => {
 ensureMockPersistence();
 
 // ============================================================================
-// EXECUTION LOG SERVICE MOCK
-// ============================================================================
-
-// // Mock ExecutionLogService for consistent logging behavior
-// const createExecutionLogServiceMock = () => {
-//   return {
-//     log: vi.fn((event, data) => {
-//       // console.log(`[Mock Log] ${event}:`, data);
-//       return Promise.resolve();
-//     }),
-//     logError: vi.fn((event, error, data) => {
-//       // console.error(`[Mock Error] ${event}:`, error, data);
-//       return Promise.resolve();
-//     }),
-//     logRuleTriggered: vi.fn().mockResolvedValue(),
-//     queryLogs: vi.fn().mockResolvedValue([]),
-//     getSessionLogs: vi.fn().mockResolvedValue([]),
-//     clearOldLogs: vi.fn().mockResolvedValue(0)
-//   };
-// };
-
-// const mockExecutionLogService = createExecutionLogServiceMock();
-
-// vi.mock('./core/services/ExecutionLogService.js', () => ({
-//   default: mockExecutionLogService
-// }));
-
-// ============================================================================
 // GLOBAL MOCK MANAGEMENT (CLEANUP/RESET)
 // ============================================================================
 
@@ -473,15 +372,12 @@ beforeEach(() => {
 
   // Reset custom mocks to their initial state
   Object.assign(mockAuth0, createAuth0Mock());
-  // Object.assign(mockExecutionLogService, createExecutionLogServiceMock());
 });
 
 // Final cleanup after all tests
 afterAll(() => {
   vi.restoreAllMocks();
 });
-
-// console.log('✅ Surgical test infrastructure fixes applied - ready for 116 test repairs'); 
 
 // Global test utilities for mocks
 global.testUtils = {

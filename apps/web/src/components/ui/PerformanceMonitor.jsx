@@ -19,6 +19,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Activity, Clock, Zap, AlertTriangle } from 'lucide-react';
 import StyledButton from './StyledButton';
 import './PerformanceMonitor.css';
+import env from '../../lib/env.js';
 
 const PerformanceMonitor = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -35,7 +36,7 @@ const PerformanceMonitor = () => {
 
   // Initialize performance monitoring
   useEffect(() => {
-    if (import.meta.env.DEV) {
+    if (env.DEV) {
       // Only show in development mode
       setIsVisible(true);
       startMonitoring();
@@ -160,40 +161,4 @@ const PerformanceMonitor = () => {
       </div>
       
       <div className="performance-score">
-        <div className={`score-indicator ${status}`}>
-          <span className="score-value">{metrics.lighthouseScore}</span>
-          <span className="score-label">Lighthouse</span>
-        </div>
-        
-        {status === 'poor' && (
-          <div className="performance-warning">
-            <AlertTriangle size={12} />
-            <span>Performance needs attention</span>
-          </div>
-        )}
-      </div>
-      
-      <div className="performance-actions">
-        <StyledButton
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            setMetrics({
-              loadTime: 0,
-              renderTime: 0,
-              memoryUsage: 0,
-              bundleSize: 0,
-              lighthouseScore: 0
-            });
-            startTime.current = performance.now();
-            startMonitoring();
-          }}
-        >
-          Reset
-        </StyledButton>
-      </div>
-    </div>
-  );
-};
-
-export default PerformanceMonitor; 
+        <div className={`score-indicator ${status}`

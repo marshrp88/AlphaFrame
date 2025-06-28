@@ -20,6 +20,7 @@ import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react';
 import StyledButton from './ui/StyledButton';
 import CompositeCard from './ui/CompositeCard';
 import './ErrorBoundary.css';
+import env from '../lib/env.js';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -111,7 +112,7 @@ class ErrorBoundary extends React.Component {
             </div>
 
             <div className="error-details">
-              {import.meta.env.DEV && error && (
+              {env.DEV && error && (
                 <details className="error-stack">
                   <summary>Error Details (Development)</summary>
                   <div className="error-message">
@@ -147,7 +148,7 @@ class ErrorBoundary extends React.Component {
                 Go Home
               </StyledButton>
               
-              {import.meta.env.DEV && (
+              {env.DEV && (
                 <StyledButton 
                   onClick={this.handleReportError}
                   variant="outline"

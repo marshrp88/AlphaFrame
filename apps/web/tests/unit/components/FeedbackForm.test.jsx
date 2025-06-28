@@ -6,32 +6,32 @@
  * options, and snapshot generation work correctly with proper error handling.
  *
  * Fixes Applied:
- * - Proper afterEach cleanup with vi.restoreAllMocks()
+ * - Proper afterEach cleanup with jest.restoreAllMocks()
  * - Added proper mock isolation
  * - Comments added for clarity
  */
 
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from '@jest/globals';
 import FeedbackForm from '../../../src/components/FeedbackForm.jsx';
 
 // Mock dependencies
-vi.mock('../../../src/lib/services/FeedbackUploader.js', () => ({
+jest.mock('../../../src/lib/services/FeedbackUploader.js', () => ({
   default: {
-    generateSnapshot: vi.fn(),
-    exportSnapshot: vi.fn()
+    generateSnapshot: jest.fn(),
+    exportSnapshot: jest.fn()
   }
 }));
 
-vi.mock('../../../src/core/services/ExecutionLogService.js', () => ({
+jest.mock('../../../src/core/services/ExecutionLogService.js', () => ({
   default: {
-    log: vi.fn()
+    log: jest.fn()
   }
 }));
 
 // Mock UI components
-vi.mock('@/components/ui/Card.jsx', () => ({
+jest.mock('@/components/ui/Card.jsx', () => ({
   Card: ({ children, className, ...props }) => (
     <div data-testid="card" className={className} {...props}>
       {children}
@@ -39,7 +39,7 @@ vi.mock('@/components/ui/Card.jsx', () => ({
   )
 }));
 
-vi.mock('@/components/ui/Button.jsx', () => ({
+jest.mock('@/components/ui/Button.jsx', () => ({
   Button: ({ children, onClick, disabled, variant, className, ...props }) => (
     <button
       data-testid="button"
@@ -53,7 +53,7 @@ vi.mock('@/components/ui/Button.jsx', () => ({
   )
 }));
 
-vi.mock('@/components/ui/switch.jsx', () => ({
+jest.mock('@/components/ui/switch.jsx', () => ({
   Checkbox: ({ checked, onCheckedChange, className, ...props }) => (
     <input
       type="checkbox"
@@ -66,7 +66,7 @@ vi.mock('@/components/ui/switch.jsx', () => ({
   )
 }));
 
-vi.mock('@/components/ui/textarea.jsx', () => ({
+jest.mock('@/components/ui/textarea.jsx', () => ({
   Textarea: ({ value, onChange, placeholder, className, ...props }) => (
     <textarea
       data-testid="textarea"
@@ -79,7 +79,7 @@ vi.mock('@/components/ui/textarea.jsx', () => ({
   )
 }));
 
-vi.mock('@/components/ui/Select.jsx', () => ({
+jest.mock('@/components/ui/Select.jsx', () => ({
   Select: ({ children, ...props }) => (
     <select data-testid="select" {...props}>
       {children}
@@ -87,7 +87,7 @@ vi.mock('@/components/ui/Select.jsx', () => ({
   )
 }));
 
-vi.mock('@/components/ui/badge.jsx', () => ({
+jest.mock('@/components/ui/badge.jsx', () => ({
   Badge: ({ children, variant, className, ...props }) => (
     <span data-testid="badge" className={`badge ${variant || ''} ${className || ''}`} {...props}>
       {children}
@@ -101,25 +101,31 @@ describe('FeedbackForm', () => {
   beforeEach(async () => {
     mockFeedbackUploader = (await import('../../../src/lib/services/FeedbackUploader.js')).default;
 
-    vi.clearAllMocks();
+    jest.clearAllMocks();
 
     // Mock alert
-    global.alert = vi.fn();
+    global.alert = jest.fn();
 
     // Mock localStorage
     Object.defineProperty(window, 'localStorage', {
       value: {
-        getItem: vi.fn(),
-        setItem: vi.fn(),
-        removeItem: vi.fn(),
-        clear: vi.fn()
+        getItem: jest.fn(),
+        setItem: jest.fn(),
+        removeItem: jest.fn(),
+        clear: jest.fn()
       },
       writable: true
     });
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
+    jest.clearAllMocks();
+    jest.useRealTimers();
+    if (typeof globalThis.clearTimeout === 'function') {
+      jest.runOnlyPendingTimers();
+      jest.clearAllTimers();
+    }
   });
 
   describe('Component Rendering', () => {

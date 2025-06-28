@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from '@jest/globals';
 import ruleEngine from '../../../src/lib/services/ruleEngine';
 import { RuleSchema } from '@/lib/validation/schemas';
 
@@ -13,11 +13,11 @@ const mockTransaction = {
 
 describe('ruleEngine (unit)', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   it('should evaluate simple greater-than rule', async () => {

@@ -19,7 +19,7 @@ import ReactDOM from "react-dom/client";
 import { Auth0Provider } from "@auth0/auth0-react";
 import App from "./App.jsx";
 import "./index.css";
-import { config } from "./lib/config.js";
+import { config } from '@/lib/config.js';
 
 // Auth0 configuration
 const auth0Config = {

@@ -6,45 +6,45 @@
  * works correctly with proper error handling and privacy controls.
  *
  * Fixes Applied:
- * - Proper afterEach cleanup with vi.restoreAllMocks()
+ * - Proper afterEach cleanup with jest.restoreAllMocks()
  * - Added proper mock isolation
  * - Comments added for clarity
  */
 
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from '@jest/globals';
 import { FeedbackUploader } from '../../../src/lib/services/FeedbackUploader.js';
 
 // Mock dependencies
-vi.mock('../../../src/core/services/CryptoService.js', () => ({
+jest.mock('../../../src/core/services/CryptoService.js', () => ({
   default: {
-    encrypt: vi.fn(),
-    decrypt: vi.fn()
+    encrypt: jest.fn(),
+    decrypt: jest.fn()
   }
 }));
 
-vi.mock('../../../src/core/services/ExecutionLogService.js', () => ({
+jest.mock('../../../src/core/services/ExecutionLogService.js', () => ({
   default: {
-    getLogs: vi.fn(),
-    log: vi.fn(),
-    logError: vi.fn()
+    getLogs: jest.fn(),
+    log: jest.fn(),
+    logError: jest.fn()
   }
 }));
 
-vi.mock('../../../src/features/pro/services/BudgetService.js', () => ({
+jest.mock('../../../src/features/pro/services/BudgetService.js', () => ({
   default: {
-    getBudgetSummary: vi.fn()
+    getBudgetSummary: jest.fn()
   }
 }));
 
-vi.mock('../../../src/features/pro/services/CashFlowService.js', () => ({
+jest.mock('../../../src/features/pro/services/CashFlowService.js', () => ({
   default: {
-    getCashFlowSummary: vi.fn()
+    getCashFlowSummary: jest.fn()
   }
 }));
 
-vi.mock('../../../src/features/pro/services/PortfolioAnalyzer.js', () => ({
+jest.mock('../../../src/features/pro/services/PortfolioAnalyzer.js', () => ({
   default: {
-    analyzePortfolio: vi.fn()
+    analyzePortfolio: jest.fn()
   }
 }));
 
@@ -64,15 +64,15 @@ describe('FeedbackUploader', () => {
     mockBudgetService = (await import('../../../src/features/pro/services/BudgetService.js')).default;
     mockCashFlowService = (await import('../../../src/features/pro/services/CashFlowService.js')).default;
 
-    vi.clearAllMocks();
+    jest.clearAllMocks();
 
     // Mock localStorage
     Object.defineProperty(window, 'localStorage', {
       value: {
-        getItem: vi.fn(),
-        setItem: vi.fn(),
-        removeItem: vi.fn(),
-        clear: vi.fn()
+        getItem: jest.fn(),
+        setItem: jest.fn(),
+        removeItem: jest.fn(),
+        clear: jest.fn()
       },
       writable: true
     });
@@ -80,27 +80,27 @@ describe('FeedbackUploader', () => {
     // Mock navigator.clipboard
     Object.defineProperty(navigator, 'clipboard', {
       value: {
-        writeText: vi.fn()
+        writeText: jest.fn()
       },
       writable: true
     });
 
     // Mock URL.createObjectURL and URL.revokeObjectURL
-    global.URL.createObjectURL = vi.fn();
-    global.URL.revokeObjectURL = vi.fn();
+    global.URL.createObjectURL = jest.fn();
+    global.URL.revokeObjectURL = jest.fn();
 
     // Mock document methods
-    document.createElement = vi.fn(() => ({
+    document.createElement = jest.fn(() => ({
       href: '',
       download: '',
-      click: vi.fn()
+      click: jest.fn()
     }));
-    document.body.appendChild = vi.fn();
-    document.body.removeChild = vi.fn();
+    document.body.appendChild = jest.fn();
+    document.body.removeChild = jest.fn();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('Snapshot Generation', () => {

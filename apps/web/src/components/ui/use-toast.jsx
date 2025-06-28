@@ -17,6 +17,7 @@
 import { createContext, useContext, useState, useCallback } from "react";
 import ReactDOM from "react-dom";
 import React from "react";
+import env from '../../lib/env.js';
 
 // Toast context
 const ToastContext = createContext();
@@ -68,7 +69,7 @@ export function useToast() {
  * @returns {JSX.Element} The rendered toaster component
  */
 function Toaster({ toasts }) {
-  const isTest = import.meta.env.VITE_APP_ENV === 'test';
+  const isTest = env.VITE_APP_ENV === 'test';
   
   return ReactDOM.createPortal(
     <div

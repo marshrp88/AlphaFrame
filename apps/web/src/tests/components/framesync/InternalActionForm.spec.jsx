@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from '@jest/globals';
 
 describe('InternalActionForm', () => {
-  it('should be implemented', () => {
-    expect(true).toBe(true);
+  it.skip('should be implemented', () => {
+    // Placeholder test
   });
 }); 

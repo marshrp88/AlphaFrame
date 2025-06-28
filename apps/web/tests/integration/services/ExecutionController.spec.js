@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from '@jest/globals';
 
 // Mock PermissionEnforcer properly - must be before imports
-vi.mock('@/lib/services/PermissionEnforcer', () => {
-  const mockCanExecuteAction = vi.fn(() => Promise.resolve({ allowed: true }));
+jest.mock('@/lib/services/PermissionEnforcer', () => {
+  const mockCanExecuteAction = jest.fn(() => Promise.resolve({ allowed: true }));
   return {
     PermissionEnforcer: {
       canExecuteAction: mockCanExecuteAction
@@ -12,10 +12,10 @@ vi.mock('@/lib/services/PermissionEnforcer', () => {
 });
 
 // Mock useUIStore at the very top for hoisting
-vi.mock('@/core/store/uiStore', () => ({
+jest.mock('@/core/store/uiStore', () => ({
   useUIStore: {
-    getState: vi.fn(() => ({
-      showPasswordPrompt: vi.fn(({ onConfirm }) => {
+    getState: jest.fn(() => ({
+      showPasswordPrompt: jest.fn(({ onConfirm }) => {
         console.log('[MOCK showPasswordPrompt] called, confirming...');
         return onConfirm('mock-password');
       }),
@@ -25,15 +25,15 @@ vi.mock('@/core/store/uiStore', () => ({
 }));
 
 // Mock useFinancialStateStore with spies for internal actions - MUST BE BEFORE IMPORTS
-const mockAdjustGoal = vi.fn();
-const mockUpdateBudget = vi.fn();
-const mockModifyCategory = vi.fn();
-const mockGetAccountBalance = vi.fn(() => 1000);
-const mockSetAccountBalance = vi.fn();
+const mockAdjustGoal = jest.fn();
+const mockUpdateBudget = jest.fn();
+const mockModifyCategory = jest.fn();
+const mockGetAccountBalance = jest.fn(() => 1000);
+const mockSetAccountBalance = jest.fn();
 
-vi.mock('@/core/store/financialStateStore', () => ({
+jest.mock('@/core/store/financialStateStore', () => ({
   useFinancialStateStore: {
-    getState: vi.fn(() => ({
+    getState: jest.fn(() => ({
       adjustGoal: mockAdjustGoal,
       updateBudget: mockUpdateBudget,
       modifyCategory: mockModifyCategory,
@@ -44,14 +44,14 @@ vi.mock('@/core/store/financialStateStore', () => ({
 }));
 
 // Mock the secure vault
-vi.mock('@/core/services/SecureVault', () => ({
-  get: vi.fn(() => 'mock-plaid-token')
+jest.mock('@/core/services/SecureVault', () => ({
+  get: jest.fn(() => 'mock-plaid-token')
 }));
 
 // Mock ActionSchema to always pass validation
-vi.mock('@/lib/validation/schemas', () => ({
+jest.mock('@/lib/validation/schemas', () => ({
   ActionSchema: {
-    safeParse: vi.fn(() => ({ success: true, data: {} }))
+    safeParse: jest.fn(() => ({ success: true, data: {} }))
   }
 }));
 
@@ -59,14 +59,14 @@ import { ExecutionController } from '@/lib/services/ExecutionController';
 import { PermissionEnforcer } from '@/lib/services/PermissionEnforcer';
 
 // Mock the global fetch
-global.fetch = vi.fn();
+global.fetch = jest.fn();
 
 describe('ExecutionController', () => {
   let mockCanExecuteAction;
 
   beforeEach(() => {
     // Reset all mocks
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     global.fetch.mockReset();
     
     // Clear the store method mocks
@@ -373,7 +373,7 @@ describe('ExecutionController', () => {
 
 describe('ExecutionController - Diagnostics', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   it('should call adjustGoal when ADJUST_GOAL is dispatched', async () => {

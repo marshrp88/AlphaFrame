@@ -2,7 +2,7 @@
 // @last-reviewed: 2025-06-18
 // @version-hash: <git rev-parse HEAD>
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from '@jest/globals';
 import { act } from '@testing-library/react';
 import { useUIStore } from '@/core/store/uiStore';
 

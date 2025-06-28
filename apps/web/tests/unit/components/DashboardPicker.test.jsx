@@ -6,7 +6,7 @@
  * correctly with proper user interactions and state management.
  *
  * Fixes Applied:
- * - Proper afterEach cleanup with vi.restoreAllMocks()
+ * - Proper afterEach cleanup with jest.restoreAllMocks()
  * - Added proper mock isolation
  * - Comments added for clarity
  * - CLUSTER 2 FIXES: Fixed CSS class expectations to match actual component
@@ -15,7 +15,7 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { vi, beforeEach, afterEach } from 'vitest';
+import { vi, beforeEach, afterEach } from '@jest/globals';
 import DashboardPicker from '../../../src/components/DashboardPicker';
 
 // PHASE 1 CLUSTER 3 FIX: Reusable test utility for card state assertions
@@ -31,15 +31,15 @@ function expectCardState(card, isSelected) {
 }
 
 describe('DashboardPicker', () => {
-  const mockOnModeChange = vi.fn();
+  const mockOnModeChange = jest.fn();
 
   beforeEach(() => {
     mockOnModeChange.mockClear();
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('Rendering', () => {

@@ -1,0 +1,37 @@
+{
+  "extends": ["./.eslintrc.cjs"],
+  "rules": {
+    "no-console": "off",
+    "no-unused-vars": ["error", { 
+      "argsIgnorePattern": "^_",
+      "varsIgnorePattern": "^_",
+      "caughtErrorsIgnorePattern": "^_",
+      "ignoreRestSiblings": true
+    }],
+    "react/no-unescaped-entities": "warn",
+    "jsx-a11y/no-noninteractive-element-interactions": "warn",
+    "jsx-a11y/click-events-have-key-events": "warn",
+    "jsx-a11y/no-static-element-interactions": "warn",
+    "jsx-a11y/no-noninteractive-tabindex": "warn",
+    "jsx-a11y/label-has-associated-control": "warn",
+    "react-hooks/exhaustive-deps": "warn",
+    "prefer-const": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.js", "**/*.test.jsx", "**/*.spec.js", "**/*.spec.jsx"],
+      "rules": {
+        "no-console": "off",
+        "no-unused-vars": "off",
+        "prefer-const": "off"
+      }
+    },
+    {
+      "files": ["**/*.js", "**/*.jsx"],
+      "excludedFiles": ["**/*.test.js", "**/*.test.jsx", "**/*.spec.js", "**/*.spec.jsx"],
+      "rules": {
+        "no-console": "warn"
+      }
+    }
+  ]
+} 

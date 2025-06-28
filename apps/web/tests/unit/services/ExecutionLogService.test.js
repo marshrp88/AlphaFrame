@@ -15,16 +15,16 @@
  * - CLUSTER 4 FIX: Simplified IndexedDB mocking to match service implementation
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from '@jest/globals';
 import executionLogService from '../../../src/core/services/ExecutionLogService.js';
 
 // Mock crypto service
-vi.mock('../../../src/core/services/CryptoService.js', () => ({
-  encryptData: vi.fn((data) => Promise.resolve(`encrypted_${data}`)),
-  decryptData: vi.fn((encryptedData) => Promise.resolve(encryptedData.replace('encrypted_', ''))),
-  encrypt: vi.fn((data) => Promise.resolve(`encrypted_${data}`)),
-  decrypt: vi.fn((encryptedData) => Promise.resolve(encryptedData.replace('encrypted_', ''))),
-  generateSalt: vi.fn(() => Promise.resolve('test-salt'))
+jest.mock('../../../src/core/services/CryptoService.js', () => ({
+  encryptData: jest.fn((data) => Promise.resolve(`encrypted_${data}`)),
+  decryptData: jest.fn((encryptedData) => Promise.resolve(encryptedData.replace('encrypted_', ''))),
+  encrypt: jest.fn((data) => Promise.resolve(`encrypted_${data}`)),
+  decrypt: jest.fn((encryptedData) => Promise.resolve(encryptedData.replace('encrypted_', ''))),
+  generateSalt: jest.fn(() => Promise.resolve('test-salt'))
 }));
 
 // CLUSTER 4 FIX: Define mockStore at top level for accessibility
@@ -45,30 +45,30 @@ describe('ExecutionLogService', () => {
     // Mock window and IndexedDB for Node environment
     global.window = undefined;
     global.indexedDB = {
-      open: vi.fn()
+      open: jest.fn()
     };
     
     // Reset mocks
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     
     // CLUSTER 4 FIX: Setup IndexedDB mocks at top level scope
     mockStore = {
-      add: vi.fn(),
-      getAll: vi.fn(),
-      clear: vi.fn(),
-      createIndex: vi.fn()
+      add: jest.fn(),
+      getAll: jest.fn(),
+      clear: jest.fn(),
+      createIndex: jest.fn()
     };
 
     mockTransaction = {
-      objectStore: vi.fn(() => mockStore)
+      objectStore: jest.fn(() => mockStore)
     };
 
     mockDB = {
       objectStoreNames: {
-        contains: vi.fn(() => false)
+        contains: jest.fn(() => false)
       },
-      createObjectStore: vi.fn(() => mockStore),
-      transaction: vi.fn(() => mockTransaction)
+      createObjectStore: jest.fn(() => mockStore),
+      transaction: jest.fn(() => mockTransaction)
     };
 
     // Mock IndexedDB open request
@@ -91,7 +91,7 @@ describe('ExecutionLogService', () => {
         // Ignore cleanup errors
       }
     }
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
     global.indexedDB = originalIndexedDB;
     global.window = originalWindow;
   });
@@ -125,7 +125,7 @@ describe('ExecutionLogService', () => {
   describe('Log Creation', () => {
     beforeEach(async () => {
       // CLUSTER 4 FIX: Service is already initialized, no need to call initialize()
-      vi.clearAllMocks();
+      jest.clearAllMocks();
     });
 
     it('should create and store a log entry successfully', async () => {
@@ -180,7 +180,7 @@ describe('ExecutionLogService', () => {
   describe('Log Retrieval', () => {
     beforeEach(async () => {
       // CLUSTER 4 FIX: Service is already initialized, no need to call initialize()
-      vi.clearAllMocks();
+      jest.clearAllMocks();
     });
 
     it('should retrieve and decrypt logs successfully', async () => {
@@ -231,7 +231,7 @@ describe('ExecutionLogService', () => {
   describe('Log Statistics', () => {
     beforeEach(async () => {
       // CLUSTER 4 FIX: Service is already initialized, no need to call initialize()
-      vi.clearAllMocks();
+      jest.clearAllMocks();
     });
 
     it('should generate correct log statistics', async () => {
@@ -259,7 +259,7 @@ describe('ExecutionLogService', () => {
   describe('Convenience Methods', () => {
     beforeEach(async () => {
       // CLUSTER 4 FIX: Service is already initialized, no need to call initialize()
-      vi.clearAllMocks();
+      jest.clearAllMocks();
     });
 
     it('should log portfolio analysis with correct type', async () => {
@@ -289,7 +289,7 @@ describe('ExecutionLogService', () => {
   describe('Error Handling', () => {
     beforeEach(async () => {
       // CLUSTER 4 FIX: Service is already initialized, no need to call initialize()
-      vi.clearAllMocks();
+      jest.clearAllMocks();
     });
 
     it('should handle IndexedDB initialization errors gracefully', async () => {

@@ -24,7 +24,7 @@ import LoginButton from "./components/LoginButton.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import { ToastProvider } from "./components/ui/use-toast.jsx";
-import { config } from "./lib/config.js";
+import { config } from '@/lib/config.js';
 import LiveFinancialDashboard from './components/dashboard/LiveFinancialDashboard';
 import Dashboard2 from './components/dashboard/Dashboard2.jsx';
 import OnboardingFlow from './features/onboarding/OnboardingFlow.jsx';

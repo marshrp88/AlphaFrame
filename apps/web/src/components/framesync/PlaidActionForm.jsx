@@ -32,29 +32,26 @@ export const PlaidActionForm = ({ initialPayload, onChange }) => {
 
   const [errors, setErrors] = useState({});
 
-  // Validate form data
-  const validateForm = () => {
+  // Validate form data after formData changes
+  useEffect(() => {
     const newErrors = {};
-    
     if (!formData.sourceAccount) {
       newErrors.sourceAccount = 'Source account is required';
     }
-    
     if (!formData.destinationAccount) {
       newErrors.destinationAccount = 'Destination account is required';
     }
-    
     if (formData.sourceAccount === formData.destinationAccount) {
       newErrors.destinationAccount = 'Source and destination accounts must be different';
     }
-    
     if (!formData.amount || isNaN(formData.amount) || Number(formData.amount) <= 0) {
       newErrors.amount = 'Please enter a valid amount';
     }
-
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    if (onChange && Object.keys(newErrors).length === 0) {
+      onChange(formData);
+    }
+  }, [formData, onChange]);
 
   const handleChange = (field, value) => {
     setFormData(prev => ({
@@ -62,12 +59,6 @@ export const PlaidActionForm = ({ initialPayload, onChange }) => {
       [field]: value
     }));
   };
-
-  // Notify parent of changes
-  useEffect(() => {
-    onChange?.(formData);
-    validateForm();
-  }, [formData, onChange, validateForm]);
 
   const formatAccountOption = (account) => {
     const balance = account.balance?.toLocaleString('en-US', {
@@ -199,6 +190,7 @@ export const PlaidActionForm = ({ initialPayload, onChange }) => {
           onChange={(e) => handleChange('description', e.target.value)}
           placeholder="Enter transfer description"
           className="form-input"
+          data-testid="description"
         />
       </div>
 

@@ -6,22 +6,45 @@
  * forecasting, analysis, and insights generation.
  * 
  * Fixes Applied:
- * - Proper afterEach cleanup with vi.restoreAllMocks()
+ * - Proper afterEach cleanup with jest.restoreAllMocks()
  * - Added proper mock isolation
  * - Comments added for clarity
  */
 
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from '@jest/globals';
+
+// Mock the module at the top level
+jest.mock('../../../core/services/ExecutionLogService.js');
+
+// Import after mocks are set up
 import { CashFlowService } from '../services/CashFlowService.js';
 import executionLogService from '../../../core/services/ExecutionLogService.js';
 
-// Mock ExecutionLogService
-vi.mock('../../../core/services/ExecutionLogService.js', () => ({
-  default: {
-    log: vi.fn(),
-    logError: vi.fn()
-  }
-}));
+// Set up the mock implementation after import
+const mockLog = jest.fn().mockResolvedValue({ id: 'test-log-id' });
+const mockLogError = jest.fn().mockResolvedValue({ id: 'test-error-id' });
+
+// Mock the default export
+executionLogService.log = mockLog;
+executionLogService.logError = mockLogError;
+executionLogService.logPortfolioAnalysis = jest.fn().mockResolvedValue({ id: 'test-portfolio-log-id' });
+executionLogService.logSimulationRun = jest.fn().mockResolvedValue({ id: 'test-simulation-log-id' });
+executionLogService.logBudgetForecast = jest.fn().mockResolvedValue({ id: 'test-budget-log-id' });
+executionLogService.logRuleTriggered = jest.fn().mockResolvedValue({ id: 'test-rule-log-id' });
+executionLogService.queryLogs = jest.fn().mockResolvedValue([]);
+executionLogService.getSessionLogs = jest.fn().mockResolvedValue([]);
+executionLogService.getComponentLogs = jest.fn().mockResolvedValue([]);
+executionLogService.getPerformanceLogs = jest.fn().mockResolvedValue([]);
+executionLogService.clearOldLogs = jest.fn().mockResolvedValue(0);
+executionLogService.exportLogs = jest.fn().mockResolvedValue({ logs: [] });
+executionLogService.decryptPayload = jest.fn().mockResolvedValue({});
+executionLogService.generateId = jest.fn(() => 'test-id');
+executionLogService.generateSessionId = jest.fn(() => 'test-session');
+executionLogService.getUserId = jest.fn(() => 'test-user');
+executionLogService.initDatabase = jest.fn().mockResolvedValue();
+executionLogService.initEncryption = jest.fn().mockResolvedValue();
+executionLogService.encryptPayload = jest.fn().mockResolvedValue('encrypted-data');
+executionLogService.storeLog = jest.fn().mockResolvedValue();
 
 describe('CashFlowService', () => {
   let cashFlowService;
@@ -29,15 +52,34 @@ describe('CashFlowService', () => {
   beforeEach(() => {
     cashFlowService = new CashFlowService();
     
-    // Reset mocks
-    executionLogService.log.mockResolvedValue();
-    executionLogService.logError.mockResolvedValue();
+    // Reset all mocks before each test
+    jest.clearAllMocks();
     
-    vi.clearAllMocks();
+    // Re-setup the mock functions with default resolved values
+    executionLogService.log.mockResolvedValue({ id: 'test-log-id' });
+    executionLogService.logError.mockResolvedValue({ id: 'test-error-id' });
+    executionLogService.logPortfolioAnalysis.mockResolvedValue({ id: 'test-portfolio-log-id' });
+    executionLogService.logSimulationRun.mockResolvedValue({ id: 'test-simulation-log-id' });
+    executionLogService.logBudgetForecast.mockResolvedValue({ id: 'test-budget-log-id' });
+    executionLogService.logRuleTriggered.mockResolvedValue({ id: 'test-rule-log-id' });
+    executionLogService.queryLogs.mockResolvedValue([]);
+    executionLogService.getSessionLogs.mockResolvedValue([]);
+    executionLogService.getComponentLogs.mockResolvedValue([]);
+    executionLogService.getPerformanceLogs.mockResolvedValue([]);
+    executionLogService.clearOldLogs.mockResolvedValue(0);
+    executionLogService.exportLogs.mockResolvedValue({ logs: [] });
+    executionLogService.decryptPayload.mockResolvedValue({});
+    executionLogService.generateId.mockReturnValue('test-id');
+    executionLogService.generateSessionId.mockReturnValue('test-session');
+    executionLogService.getUserId.mockReturnValue('test-user');
+    executionLogService.initDatabase.mockResolvedValue();
+    executionLogService.initEncryption.mockResolvedValue();
+    executionLogService.encryptPayload.mockResolvedValue('encrypted-data');
+    executionLogService.storeLog.mockResolvedValue();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('Basic Properties', () => {

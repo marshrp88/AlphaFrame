@@ -1,8 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import plaidService from '../PlaidService';
+import { describe, it, expect, vi, beforeEach, afterEach } from '@jest/globals';
 
 // Mock config
-vi.mock('../../config', () => ({
+jest.mock('../../config', () => ({
   default: {
     plaid: {
       clientId: 'test-client-id',
@@ -13,36 +12,65 @@ vi.mock('../../config', () => ({
 }));
 
 describe('PlaidService', () => {
-  let localStorageMock;
-  let fetchMock;
+  let plaidService;
   let originalAccessToken;
 
-  beforeEach(() => {
-    // Per-test localStorage mock
-    localStorageMock = {
-      getItem: vi.fn((key) => {
-        if (key === 'plaid_access_token') return 'test-plaid-token';
-        return null;
-      }),
-      setItem: vi.fn(),
-      removeItem: vi.fn(),
-      clear: vi.fn()
-    };
-    global.localStorage = localStorageMock;
+  beforeEach(async () => {
+    // Reset modules
+    jest.resetModules();
+    jest.clearAllMocks();
 
-    // Per-test fetch mock
-    fetchMock = vi.fn();
-    global.fetch = fetchMock;
+    // Create a completely new localStorage mock
+    const mockLocalStorage = {
+      store: {
+        'plaid_access_token': 'test-plaid-token'
+      },
+      getItem: jest.fn(function(key) {
+        console.log('MOCK localStorage.getItem called with:', key);
+        const value = this.store[key] || null;
+        console.log('MOCK localStorage.getItem returning:', value);
+        return value;
+      }),
+      setItem: jest.fn(function(key, value) {
+        console.log('MOCK localStorage.setItem called with:', key, value);
+        this.store[key] = value.toString();
+      }),
+      removeItem: jest.fn(function(key) {
+        console.log('MOCK localStorage.removeItem called with:', key);
+        delete this.store[key];
+      }),
+      clear: jest.fn(function() {
+        console.log('MOCK localStorage.clear called');
+        this.store = {};
+      })
+    };
+
+    // Replace the entire localStorage object
+    Object.defineProperty(global, 'localStorage', {
+      value: mockLocalStorage,
+      writable: true,
+      configurable: true
+    });
+
+    if (typeof window !== 'undefined') {
+      Object.defineProperty(window, 'localStorage', {
+        value: mockLocalStorage,
+        writable: true,
+        configurable: true
+      });
+    }
+
+    // Import the service after setting up mocks
+    plaidService = await import('../PlaidService');
+    plaidService = plaidService.default;
 
     // Save and reset PlaidService accessToken
     originalAccessToken = plaidService.accessToken;
     plaidService.accessToken = undefined;
-
-    vi.clearAllMocks();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
     plaidService.accessToken = originalAccessToken;
   });
 
@@ -55,20 +83,18 @@ describe('PlaidService', () => {
 
   describe('Token Management', () => {
     it('should get access token from storage', () => {
-      localStorageMock.getItem.mockReturnValue('test-plaid-token');
-      plaidService.accessToken = localStorageMock.getItem('plaid_access_token');
-      const token = plaidService.accessToken;
+      const token = global.localStorage.getItem('plaid_access_token');
       expect(token).toBe('test-plaid-token');
     });
 
     it('should set access token in storage', () => {
       plaidService.clearAccessToken();
-      expect(localStorageMock.removeItem).toHaveBeenCalledWith('plaid_access_token');
+      expect(global.localStorage.removeItem).toHaveBeenCalledWith('plaid_access_token');
     });
 
     it('should clear access token', () => {
       plaidService.clearAccessToken();
-      expect(localStorageMock.removeItem).toHaveBeenCalledWith('plaid_access_token');
+      expect(global.localStorage.removeItem).toHaveBeenCalledWith('plaid_access_token');
     });
   });
 

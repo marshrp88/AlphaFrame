@@ -1,24 +1,24 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from '@jest/globals';
 import { PermissionEnforcer } from '../../../src/lib/services/PermissionEnforcer';
 import { useAuthStore } from '../../../src/core/store/authStore';
 import { useUIStore } from '../../../src/core/store/uiStore';
 
 // Mock the secureVault
-vi.mock('../../../src/core/services/SecureVault', () => ({
-  unlock: vi.fn()
+jest.mock('../../../src/core/services/SecureVault', () => ({
+  unlock: jest.fn()
 }));
 
 // Mock the auth store
-vi.mock('../../../src/core/store/authStore', () => ({
+jest.mock('../../../src/core/store/authStore', () => ({
   useAuthStore: {
-    getState: vi.fn()
+    getState: jest.fn()
   }
 }));
 
 // Mock the UI store
-vi.mock('../../../src/core/store/uiStore', () => ({
+jest.mock('../../../src/core/store/uiStore', () => ({
   useUIStore: {
-    getState: vi.fn()
+    getState: jest.fn()
   }
 }));
 
@@ -27,7 +27,7 @@ describe('PermissionEnforcer', () => {
   let mockUIStore;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
 
     // Setup mock auth store
     mockAuthStore = {
@@ -40,7 +40,7 @@ describe('PermissionEnforcer', () => {
 
     // Setup mock UI store
     mockUIStore = {
-      showPasswordPrompt: vi.fn(({ onConfirm }) => onConfirm('test-password'))
+      showPasswordPrompt: jest.fn(({ onConfirm }) => onConfirm('test-password'))
     };
     useUIStore.getState.mockReturnValue(mockUIStore);
   });

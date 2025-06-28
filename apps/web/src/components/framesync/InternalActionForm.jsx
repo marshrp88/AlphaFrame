@@ -37,19 +37,19 @@ function InternalActionFormComponent({ initialPayload, onChange }) {
     goalId: safeInitialPayload.goalId || ''
   });
 
+  const [errors, setErrors] = useState({});
+
   /**
    * Handles changes to form input values
    * @param {string} field - The field being changed
    * @param {string|number} value - The new value
    */
   const handleChange = useCallback((field, value) => {
-    const newData = {
-      ...formData,
+    setFormData(prev => ({
+      ...prev,
       [field]: value
-    };
-    setFormData(newData);
-    onChange?.(newData);
-  }, [formData, onChange]);
+    }));
+  }, []);
 
   /**
    * Validates the form data
@@ -67,10 +67,22 @@ function InternalActionFormComponent({ initialPayload, onChange }) {
     return true;
   }, [formData.amount, toast]);
 
-  // Validate form data when it changes
+  // Validate form data after formData changes
   useEffect(() => {
-    validateForm();
-  }, [validateForm]);
+    const newErrors = {};
+    if (formData.amount && isNaN(Number(formData.amount))) {
+      newErrors.amount = 'Please enter a valid number for the amount';
+      toast({
+        title: 'Invalid Amount',
+        description: 'Please enter a valid number for the amount',
+        variant: 'destructive'
+      });
+    }
+    setErrors(newErrors);
+    if (onChange && Object.keys(newErrors).length === 0) {
+      onChange(formData);
+    }
+  }, [formData, onChange, toast]);
 
   try {
     return (

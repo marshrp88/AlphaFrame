@@ -31,35 +31,10 @@ import React from 'react';
  * @param {LabelProps} props - Component props
  * @returns {JSX.Element} The rendered label component
  */
-export function Label({ 
-  htmlFor, 
-  children, 
-  className = '', 
-  required = false,
-  variant = 'default',
-  ...props 
-}) {
-  const baseClasses = 'block text-sm font-medium text-gray-700 mb-1';
-  
-  const variantClasses = {
-    default: 'text-gray-700',
-    error: 'text-red-600',
-    success: 'text-green-600',
-    disabled: 'text-gray-400'
-  };
-
-  const classes = `${baseClasses} ${variantClasses[variant]} ${className}`.trim();
-
-  return (
-    <label 
-      htmlFor={htmlFor}
-      className={classes}
-      {...props}
-    >
-      {children}
-      {required && <span className="text-red-500 ml-1">*</span>}
-    </label>
-  );
-}
+export const Label = ({ children, className, ...props }) => (
+  <label className={className} {...props}>
+    {children}
+  </label>
+);
 
 export default Label; 

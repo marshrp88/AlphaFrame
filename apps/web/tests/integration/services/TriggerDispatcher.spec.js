@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from '@jest/globals';
 import { queueAction, getActionQueue, clearActionQueue } from '@/lib/services/TriggerDispatcher';
 import { dispatchAction } from '@/lib/services/TriggerDispatcher';
 
@@ -12,7 +12,7 @@ if (!global.crypto.randomUUID) {
 
 // Mock the logStore
 let mockActionLog = [];
-const mockQueueAction = vi.fn((action) => {
+const mockQueueAction = jest.fn((action) => {
   const id = crypto.randomUUID ? crypto.randomUUID() : String(Math.random());
   const queuedAction = {
     id,
@@ -25,12 +25,12 @@ const mockQueueAction = vi.fn((action) => {
   mockActionLog.push(queuedAction);
   return mockActionLog.length - 1;
 });
-const mockUpdateAction = vi.fn((index, updatedAction) => {
+const mockUpdateAction = jest.fn((index, updatedAction) => {
   mockActionLog[index] = updatedAction;
 });
-vi.mock('@/core/store/logStore', () => ({
+jest.mock('@/core/store/logStore', () => ({
   useLogStore: {
-    getState: vi.fn(() => ({
+    getState: jest.fn(() => ({
       queueAction: mockQueueAction,
       updateAction: mockUpdateAction,
       get actionLog() { return mockActionLog; }
@@ -39,30 +39,30 @@ vi.mock('@/core/store/logStore', () => ({
 }));
 
 // Mock useUIStore for showPasswordPrompt and isSandboxMode
-vi.mock('@/core/store/uiStore', () => ({
+jest.mock('@/core/store/uiStore', () => ({
   useUIStore: {
-    getState: vi.fn(() => ({
-      showPasswordPrompt: vi.fn(),
+    getState: jest.fn(() => ({
+      showPasswordPrompt: jest.fn(),
       isSandboxMode: false
     }))
   }
 }));
 
 // Mock canExecuteAction from PermissionEnforcer
-vi.mock('../../../src/lib/services/PermissionEnforcer', () => ({
-  canExecuteAction: vi.fn(() => Promise.resolve({ allowed: true }))
+jest.mock('../../../src/lib/services/PermissionEnforcer', () => ({
+  canExecuteAction: jest.fn(() => Promise.resolve({ allowed: true }))
 }));
 
 // Mock global fetch for communication actions
-vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({
+global.fetch = jest.fn(() => Promise.resolve({
   ok: true,
   json: () => Promise.resolve({ status: 'success' })
-})));
+}));
 
 describe('TriggerDispatcher', () => {
   beforeEach(() => {
     clearActionQueue();
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     mockActionLog = [];
   });
 

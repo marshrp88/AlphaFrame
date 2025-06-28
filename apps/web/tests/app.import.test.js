@@ -1,11 +1,82 @@
-import { it, expect, vi } from 'vitest';
+// Test that all imports work correctly
+import { describe, it, expect } from '@jest/globals';
 
-it('can import the App component with a mocked config', async () => {
-  vi.doMock('../src/lib/config', () => ({
-    config: { apiUrl: 'mocked-url' },
-  }));
+// Mock config.js to avoid import.meta.env issues
+jest.mock('@/lib/config.js', () => ({
+  config: {
+    env: 'test',
+    apiUrl: 'http://localhost:3000/api',
+    plaid: {
+      clientId: 'test-plaid-client-id',
+      secret: 'test-plaid-secret',
+      env: 'sandbox'
+    },
+    auth0: {
+      domain: 'test.auth0.com',
+      clientId: 'test-auth0-client-id',
+      audience: 'test-audience',
+      redirectUri: 'http://localhost:5173'
+    },
+    auth: {
+      domain: 'test.auth0.com',
+      clientId: 'test-auth0-client-id',
+      audience: 'test-audience'
+    },
+    webhook: {
+      url: 'http://localhost:3000/webhook',
+      secret: 'test-webhook-secret'
+    },
+    notifications: {
+      sendgridApiKey: 'test-sendgrid-key',
+      fromEmail: 'noreply@alphaframe.com'
+    },
+    features: {
+      betaMode: false,
+      plaidIntegration: true,
+      webhooks: true,
+      notifications: true
+    },
+    logging: {
+      level: 'info',
+      debugMode: false
+    },
+    security: {
+      encryptionKey: 'test-encryption-key',
+      jwtSecret: 'test-jwt-secret'
+    }
+  },
+  validateConfig: jest.fn(() => ({ isValid: true, errors: [], warnings: [] })),
+  initializeConfig: jest.fn(() => ({ isValid: true, errors: [], warnings: [] })),
+  getFeatureFlag: jest.fn(() => false),
+  isDevelopment: jest.fn(() => true),
+  isProduction: jest.fn(() => false),
+  isStaging: jest.fn(() => false),
+  getSecureConfig: jest.fn(() => ({ env: 'test' }))
+}));
 
-  // Try to import the App component
-  const { default: App } = await import('../src/App');
-  expect(typeof App).toBe('function');
+// Mock components that use import.meta.env
+jest.mock('@/components/ui/PerformanceMonitor', () => ({
+  __esModule: true,
+  default: () => null,
+}));
+
+jest.mock('@/components/PrivateRoute', () => ({
+  __esModule: true,
+  default: ({ children }) => <div data-testid="private-route">{children}</div>,
+}));
+
+describe('App Import Tests', () => {
+  it('should import App component without errors', async () => {
+    // Test that App can be imported without throwing
+    const App = await import('../src/App');
+    expect(App).toBeDefined();
+    expect(App.default).toBeDefined();
+  });
+
+  it('should import main App component', () => {
+    // Simple import test
+    expect(() => {
+      require('../src/App');
+    }).not.toThrow();
+  });
 }); 

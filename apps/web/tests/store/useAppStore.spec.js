@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach } from '@jest/globals';
 import { useAppStore } from '@/core/store/useAppStore'
 
 describe('useAppStore Zustand Store', () => {

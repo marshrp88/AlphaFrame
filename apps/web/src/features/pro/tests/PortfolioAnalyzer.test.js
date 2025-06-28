@@ -17,43 +17,87 @@
  * analyzes portfolios, calculates metrics, and generates actionable insights.
  */
 
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from '@jest/globals';
+
+// Mock the module at the top level
+jest.mock('../../../core/services/ExecutionLogService.js');
+
+// Import after mocks are set up
 import { PortfolioAnalyzer } from '../services/PortfolioAnalyzer.js';
 import executionLogService from '../../../core/services/ExecutionLogService.js';
 
-// Mock ExecutionLogService
-vi.mock('../../../core/services/ExecutionLogService.js', () => ({
-  default: {
-    logPortfolioAnalysis: vi.fn(),
-    logError: vi.fn()
-  }
-}));
+// Set up the mock implementation after import
+const mockLog = jest.fn().mockResolvedValue({ id: 'test-log-id' });
+const mockLogError = jest.fn().mockResolvedValue({ id: 'test-error-id' });
+
+// Mock the default export
+executionLogService.log = mockLog;
+executionLogService.logError = mockLogError;
+executionLogService.logPortfolioAnalysis = jest.fn().mockResolvedValue({ id: 'test-portfolio-log-id' });
+executionLogService.logSimulationRun = jest.fn().mockResolvedValue({ id: 'test-simulation-log-id' });
+executionLogService.logBudgetForecast = jest.fn().mockResolvedValue({ id: 'test-budget-log-id' });
+executionLogService.logRuleTriggered = jest.fn().mockResolvedValue({ id: 'test-rule-log-id' });
+executionLogService.queryLogs = jest.fn().mockResolvedValue([]);
+executionLogService.getSessionLogs = jest.fn().mockResolvedValue([]);
+executionLogService.getComponentLogs = jest.fn().mockResolvedValue([]);
+executionLogService.getPerformanceLogs = jest.fn().mockResolvedValue([]);
+executionLogService.clearOldLogs = jest.fn().mockResolvedValue(0);
+executionLogService.exportLogs = jest.fn().mockResolvedValue({ logs: [] });
+executionLogService.decryptPayload = jest.fn().mockResolvedValue({});
+executionLogService.generateId = jest.fn(() => 'test-id');
+executionLogService.generateSessionId = jest.fn(() => 'test-session');
+executionLogService.getUserId = jest.fn(() => 'test-user');
+executionLogService.initDatabase = jest.fn().mockResolvedValue();
+executionLogService.initEncryption = jest.fn().mockResolvedValue();
+executionLogService.encryptPayload = jest.fn().mockResolvedValue('encrypted-data');
+executionLogService.storeLog = jest.fn().mockResolvedValue();
 
 describe('PortfolioAnalyzer', () => {
-  let analyzer;
+  let portfolioAnalyzer;
 
   beforeEach(() => {
-    analyzer = new PortfolioAnalyzer();
+    portfolioAnalyzer = new PortfolioAnalyzer();
     
-    // Reset mocks
-    executionLogService.logPortfolioAnalysis.mockResolvedValue();
-    executionLogService.logError.mockResolvedValue();
+    // Reset all mocks before each test
+    jest.clearAllMocks();
+    
+    // Re-setup the mock functions with default resolved values
+    executionLogService.log.mockResolvedValue({ id: 'test-log-id' });
+    executionLogService.logError.mockResolvedValue({ id: 'test-error-id' });
+    executionLogService.logPortfolioAnalysis.mockResolvedValue({ id: 'test-portfolio-log-id' });
+    executionLogService.logSimulationRun.mockResolvedValue({ id: 'test-simulation-log-id' });
+    executionLogService.logBudgetForecast.mockResolvedValue({ id: 'test-budget-log-id' });
+    executionLogService.logRuleTriggered.mockResolvedValue({ id: 'test-rule-log-id' });
+    executionLogService.queryLogs.mockResolvedValue([]);
+    executionLogService.getSessionLogs.mockResolvedValue([]);
+    executionLogService.getComponentLogs.mockResolvedValue([]);
+    executionLogService.getPerformanceLogs.mockResolvedValue([]);
+    executionLogService.clearOldLogs.mockResolvedValue(0);
+    executionLogService.exportLogs.mockResolvedValue({ logs: [] });
+    executionLogService.decryptPayload.mockResolvedValue({});
+    executionLogService.generateId.mockReturnValue('test-id');
+    executionLogService.generateSessionId.mockReturnValue('test-session');
+    executionLogService.getUserId.mockReturnValue('test-user');
+    executionLogService.initDatabase.mockResolvedValue();
+    executionLogService.initEncryption.mockResolvedValue();
+    executionLogService.encryptPayload.mockResolvedValue('encrypted-data');
+    executionLogService.storeLog.mockResolvedValue();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('Basic Properties', () => {
     it('should have correct basic properties', () => {
-      expect(analyzer.assetClassifications).toBeDefined();
-      expect(analyzer.defaultTargets).toBeDefined();
-      expect(typeof analyzer.assetClassifications).toBe('object');
-      expect(typeof analyzer.defaultTargets).toBe('object');
+      expect(portfolioAnalyzer.assetClassifications).toBeDefined();
+      expect(portfolioAnalyzer.defaultTargets).toBeDefined();
+      expect(typeof portfolioAnalyzer.assetClassifications).toBe('object');
+      expect(typeof portfolioAnalyzer.defaultTargets).toBe('object');
     });
 
     it('should have supported assets', () => {
-      const assets = analyzer.getSupportedAssets();
+      const assets = portfolioAnalyzer.getSupportedAssets();
       expect(assets).toBeDefined();
       expect(assets.AAPL).toBeDefined();
       expect(assets.BND).toBeDefined();
@@ -62,7 +106,7 @@ describe('PortfolioAnalyzer', () => {
     });
 
     it('should have default targets', () => {
-      const targets = analyzer.getDefaultTargets();
+      const targets = portfolioAnalyzer.getDefaultTargets();
       expect(targets).toBeDefined();
       expect(targets.equity).toBe(60);
       expect(targets.bonds).toBe(30);
@@ -77,7 +121,7 @@ describe('PortfolioAnalyzer', () => {
         { ticker: 'BND', quantity: 50, currentPrice: 80, costBasis: 80 }
       ];
 
-      const analysis = await analyzer.analyzePortfolio(holdings);
+      const analysis = await portfolioAnalyzer.analyzePortfolio(holdings);
 
       expect(analysis.totalValue).toBe(19000); // 100*150 + 50*80
       expect(analysis.currentAllocation.equity).toBeCloseTo(78.95, 1); // 15000/19000 * 100
@@ -90,7 +134,7 @@ describe('PortfolioAnalyzer', () => {
 
     it('should handle empty portfolio', async () => {
       const holdings = [];
-      await expect(analyzer.analyzePortfolio(holdings)).rejects.toThrow('Portfolio has no value to analyze');
+      await expect(portfolioAnalyzer.analyzePortfolio(holdings)).rejects.toThrow('Portfolio has no value to analyze');
     });
 
     it('should handle custom targets', async () => {
@@ -100,7 +144,7 @@ describe('PortfolioAnalyzer', () => {
       ];
       const customTargets = { equity: 50, bonds: 50 };
 
-      const analysis = await analyzer.analyzePortfolio(holdings, customTargets);
+      const analysis = await portfolioAnalyzer.analyzePortfolio(holdings, customTargets);
 
       expect(analysis.targetAllocation).toEqual(customTargets);
       expect(analysis.deviations.equity).toBeCloseTo(28.95, 1); // 78.95 - 50
@@ -112,7 +156,7 @@ describe('PortfolioAnalyzer', () => {
         { ticker: 'AAPL', quantity: 100, currentPrice: 150 }, // $15,000
         { ticker: 'MSFT', quantity: 50, currentPrice: 300 }   // $15,000
       ];
-      const analysis = await analyzer.analyzePortfolio(holdings);
+      const analysis = await portfolioAnalyzer.analyzePortfolio(holdings);
 
       // Both AAPL and MSFT are technology sector, so 100% tech
       expect(analysis.currentAllocation.bySector.technology).toBeCloseTo(100, 1);
@@ -123,7 +167,7 @@ describe('PortfolioAnalyzer', () => {
         { ticker: 'AAPL', quantity: 100, currentPrice: 150 }, // $15,000
         { ticker: 'UNKNOWN', quantity: 50, currentPrice: 100 } // $5,000
       ];
-      const analysis = await analyzer.analyzePortfolio(holdings);
+      const analysis = await portfolioAnalyzer.analyzePortfolio(holdings);
 
       expect(analysis.currentAllocation.equity).toBeCloseTo(75, 1); // 15000/20000 * 100
       expect(analysis.currentAllocation.unknown).toBeCloseTo(25, 1); // 5000/20000 * 100
@@ -135,7 +179,7 @@ describe('PortfolioAnalyzer', () => {
         { ticker: 'BND', quantity: 50, currentPrice: 80 }
       ];
 
-      await analyzer.analyzePortfolio(holdings);
+      await portfolioAnalyzer.analyzePortfolio(holdings);
 
       expect(executionLogService.logPortfolioAnalysis).toHaveBeenCalledWith(
         expect.stringMatching(/^portfolio-/), // portfolioId
@@ -157,12 +201,12 @@ describe('PortfolioAnalyzer', () => {
         { ticker: 'AAPL', quantity: 100, currentPrice: 150 }
       ];
 
-      await expect(analyzer.analyzePortfolio(holdings)).rejects.toThrow('Logging failed');
+      await expect(portfolioAnalyzer.analyzePortfolio(holdings)).rejects.toThrow('Logging failed');
       expect(executionLogService.logError).toHaveBeenCalledWith(
         expect.any(Error), // error
         'PortfolioAnalyzer', // component
         'analyzePortfolio', // action
-        { holdings, targets: analyzer.defaultTargets } // meta
+        { holdings, targets: portfolioAnalyzer.defaultTargets } // meta
       );
     });
   });
@@ -175,7 +219,7 @@ describe('PortfolioAnalyzer', () => {
         { ticker: 'CASH', quantity: 1, currentPrice: 1000 }
       ];
 
-      const allocation = analyzer.calculateCurrentAllocation(holdings);
+      const allocation = portfolioAnalyzer.calculateCurrentAllocation(holdings);
 
       expect(allocation.equity).toBe(15000);
       expect(allocation.bonds).toBe(4000);
@@ -202,7 +246,7 @@ describe('PortfolioAnalyzer', () => {
         }
       };
 
-      const percentages = analyzer.calculateAllocationPercentages(allocation, 20000);
+      const percentages = portfolioAnalyzer.calculateAllocationPercentages(allocation, 20000);
 
       expect(percentages.equity).toBe(75);
       expect(percentages.bonds).toBe(20);
@@ -220,7 +264,7 @@ describe('PortfolioAnalyzer', () => {
         bySector: {}
       };
 
-      const percentages = analyzer.calculateAllocationPercentages(allocation, 0);
+      const percentages = portfolioAnalyzer.calculateAllocationPercentages(allocation, 0);
 
       expect(percentages.equity).toBe(0);
       expect(percentages.bonds).toBe(0);
@@ -234,7 +278,7 @@ describe('PortfolioAnalyzer', () => {
         totalValue: 20000
       };
 
-      const percentages = analyzer.calculateAllocationPercentages(allocation, 20000);
+      const percentages = portfolioAnalyzer.calculateAllocationPercentages(allocation, 20000);
 
       expect(percentages.equity).toBe(75);
       expect(percentages.bonds).toBe(25);
@@ -247,7 +291,7 @@ describe('PortfolioAnalyzer', () => {
       const current = { equity: 75, bonds: 20, cash: 5 };
       const targets = { equity: 60, bonds: 30, cash: 10 };
 
-      const deviations = analyzer.calculateDeviations(current, targets);
+      const deviations = portfolioAnalyzer.calculateDeviations(current, targets);
 
       expect(deviations.equity).toBe(15); // 75 - 60
       expect(deviations.bonds).toBe(-10); // 20 - 30
@@ -258,7 +302,7 @@ describe('PortfolioAnalyzer', () => {
       const current = { equity: 100 };
       const targets = { equity: 60, bonds: 40 };
 
-      const deviations = analyzer.calculateDeviations(current, targets);
+      const deviations = portfolioAnalyzer.calculateDeviations(current, targets);
 
       expect(deviations.equity).toBe(40);
       expect(deviations.bonds).toBe(-40); // 0 - 40
@@ -268,7 +312,7 @@ describe('PortfolioAnalyzer', () => {
       const current = { equity: 50, bonds: 50 };
       const targets = { equity: 0, bonds: 0 };
 
-      const deviations = analyzer.calculateDeviations(current, targets);
+      const deviations = portfolioAnalyzer.calculateDeviations(current, targets);
 
       expect(deviations.equity).toBe(50);
       expect(deviations.bonds).toBe(50);
@@ -292,7 +336,7 @@ describe('PortfolioAnalyzer', () => {
         }
       };
 
-      const scores = analyzer.calculateDiversificationScores(holdings, allocation);
+      const scores = portfolioAnalyzer.calculateDiversificationScores(holdings, allocation);
 
       expect(scores.sectorCount).toBe(2);
       expect(scores.assetClassCount).toBe(2);
@@ -315,7 +359,7 @@ describe('PortfolioAnalyzer', () => {
         }
       };
 
-      const scores = analyzer.calculateDiversificationScores(holdings, allocation);
+      const scores = portfolioAnalyzer.calculateDiversificationScores(holdings, allocation);
 
       expect(scores.sectorCount).toBe(1);
       expect(scores.assetClassCount).toBe(1);
@@ -337,7 +381,7 @@ describe('PortfolioAnalyzer', () => {
         }
       };
 
-      const scores = analyzer.calculateDiversificationScores(holdings, allocation);
+      const scores = portfolioAnalyzer.calculateDiversificationScores(holdings, allocation);
 
       expect(scores.sectorCount).toBe(1); // Only known ticker contributes to sector count
       expect(scores.assetClassCount).toBe(1); // Only equity, unknown doesn't count
@@ -350,7 +394,7 @@ describe('PortfolioAnalyzer', () => {
         bySector: {}
       };
 
-      const scores = analyzer.calculateDiversificationScores(holdings, allocation);
+      const scores = portfolioAnalyzer.calculateDiversificationScores(holdings, allocation);
 
       expect(scores.sectorCount).toBe(0);
       expect(scores.assetClassCount).toBe(0);
@@ -370,7 +414,7 @@ describe('PortfolioAnalyzer', () => {
         sectorCount: 4
       };
 
-      const recommendations = analyzer.generateRecommendations(deviations, diversificationScores);
+      const recommendations = portfolioAnalyzer.generateRecommendations(deviations, diversificationScores);
 
       expect(recommendations).toHaveLength(2); // Only equity and bonds exceed 5%
       expect(recommendations[0].type).toBe('rebalancing');
@@ -385,7 +429,7 @@ describe('PortfolioAnalyzer', () => {
         sectorCount: 2 // Few sectors
       };
 
-      const recommendations = analyzer.generateRecommendations(deviations, diversificationScores);
+      const recommendations = portfolioAnalyzer.generateRecommendations(deviations, diversificationScores);
 
       expect(recommendations).toHaveLength(2);
       expect(recommendations[0].type).toBe('diversification');
@@ -404,7 +448,7 @@ describe('PortfolioAnalyzer', () => {
         sectorCount: 5
       };
 
-      const recommendations = analyzer.generateRecommendations(deviations, diversificationScores);
+      const recommendations = portfolioAnalyzer.generateRecommendations(deviations, diversificationScores);
 
       expect(recommendations).toHaveLength(0); // No significant issues
     });
@@ -419,7 +463,7 @@ describe('PortfolioAnalyzer', () => {
         sectorCount: 3
       };
 
-      const recommendations = analyzer.generateRecommendations(deviations, diversificationScores);
+      const recommendations = portfolioAnalyzer.generateRecommendations(deviations, diversificationScores);
 
       expect(recommendations).toHaveLength(2);
       expect(recommendations[0].priority).toBe('medium'); // 5.1% < 10%
@@ -434,7 +478,7 @@ describe('PortfolioAnalyzer', () => {
         { ticker: 'BND', quantity: 50, currentPrice: 80 }
       ];
 
-      const validation = analyzer.validateHoldings(holdings);
+      const validation = portfolioAnalyzer.validateHoldings(holdings);
 
       expect(validation.isValid).toBe(true);
       expect(validation.errors).toHaveLength(0);
@@ -447,7 +491,7 @@ describe('PortfolioAnalyzer', () => {
         { ticker: 'BND', currentPrice: 80 } // Missing quantity
       ];
 
-      const validation = analyzer.validateHoldings(holdings);
+      const validation = portfolioAnalyzer.validateHoldings(holdings);
 
       expect(validation.isValid).toBe(false);
       expect(validation.errors).toHaveLength(2);
@@ -460,7 +504,7 @@ describe('PortfolioAnalyzer', () => {
         { ticker: 'BND', quantity: 50, currentPrice: -80 }
       ];
 
-      const validation = analyzer.validateHoldings(holdings);
+      const validation = portfolioAnalyzer.validateHoldings(holdings);
 
       expect(validation.isValid).toBe(false);
       expect(validation.errors).toHaveLength(2);
@@ -473,7 +517,7 @@ describe('PortfolioAnalyzer', () => {
         { ticker: 'UNSUPPORTED', quantity: 50, currentPrice: 100 }
       ];
 
-      const validation = analyzer.validateHoldings(holdings);
+      const validation = portfolioAnalyzer.validateHoldings(holdings);
 
       expect(validation.isValid).toBe(true);
       expect(validation.errors).toHaveLength(0);
@@ -484,7 +528,7 @@ describe('PortfolioAnalyzer', () => {
     it('should handle empty holdings array', () => {
       const holdings = [];
 
-      const validation = analyzer.validateHoldings(holdings);
+      const validation = portfolioAnalyzer.validateHoldings(holdings);
 
       expect(validation.isValid).toBe(true);
       expect(validation.errors).toHaveLength(0);
@@ -499,7 +543,7 @@ describe('PortfolioAnalyzer', () => {
         { ticker: 'BND', quantity: 50, currentPrice: 0 }
       ];
 
-      const allocation = analyzer.calculateCurrentAllocation(holdings);
+      const allocation = portfolioAnalyzer.calculateCurrentAllocation(holdings);
 
       expect(allocation.totalValue).toBe(0);
       expect(allocation.equity).toBe(0);
@@ -511,7 +555,7 @@ describe('PortfolioAnalyzer', () => {
         { ticker: 'AAPL', quantity: 1000000, currentPrice: 1000000 }
       ];
 
-      const allocation = analyzer.calculateCurrentAllocation(holdings);
+      const allocation = portfolioAnalyzer.calculateCurrentAllocation(holdings);
 
       expect(allocation.totalValue).toBe(1000000000000);
       expect(allocation.equity).toBe(1000000000000);
@@ -522,7 +566,7 @@ describe('PortfolioAnalyzer', () => {
         { ticker: 'AAPL', quantity: 100.5, currentPrice: 150.75 }
       ];
 
-      const allocation = analyzer.calculateCurrentAllocation(holdings);
+      const allocation = portfolioAnalyzer.calculateCurrentAllocation(holdings);
 
       expect(allocation.totalValue).toBe(15150.375); // 100.5 * 150.75
       expect(allocation.equity).toBe(15150.375);
@@ -533,7 +577,7 @@ describe('PortfolioAnalyzer', () => {
         { ticker: 'UNKNOWN_TICKER', quantity: 100, currentPrice: 100 }
       ];
 
-      const allocation = analyzer.calculateCurrentAllocation(holdings);
+      const allocation = portfolioAnalyzer.calculateCurrentAllocation(holdings);
 
       expect(allocation.unknown).toBe(10000);
       expect(allocation.totalValue).toBe(10000);

@@ -332,4 +332,13 @@ export default {
   waitForServiceCall,
   verifyDownloadOperations,
   verifyServiceMock
-}; 
+};
+
+afterEach(() => {
+  jest.clearAllMocks();
+  jest.useRealTimers();
+  if (typeof globalThis.clearTimeout === 'function') {
+    jest.runOnlyPendingTimers();
+    jest.clearAllTimers();
+  }
+}); 

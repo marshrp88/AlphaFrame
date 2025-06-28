@@ -26,6 +26,7 @@ import PageLayout from '../components/PageLayout';
 import { useToast } from '../components/ui/use-toast.jsx';
 import { Plus, X, Settings, Zap, Shield, TrendingUp } from 'lucide-react';
 import './RulesPage.css';
+import env from '../lib/env.js';
 
 // Error Catcher Component to catch runtime exceptions
 const ErrorCatcher = ({ children }) => {
@@ -43,7 +44,7 @@ const RulesPage = () => {
 
   // Diagnostic logging and test mode setup
   useEffect(() => {
-    if (import.meta.env.VITE_APP_ENV === 'test') {
+    if (env.VITE_APP_ENV === 'test') {
       console.log('RulesPage: Test mode active');
     }
   }, [showRuleBinder, currentRule]);
@@ -105,7 +106,7 @@ const RulesPage = () => {
               </div>
               
               {/* Test mode indicator */}
-              {import.meta.env.VITE_APP_ENV === 'test' && (
+              {env.VITE_APP_ENV === 'test' && (
                 <motion.div 
                   className="test-mode-indicator"
                   initial={{ opacity: 0, scale: 0.9 }}

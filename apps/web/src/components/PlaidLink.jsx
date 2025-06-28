@@ -19,6 +19,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
 import plaidService from '../lib/services/PlaidService.js';
 import { useAppStore } from '../core/store/useAppStore.js';
+import env from '../lib/env.js';
 
 const PlaidLink = ({ onSuccess, onError, onExit, className = '', children }) => {
   const [linkToken, setLinkToken] = useState(null);
@@ -114,7 +115,7 @@ const PlaidLink = ({ onSuccess, onError, onExit, className = '', children }) => 
     onSuccess: handleSuccess,
     onExit: handleExit,
     // Sandbox mode configuration for development
-    env: import.meta.env.VITE_PLAID_ENV || 'sandbox',
+    env: env.VITE_PLAID_ENV || 'sandbox',
     clientName: 'AlphaFrame',
     products: ['transactions'],
     countryCodes: ['US'],
