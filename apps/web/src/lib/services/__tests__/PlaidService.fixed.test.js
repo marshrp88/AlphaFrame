@@ -9,13 +9,13 @@
  * - Test isolation with fresh instances
  * - Proper async handling
  * - CLUSTER 2 FIXES: Fixed success flag issues and proper mock setup
+ * - FEEDBACKUPLOADER PATTERN: Applied dynamic import + singleton override pattern
  */
 
-import { vi, describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import * as CryptoService from '../../../core/services/CryptoService.js';
+import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
 
+// Mock plaid module
 jest.mock('plaid', () => {
-  // Return a factory for PlaidApi that always returns the current global.testUtils.mockPlaidClient
   return {
     Configuration: jest.fn(),
     PlaidApi: jest.fn(() => (global.testUtils && global.testUtils.mockPlaidClient) || {}),
@@ -25,19 +25,20 @@ jest.mock('plaid', () => {
   };
 });
 
+// Mock CryptoService
 jest.mock('../../../core/services/CryptoService.js', () => ({
   encrypt: jest.fn().mockResolvedValue('encrypted_token'),
   decrypt: jest.fn().mockResolvedValue('decrypted_token')
 }));
 
-import { PlaidService } from '../PlaidService.js';
-
 describe('PlaidService - Fixed', () => {
   let plaidService;
   let mockStorage;
+  let mockCryptoService;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.clearAllMocks();
+    
     // Set up Plaid client mock for each test
     if (!global.testUtils) global.testUtils = {};
     global.testUtils.mockPlaidClient = {
@@ -46,10 +47,8 @@ describe('PlaidService - Fixed', () => {
       accountsBalanceGet: jest.fn(),
       transactionsGet: jest.fn(),
     };
-    // Set up CryptoService mocks using ESM import
-    jest.spyOn(CryptoService, 'encrypt').mockResolvedValue('encrypted_token');
-    jest.spyOn(CryptoService, 'decrypt').mockResolvedValue('decrypted_token');
 
+    // Set up storage mock
     const createStorageMock = () => {
       let store = {};
       return {
@@ -60,14 +59,37 @@ describe('PlaidService - Fixed', () => {
       };
     };
     mockStorage = createStorageMock();
-    global.localStorage = mockStorage;
+    
+    // Override localStorage globally
+    Object.defineProperty(global, 'localStorage', {
+      value: mockStorage,
+      writable: true
+    });
 
-    // Replace vi.stubEnv('VITE_PLAID_CLIENT_ID', 'test_client_id');
+    // Set environment variables
     process.env.VITE_PLAID_CLIENT_ID = 'test_client_id';
-    // Replace vi.stubEnv('VITE_PLAID_SECRET', 'test_secret');
     process.env.VITE_PLAID_SECRET = 'test_secret';
-    // Replace vi.stubEnv('VITE_PLAID_ENV', 'sandbox');
     process.env.VITE_PLAID_ENV = 'sandbox';
+
+    // Dynamic import with singleton override pattern
+    const { PlaidService } = await import('../PlaidService.js');
+    
+    // Override CryptoService singleton
+    const cryptoModule = await import('../../../core/services/CryptoService.js');
+    mockCryptoService = {
+      encrypt: jest.fn().mockResolvedValue('encrypted_token'),
+      decrypt: jest.fn().mockResolvedValue('decrypted_token')
+    };
+    
+    // Override the module exports
+    Object.defineProperty(cryptoModule, 'encrypt', {
+      value: mockCryptoService.encrypt,
+      writable: true
+    });
+    Object.defineProperty(cryptoModule, 'decrypt', {
+      value: mockCryptoService.decrypt,
+      writable: true
+    });
 
     // Instantiate PlaidService after all mocks are set
     plaidService = new PlaidService();

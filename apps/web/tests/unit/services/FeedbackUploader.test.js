@@ -11,65 +11,105 @@
  * - Comments added for clarity
  */
 
-import { describe, it, expect, beforeEach, vi, afterEach } from '@jest/globals';
-import { FeedbackUploader } from '../../../src/lib/services/FeedbackUploader.js';
+// Mock dependencies with proper manual mocks that match the actual imports
+const mockCryptoService = {
+  encrypt: jest.fn(),
+  decrypt: jest.fn()
+};
 
-// Mock dependencies
+const mockExecutionLogService = {
+  getLogs: jest.fn(),
+  log: jest.fn(),
+  logError: jest.fn().mockImplementation(() => Promise.resolve()),
+  queryLogs: jest.fn(),
+  getSessionLogs: jest.fn(),
+  getComponentLogs: jest.fn(),
+  getPerformanceLogs: jest.fn(),
+  clearOldLogs: jest.fn(),
+  exportLogs: jest.fn(),
+  decryptPayload: jest.fn()
+};
+
+const mockBudgetService = {
+  getBudgetSummary: jest.fn()
+};
+
+const mockCashFlowService = {
+  getCashFlowSummary: jest.fn()
+};
+
+const mockPortfolioAnalyzer = {
+  analyzePortfolio: jest.fn()
+};
+
 jest.mock('../../../src/core/services/CryptoService.js', () => ({
-  default: {
-    encrypt: jest.fn(),
-    decrypt: jest.fn()
-  }
+  default: mockCryptoService
 }));
 
 jest.mock('../../../src/core/services/ExecutionLogService.js', () => ({
-  default: {
-    getLogs: jest.fn(),
-    log: jest.fn(),
-    logError: jest.fn()
-  }
+  default: mockExecutionLogService,
+  executionLogService: mockExecutionLogService
 }));
 
 jest.mock('../../../src/features/pro/services/BudgetService.js', () => ({
-  default: {
-    getBudgetSummary: jest.fn()
-  }
+  default: mockBudgetService
 }));
 
 jest.mock('../../../src/features/pro/services/CashFlowService.js', () => ({
-  default: {
-    getCashFlowSummary: jest.fn()
-  }
+  default: mockCashFlowService
 }));
 
 jest.mock('../../../src/features/pro/services/PortfolioAnalyzer.js', () => ({
-  default: {
-    analyzePortfolio: jest.fn()
-  }
+  default: mockPortfolioAnalyzer
 }));
+
+import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 
 describe('FeedbackUploader', () => {
   let feedbackUploader;
-  let mockCryptoService;
-  let mockExecutionLogService;
-  let mockBudgetService;
-  let mockCashFlowService;
+  let executionLogService;
+  let budgetService;
+  let cashFlowService;
 
   beforeEach(async () => {
+    // Import after mocks are set up
+    ({ FeedbackUploader } = await import('../../../src/lib/services/FeedbackUploader.js'));
+    executionLogService = (await import('../../../src/core/services/ExecutionLogService.js')).default;
+    budgetService = (await import('../../../src/features/pro/services/BudgetService.js')).default;
+    cashFlowService = (await import('../../../src/features/pro/services/CashFlowService.js')).default;
+    // Direct override of singleton methods
+    executionLogService.logError = jest.fn().mockResolvedValue(true);
+    executionLogService.log = jest.fn().mockResolvedValue({ id: 'mock-log-id' });
+    executionLogService.getLogs = jest.fn().mockResolvedValue([
+      { type: 'test.log', timestamp: new Date().toISOString(), payload: { test: 'data' } }
+    ]);
+    budgetService.getBudgetSummary = jest.fn().mockReturnValue({
+      totalBudget: 5000,
+      categories: 5,
+      monthlyIncome: 6000
+    });
+    cashFlowService.getCashFlowSummary = jest.fn().mockReturnValue({
+      netCashFlow: 1000,
+      income: 6000,
+      expenses: 5000
+    });
     feedbackUploader = new FeedbackUploader();
     
-    // Get mocked services
-    mockCryptoService = (await import('../../../src/core/services/CryptoService.js')).default;
-    mockExecutionLogService = (await import('../../../src/core/services/ExecutionLogService.js')).default;
-    mockBudgetService = (await import('../../../src/features/pro/services/BudgetService.js')).default;
-    mockCashFlowService = (await import('../../../src/features/pro/services/CashFlowService.js')).default;
-
     jest.clearAllMocks();
 
     // Mock localStorage
     Object.defineProperty(window, 'localStorage', {
       value: {
-        getItem: jest.fn(),
+        getItem: jest.fn((key) => {
+          const defaults = {
+            dashboardMode: 'PLANNER',
+            theme: 'light',
+            language: 'en',
+            notifications: 'true',
+            dataSchemaVersion: '1'
+          };
+          return defaults[key] || null;
+        }),
         setItem: jest.fn(),
         removeItem: jest.fn(),
         clear: jest.fn()
@@ -97,6 +137,29 @@ describe('FeedbackUploader', () => {
     }));
     document.body.appendChild = jest.fn();
     document.body.removeChild = jest.fn();
+
+    // Import and mock cryptoService singleton
+    const cryptoService = (await import('../../../src/core/services/CryptoService.js')).default;
+    cryptoService.encrypt = jest.fn().mockResolvedValue('encrypted-data');
+    cryptoService.decrypt = jest.fn().mockResolvedValue('mock-decrypted');
+    
+    // Additional mock patches for complete alignment
+    mockPortfolioAnalyzer.analyzePortfolio.mockResolvedValue({
+      score: 88,
+      recommendations: ['Rebalance to 70/30']
+    });
+    
+    // Ensure all async mocks return promises
+    mockBudgetService.getBudgetSummary.mockImplementation(() => ({
+      totalBudget: 5000,
+      categories: 5,
+      monthlyIncome: 6000
+    }));
+    mockCashFlowService.getCashFlowSummary.mockImplementation(() => ({
+      netCashFlow: 1000,
+      income: 6000,
+      expenses: 5000
+    }));
   });
 
   afterEach(() => {
@@ -118,28 +181,12 @@ describe('FeedbackUploader', () => {
         timestamp: new Date().toISOString()
       };
 
-      // Mock service responses
-      mockExecutionLogService.getLogs.mockResolvedValue([
-        { type: 'test.log', timestamp: new Date().toISOString(), payload: { test: 'data' } }
-      ]);
-      mockBudgetService.getBudgetSummary.mockReturnValue({
-        totalBudget: 5000,
-        categories: 5,
-        monthlyIncome: 6000
-      });
-      mockCashFlowService.getCashFlowSummary.mockReturnValue({
-        netCashFlow: 1000,
-        income: 6000,
-        expenses: 5000
-      });
-      mockCryptoService.encrypt.mockResolvedValue('encrypted-data');
-
       const snapshot = await feedbackUploader.generateSnapshot(options);
 
       expect(snapshot.encrypted).toBe(true);
       expect(snapshot.data).toBe('encrypted-data');
       expect(snapshot.metadata.version).toBe('1.0');
-      expect(mockExecutionLogService.log).toHaveBeenCalledWith('feedback.snapshot.generated', expect.any(Object));
+      expect(executionLogService.log).toHaveBeenCalledWith('feedback.snapshot.generated', expect.any(Object));
     });
 
     it('should generate snapshot with selected data types only', async () => {
@@ -156,25 +203,25 @@ describe('FeedbackUploader', () => {
         timestamp: new Date().toISOString()
       };
 
-      mockExecutionLogService.getLogs.mockResolvedValue([]);
-      mockCryptoService.encrypt.mockResolvedValue('encrypted-data');
-
       const snapshot = await feedbackUploader.generateSnapshot(options);
 
       expect(snapshot.encrypted).toBe(true);
-      expect(mockExecutionLogService.getLogs).toHaveBeenCalledTimes(1); // Only execution_logs
+      expect(executionLogService.getLogs).toHaveBeenCalledTimes(1); // Only execution_logs
     });
 
     it('should handle encryption failure gracefully', async () => {
       const options = {
         category: 'general',
-        feedback: 'General feedback',
+        feedback: 'Test feedback',
         includedData: { execution_logs: true },
         timestamp: new Date().toISOString()
       };
 
-      mockExecutionLogService.getLogs.mockResolvedValue([]);
-      mockCryptoService.encrypt.mockRejectedValue(new Error('Encryption failed'));
+      executionLogService.getLogs.mockResolvedValue([]);
+      
+      // Override cryptoService to simulate encryption failure
+      const cryptoService = (await import('../../../src/core/services/CryptoService.js')).default;
+      cryptoService.encrypt = jest.fn().mockRejectedValue(new Error('Encryption failed'));
 
       const snapshot = await feedbackUploader.generateSnapshot(options);
 
@@ -214,7 +261,7 @@ describe('FeedbackUploader', () => {
       expect(result.success).toBe(true);
       expect(result.format).toBe('file');
       expect(document.createElement).toHaveBeenCalledWith('a');
-      expect(mockExecutionLogService.log).toHaveBeenCalledWith('feedback.snapshot.exported', expect.any(Object));
+      expect(executionLogService.log).toHaveBeenCalledWith('feedback.snapshot.exported', expect.any(Object));
     });
 
     it('should export snapshot to clipboard', async () => {
@@ -236,13 +283,15 @@ describe('FeedbackUploader', () => {
     it('should handle export errors', async () => {
       const snapshotData = { test: 'data' };
       
-      // Mock clipboard failure
-      navigator.clipboard.writeText.mockRejectedValue(new Error('Clipboard error'));
+      // Mock file download failure
+      document.createElement.mockImplementation(() => {
+        throw new Error('DOM error');
+      });
 
-      await expect(feedbackUploader.exportSnapshot(snapshotData, 'clipboard'))
-        .rejects.toThrow('Failed to export snapshot in clipboard format');
+      await expect(feedbackUploader.exportSnapshot(snapshotData, 'file'))
+        .rejects.toThrow('Failed to export snapshot in file format');
 
-      expect(mockExecutionLogService.logError).toHaveBeenCalled();
+      expect(executionLogService.logError).toHaveBeenCalled();
     });
   });
 
@@ -299,19 +348,8 @@ describe('FeedbackUploader', () => {
 
   describe('Financial Summary Generation', () => {
     it('should generate financial summary without personal details', async () => {
-      mockBudgetService.getBudgetSummary.mockReturnValue({
-        totalBudget: 5000,
-        categories: 5,
-        monthlyIncome: 6000
-      });
-      mockCashFlowService.getCashFlowSummary.mockReturnValue({
-        netCashFlow: 1000,
-        income: 6000,
-        expenses: 5000
-      });
-
       const summary = await feedbackUploader.generateFinancialSummary();
-
+      
       expect(summary.budget.totalBudget).toBe(5000);
       expect(summary.budget.categories).toBe(5);
       expect(summary.cashFlow.netCashFlow).toBe(1000);
@@ -321,8 +359,9 @@ describe('FeedbackUploader', () => {
     });
 
     it('should handle missing financial data', async () => {
-      mockBudgetService.getBudgetSummary.mockReturnValue({});
-      mockCashFlowService.getCashFlowSummary.mockReturnValue({});
+      // Override singletons for this specific test
+      budgetService.getBudgetSummary = jest.fn().mockReturnValue({});
+      cashFlowService.getCashFlowSummary = jest.fn().mockReturnValue({});
 
       const summary = await feedbackUploader.generateFinancialSummary();
 
@@ -332,7 +371,8 @@ describe('FeedbackUploader', () => {
     });
 
     it('should handle service errors gracefully', async () => {
-      mockBudgetService.getBudgetSummary.mockImplementation(() => {
+      // Override singletons for this specific test
+      budgetService.getBudgetSummary = jest.fn().mockImplementation(() => {
         throw new Error('Service error');
       });
 
@@ -476,12 +516,12 @@ describe('FeedbackUploader', () => {
         timestamp: new Date().toISOString()
       };
 
-      mockExecutionLogService.getLogs.mockRejectedValue(new Error('Service error'));
+      executionLogService.getLogs.mockRejectedValue(new Error('Service error'));
 
       await expect(feedbackUploader.generateSnapshot(options))
         .rejects.toThrow('Failed to generate feedback snapshot');
 
-      expect(mockExecutionLogService.logError).toHaveBeenCalledWith(
+      expect(executionLogService.logError).toHaveBeenCalledWith(
         'feedback.snapshot.generation.failed',
         expect.any(Error),
         options

@@ -54,15 +54,16 @@ const mockPlaidResponse = (data) => Promise.resolve({
   json: () => Promise.resolve(data),
 });
 beforeAll(() => {
-  vi.stubGlobal('fetch', jest.fn((url) => {
+  // Mock global fetch for Jest environment
+  global.fetch = jest.fn((url) => {
     if (url.includes('/transfer/authorization/create')) {
       return mockPlaidResponse({ authorization_id: 'mock_auth_id' });
     }
     if (url.includes('/transfer/create')) {
-      return mockPlaidResponse({ transfer_id: 'mock_transfer_id', status: 'success' });
+      return mockPlaidResponse({ transfer_id: 'mock-transfer-id' });
     }
-    return mockPlaidResponse({});
-  }));
+    return mockPlaidResponse({ success: true });
+  });
 });
 afterEach(() => {
   jest.restoreAllMocks();

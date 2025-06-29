@@ -1,6 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from '@jest/globals';
-import { ExecutionController } from '../../../src/lib/services/ExecutionController';
-import { ActionSchema } from '../../../src/lib/validation/schemas';
+import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 
 // Mock canExecuteAction to always allow
 jest.mock('@/lib/services/PermissionEnforcer', () => ({
@@ -23,9 +21,12 @@ jest.mock('@/core/services/SecureVault', () => ({
   get: jest.fn(() => ({ token: 'mock-plaid-token' }))
 }));
 
-// Mock global fetch for Plaid API calls
+// Mock global fetch for Plaid API calls with proper response
 globalThis.fetch = jest.fn(() => Promise.resolve({
-  json: () => Promise.resolve({}),
+  json: () => Promise.resolve({ 
+    transfer_id: 'mock-transfer-id',
+    success: true 
+  }),
   text: () => Promise.resolve(''),
   ok: true,
   status: 200
@@ -36,15 +37,24 @@ it('sanity check', () => {
 });
 
 describe('ExecutionController (unit)', () => {
-  beforeEach(() => {
+  let ExecutionController;
+
+  beforeEach(async () => {
     jest.clearAllMocks();
+    
+    // Dynamic import with singleton override pattern
+    const module = await import('../../../src/lib/services/ExecutionController');
+    ExecutionController = module.ExecutionController;
   });
 
   it('should execute a PLAID_TRANSFER action and return success', async () => {
     const action = { type: 'PLAID_TRANSFER', payload: { amount: 100 } };
+    
     // Contract test: validate action with Zod
+    const { ActionSchema } = await import('../../../src/lib/validation/schemas');
     const parsed = ActionSchema.safeParse(action);
     expect(parsed.success).toBe(true);
+    
     const result = await ExecutionController.executeAction(action.type, action.payload);
     expect(result.transfer_id).toBe('mock-transfer-id');
   });
@@ -63,4 +73,5 @@ describe('ExecutionController (unit)', () => {
 // Notes:
 // - This file is focused on ExecutionController logic only.
 // - All external dependencies are mocked.
-// - Each test is isolated and easy to understand for a 10th-grade reader. 
+// - Each test is isolated and easy to understand for a 10th-grade reader.
+// - FEEDBACKUPLOADER PATTERN: Applied dynamic import + singleton override pattern 

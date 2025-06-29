@@ -38,6 +38,7 @@ class BudgetService {
     this.budgetType = 'category'; // 'category' or 'envelope'
     this.monthlyIncome = 0;
     this.emergencyFund = 0;
+    this.budgets = {};
   }
 
   /**
@@ -430,7 +431,9 @@ class BudgetService {
       savingsBudget,
       budgetType: this.budgetType,
       emergencyFund: this.emergencyFund,
-      categories: Object.keys(this.categories).length
+      categories: Object.keys(this.categories).length,
+      monthlyExpenses: this.monthlyIncome - totalBudget,
+      savingsRate: savingsBudget / totalBudget
     };
   }
 
@@ -448,6 +451,14 @@ class BudgetService {
    */
   getBudgetType() {
     return this.budgetType;
+  }
+
+  setBudget(category, amount) {
+    this.budgets[category] = amount;
+  }
+
+  getBudget(category) {
+    return this.budgets[category] || 0;
   }
 }
 

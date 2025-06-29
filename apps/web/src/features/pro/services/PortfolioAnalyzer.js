@@ -76,6 +76,7 @@ class PortfolioAnalyzer {
   constructor() {
     this.assetClassifications = ASSET_CLASSIFICATIONS;
     this.defaultTargets = DEFAULT_TARGETS;
+    this.portfolio = {};
   }
 
   /**
@@ -355,6 +356,14 @@ class PortfolioAnalyzer {
       errors,
       warnings
     };
+  }
+
+  setPortfolio(portfolio) {
+    this.portfolio = portfolio;
+  }
+
+  getPortfolio() {
+    return this.portfolio;
   }
 }
 

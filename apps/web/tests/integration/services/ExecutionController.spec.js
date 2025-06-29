@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from '@jest/globals';
+import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 
 // Mock PermissionEnforcer properly - must be before imports
 jest.mock('@/lib/services/PermissionEnforcer', () => {
@@ -55,29 +55,28 @@ jest.mock('@/lib/validation/schemas', () => ({
   }
 }));
 
-import { ExecutionController } from '@/lib/services/ExecutionController';
-import { PermissionEnforcer } from '@/lib/services/PermissionEnforcer';
-
-// Mock the global fetch
-global.fetch = jest.fn();
-
 describe('ExecutionController', () => {
   let mockCanExecuteAction;
+  let ExecutionController;
+  let PermissionEnforcer;
 
-  beforeEach(() => {
-    // Reset all mocks
+  beforeEach(async () => {
     jest.clearAllMocks();
+    global.fetch = jest.fn();
     global.fetch.mockReset();
-    
-    // Clear the store method mocks
+
+    // Dynamic import after singleton override
+    const executionControllerModule = await import('@/lib/services/ExecutionController');
+    const permissionEnforcerModule = await import('@/lib/services/PermissionEnforcer');
+    ExecutionController = executionControllerModule.ExecutionController;
+    PermissionEnforcer = permissionEnforcerModule.PermissionEnforcer;
+    mockCanExecuteAction = PermissionEnforcer.canExecuteAction;
+    mockCanExecuteAction.mockClear();
     mockAdjustGoal.mockClear();
     mockUpdateBudget.mockClear();
     mockModifyCategory.mockClear();
     mockGetAccountBalance.mockClear();
     mockSetAccountBalance.mockClear();
-    
-    mockCanExecuteAction = PermissionEnforcer.canExecuteAction;
-    mockCanExecuteAction.mockClear();
   });
 
   it('should execute internal actions', async () => {
@@ -297,6 +296,10 @@ describe('ExecutionController', () => {
       }
     };
 
+    // Ensure SecureVault mock is applied for this test
+    const { get } = await import('@/core/services/SecureVault');
+    get.mockResolvedValue('mock-plaid-token');
+
     global.fetch.mockRejectedValue(new Error('Network error'));
 
     // Act & Assert
@@ -348,6 +351,10 @@ describe('ExecutionController', () => {
       }
     };
 
+    // Ensure SecureVault mock is applied for this test
+    const { get } = await import('@/core/services/SecureVault');
+    get.mockResolvedValue('mock-plaid-token');
+
     const mockAuthResponse = {
       ok: true,
       json: () => Promise.resolve({ authorization_id: 'auth_123' })
@@ -369,12 +376,6 @@ describe('ExecutionController', () => {
     expect(result).toEqual({ transfer_id: 'transfer_123' });
     // The password prompt should have been called (handled by the mock)
   });
-});
-
-describe('ExecutionController - Diagnostics', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
 
   it('should call adjustGoal when ADJUST_GOAL is dispatched', async () => {
     const mockAction = {
@@ -382,21 +383,26 @@ describe('ExecutionController - Diagnostics', () => {
       payload: { goalId: 'goal_123', amount: 250 },
     };
 
-    // Set up spy to return success
     mockAdjustGoal.mockResolvedValue({ success: true });
 
     // === 💡 Pre-run diagnostic checks ===
-    const store = (await import('../../../src/core/store/financialStateStore')).useFinancialStateStore.getState();
-    console.log('[TEST] Retrieved store:', store);
-    console.log('[TEST] typeof store.adjustGoal =', typeof store.adjustGoal);
+    const store = (await import('@/core/store/financialStateStore')).useFinancialStateStore.getState();
     expect(typeof store.adjustGoal).toBe('function');
 
     // === 🚀 Run action ===
-    console.log('[TEST] Calling ExecutionController.executeAction...');
     await ExecutionController.executeAction(mockAction.actionType, mockAction.payload);
-    console.log('[TEST] Execution complete.');
 
     // === ✅ Assertion ===
     expect(mockAdjustGoal).toHaveBeenCalledWith(mockAction.payload);
+  });
+});
+
+describe('ExecutionController - Diagnostics', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should be implemented', () => {
+    // Placeholder test
   });
 }); 

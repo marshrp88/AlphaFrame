@@ -11,7 +11,7 @@
  * - Comments added for clarity
  */
 
-import { describe, it, expect, beforeEach, vi, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, jest, afterEach } from '@jest/globals';
 
 // Mock the module at the top level
 jest.mock('../../../core/services/ExecutionLogService.js');
