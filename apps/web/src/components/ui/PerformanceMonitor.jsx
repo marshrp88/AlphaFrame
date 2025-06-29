@@ -161,4 +161,23 @@ const PerformanceMonitor = () => {
       </div>
       
       <div className="performance-score">
-        <div className={`score-indicator ${status}`
+        <div className={`score-indicator ${status}`}>
+          <span>Lighthouse: {metrics.lighthouseScore}</span>
+          {status === 'excellent' && <span className="status-icon">✅</span>}
+          {status === 'good' && <span className="status-icon">⚠️</span>}
+          {status === 'needs-improvement' && <span className="status-icon">🔶</span>}
+          {status === 'poor' && <span className="status-icon">❌</span>}
+        </div>
+      </div>
+      
+      {status !== 'excellent' && (
+        <div className="performance-suggestions">
+          <AlertTriangle size={12} />
+          <span>Consider optimizing performance</span>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default PerformanceMonitor;
