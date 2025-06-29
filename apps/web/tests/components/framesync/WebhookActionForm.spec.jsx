@@ -173,8 +173,4 @@ describe('WebhookActionForm', () => {
     expect(screen.getByLabelText('Request Method')).toHaveValue(initialPayload.method);
     expect(screen.getByPlaceholderText('Enter JSON payload')).toHaveValue('{\n  "initial": "value"\n}');
   });
-
-  it.skip('should be implemented', () => {
-    // Placeholder test
-  });
 }); 

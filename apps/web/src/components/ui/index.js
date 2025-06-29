@@ -1,30 +1,63 @@
 /**
- * UI Components Index - AlphaFrame Phase X Sprint 2
+ * UI Components Index - AlphaFrame VX.3 Production Ready
  * 
  * Purpose: Central export file for all design system components
- * providing easy importing and tree-shaking support.
+ * providing easy importing and tree-shaking support for production.
  * 
  * Procedure:
- * 1. Exports all Sprint 1 components (CompositeCard, PrimaryButton, InputField)
- * 2. Exports all Sprint 2 components (Modal, Dropdown, Tabs, Select, Checkbox)
+ * 1. Exports all production-ready components with proper naming
+ * 2. Removes unused or deprecated component exports
  * 3. Provides both named and default exports for flexibility
  * 4. Maintains clean import paths for developers
+ * 5. Includes mobile-optimized components
  * 
  * Conclusion: Creates a single entry point for all design system
- * components with proper JavaScript module exports.
+ * components with proper JavaScript module exports for production.
  */
 
-// Sprint 1 Components
+// Core UI Components
 export { default as CompositeCard } from './CompositeCard.jsx';
+export { default as Card } from './Card.jsx';
+export { default as StyledButton } from './StyledButton.jsx';
+export { default as Button } from './Button.jsx';
 export { default as PrimaryButton } from './PrimaryButton.jsx';
-export { default as InputField } from './InputField.jsx';
+export { default as AnimatedButton } from './AnimatedButton.jsx';
 
-// Sprint 2 Components
-export { default as Modal } from './Modal.jsx';
-export { default as Dropdown } from './Dropdown.jsx';
-export { default as Tabs } from './Tabs.jsx';
+// Form Components
+export { default as InputField } from './InputField.jsx';
+export { default as Input } from './Input.jsx';
+export { default as Label } from './Label.jsx';
+export { default as textarea } from './textarea.jsx';
 export { default as Select } from './Select.jsx';
 export { default as Checkbox } from './Checkbox.jsx';
+export { default as switch } from './switch.jsx';
+export { default as badge } from './badge.jsx';
+
+// Navigation Components
+export { default as NavBar } from './NavBar.jsx';
+export { default as Tabs } from './Tabs.jsx';
+export { default as Dropdown } from './Dropdown.jsx';
+
+// Modal & Overlay Components
+export { default as Modal } from './Modal.jsx';
+export { default as ModalDialog } from './ModalDialog.jsx';
+export { default as tooltip } from './tooltip.jsx';
+
+// Feedback Components
+export { default as ToastAlert } from './ToastAlert.jsx';
+export { default as AnimatedToast } from './AnimatedToast.jsx';
+export { default as StatusBadge } from './StatusBadge.jsx';
+export { default as useToast } from './use-toast.jsx';
+
+// Mobile-Optimized Components
+export { default as MobileNavigation } from './MobileNavigation.jsx';
+export { default as MobileForm } from './MobileForm.jsx';
+export { default as TouchGestureHandler } from './TouchGestureHandler.jsx';
+
+// Utility Components
+export { default as DarkModeToggle } from './DarkModeToggle.jsx';
+export { default as PerformanceMonitor } from './PerformanceMonitor.jsx';
+export { default as ComponentShowcase } from './ComponentShowcase.jsx';
 
 // Design Tokens (for reference)
 export const designTokens = {
