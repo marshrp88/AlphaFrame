@@ -1,0 +1,400 @@
+/**
+ * TouchGestureHandler.css - AlphaFrame VX.1 Mobile Touch Gestures
+ * 
+ * Purpose: Styles for the touch gesture handler component with
+ * touch-friendly design and accessibility features.
+ * 
+ * Procedure:
+ * 1. Touch-friendly styling with proper touch targets
+ * 2. Visual feedback for different gesture states
+ * 3. Accessibility features for keyboard navigation
+ * 4. Smooth animations and transitions
+ * 5. High contrast and reduced motion support
+ * 
+ * Conclusion: Creates an intuitive touch interaction component
+ * that enhances mobile user experience and accessibility.
+ */
+
+@import '../../styles/design-tokens.css';
+
+/* ===== TOUCH GESTURE HANDLER ===== */
+
+.touch-gesture-handler {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  outline: none;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+
+/* ===== TOUCH TARGETS ===== */
+
+/* Ensure minimum touch target size */
+.touch-gesture-handler {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* ===== VISUAL FEEDBACK ===== */
+
+/* Hover state */
+.touch-gesture-handler:hover {
+  background: var(--color-background-secondary);
+}
+
+/* Pressed state */
+.touch-gesture-handler:active {
+  background: var(--color-background-tertiary);
+  transform: scale(0.98);
+}
+
+/* Focus state for keyboard navigation */
+.touch-gesture-handler:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+  background: var(--color-primary-50);
+}
+
+/* Long press state */
+.touch-gesture-handler[data-long-press="true"] {
+  background: var(--color-primary-100);
+  transform: scale(0.95);
+}
+
+/* ===== GESTURE INDICATORS ===== */
+
+/* Swipe indicator */
+.touch-gesture-handler::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(59, 130, 246, 0.1) 50%, transparent 70%);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.touch-gesture-handler[data-swipe="true"]::before {
+  opacity: 1;
+}
+
+/* ===== ANIMATIONS ===== */
+
+/* Ripple effect for tap */
+.touch-gesture-handler::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(59, 130, 246, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease-out, height 0.3s ease-out;
+  pointer-events: none;
+}
+
+.touch-gesture-handler[data-tap="true"]::after {
+  width: 100px;
+  height: 100px;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .touch-gesture-handler {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
+
+/* Small mobile screens */
+@media (max-width: 375px) {
+  .touch-gesture-handler {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ===== TOUCH DEVICE OPTIMIZATIONS ===== */
+
+/* Optimize for touch devices */
+@media (pointer: coarse) {
+  .touch-gesture-handler {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .touch-gesture-handler:hover {
+    background: transparent;
+  }
+  
+  .touch-gesture-handler:active {
+    background: var(--color-background-tertiary);
+  }
+}
+
+/* ===== DARK MODE SUPPORT ===== */
+
+@media (prefers-color-scheme: dark) {
+  .touch-gesture-handler:hover {
+    background: var(--color-background-secondary);
+  }
+  
+  .touch-gesture-handler:active {
+    background: var(--color-background-tertiary);
+  }
+  
+  .touch-gesture-handler:focus-visible {
+    background: var(--color-primary-900);
+  }
+  
+  .touch-gesture-handler[data-long-press="true"] {
+    background: var(--color-primary-900);
+  }
+  
+  .touch-gesture-handler::before {
+    background: linear-gradient(45deg, transparent 30%, rgba(96, 165, 250, 0.2) 50%, transparent 70%);
+  }
+  
+  .touch-gesture-handler::after {
+    background: rgba(96, 165, 250, 0.4);
+  }
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+
+@media (prefers-contrast: high) {
+  .touch-gesture-handler {
+    border: 2px solid var(--color-text);
+  }
+  
+  .touch-gesture-handler:focus-visible {
+    outline-width: 3px;
+    border-color: var(--color-primary);
+  }
+  
+  .touch-gesture-handler:active {
+    border-color: var(--color-primary);
+  }
+}
+
+/* ===== REDUCED MOTION ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  .touch-gesture-handler {
+    transition: none;
+  }
+  
+  .touch-gesture-handler::before,
+  .touch-gesture-handler::after {
+    transition: none;
+  }
+  
+  .touch-gesture-handler:hover,
+  .touch-gesture-handler:active {
+    transform: none;
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus indicators for keyboard navigation */
+.touch-gesture-handler:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* Disabled state */
+.touch-gesture-handler:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.touch-gesture-handler:disabled:hover,
+.touch-gesture-handler:disabled:active {
+  background: transparent;
+  transform: none;
+}
+
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+
+/* Use transform for animations instead of position properties */
+.touch-gesture-handler {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Optimize for high DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .touch-gesture-handler {
+    border-width: 0.5px;
+  }
+}
+
+/* ===== GESTURE-SPECIFIC STYLES ===== */
+
+/* Swipe left indicator */
+.touch-gesture-handler[data-swipe-direction="left"]::before {
+  background: linear-gradient(90deg, transparent 0%, rgba(239, 68, 68, 0.1) 100%);
+}
+
+/* Swipe right indicator */
+.touch-gesture-handler[data-swipe-direction="right"]::before {
+  background: linear-gradient(90deg, rgba(34, 197, 94, 0.1) 0%, transparent 100%);
+}
+
+/* Swipe up indicator */
+.touch-gesture-handler[data-swipe-direction="up"]::before {
+  background: linear-gradient(180deg, transparent 0%, rgba(59, 130, 246, 0.1) 100%);
+}
+
+/* Swipe down indicator */
+.touch-gesture-handler[data-swipe-direction="down"]::before {
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
+}
+
+/* ===== UTILITY CLASSES ===== */
+
+/* Touch gesture variants */
+.touch-gesture-handler--primary {
+  background: var(--color-primary-600);
+  color: var(--color-white);
+}
+
+.touch-gesture-handler--primary:hover {
+  background: var(--color-primary-700);
+}
+
+.touch-gesture-handler--secondary {
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-primary);
+}
+
+.touch-gesture-handler--secondary:hover {
+  background: var(--color-background-tertiary);
+  border-color: var(--color-border-secondary);
+}
+
+.touch-gesture-handler--ghost {
+  background: transparent;
+}
+
+.touch-gesture-handler--ghost:hover {
+  background: var(--color-background-secondary);
+}
+
+/* Size variants */
+.touch-gesture-handler--sm {
+  min-height: 32px;
+  min-width: 32px;
+  padding: var(--spacing-1) var(--spacing-2);
+}
+
+.touch-gesture-handler--md {
+  min-height: 44px;
+  min-width: 44px;
+  padding: var(--spacing-2) var(--spacing-3);
+}
+
+.touch-gesture-handler--lg {
+  min-height: 56px;
+  min-width: 56px;
+  padding: var(--spacing-3) var(--spacing-4);
+}
+
+/* ===== ANIMATION KEYFRAMES ===== */
+
+@keyframes touchRipple {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes touchPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ===== INTERACTION STATES ===== */
+
+/* Loading state */
+.touch-gesture-handler--loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.touch-gesture-handler--loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color-border-primary);
+  border-top: 2px solid var(--color-primary-600);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Success state */
+.touch-gesture-handler--success {
+  background: var(--color-success-100);
+  border-color: var(--color-success-500);
+}
+
+.touch-gesture-handler--success::before {
+  background: linear-gradient(45deg, transparent 30%, rgba(34, 197, 94, 0.1) 50%, transparent 70%);
+}
+
+/* Error state */
+.touch-gesture-handler--error {
+  background: var(--color-error-100);
+  border-color: var(--color-error-500);
+}
+
+.touch-gesture-handler--error::before {
+  background: linear-gradient(45deg, transparent 30%, rgba(239, 68, 68, 0.1) 50%, transparent 70%);
+} 

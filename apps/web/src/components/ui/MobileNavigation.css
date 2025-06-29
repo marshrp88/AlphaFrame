@@ -1,0 +1,429 @@
+/**
+ * MobileNavigation.css - AlphaFrame VX.1 Mobile-First Navigation Styles
+ * 
+ * Purpose: Styles for the mobile navigation component with touch-friendly
+ * design, smooth animations, and comprehensive accessibility features.
+ * 
+ * Procedure:
+ * 1. Mobile-first bottom navigation with 44px minimum touch targets
+ * 2. Smooth animations and transitions using design tokens
+ * 3. Accessibility features for screen readers and keyboard navigation
+ * 4. Haptic feedback patterns and visual states
+ * 5. Dark mode and high contrast support
+ * 
+ * Conclusion: Creates an intuitive, accessible mobile navigation
+ * that follows mobile UX best practices and WCAG guidelines.
+ */
+
+@import '../../styles/design-tokens.css';
+
+/* ===== MOBILE NAVIGATION CONTAINER ===== */
+
+.mobile-navigation {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border-primary);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+  padding: var(--spacing-2) var(--spacing-4);
+  padding-bottom: calc(var(--spacing-2) + env(safe-area-inset-bottom));
+}
+
+.mobile-navigation__container {
+  position: relative;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ===== NAVIGATION ITEMS ===== */
+
+.mobile-navigation__items {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.mobile-navigation__item {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.mobile-navigation__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: var(--spacing-2);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: var(--color-text-secondary);
+  transition: all var(--transition-base);
+  position: relative;
+  outline: none;
+}
+
+.mobile-navigation__link:hover {
+  color: var(--color-text-primary);
+  background: var(--color-background-secondary);
+}
+
+.mobile-navigation__link:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.mobile-navigation__link--active {
+  color: var(--color-primary-600);
+  background: var(--color-primary-50);
+}
+
+.mobile-navigation__link--active::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: var(--color-primary-600);
+  border-radius: var(--radius-full);
+}
+
+/* ===== ICON CONTAINER ===== */
+
+.mobile-navigation__icon-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-1);
+}
+
+.mobile-navigation__icon {
+  transition: transform var(--transition-base);
+}
+
+.mobile-navigation__link:hover .mobile-navigation__icon {
+  transform: scale(1.1);
+}
+
+.mobile-navigation__link--active .mobile-navigation__icon {
+  transform: scale(1.1);
+}
+
+/* ===== BADGE ===== */
+
+.mobile-navigation__badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 var(--spacing-1);
+  background: var(--color-error-500);
+  color: var(--color-white);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* ===== LABEL ===== */
+
+.mobile-navigation__label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  line-height: 1.2;
+  transition: color var(--transition-base);
+}
+
+/* ===== FLOATING ACTION BUTTON ===== */
+
+.mobile-navigation__fab {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+}
+
+.mobile-navigation__fab-button {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-600);
+  color: var(--color-white);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-base);
+  outline: none;
+}
+
+.mobile-navigation__fab-button:hover {
+  background: var(--color-primary-700);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.mobile-navigation__fab-button:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.mobile-navigation__fab-button:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===== MENU OVERLAY ===== */
+
+.mobile-navigation__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+
+.mobile-navigation__menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 280px;
+  background: var(--color-surface);
+  border-left: 1px solid var(--color-border-primary);
+  box-shadow: var(--shadow-xl);
+  padding: var(--spacing-6);
+  overflow-y: auto;
+}
+
+.mobile-navigation__menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-6);
+  padding-bottom: var(--spacing-4);
+  border-bottom: 1px solid var(--color-border-secondary);
+}
+
+.mobile-navigation__menu-header h3 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.mobile-navigation__menu-close {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: var(--color-background-secondary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  transition: all var(--transition-base);
+}
+
+.mobile-navigation__menu-close:hover {
+  background: var(--color-background-tertiary);
+  color: var(--color-text-primary);
+}
+
+.mobile-navigation__menu-content {
+  /* Additional menu content styles */
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablet and larger screens - hide mobile navigation */
+@media (min-width: 768px) {
+  .mobile-navigation {
+    display: none;
+  }
+}
+
+/* Small mobile screens */
+@media (max-width: 375px) {
+  .mobile-navigation {
+    padding: var(--spacing-1) var(--spacing-2);
+  }
+  
+  .mobile-navigation__link {
+    padding: var(--spacing-1);
+  }
+  
+  .mobile-navigation__label {
+    font-size: 10px;
+  }
+  
+  .mobile-navigation__icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* ===== DARK MODE SUPPORT ===== */
+
+@media (prefers-color-scheme: dark) {
+  .mobile-navigation {
+    background: var(--color-surface);
+    border-top-color: var(--color-border-primary);
+  }
+  
+  .mobile-navigation__link:hover {
+    background: var(--color-background-secondary);
+  }
+  
+  .mobile-navigation__link--active {
+    background: var(--color-primary-900);
+    color: var(--color-primary-400);
+  }
+  
+  .mobile-navigation__fab-button {
+    background: var(--color-primary-600);
+  }
+  
+  .mobile-navigation__fab-button:hover {
+    background: var(--color-primary-500);
+  }
+  
+  .mobile-navigation__menu {
+    background: var(--color-surface);
+    border-left-color: var(--color-border-primary);
+  }
+  
+  .mobile-navigation__menu-close {
+    background: var(--color-background-secondary);
+  }
+  
+  .mobile-navigation__menu-close:hover {
+    background: var(--color-background-tertiary);
+  }
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+
+@media (prefers-contrast: high) {
+  .mobile-navigation {
+    border-top-width: 2px;
+  }
+  
+  .mobile-navigation__link:focus-visible {
+    outline-width: 3px;
+  }
+  
+  .mobile-navigation__fab-button {
+    border: 2px solid var(--color-primary-600);
+  }
+  
+  .mobile-navigation__fab-button:focus-visible {
+    outline-width: 3px;
+  }
+}
+
+/* ===== REDUCED MOTION ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-navigation__link,
+  .mobile-navigation__icon,
+  .mobile-navigation__fab-button {
+    transition: none;
+  }
+  
+  .mobile-navigation__link:hover .mobile-navigation__icon,
+  .mobile-navigation__link--active .mobile-navigation__icon {
+    transform: none;
+  }
+  
+  .mobile-navigation__fab-button:hover {
+    transform: none;
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus indicators for keyboard navigation */
+.mobile-navigation__link:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* Touch target size validation */
+@media (pointer: coarse) {
+  .mobile-navigation__link {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .mobile-navigation__fab-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ===== ANIMATIONS ===== */
+
+@keyframes navItemFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobile-navigation__item {
+  animation: navItemFadeIn 0.3s ease-out;
+}
+
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+
+/* Use transform for animations instead of position properties */
+.mobile-navigation__link:hover,
+.mobile-navigation__link--active {
+  transform: translateZ(0);
+}
+
+/* Optimize for high DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .mobile-navigation {
+    border-top-width: 0.5px;
+  }
+} 
