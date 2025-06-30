@@ -54,4 +54,24 @@ The Profile page lets users view and manage their account information, roles, pe
 
 ---
 
-**For more details, see code comments and the main project README.** 
+**For more details, see code comments and the main project README.**
+
+# Pages Directory - Phoenix Initiative V3.1
+
+## Routing & Page Shells (Phase 1)
+
+This directory contains all top-level page components for the AlphaFrame app. As of Phase 1, the following routes and page shells are scaffolded:
+
+| Route         | Component         | Purpose                                 |
+|--------------|-------------------|-----------------------------------------|
+| /            | DashboardPage     | Main dashboard (redirect from /)        |
+| /dashboard   | DashboardPage     | Main dashboard                          |
+| /rules       | RulesPage         | Rule management and simulation          |
+| /profile     | Profile           | User profile and settings               |
+| /settings    | SettingsPage      | App and user settings                   |
+| /onboarding  | OnboardingPage    | Onboarding flow for new users           |
+| *            | NotFoundPage      | 404 fallback for unknown routes         |
+
+All routing is handled by `AppRouter.jsx` using React Router v6. Each page shell is a minimal React component and will be expanded in future phases.
+
+**Tech Stack:** React, vanilla JS, modular CSS only. No TypeScript, Tailwind, or Svelte. 
