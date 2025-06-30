@@ -61,12 +61,12 @@ jest.mock('../../../src/components/ui/Button.jsx', () => ({
 }));
 
 jest.mock('../../../src/components/ui/switch.jsx', () => {
-  const MockSwitch = ({ checked, onChange, ...props }) => (
+  const MockSwitch = ({ checked, onCheckedChange = () => {}, ...props }) => (
     <input
       data-testid="checkbox"
       type="checkbox"
       checked={checked}
-      onChange={onChange}
+      onChange={e => onCheckedChange(e.target.checked)}
       {...props}
     />
   );
@@ -315,31 +315,22 @@ describe('FeedbackForm', () => {
 
   describe('Export Functionality', () => {
     it('should export snapshot as file', async () => {
-      console.log('[DEBUG] Starting export snapshot as file test');
-      
       render(<FeedbackForm />);
       
       // Setup form
       fireEvent.click(screen.getByTestId('category-bug_report'));
       fireEvent.change(screen.getByTestId('textarea'), { target: { value: 'Test feedback' } });
       
-      console.log('[DEBUG] Form setup complete, clicking Generate Snapshot');
       const submitButton = screen.getByText('Generate Snapshot');
       fireEvent.click(submitButton);
       
-      console.log('[DEBUG] Generate Snapshot clicked, waiting for success state...');
       await waitFor(() => {
-        console.log('[DEBUG] Inside waitFor, checking for success text');
         expect(screen.getByText(/Snapshot Generated Successfully/i)).toBeInTheDocument();
       });
       
-      console.log('[DEBUG] Success state reached, looking for export button');
       // Updated to match actual button text
       const exportButton = screen.getByText('Download Snapshot File');
       fireEvent.click(exportButton);
-      
-      console.log('[DEBUG] Export button clicked, checking mock calls');
-      console.log('MOCK CALLS:', require('../../../src/lib/services/FeedbackUploader.js').default.generateSnapshot.mock.calls);
       
       // Check that exportSnapshot was called
       expect(require('../../../src/lib/services/FeedbackUploader.js').default.exportSnapshot).toHaveBeenCalled();

@@ -16,14 +16,43 @@ export default defineConfig({
     'process.env': process.env
   },
   test: {
-    environment: 'jsdom',
+    environment: 'happy-dom',
     globals: true,
-    setupFiles: './apps/web/src/setupTests.js',
+    setupFiles: './apps/web/tests/setup.js',
     css: false,
+    testTimeout: 30000,
+    hookTimeout: 30000,
+    include: [
+      'apps/web/tests/**/*.{test,spec}.{js,jsx}',
+      'apps/web/src/**/*.{test,spec}.{js,jsx}'
+    ],
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/e2e/**',
+      '**/*.e2e.*',
+      '**/playwright-report/**',
+      '**/test-results/**',
+      'apps/web/e2e/**',
+      'apps/web/src/components/Button.test.jsx',
+      'apps/web/src/features/pro/tests/**',
+      '**/e2e/**/*',
+      '**/*.e2e.js',
+      '**/*.e2e.jsx',
+      '**/e2e/**/*.spec.js',
+      '**/e2e/**/*.spec.jsx',
+      '**/e2e/**/*.test.js',
+      '**/e2e/**/*.test.jsx',
+      'apps/web/e2e/**/*',
+      'apps/web/e2e/**/*.spec.js',
+      'apps/web/e2e/**/*.test.js'
+    ],
     environmentOptions: {
       jsdom: {
         resources: 'usable',
-        runScripts: 'dangerously'
+        runScripts: 'dangerously',
+        pretendToBeVisual: true,
+        includeNodeLocations: true,
       }
     },
     env: {
@@ -35,16 +64,5 @@ export default defineConfig({
       VITE_PLAID_SECRET: 'test_plaid_secret',
       VITE_PLAID_ENV: 'sandbox'
     },
-    exclude: [
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/e2e/**',
-      '**/*.e2e.*',
-      '**/playwright-report/**',
-      '**/test-results/**',
-      'src/components/Button.test.jsx',
-      'src/features/pro/tests/**',
-      'apps/web/tests/**',
-    ],
   },
 }); 

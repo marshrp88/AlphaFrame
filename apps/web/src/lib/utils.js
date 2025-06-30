@@ -1,28 +1,20 @@
 /**
- * AlphaFrame Utility Functions
+ * Utility Functions - Common utility functions used throughout the application
  * 
- * Purpose: Common utility functions used across the AlphaFrame application
- * Procedure: Import these functions in components that need utility functionality
- * Conclusion: Provides consistent utility access without external dependencies
+ * Purpose: Provides reusable helper functions for common operations
+ * Procedure: Exports utility functions for string manipulation, validation, and formatting
+ * Conclusion: Reduces code duplication and provides consistent utility functions
  */
 
 /**
- * Utility function to merge class names with proper conflict resolution
- * Simple implementation without external dependencies
- * 
- * @param {...any} inputs - Class names to merge
- * @returns {string} - Merged class string
+ * Combines class names with conditional logic
  */
-export function cn(...inputs) {
-  return inputs.filter(Boolean).join(' ');
+export function cn(...classes) {
+  return classes.filter(Boolean).join(' ');
 }
 
 /**
- * Format currency values consistently across the application
- * 
- * @param {number} amount - Amount to format
- * @param {string} currency - Currency code (default: USD)
- * @returns {string} - Formatted currency string
+ * Formats currency values
  */
 export function formatCurrency(amount, currency = 'USD') {
   return new Intl.NumberFormat('en-US', {
@@ -32,52 +24,21 @@ export function formatCurrency(amount, currency = 'USD') {
 }
 
 /**
- * Format dates consistently across the application
- * 
- * @param {Date|string} date - Date to format
- * @param {string} format - Format style (short, long, relative)
- * @returns {string} - Formatted date string
+ * Formats dates consistently
  */
-export function formatDate(date, format = 'short') {
-  const dateObj = new Date(date);
+export function formatDate(date, options = {}) {
+  const defaultOptions = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    ...options
+  };
   
-  switch (format) {
-    case 'long':
-      return dateObj.toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-    case 'relative':
-      const now = new Date();
-      const diffTime = Math.abs(now - dateObj);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      
-      if (diffDays === 1) return 'Today';
-      if (diffDays === 2) return 'Yesterday';
-      if (diffDays <= 7) return `${diffDays - 1} days ago`;
-      return dateObj.toLocaleDateString();
-    default:
-      return dateObj.toLocaleDateString();
-  }
+  return new Intl.DateTimeFormat('en-US', defaultOptions).format(new Date(date));
 }
 
 /**
- * Generate a unique ID for components and elements
- * 
- * @returns {string} - Unique ID string
- */
-export function generateId() {
-  return Math.random().toString(36).substr(2, 9);
-}
-
-/**
- * Debounce function to limit the rate of function calls
- * 
- * @param {Function} func - Function to debounce
- * @param {number} wait - Wait time in milliseconds
- * @returns {Function} - Debounced function
+ * Debounces a function call
  */
 export function debounce(func, wait) {
   let timeout;
@@ -92,14 +53,28 @@ export function debounce(func, wait) {
 }
 
 /**
- * Validate email format
- * 
- * @param {string} email - Email to validate
- * @returns {boolean} - Whether email is valid
+ * Validates email format
  */
 export function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
+}
+
+/**
+ * Truncates text to specified length
+ */
+export function truncateText(text, maxLength = 100) {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + '...';
+}
+
+/**
+ * Generate a unique ID for components and elements
+ * 
+ * @returns {string} - Unique ID string
+ */
+export function generateId() {
+  return Math.random().toString(36).substr(2, 9);
 }
 
 /**
@@ -110,16 +85,4 @@ export function isValidEmail(email) {
  */
 export function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-/**
- * Truncate text to specified length
- * 
- * @param {string} text - Text to truncate
- * @param {number} length - Maximum length
- * @returns {string} - Truncated text
- */
-export function truncate(text, length = 50) {
-  if (text.length <= length) return text;
-  return text.substring(0, length) + '...';
 } 

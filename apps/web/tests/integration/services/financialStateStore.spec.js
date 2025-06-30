@@ -19,9 +19,18 @@ Object.defineProperty(global, 'localStorage', { value: mockStorage });
 import { describe, it, expect, beforeEach, afterEach, vi } from '@jest/globals';
 
 describe('Financial State Store', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     mockStorage.clear();
     jest.clearAllMocks();
+    const { useFinancialStateStore } = await import('@/core/store/financialStateStore');
+    useFinancialStateStore.setState({
+      accounts: [],
+      rules: [],
+      transactions: [],
+      budget: {},
+      goals: {},
+      schemaVersion: "v1"
+    });
   });
 
   afterEach(() => {
@@ -103,11 +112,11 @@ describe('Financial State Store', () => {
       
       // Record spending
       useFinancialStateStore.getState().recordSpending(categoryId, 100);
-      expect(useFinancialStateStore.getState().budgets[categoryId].spent).toBe(100);
+      expect(useFinancialStateStore.getState().budget[categoryId].spent).toBe(100);
 
       // Record more spending
       useFinancialStateStore.getState().recordSpending(categoryId, 50);
-      expect(useFinancialStateStore.getState().budgets[categoryId].spent).toBe(150);
+      expect(useFinancialStateStore.getState().budget[categoryId].spent).toBe(150);
     });
 
     it('should reset monthly budgets', async () => {
@@ -118,8 +127,8 @@ describe('Financial State Store', () => {
 
       // Reset budgets
       useFinancialStateStore.getState().resetMonthlyBudgets();
-      expect(useFinancialStateStore.getState().budgets[categoryId].spent).toBe(0);
-      expect(useFinancialStateStore.getState().budgets[categoryId].limit).toBe(mockBudget.limit);
+      expect(useFinancialStateStore.getState().budget[categoryId].spent).toBe(0);
+      expect(useFinancialStateStore.getState().budget[categoryId].limit).toBe(mockBudget.limit);
     });
   });
 
@@ -156,7 +165,7 @@ describe('Financial State Store', () => {
         currentAmount: 1000,
         deadline: '2024-12-31'
       });
-      expect(storeState.budgets[categoryId]).toEqual({
+      expect(storeState.budget[categoryId]).toEqual({
         name: 'Test Budget',
         limit: 500,
         spent: 100

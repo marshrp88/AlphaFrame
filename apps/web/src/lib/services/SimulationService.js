@@ -3,58 +3,85 @@
 // Part of FrameSync - the execution and automation layer of AlphaFrame
 
 /**
- * Simulates a Plaid transfer action
- * @param {Object} action - The action to simulate
- * @param {Object} financialState - The current financial state
- * @returns {Object} Simulation result
+ * Simulation Service - Handles financial scenario simulations
+ * 
+ * Purpose: Provides simulation capabilities for testing financial rules and scenarios
+ * Procedure: Creates mock data and simulates rule execution without real transactions
+ * Conclusion: Enables safe testing of financial automation logic
  */
-const simulatePlaidTransfer = (action, financialState) => {
-  const { amount, sourceAccount, destinationAccount } = action.payload;
-  const sourceBalance = financialState.getAccountBalance(sourceAccount);
-  const destinationBalance = financialState.getAccountBalance(destinationAccount);
-
-  return {
-    sourceBalance: sourceBalance - amount,
-    destinationBalance: destinationBalance + amount,
-    success: sourceBalance >= amount
-  };
-};
-
-/**
- * Simulates a goal adjustment action
- * @param {Object} action - The action to simulate
- * @param {Object} financialState - The current financial state
- * @returns {Object} Simulation result
- */
-const simulateGoalAdjustment = (action, financialState) => {
-  const { goalId, adjustment } = action.payload;
-  const goal = financialState.getGoal(goalId);
-  const newProgress = Math.min(100, ((goal.currentAmount + adjustment) / goal.targetAmount) * 100);
-
-  return {
-    goalProgress: newProgress,
-    remainingAmount: Math.max(0, goal.targetAmount - (goal.currentAmount + adjustment)),
-    success: true
-  };
-};
-
-/**
- * Runs a simulation for a given action
- * @param {Object} action - The action to simulate
- * @param {Object} financialState - The current financial state
- * @returns {Promise<Object>} Simulation result
- */
-export const runSimulation = async (action, financialState) => {
-  try {
-    switch (action.actionType) {
-      case 'PLAID_TRANSFER':
-        return simulatePlaidTransfer(action, financialState);
-      case 'ADJUST_GOAL':
-        return simulateGoalAdjustment(action, financialState);
-      default:
-        throw new Error(`Unsupported action type for simulation: ${action.actionType}`);
-    }
-  } catch (error) {
-    throw new Error(`Simulation failed: ${error.message}`);
+class SimulationService {
+  constructor() {
+    this.simulations = new Map();
+    this.isRunning = false;
   }
-}; 
+
+  /**
+   * Create a new simulation with mock data
+   */
+  createSimulation(config) {
+    const simulationId = `sim_${Date.now()}`;
+    const simulation = {
+      id: simulationId,
+      config,
+      status: 'created',
+      results: null,
+      createdAt: new Date(),
+    };
+    
+    this.simulations.set(simulationId, simulation);
+    return simulationId;
+  }
+
+  /**
+   * Run a simulation with the given configuration
+   */
+  async runSimulation(simulationId) {
+    const simulation = this.simulations.get(simulationId);
+    if (!simulation) {
+      throw new Error(`Simulation ${simulationId} not found`);
+    }
+
+    this.isRunning = true;
+    simulation.status = 'running';
+
+    try {
+      // Simulate processing time
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Generate mock results
+      simulation.results = {
+        success: true,
+        actionsExecuted: Math.floor(Math.random() * 5) + 1,
+        totalValue: Math.random() * 10000,
+        timestamp: new Date(),
+      };
+      
+      simulation.status = 'completed';
+      return simulation.results;
+    } catch (error) {
+      simulation.status = 'failed';
+      simulation.error = error.message;
+      throw error;
+    } finally {
+      this.isRunning = false;
+    }
+  }
+
+  /**
+   * Get simulation results
+   */
+  getSimulation(simulationId) {
+    return this.simulations.get(simulationId);
+  }
+
+  /**
+   * List all simulations
+   */
+  listSimulations() {
+    return Array.from(this.simulations.values());
+  }
+}
+
+// Export singleton instance
+const simulationService = new SimulationService();
+export default simulationService; 

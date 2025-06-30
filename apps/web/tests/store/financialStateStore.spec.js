@@ -56,9 +56,12 @@ describe('Financial State Store', () => {
     useFinancialStateStore = module.useFinancialStateStore;
     // Reset store state
     useFinancialStateStore.setState({
-      accounts: {},
+      accounts: [],
+      rules: [],
+      transactions: [],
+      budget: {},
       goals: {},
-      budgets: {}
+      schemaVersion: "v1"
     });
     // Clear localStorage mock data
     localStorageMock.clear();
@@ -123,7 +126,7 @@ describe('Financial State Store', () => {
       };
       useFinancialStateStore.getState().setBudget(categoryId, budget);
       useFinancialStateStore.getState().recordSpending(categoryId, 50);
-      const updatedBudget = useFinancialStateStore.getState().budgets[categoryId];
+      const updatedBudget = useFinancialStateStore.getState().budget[categoryId];
       expect(updatedBudget.spent).toBe(150);
     });
     it('should reset monthly budgets', async () => {
@@ -135,7 +138,7 @@ describe('Financial State Store', () => {
       };
       useFinancialStateStore.getState().setBudget(categoryId, budget);
       useFinancialStateStore.getState().resetMonthlyBudgets();
-      const resetBudget = useFinancialStateStore.getState().budgets[categoryId];
+      const resetBudget = useFinancialStateStore.getState().budget[categoryId];
       expect(resetBudget.spent).toBe(0);
     });
   });
@@ -163,7 +166,7 @@ describe('Financial State Store', () => {
       // Verify operations worked
       expect(useFinancialStateStore.getState().getAccountBalance(accountId)).toBe(1000);
       expect(useFinancialStateStore.getState().getGoal(goalId).name).toBe('Test Goal');
-      expect(useFinancialStateStore.getState().budgets[categoryId].name).toBe('Test Budget');
+      expect(useFinancialStateStore.getState().budget[categoryId].name).toBe('Test Budget');
     });
   });
 }); 

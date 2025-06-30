@@ -10,6 +10,15 @@ const mockTransaction = {
   description: 'Test transaction'
 };
 
+beforeEach(() => {
+  // Inject a test-safe logger mock into the singleton
+  ruleEngine.logger = {
+    log: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn()
+  };
+});
+
 describe('ruleEngine', () => {
   beforeEach(() => {
     jest.clearAllMocks();

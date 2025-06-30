@@ -4,13 +4,24 @@
 import React from 'react';
 
 /**
- * Card - main container
+ * Card Component - A simple container component for content sections
+ * 
+ * Purpose: Provides a consistent visual container for grouping related content
+ * Procedure: Renders a div with card-like styling and accepts all standard div props
+ * Conclusion: Enables consistent layout structure across the application
  */
-export const Card = ({ className = '', children, ...props }) => (
-  <div className={`rounded bg-white shadow p-4 ${className}`} {...props}>
-    {children}
-  </div>
-);
+const Card = ({ children, className = '', ...props }) => {
+  return (
+    <div 
+      className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 ${className}`}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+};
+
+export default Card;
 
 /**
  * CardHeader - header section for a card

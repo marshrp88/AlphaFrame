@@ -1,8 +1,22 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from '@jest/globals';
-import ruleEngine from '../ruleEngine';
+import { RuleEngine } from '../ruleEngine';
 
 describe('ruleEngine', () => {
+  let ruleEngine;
+
   beforeEach(() => {
+    // Create a mock logger for the RuleEngine
+    const mockLogger = {
+      log: jest.fn().mockResolvedValue(undefined),
+      logRuleTriggered: jest.fn().mockResolvedValue(undefined),
+      logError: jest.fn().mockResolvedValue(undefined),
+      queryLogs: jest.fn().mockResolvedValue([]),
+      getSessionLogs: jest.fn().mockResolvedValue([]),
+      clearOldLogs: jest.fn().mockResolvedValue(0)
+    };
+    
+    // Create RuleEngine instance with mock logger
+    ruleEngine = new RuleEngine(mockLogger);
     jest.clearAllMocks();
   });
 
@@ -153,6 +167,11 @@ describe('ruleEngine', () => {
         }
       ];
 
+      // Register the rules first
+      for (const rule of rules) {
+        await ruleEngine.registerRule(rule);
+      }
+
       const data = { 
         id: 'txn_1',
         amount: 1500, 
@@ -160,11 +179,11 @@ describe('ruleEngine', () => {
         category: 'expense',
         description: 'Test transaction'
       };
-      const results = await ruleEngine.evaluateRules(rules, data);
+      const results = await ruleEngine.evaluateRules(data);
       
       expect(results).toHaveLength(2);
-      expect(results[0].matched).toBe(true);
-      expect(results[1].matched).toBe(true);
+      expect(results[0].result.matched).toBe(true);
+      expect(results[1].result.matched).toBe(true);
     });
   });
 

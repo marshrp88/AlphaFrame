@@ -5,20 +5,39 @@
 
 import React from 'react';
 
-// Main Select component using native <select>
-export function Select({ value, onValueChange, children, ...props }) {
-  // onValueChange is the handler for when the user picks a new option
+/**
+ * Select Component - A dropdown selection component
+ * 
+ * Purpose: Provides dropdown selection functionality with consistent styling
+ * Procedure: Renders a select element with proper accessibility attributes
+ * Conclusion: Enables consistent form input behavior across the application
+ */
+const Select = ({ 
+  children, 
+  value, 
+  onChange, 
+  placeholder = 'Select an option',
+  className = '', 
+  ...props 
+}) => {
   return (
-    <select
+    <select 
       value={value}
-      onChange={e => onValueChange?.(e.target.value)}
-      data-testid="action-selector"
+      onChange={onChange}
+      className={`block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 ${className}`}
       {...props}
     >
+      {placeholder && (
+        <option value="" disabled>
+          {placeholder}
+        </option>
+      )}
       {children}
     </select>
   );
-}
+};
+
+export default Select;
 
 // Trigger is not needed for native <select>, but export for API compatibility
 export function SelectTrigger() {

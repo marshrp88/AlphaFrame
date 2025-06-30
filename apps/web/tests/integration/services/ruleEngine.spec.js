@@ -4,6 +4,7 @@ import {
   executeRule,
   validateRule,
 } from '../../../src/lib/services/ruleEngine.js';
+import ruleEngine from '../../../src/lib/services/ruleEngine.js';
 
 // CLUSTER 2 FIX: Proper transaction data with required fields
 const mockTransaction = {
@@ -31,6 +32,12 @@ const invalidRule = { id: 'rule_2' }; // Missing conditions/action
 describe('RuleEngine Integration', () => {
   beforeEach(() => {
     // Reset any state if needed
+    // Inject a test-safe logger mock into the singleton
+    ruleEngine.logger = {
+      log: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn()
+    };
   });
 
   afterEach(() => {

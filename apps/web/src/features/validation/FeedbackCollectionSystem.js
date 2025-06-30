@@ -633,9 +633,9 @@ export function useFeedbackCollection() {
     // In production, this would also send to backend
     try {
       // await api.submitFeedback(feedbackData);
-      console.log('Feedback submitted:', feedbackData);
+      console.log('Feedback submitted successfully');
     } catch (error) {
-      console.error('Failed to submit feedback:', error);
+      console.error('Failed to submit feedback:', error.message);
       throw error;
     }
   }, [analysisEngine]);

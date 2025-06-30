@@ -1,42 +1,20 @@
 /**
- * Tooltip Component
+ * Tooltip Component - Provides contextual help and information
  * 
- * Purpose: A reusable tooltip component for providing additional context
- * and help text to users through hover interactions.
- * 
- * Procedure:
- * 1. Provide Tooltip, TooltipContent, TooltipProvider, and TooltipTrigger components
- * 2. Implement hover-based visibility with proper positioning
- * 3. Apply consistent styling using Tailwind CSS classes
- * 4. Include proper accessibility attributes for screen readers
- * 
- * Conclusion: Essential UI component for user guidance and contextual
- * help throughout the AlphaFrame application.
+ * Purpose: Shows additional information when users hover over elements
+ * Procedure: Renders a tooltip that appears on hover with the provided content
+ * Conclusion: Enhances user experience by providing contextual information
  */
-
-import React, { useState, useRef, useEffect } from 'react';
-
-/**
- * TooltipProvider Component Props
- * @typedef {Object} TooltipProviderProps
- * @property {React.ReactNode} children - Child components
- */
-
-/**
- * TooltipProvider Component
- * @param {TooltipProviderProps} props - Component props
- * @returns {JSX.Element} The rendered tooltip provider component
- */
-export function TooltipProvider({ children }) {
-  return <>{children}</>;
-}
+import React, { useState } from 'react';
 
 /**
  * Tooltip Component Props
  * @typedef {Object} TooltipProps
- * @property {boolean} [open] - Whether the tooltip is open
- * @property {Function} [onOpenChange] - Callback when open state changes
  * @property {React.ReactNode} children - Tooltip content
+ * @property {React.ReactNode} content - Tooltip content
+ * @property {string} position - Position of the tooltip
+ * @property {string} className - Additional CSS classes
+ * @property {Object} props - Additional props
  */
 
 /**
@@ -44,95 +22,43 @@ export function TooltipProvider({ children }) {
  * @param {TooltipProps} props - Component props
  * @returns {JSX.Element} The rendered tooltip component
  */
-export function Tooltip({ children }) {
-  return <>{children}</>;
-}
+const Tooltip = ({ 
+  children, 
+  content, 
+  position = 'top',
+  className = '',
+  ...props 
+}) => {
+  const [isVisible, setIsVisible] = useState(false);
 
-/**
- * TooltipTrigger Component Props
- * @typedef {Object} TooltipTriggerProps
- * @property {React.ReactNode} children - Trigger element
- * @property {string} [className] - Additional CSS classes
- */
-
-/**
- * TooltipTrigger Component
- * @param {TooltipTriggerProps} props - Component props
- * @returns {JSX.Element} The rendered tooltip trigger component
- */
-export function TooltipTrigger({ children, className = '', ...props }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const triggerRef = useRef(null);
-  const tooltipRef = useRef(null);
-
-  const handleMouseEnter = () => setIsOpen(true);
-  const handleMouseLeave = () => setIsOpen(false);
-
-  useEffect(() => {
-    if (isOpen && tooltipRef.current) {
-      const trigger = triggerRef.current;
-      const tooltip = tooltipRef.current;
-      
-      // Position tooltip above the trigger
-      const triggerRect = trigger.getBoundingClientRect();
-      tooltip.style.position = 'absolute';
-      tooltip.style.top = `${triggerRect.top - tooltip.offsetHeight - 8}px`;
-      tooltip.style.left = `${triggerRect.left + (triggerRect.width / 2) - (tooltip.offsetWidth / 2)}px`;
-    }
-  }, [isOpen]);
+  const positionClasses = {
+    top: 'bottom-full left-1/2 transform -translate-x-1/2 mb-2',
+    bottom: 'top-full left-1/2 transform -translate-x-1/2 mt-2',
+    left: 'right-full top-1/2 transform -translate-y-1/2 mr-2',
+    right: 'left-full top-1/2 transform -translate-y-1/2 ml-2'
+  };
 
   return (
-    <div className="relative inline-block">
-      <div
-        ref={triggerRef}
-        className={className}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        {...props}
-      >
-        {children}
-      </div>
-      
-      {isOpen && (
-        <div
-          ref={tooltipRef}
-          className="absolute z-50 px-3 py-2 text-sm text-white bg-gray-900 rounded-md shadow-lg whitespace-nowrap"
-          role="tooltip"
-        >
-          {props['aria-label'] || 'Tooltip content'}
-          <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+    <div 
+      className={`relative inline-block ${className}`}
+      onMouseEnter={() => setIsVisible(true)}
+      onMouseLeave={() => setIsVisible(false)}
+      {...props}
+    >
+      {children}
+      {isVisible && content && (
+        <div className={`absolute z-50 px-2 py-1 text-sm text-white bg-gray-900 rounded shadow-lg whitespace-nowrap ${positionClasses[position]}`}>
+          {content}
+          <div className={`absolute w-2 h-2 bg-gray-900 transform rotate-45 ${
+            position === 'top' ? 'top-full left-1/2 -translate-x-1/2 -mt-1' :
+            position === 'bottom' ? 'bottom-full left-1/2 -translate-x-1/2 -mb-1' :
+            position === 'left' ? 'left-full top-1/2 -translate-y-1/2 -ml-1' :
+            'right-full top-1/2 -translate-y-1/2 -mr-1'
+          }`} />
         </div>
       )}
     </div>
   );
-}
+};
 
-/**
- * TooltipContent Component Props
- * @typedef {Object} TooltipContentProps
- * @property {React.ReactNode} children - Tooltip content
- * @property {string} [className] - Additional CSS classes
- */
-
-/**
- * TooltipContent Component
- * @param {TooltipContentProps} props - Component props
- * @returns {JSX.Element} The rendered tooltip content component
- */
-export function TooltipContent({ children, className = '', ...props }) {
-  return (
-    <div
-      className={`px-3 py-2 text-sm text-white bg-gray-900 rounded-md shadow-lg ${className}`}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-}
-
-export default {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-}; 
+export default Tooltip; 

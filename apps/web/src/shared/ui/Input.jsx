@@ -1,23 +1,30 @@
-import React from "react";
-import { cn } from "@/lib/utils.js";
+import React from 'react';
 
-// The Input component is a reusable text input element that can be customized with props like type and className.
-// It uses React.forwardRef to allow parent components to pass a ref to the underlying DOM element.
-export const Input = React.forwardRef(({
-  type = "text",
-  className,
-  ...props
-}, ref) => {
+/**
+ * Input Component - A reusable text input component
+ * 
+ * Purpose: Provides consistent text input functionality across the application
+ * Procedure: Renders an input element with proper styling and accessibility
+ * Conclusion: Ensures uniform input behavior and appearance
+ */
+const Input = ({ 
+  type = 'text',
+  placeholder,
+  value,
+  onChange,
+  className = '', 
+  ...props 
+}) => {
   return (
-    <input
-      ref={ref}
+    <input 
       type={type}
-      className={cn(
-        "flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-        className
-      )}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      className={`block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 ${className}`}
       {...props}
     />
   );
-});
-Input.displayName = "Input"; 
+};
+
+export default Input; 

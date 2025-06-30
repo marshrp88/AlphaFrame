@@ -16,7 +16,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi, beforeEach, afterEach } from '@jest/globals';
-import DashboardPicker from '../../../src/components/DashboardPicker';
+import DashboardPicker from '@/components/DashboardPicker';
 
 // PHASE 1 CLUSTER 3 FIX: Reusable test utility for card state assertions
 function expectCardState(card, isSelected) {

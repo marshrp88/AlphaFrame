@@ -11,13 +11,13 @@
  * Conclusion: Ensures reliable logging infrastructure for AlphaPro
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from '@jest/globals';
 
 // Mock CryptoService functions
-vi.mock('../../core/services/CryptoService', () => ({
-  encrypt: vi.fn(),
-  decrypt: vi.fn(),
-  generateSalt: vi.fn()
+jest.mock('../../core/services/CryptoService', () => ({
+  encrypt: jest.fn(),
+  decrypt: jest.fn(),
+  generateSalt: jest.fn()
 }));
 
 // Import after mocking
@@ -26,15 +26,25 @@ import { encrypt, decrypt, generateSalt } from '../../core/services/CryptoServic
 
 // Mock IndexedDB
 const mockIndexedDB = {
-  open: vi.fn(),
-  deleteDatabase: vi.fn()
+  open: jest.fn(),
+  deleteDatabase: jest.fn()
 };
 
-// Mock global objects
-global.indexedDB = mockIndexedDB;
-global.localStorage = {
-  getItem: vi.fn(),
-  setItem: vi.fn()
+// Mock localStorage
+const mockLocalStorage = {
+  getItem: jest.fn(),
+  setItem: jest.fn()
+};
+
+// Mock sessionStorage
+const mockSessionStorage = {
+  getItem: jest.fn(),
+  setItem: jest.fn()
+};
+
+// Mock crypto
+const mockCrypto = {
+  getRandomValues: jest.fn()
 };
 
 describe('ExecutionLogService', () => {
@@ -44,48 +54,78 @@ describe('ExecutionLogService', () => {
   let mockRequest;
 
   beforeEach(() => {
-    // Reset mocks
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     
-    // Setup IndexedDB mock
-    mockRequest = {
-      onerror: null,
-      onsuccess: null,
-      onupgradeneeded: null,
-      result: null,
-      error: null
-    };
-
+    // Mock store methods
     mockStore = {
-      add: vi.fn(),
-      getAll: vi.fn(),
-      delete: vi.fn(),
-      createIndex: vi.fn()
+      add: jest.fn(),
+      getAll: jest.fn(),
+      delete: jest.fn(),
+      createIndex: jest.fn()
     };
 
+    // Mock transaction
     mockTransaction = {
-      objectStore: vi.fn(() => mockStore),
+      objectStore: jest.fn(() => mockStore),
       oncomplete: null,
       onerror: null
     };
 
+    // Mock database
     mockDb = {
-      objectStoreNames: { contains: vi.fn() },
-      createObjectStore: vi.fn(() => mockStore),
-      transaction: vi.fn(() => mockTransaction)
+      objectStoreNames: { contains: jest.fn() },
+      createObjectStore: jest.fn(() => mockStore),
+      transaction: jest.fn(() => mockTransaction)
     };
 
-    mockIndexedDB.open.mockReturnValue(mockRequest);
-    
-    // Mock CryptoService methods
-    encrypt.mockResolvedValue('encrypted-data');
-    decrypt.mockResolvedValue('{"test": "data"}');
-    generateSalt.mockResolvedValue('test-salt');
+    // Setup IndexedDB mock
+    mockRequest = {
+      onupgradeneeded: null,
+      onsuccess: null,
+      onerror: null,
+      result: mockDb
+    };
+
+    mockIndexedDB.open.mockImplementation((name) => {
+      const request = {
+        onupgradeneeded: null,
+        onsuccess: null,
+        onerror: null,
+        result: mockDb
+      };
+      setTimeout(() => {
+        if (request.onupgradeneeded) request.onupgradeneeded();
+        if (request.onsuccess) request.onsuccess();
+      }, 0);
+      return request;
+    });
+
+    // Setup localStorage mock
+    mockLocalStorage.getItem.mockReturnValue('test-user-id');
+    mockLocalStorage.setItem.mockImplementation(() => {});
+
+    // Setup sessionStorage mock
+    mockSessionStorage.getItem.mockReturnValue('test-session-id');
+    mockSessionStorage.setItem.mockImplementation(() => {});
+
+    // Setup crypto mock
+    mockCrypto.getRandomValues.mockReturnValue(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8]));
+
+    // Mock global objects
+    global.indexedDB = mockIndexedDB;
+    global.localStorage = mockLocalStorage;
+    global.sessionStorage = mockSessionStorage;
+    global.crypto = mockCrypto;
   });
 
   afterEach(() => {
-    // Clean up
-    vi.restoreAllMocks();
+    jest.clearAllMocks();
+    jest.useRealTimers();
+    if (typeof globalThis.clearTimeout === 'function') {
+      // Clear any timers if they exist
+      jest.runOnlyPendingTimers();
+      jest.clearAllTimers();
+    }
   });
 
   describe('Initialization', () => {
@@ -298,7 +338,7 @@ describe('ExecutionLogService', () => {
     });
 
     it('should log rule triggered events', async () => {
-      const logSpy = vi.spyOn(executionLogService, 'log');
+      const logSpy = jest.spyOn(executionLogService, 'log');
       
       await executionLogService.logRuleTriggered('rule-1', 'buy', { amount: 100 });
       
@@ -315,7 +355,7 @@ describe('ExecutionLogService', () => {
     });
 
     it('should log simulation runs', async () => {
-      const logSpy = vi.spyOn(executionLogService, 'log');
+      const logSpy = jest.spyOn(executionLogService, 'log');
       
       await executionLogService.logSimulationRun('sim-1', 150, { scenarios: 3 });
       
@@ -333,7 +373,7 @@ describe('ExecutionLogService', () => {
     });
 
     it('should log budget forecasts', async () => {
-      const logSpy = vi.spyOn(executionLogService, 'log');
+      const logSpy = jest.spyOn(executionLogService, 'log');
       
       await executionLogService.logBudgetForecast('forecast-1', 200);
       
@@ -350,7 +390,7 @@ describe('ExecutionLogService', () => {
     });
 
     it('should log portfolio analysis', async () => {
-      const logSpy = vi.spyOn(executionLogService, 'log');
+      const logSpy = jest.spyOn(executionLogService, 'log');
       
       await executionLogService.logPortfolioAnalysis('portfolio-1', 300);
       
@@ -367,7 +407,7 @@ describe('ExecutionLogService', () => {
     });
 
     it('should log errors', async () => {
-      const logSpy = vi.spyOn(executionLogService, 'log');
+      const logSpy = jest.spyOn(executionLogService, 'log');
       const error = new Error('Test error');
       
       await executionLogService.logError(error, 'TestComponent', 'testAction');

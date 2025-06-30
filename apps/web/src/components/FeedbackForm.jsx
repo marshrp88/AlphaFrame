@@ -128,77 +128,60 @@ const FeedbackForm = () => {
   };
 
   const handleSubmit = async () => {
-    console.log('[DEBUG] handleSubmit called with:', { selectedCategory, feedbackText: feedbackText.trim() });
-    
     if (!selectedCategory || !feedbackText.trim()) {
-      console.log('[DEBUG] Validation failed, showing alert');
-      alert('Please select a category and provide feedback text.');
       return;
     }
 
-    console.log('[DEBUG] Starting snapshot generation...');
     setIsSubmitting(true);
+
     try {
-      // Generate snapshot with selected data
-      console.log('[DEBUG] Calling feedbackUploader.generateSnapshot...');
-      const snapshot = await feedbackUploader.generateSnapshot({
+      const snapshotData = {
         category: selectedCategory,
         feedback: feedbackText,
         includedData,
         timestamp: new Date().toISOString()
-      });
+      };
 
-      console.log('[DEBUG] Snapshot generated successfully:', snapshot);
-      setSnapshotData(snapshot);
-      console.log('[DEBUG] About to call setSnapshotGenerated(true)');
+      const result = await feedbackUploader.generateSnapshot(snapshotData);
+      
+      setSnapshotData(result);
       setSnapshotGenerated(true);
-      console.log('[DEBUG] setSnapshotGenerated was called, state should now be true');
-
-      console.log('[DEBUG] Calling executionLogService.log...');
-      await executionLogService.log('feedback.snapshot.created', {
+      
+      await executionLogService.log('feedback.snapshot.generated', {
         category: selectedCategory,
-        dataIncluded: Object.keys(includedData).filter(key => includedData[key]),
         totalSize: `${totalSize}KB`
       });
-      console.log('[DEBUG] Execution log completed');
 
     } catch (error) {
-      console.error('[DEBUG] Error in handleSubmit:', error);
+      console.error('[ERROR] Snapshot generation failed:', error.message);
       alert('Error generating snapshot. Please try again.');
     } finally {
-      console.log('[DEBUG] Setting isSubmitting to false');
       setIsSubmitting(false);
     }
   };
 
   const handleExport = async () => {
     if (!snapshotData) {
-      // Debug log
-      console.log('[DEBUG] snapshotData is null or undefined:', snapshotData);
       return;
     }
 
     try {
-      // Debug log
-      console.log('[DEBUG] snapshotData before export:', snapshotData);
       let exportResult;
       try {
         exportResult = await feedbackUploader.exportSnapshot(snapshotData, 'file');
-        console.log('[DEBUG] export result:', exportResult);
       } catch (e) {
-        console.error('[ERROR] exportSnapshot threw:', e);
+        console.error('[ERROR] Export failed:', e.message);
         throw e;
       }
-      // Debug log
-      console.log('[DEBUG] logger exists:', typeof executionLogService.log);
+      
       await executionLogService.log('feedback.snapshot.exported', {
         category: selectedCategory,
         totalSize: `${totalSize}KB`
       });
-      console.log('[DEBUG] alert: Snapshot exported successfully!');
+      
       alert('Snapshot exported successfully!');
     } catch (error) {
-      console.log('[DEBUG] alert: Error exporting snapshot. Please try again.', error);
+      console.error('[ERROR] Export failed:', error.message);
       alert('Error exporting snapshot. Please try again.');
     }
   };

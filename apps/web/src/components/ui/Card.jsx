@@ -1,21 +1,11 @@
 /**
- * Card Component
+ * UI Card Component - A styled card component for the UI library
  * 
- * Purpose: A reusable card container component for organizing content
- * into visually distinct sections with consistent styling and spacing.
- * 
- * Procedure:
- * 1. Provide Card, CardHeader, CardContent, and CardTitle subcomponents
- * 2. Apply consistent styling using Tailwind CSS classes
- * 3. Support various content layouts and spacing options
- * 4. Include proper semantic HTML structure
- * 
- * Conclusion: Essential UI component for content organization and
- * consistent visual hierarchy throughout the AlphaFrame application.
+ * Purpose: Provides consistent card styling for the UI component library
+ * Procedure: Renders a card container with predefined styles and variants
+ * Conclusion: Ensures visual consistency across UI components
  */
-
 import React from 'react';
-import './Card.css';
 
 /**
  * Card - AlphaFrame Design System
@@ -28,30 +18,16 @@ import './Card.css';
  * - className: string
  * - ...rest: other div props
  */
-function Card({
-  variant = 'base',
-  status,
-  header,
-  footer,
-  children,
-  className = '',
-  ...rest
-}) {
-  const cardClass = [
-    'card',
-    `card--${variant}`,
-    status ? `card--${status}` : '',
-    className,
-  ].filter(Boolean).join(' ');
-
+const Card = ({ children, className = '', ...props }) => {
   return (
-    <div className={cardClass} tabIndex={0} {...rest}>
-      {header && <div className="card__header">{header}</div>}
-      <div className="card__content">{children}</div>
-      {footer && <div className="card__footer">{footer}</div>}
+    <div 
+      className={`rounded-lg border bg-card text-card-foreground shadow-sm ${className}`}
+      {...props}
+    >
+      {children}
     </div>
   );
-}
+};
 
 /**
  * CardHeader Component Props
@@ -119,6 +95,4 @@ export function CardContent({ children, className = '', ...props }) {
   );
 }
 
-// Export both default and named Card for backward compatibility
-export { Card };
 export default Card; 

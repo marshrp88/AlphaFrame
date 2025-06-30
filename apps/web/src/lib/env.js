@@ -1,86 +1,59 @@
 /**
- * Environment Configuration Abstraction
+ * Environment Configuration - Jest-compatible environment abstraction
  * 
- * Purpose: Centralize environment variable access and provide fallbacks
- * for different environments (development, test, production)
+ * Purpose: Provides centralized environment variable access that works in both
+ * browser (Vite) and test (Jest) environments without import.meta conflicts
  * 
  * Procedure: 
- * - Abstracts import.meta.env usage
- * - Provides consistent API across environments
- * - Includes fallback values for testing
+ * 1. Use only Node.js process.env for environment variables
+ * 2. Provide fallback values for missing variables
+ * 3. Detect environment using NODE_ENV
  * 
- * Conclusion: Enables consistent environment handling and easier mocking
+ * Conclusion: Eliminates import.meta.env conflicts in Jest while maintaining
+ * compatibility with browser environments through process.env
  */
 
-// Jest-safe environment abstraction
+// Environment detection using NODE_ENV
+const isDevelopment = process.env.NODE_ENV === 'development';
+const isProduction = process.env.NODE_ENV === 'production';
+const isTest = process.env.NODE_ENV === 'test';
+
+// Get environment variables with fallbacks
+function getEnvVar(key, defaultValue = '') {
+  return process.env[key] || defaultValue;
+}
+
+// Feature flags
+export const getFeatureFlag = (flagName, defaultValue = false) => {
+  const value = getEnvVar(`VITE_${flagName.toUpperCase()}`, defaultValue.toString());
+  return value === 'true' || value === true;
+};
+
+// API configuration
+export const getApiConfig = () => ({
+  baseUrl: getEnvVar('VITE_API_BASE_URL', 'http://localhost:3000'),
+  timeout: parseInt(getEnvVar('VITE_API_TIMEOUT', '10000')),
+});
+
+// UI configuration
+export const getUiConfig = () => ({
+  theme: getEnvVar('VITE_DEFAULT_THEME', 'light'),
+  animations: getEnvVar('VITE_ENABLE_ANIMATIONS', 'true') !== 'false',
+});
+
+// Export environment flags
+export { isDevelopment, isProduction, isTest };
+
+// Export all environment variables for backward compatibility
 export const env = {
-  NODE_ENV: process.env.NODE_ENV,
-  VITE_APP_ENV: process.env.VITE_APP_ENV,
-  VITE_PLAID_CLIENT_ID: process.env.VITE_PLAID_CLIENT_ID,
-  VITE_PLAID_SECRET: process.env.VITE_PLAID_SECRET,
-  VITE_PLAID_ENV: process.env.VITE_PLAID_ENV,
-  VITE_AUTH0_DOMAIN: process.env.VITE_AUTH0_DOMAIN,
-  VITE_AUTH0_CLIENT_ID: process.env.VITE_AUTH0_CLIENT_ID,
-  VITE_AUTH0_AUDIENCE: process.env.VITE_AUTH0_AUDIENCE,
-  VITE_AUTH0_REDIRECT_URI: process.env.VITE_AUTH0_REDIRECT_URI,
-  VITE_API_URL: process.env.VITE_API_URL,
-  VITE_APP_URL: process.env.VITE_APP_URL,
-  VITE_WEBHOOK_URL: process.env.VITE_WEBHOOK_URL,
-  VITE_WEBHOOK_SECRET: process.env.VITE_WEBHOOK_SECRET,
-  VITE_SENDGRID_API_KEY: process.env.VITE_SENDGRID_API_KEY,
-  VITE_FROM_EMAIL: process.env.VITE_FROM_EMAIL,
-  VITE_BETA_MODE: process.env.VITE_BETA_MODE,
-  VITE_PLAID_INTEGRATION: process.env.VITE_PLAID_INTEGRATION,
-  VITE_WEBHOOKS_ENABLED: process.env.VITE_WEBHOOKS_ENABLED,
-  VITE_NOTIFICATIONS_ENABLED: process.env.VITE_NOTIFICATIONS_ENABLED,
-  VITE_LOG_LEVEL: process.env.VITE_LOG_LEVEL,
-  VITE_DEBUG_MODE: process.env.VITE_DEBUG_MODE,
-  VITE_ENCRYPTION_KEY: process.env.VITE_ENCRYPTION_KEY,
-  VITE_JWT_SECRET: process.env.VITE_JWT_SECRET,
-  VITE_SENTRY_DSN: process.env.VITE_SENTRY_DSN,
-  VITE_ANALYTICS_ID: process.env.VITE_ANALYTICS_ID,
-  VITE_CUSTOM_ENV_VAR: process.env.VITE_CUSTOM_ENV_VAR,
+  DEV: isDevelopment,
+  PROD: isProduction,
+  VITE_API_BASE_URL: getEnvVar('VITE_API_BASE_URL', 'http://localhost:3000'),
+  VITE_ENABLE_PRO: getEnvVar('VITE_ENABLE_PRO', 'false'),
+  VITE_ENABLE_BETA: getEnvVar('VITE_ENABLE_BETA', 'false'),
+  VITE_ENABLE_EXPERIMENTAL: getEnvVar('VITE_ENABLE_EXPERIMENTAL', 'false'),
+  VITE_DEFAULT_THEME: getEnvVar('VITE_DEFAULT_THEME', 'light'),
+  VITE_ENABLE_ANIMATIONS: getEnvVar('VITE_ENABLE_ANIMATIONS', 'true'),
 };
 
-// Convenience functions
-export const isDevelopmentMode = () => env.NODE_ENV === 'development';
-export const isProductionMode = () => env.NODE_ENV === 'production';
-export const isTestMode = () => env.NODE_ENV === 'test';
-
-// Feature flag helpers
-export const isFeatureEnabled = (featureName) => {
-  const featureMap = {
-    'beta-mode': env.VITE_BETA_MODE,
-    'plaid-integration': env.VITE_PLAID_INTEGRATION,
-    'webhooks': env.VITE_WEBHOOKS_ENABLED,
-    'notifications': env.VITE_NOTIFICATIONS_ENABLED
-  };
-  return featureMap[featureName] || false;
-};
-
-// Configuration validation
-export const validateConfig = () => {
-  const errors = [];
-  const warnings = [];
-  
-  if (!env.VITE_PLAID_CLIENT_ID) {
-    errors.push('VITE_PLAID_CLIENT_ID is required');
-  }
-  
-  if (!env.VITE_AUTH0_DOMAIN) {
-    errors.push('VITE_AUTH0_DOMAIN is required');
-  }
-  
-  if (isDevelopmentMode() && !env.VITE_API_URL?.includes('localhost')) {
-    warnings.push('VITE_API_URL should point to localhost in development');
-  }
-  
-  return {
-    isValid: errors.length === 0,
-    errors,
-    warnings
-  };
-};
-
-// Export default for backward compatibility
 export default env; 

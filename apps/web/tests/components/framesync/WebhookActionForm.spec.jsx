@@ -6,7 +6,8 @@ global.fetch = jest.fn(() => Promise.resolve({
 
 import { describe, it, expect, vi, beforeEach, afterEach } from '@jest/globals';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import WebhookActionForm from '@/components/framesync/WebhookActionForm';
+import WebhookActionForm from '../../../src/components/framesync/WebhookActionForm';
+console.log('DEBUG: WebhookActionForm import =', WebhookActionForm);
 
 // Mock the toast
 jest.mock('@/components/ui/use-toast', () => ({
@@ -15,17 +16,18 @@ jest.mock('@/components/ui/use-toast', () => ({
   })
 }));
 
-jest.mock('@/components/ui/Input', () => ({
+jest.mock('@/shared/ui/Input', () => ({
+  __esModule: true,
   Input: (props) => <input {...props} />
 }));
-jest.mock('@/components/ui/Label', () => ({
-  Label: ({ children, htmlFor, ...props }) => (
-    <label htmlFor={htmlFor} {...props}>
-      {children}
-    </label>
+jest.mock('@/shared/ui/Label', () => ({
+  __esModule: true,
+  default: ({ children, htmlFor, ...props }) => (
+    <label htmlFor={htmlFor} {...props}>{children}</label>
   )
 }));
-jest.mock('@/components/ui/textarea', () => ({
+jest.mock('@/shared/ui/textarea', () => ({
+  __esModule: true,
   Textarea: (props) => <textarea {...props} />
 }));
 
