@@ -7,6 +7,7 @@ import StyledButton from '../ui/StyledButton';
 import { useToast } from '../ui/use-toast.jsx';
 import { Loader2, RefreshCw, AlertCircle, TrendingUp, Target, Clock, CheckCircle } from 'lucide-react';
 import './Dashboard2.css';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Dashboard 2.0 - Next Generation Financial Dashboard
@@ -245,13 +246,14 @@ const Dashboard2 = () => {
   const { userContext } = useUserContext();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
     try {
       // Simulate refresh
       await new Promise(resolve => setTimeout(resolve, 1000));
-      window.location.reload();
+      navigate(0);
     } catch (err) {
       toast({
         title: "Refresh Failed",

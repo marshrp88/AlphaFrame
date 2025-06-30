@@ -12,6 +12,7 @@ import { motion } from 'framer-motion';
 import { entranceAnimations, listAnimations } from '../../lib/animations/animationPresets';
 import { useToast } from '../../components/ui/use-toast.jsx';
 import { Loader2, RefreshCw, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * MainDashboard - The central hub for financial clarity and actionable insights
@@ -34,6 +35,7 @@ const MainDashboard = () => {
   const [dashboardConfig, setDashboardConfig] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Load dashboard configuration based on user context
   useEffect(() => {
@@ -94,7 +96,7 @@ const MainDashboard = () => {
     try {
       // Simulate refresh
       await new Promise(resolve => setTimeout(resolve, 1000));
-      window.location.reload();
+      navigate(0);
     } catch (err) {
       toast({
         title: "Refresh Failed",

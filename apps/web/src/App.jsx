@@ -17,7 +17,7 @@
  */
 
 import React, { Suspense, lazy } from "react";
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { usePlaidLink } from 'react-plaid-link';
 import LoginButton from "./components/LoginButton.jsx";
@@ -36,10 +36,16 @@ import CompositeCard from "./components/ui/CompositeCard.jsx";
 import DarkModeToggle from "./components/ui/DarkModeToggle.jsx";
 import PerformanceMonitor from "./components/ui/PerformanceMonitor.jsx";
 
+// Import new page shells for Phase 1
+import DashboardPage from './pages/DashboardPage.jsx';
+import SettingsPage from './pages/SettingsPage.jsx';
+import OnboardingPage from './pages/OnboardingPage.jsx';
+import NotFoundPage from './pages/NotFoundPage.jsx';
+
 // Import styles
 import "./App.css";
 
-// Lazy load pages for performance optimization
+// Lazy load existing pages for performance optimization
 const Profile = lazy(() => import('./pages/Profile.jsx'));
 const Home = lazy(() => import('./pages/Home.jsx'));
 const About = lazy(() => import('./pages/About.jsx'));
@@ -61,11 +67,13 @@ const Navigation = () => {
   const { isAuthenticated, user } = useAuth0();
 
   const navigationItems = [
-    { path: '/', label: 'Home', icon: '🏠' },
-    { path: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { path: '/rules', label: 'Rules', icon: '⚙️' },
-    { path: '/about', label: 'About', icon: 'ℹ️' },
-    { path: '/profile', label: 'Profile', icon: '👤' }
+    { to: '/', label: 'Home', icon: '🏠' },
+    { to: '/dashboard', label: 'Dashboard', icon: '📊' },
+    { to: '/rules', label: 'Rules', icon: '⚙️' },
+    { to: '/settings', label: 'Settings', icon: '⚙️' },
+    { to: '/about', label: 'About', icon: 'ℹ️' },
+    { to: '/profile', label: 'Profile', icon: '👤' },
+    { to: '/onboarding', label: 'Onboarding', icon: '🚀' }
   ];
 
   return (
@@ -101,6 +109,7 @@ const Navigation = () => {
 // Main App component with performance optimizations
 const App = () => {
   const { isLoading, error } = useAuth0();
+  const navigate = useNavigate();
 
   // Show loading state
   if (isLoading) {
@@ -122,7 +131,7 @@ const App = () => {
         <div className="error-container">
           <h2>Authentication Error</h2>
           <p>{error.message}</p>
-          <StyledButton onClick={() => window.location.reload()}>
+          <StyledButton onClick={() => navigate(0)}>
             Retry
           </StyledButton>
         </div>
@@ -144,73 +153,38 @@ const App = () => {
                   <Route path="/" element={<Home />} />
                   <Route path="/about" element={<About />} />
                   
-                  {/* Protected Routes */}
+                  {/* Protected Routes with new page shells */}
                   <Route 
                     path="/dashboard" 
-                    element={
-                      <PrivateRoute>
-                        <Dashboard2 />
-                      </PrivateRoute>
-                    } 
+                    element={<DashboardPage />}
                   />
                   <Route 
                     path="/profile" 
-                    element={
-                      <PrivateRoute>
-                        <Profile />
-                      </PrivateRoute>
-                    } 
+                    element={<Profile />}
                   />
                   <Route 
                     path="/rules" 
-                    element={
-                      <PrivateRoute>
-                        <RulesPage />
-                      </PrivateRoute>
-                    } 
+                    element={<RulesPage />}
+                  />
+                  <Route 
+                    path="/settings" 
+                    element={<SettingsPage />}
+                  />
+                  <Route 
+                    path="/onboarding" 
+                    element={<OnboardingPage />}
                   />
                   <Route 
                     path="/alphapro" 
-                    element={
-                      <PrivateRoute>
-                        <AlphaPro />
-                      </PrivateRoute>
-                    } 
+                    element={<AlphaPro />}
                   />
                   <Route 
                     path="/test" 
-                    element={
-                      <PrivateRoute>
-                        <TestMount />
-                      </PrivateRoute>
-                    } 
-                  />
-                  
-                  {/* Onboarding Route */}
-                  <Route 
-                    path="/onboarding" 
-                    element={
-                      <PrivateRoute>
-                        <OnboardingFlow />
-                      </PrivateRoute>
-                    } 
+                    element={<TestMount />}
                   />
                   
                   {/* 404 Route */}
-                  <Route 
-                    path="*" 
-                    element={
-                      <div className="not-found">
-                        <CompositeCard>
-                          <h1>Page Not Found</h1>
-                          <p>The page you're looking for doesn't exist.</p>
-                          <StyledButton onClick={() => window.history.back()}>
-                            Go Back
-                          </StyledButton>
-                        </CompositeCard>
-                      </div>
-                    } 
-                  />
+                  <Route path="*" element={<NotFoundPage />} />
                 </Routes>
               </Suspense>
             </main>

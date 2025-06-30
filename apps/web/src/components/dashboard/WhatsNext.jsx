@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { RecommendationEngine } from '../../lib/services/RecommendationEngine';
 import './WhatsNext.css';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * WhatsNext - Dynamic recommendation engine for financial actions
@@ -21,6 +22,7 @@ const WhatsNext = ({ financialState, userContext }) => {
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedAction, setSelectedAction] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const generateRecommendations = async () => {
@@ -64,16 +66,16 @@ const WhatsNext = ({ financialState, userContext }) => {
       // Execute the recommended action
       switch (recommendation.action) {
         case 'setup-automated-savings':
-          window.location.href = '/onboarding/savings-setup';
+          navigate('/onboarding/savings-setup');
           break;
         case 'review-spending':
-          window.location.href = '/dashboard/spending-analysis';
+          navigate('/dashboard/spending-analysis');
           break;
         case 'optimize-budget':
-          window.location.href = '/dashboard/budget-optimizer';
+          navigate('/dashboard/budget-optimizer');
           break;
         case 'debt-payoff':
-          window.location.href = '/dashboard/debt-strategy';
+          navigate('/dashboard/debt-strategy');
           break;
         default:
           // console.log('Action not implemented:', recommendation.action); // Commented for production cleanliness

@@ -45,6 +45,7 @@ import {
   EyeOff
 } from 'lucide-react';
 import './Profile.css';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const {
@@ -60,6 +61,7 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showToken, setShowToken] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Handle logout
   const handleLogout = () => {
@@ -147,7 +149,7 @@ const Profile = () => {
               <AlertCircle className="error-icon" />
               <h2>Not Authenticated</h2>
               <p>Please log in to view your profile.</p>
-              <StyledButton onClick={() => window.location.href = '/'}>
+              <StyledButton onClick={() => navigate('/')}>
                 Go to Login
               </StyledButton>
             </div>

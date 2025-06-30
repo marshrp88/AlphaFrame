@@ -16,6 +16,7 @@
  */
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import { AlertTriangle, RefreshCw, HelpCircle, Home } from 'lucide-react';
@@ -29,12 +30,14 @@ import { AlertTriangle, RefreshCw, HelpCircle, Home } from 'lucide-react';
  * @returns {JSX.Element} Error fallback UI
  */
 export const ErrorBoundaryFallback = ({ error, componentStack }) => {
+  const navigate = useNavigate();
+
   const handleReload = () => {
-    window.location.reload();
+    navigate(0); // Soft reload using React Router
   };
 
   const handleGoHome = () => {
-    window.location.href = '/';
+    navigate('/');
   };
 
   const handleSupport = () => {

@@ -19,7 +19,7 @@
 
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import env from '../lib/env.js';
 
 const PrivateRoute = ({ 
@@ -38,6 +38,7 @@ const PrivateRoute = ({
   } = useAuth0();
 
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Bypass authentication in test mode
   const isTestMode = env.VITE_APP_ENV === 'test';
@@ -74,7 +75,7 @@ const PrivateRoute = ({
           <h2 className="text-xl font-semibold text-red-600 mb-2">Authentication Error</h2>
           <p className="text-gray-600 mb-4">{error.message}</p>
           <button 
-            onClick={() => window.location.reload()}
+            onClick={() => navigate(0)}
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           >
             Retry

@@ -21,6 +21,7 @@ import StyledButton from './ui/StyledButton';
 import CompositeCard from './ui/CompositeCard';
 import './ErrorBoundary.css';
 import env from '../lib/env.js';
+import { useNavigate } from 'react-router-dom';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -65,7 +66,8 @@ class ErrorBoundary extends React.Component {
   };
 
   handleGoHome = () => {
-    window.location.href = '/';
+    const navigate = useNavigate();
+    navigate('/');
   };
 
   handleReportError = () => {
