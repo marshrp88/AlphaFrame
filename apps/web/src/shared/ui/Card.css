@@ -1,0 +1,229 @@
+/**
+ * Card Component Styles - Phoenix Initiative V3.1
+ * 
+ * Purpose: Provides consistent card styling using design tokens
+ * instead of Tailwind classes for better maintainability.
+ * 
+ * Procedure:
+ * 1. Use CSS custom properties from tokens.css
+ * 2. Define base card styles with proper shadows and borders
+ * 3. Create card component variations (header, content, title, description)
+ * 4. Support dark mode with design token variables
+ * 5. Ensure accessibility compliance
+ * 
+ * Conclusion: Centralized card styling that maintains design system
+ * consistency and enables easy theme switching with vanilla CSS only.
+ */
+
+/* Base Card Styles */
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-shadow);
+  padding: var(--card-padding);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* Card Header */
+.card-header {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+}
+
+/* Card Content */
+.card-content {
+  color: var(--color-text-primary);
+  line-height: var(--line-height-normal);
+}
+
+/* Card Title */
+.card-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-sm) 0;
+  line-height: var(--line-height-tight);
+}
+
+/* Card Description */
+.card-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: var(--line-height-normal);
+}
+
+/* Card Variations */
+.card-elevated {
+  box-shadow: var(--shadow-lg);
+}
+
+.card-elevated:hover {
+  box-shadow: var(--shadow-xl);
+}
+
+.card-interactive {
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-interactive:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-md);
+}
+
+/* Card with Image */
+.card-with-image {
+  padding: 0;
+  overflow: hidden;
+}
+
+.card-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.card-image-content {
+  padding: var(--card-padding);
+}
+
+/* Card with Actions */
+.card-with-actions {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-actions {
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border-secondary);
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+}
+
+/* Card Status Variations */
+.card-success {
+  border-left: 4px solid var(--color-border-success);
+}
+
+.card-warning {
+  border-left: 4px solid var(--color-border-warning);
+}
+
+.card-error {
+  border-left: 4px solid var(--color-border-error);
+}
+
+.card-info {
+  border-left: 4px solid var(--color-border-focus);
+}
+
+/* Card Loading State */
+.card-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Dark Mode Support */
+.dark-mode .card {
+  background-color: var(--color-surface);
+  border-color: var(--color-border-primary);
+}
+
+.dark-mode .card-loading::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .card {
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+  }
+  
+  .card-title {
+    font-size: var(--font-size-lg);
+  }
+  
+  .card-header {
+    font-size: var(--font-size-base);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card-interactive {
+    transition: none;
+  }
+  
+  .card:hover,
+  .card-interactive:hover {
+    transform: none;
+  }
+  
+  .card-loading::before {
+    animation: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .card {
+    box-shadow: none;
+    border: 1px solid #000;
+    break-inside: avoid;
+  }
+  
+  .card-interactive:hover {
+    transform: none;
+  }
+} 

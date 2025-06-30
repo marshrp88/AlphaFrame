@@ -1,12 +1,22 @@
-import React from 'react';
-
 /**
- * Input Component - A reusable text input component
+ * Input Component - Phoenix Initiative V3.1
  * 
  * Purpose: Provides consistent text input functionality across the application
- * Procedure: Renders an input element with proper styling and accessibility
+ * using ONLY design tokens - NO TAILWIND, NO TYPESCRIPT, NO SVELTE.
+ * 
+ * Procedure: 
+ * 1. Use CSS classes from Input.css that reference design tokens
+ * 2. Apply consistent input styling with proper focus states
+ * 3. Support multiple input types and states
+ * 4. Ensure accessibility compliance
+ * 
  * Conclusion: Ensures uniform input behavior and appearance
+ * while maintaining design system consistency with vanilla CSS only.
  */
+import React from 'react';
+import { cn } from '@/lib/utils.js';
+import './Input.css';
+
 const Input = ({ 
   type = 'text',
   placeholder,
@@ -21,7 +31,7 @@ const Input = ({
       placeholder={placeholder}
       value={value}
       onChange={onChange}
-      className={`block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 ${className}`}
+      className={cn('input', className)}
       {...props}
     />
   );

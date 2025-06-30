@@ -1,0 +1,252 @@
+/**
+ * Input Component Styles - Phoenix Initiative V3.1
+ * 
+ * Purpose: Provides consistent input styling using design tokens
+ * instead of Tailwind classes for better maintainability.
+ * 
+ * Procedure:
+ * 1. Use CSS custom properties from tokens.css
+ * 2. Define base input styles with proper focus states
+ * 3. Create input variations and states
+ * 4. Support dark mode with design token variables
+ * 5. Ensure accessibility compliance
+ * 
+ * Conclusion: Centralized input styling that maintains design system
+ * consistency and enables easy theme switching with vanilla CSS only.
+ */
+
+/* Base Input Styles */
+.input {
+  display: block;
+  width: 100%;
+  height: var(--input-height);
+  padding: var(--input-padding);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--input-border-radius);
+  transition: all var(--transition-base);
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* Placeholder Styles */
+.input::placeholder {
+  color: var(--color-text-tertiary);
+  opacity: 1;
+}
+
+/* Focus States */
+.input:focus {
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-border-focus);
+}
+
+/* Hover States */
+.input:hover:not(:disabled) {
+  border-color: var(--color-gray-400);
+}
+
+/* Disabled State */
+.input:disabled {
+  background-color: var(--color-gray-100);
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Error State */
+.input-error {
+  border-color: var(--color-border-error);
+}
+
+.input-error:focus {
+  border-color: var(--color-border-error);
+  box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-border-error);
+}
+
+/* Success State */
+.input-success {
+  border-color: var(--color-border-success);
+}
+
+.input-success:focus {
+  border-color: var(--color-border-success);
+  box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-border-success);
+}
+
+/* Warning State */
+.input-warning {
+  border-color: var(--color-border-warning);
+}
+
+.input-warning:focus {
+  border-color: var(--color-border-warning);
+  box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-border-warning);
+}
+
+/* Input Sizes */
+.input-sm {
+  height: calc(var(--input-height) - 0.5rem);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-sm);
+}
+
+.input-lg {
+  height: calc(var(--input-height) + 0.5rem);
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-lg);
+  border-radius: var(--radius-lg);
+}
+
+/* Input with Icon */
+.input-with-icon {
+  padding-left: calc(var(--input-height) + var(--spacing-sm));
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: var(--spacing-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-tertiary);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Input Group */
+.input-group {
+  display: flex;
+  align-items: stretch;
+}
+
+.input-group .input {
+  border-radius: 0;
+  border-right: none;
+}
+
+.input-group .input:first-child {
+  border-top-left-radius: var(--input-border-radius);
+  border-bottom-left-radius: var(--input-border-radius);
+}
+
+.input-group .input:last-child {
+  border-top-right-radius: var(--input-border-radius);
+  border-bottom-right-radius: var(--input-border-radius);
+  border-right: 1px solid var(--color-border-primary);
+}
+
+.input-group-addon {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-gray-100);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.input-group-addon:first-child {
+  border-top-left-radius: var(--input-border-radius);
+  border-bottom-left-radius: var(--input-border-radius);
+  border-right: none;
+}
+
+.input-group-addon:last-child {
+  border-top-right-radius: var(--input-border-radius);
+  border-bottom-right-radius: var(--input-border-radius);
+  border-left: none;
+}
+
+/* Textarea Support */
+.input[type="textarea"],
+.input[as="textarea"] {
+  min-height: 6rem;
+  resize: vertical;
+  line-height: var(--line-height-relaxed);
+}
+
+/* Number Input */
+.input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.input[type="number"]::-webkit-outer-spin-button,
+.input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Search Input */
+.input[type="search"] {
+  padding-left: calc(var(--spacing-md) + 1rem);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: var(--spacing-sm) center;
+  background-size: 1rem;
+}
+
+/* Dark Mode Support */
+.dark-mode .input {
+  background-color: var(--color-surface);
+  border-color: var(--color-border-primary);
+  color: var(--color-text-primary);
+}
+
+.dark-mode .input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.dark-mode .input:disabled {
+  background-color: var(--color-gray-800);
+  color: var(--color-text-disabled);
+}
+
+.dark-mode .input-group-addon {
+  background-color: var(--color-gray-800);
+  border-color: var(--color-border-primary);
+  color: var(--color-text-secondary);
+}
+
+.dark-mode .input[type="search"] {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .input {
+    font-size: var(--font-size-base);
+    padding: var(--spacing-sm);
+  }
+  
+  .input-lg {
+    font-size: var(--font-size-lg);
+    padding: var(--spacing-md);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .input {
+    transition: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .input {
+    border: 1px solid #000;
+    background: transparent;
+    color: #000;
+  }
+  
+  .input:focus {
+    box-shadow: none;
+    border-color: #000;
+  }
+} 

@@ -2,18 +2,28 @@
 // A set of simple card components for grouping UI content.
 // Exports: Card, CardHeader, CardContent, CardTitle, CardDescription
 import React from 'react';
+import { cn } from '@/lib/utils.js';
+import './Card.css';
 
 /**
- * Card Component - A simple container component for content sections
+ * Card Component - Phoenix Initiative V3.1
  * 
  * Purpose: Provides a consistent visual container for grouping related content
- * Procedure: Renders a div with card-like styling and accepts all standard div props
+ * using ONLY design tokens - NO TAILWIND, NO TYPESCRIPT, NO SVELTE.
+ * 
+ * Procedure: 
+ * 1. Use CSS classes from Card.css that reference design tokens
+ * 2. Apply consistent card styling with proper shadows and borders
+ * 3. Support multiple card components (Card, CardHeader, CardContent, etc.)
+ * 4. Ensure accessibility compliance
+ * 
  * Conclusion: Enables consistent layout structure across the application
+ * while maintaining design system consistency with vanilla CSS only.
  */
 const Card = ({ children, className = '', ...props }) => {
   return (
     <div 
-      className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 ${className}`}
+      className={cn('card', className)}
       {...props}
     >
       {children}
@@ -27,7 +37,7 @@ export default Card;
  * CardHeader - header section for a card
  */
 export const CardHeader = ({ className = '', children, ...props }) => (
-  <div className={`text-lg font-bold mb-2 ${className}`} {...props}>
+  <div className={cn('card-header', className)} {...props}>
     {children}
   </div>
 );
@@ -36,7 +46,7 @@ export const CardHeader = ({ className = '', children, ...props }) => (
  * CardContent - content section for a card
  */
 export const CardContent = ({ className = '', children, ...props }) => (
-  <div className={className} {...props}>
+  <div className={cn('card-content', className)} {...props}>
     {children}
   </div>
 );
@@ -45,7 +55,7 @@ export const CardContent = ({ className = '', children, ...props }) => (
  * CardTitle - title for a card
  */
 export const CardTitle = ({ className = '', children, ...props }) => (
-  <h2 className={`text-xl ${className}`} {...props}>
+  <h2 className={cn('card-title', className)} {...props}>
     {children}
   </h2>
 );
@@ -54,7 +64,7 @@ export const CardTitle = ({ className = '', children, ...props }) => (
  * CardDescription - description for a card
  */
 export const CardDescription = ({ className = '', children, ...props }) => (
-  <p className={`text-gray-600 text-sm ${className}`} {...props}>
+  <p className={cn('card-description', className)} {...props}>
     {children}
   </p>
 );

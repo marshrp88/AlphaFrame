@@ -4,13 +4,22 @@
 import React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@/lib/utils.js";
+import "./Button.css";
 
 /**
- * Button Component - A reusable button component with consistent styling
+ * Button Component - Phoenix Initiative V3.1
  * 
  * Purpose: Provides consistent button interactions across the application
- * Procedure: Renders a button element with configurable variants and states
+ * using ONLY design tokens - NO TAILWIND, NO TYPESCRIPT, NO SVELTE.
+ * 
+ * Procedure: 
+ * 1. Use CSS classes from Button.css that reference design tokens
+ * 2. Apply consistent styling with proper focus states
+ * 3. Support multiple variants and sizes
+ * 4. Ensure accessibility compliance
+ * 
  * Conclusion: Ensures uniform button behavior and appearance
+ * while maintaining design system consistency with vanilla CSS only.
  */
 const Button = ({ 
   children, 
@@ -20,24 +29,17 @@ const Button = ({
   className = '', 
   ...props 
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
-  
-  const variantClasses = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600',
-    secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700',
-    outline: 'border border-gray-300 bg-transparent hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800',
-    ghost: 'hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-100'
-  };
-
-  const sizeClasses = {
-    sm: 'h-8 px-3 text-sm',
-    md: 'h-10 px-4 py-2',
-    lg: 'h-11 px-8'
-  };
+  const buttonClasses = cn(
+    'btn',
+    `btn-${variant}`,
+    `btn-${size}`,
+    disabled && 'disabled',
+    className
+  );
 
   return (
     <button 
-      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      className={buttonClasses}
       disabled={disabled}
       {...props}
     >

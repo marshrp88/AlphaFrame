@@ -1,0 +1,446 @@
+/**
+ * AlphaFrame Design Tokens - Phoenix Initiative V3.1
+ * 
+ * Purpose: Centralized CSS custom properties for consistent design system
+ * across all AlphaFrame components following CTO directives for React + Vanilla JS + modular CSS.
+ * 
+ * Procedure:
+ * 1. Define comprehensive color palette with semantic naming
+ * 2. Establish spacing and typography scales
+ * 3. Create component-specific tokens
+ * 4. Support light/dark mode variants with smooth transitions
+ * 5. Ensure accessibility compliance
+ * 6. Provide utility classes for common patterns
+ * 
+ * Conclusion: Single source of truth for all design values enabling
+ * easy theme switching and component consistency without Tailwind dependency.
+ */
+
+:root {
+  /* ===== COLOR PALETTE ===== */
+  
+  /* Primary Colors - AlphaFrame Brand */
+  --color-primary: #2A4D69;
+  --color-primary-light: #60A5FA;
+  --color-primary-dark: #2563EB;
+  --color-primary-50: #EFF6FF;
+  --color-primary-100: #DBEAFE;
+  --color-primary-200: #BFDBFE;
+  --color-primary-300: #93C5FD;
+  --color-primary-400: #60A5FA;
+  --color-primary-500: #3B82F6;
+  --color-primary-600: #2563EB;
+  --color-primary-700: #1D4ED8;
+  --color-primary-800: #1E40AF;
+  --color-primary-900: #1E3A8A;
+  --color-primary-950: #172554;
+
+  /* Secondary Colors */
+  --color-secondary: #6366F1;
+  --color-secondary-light: #818CF8;
+  --color-secondary-dark: #4F46E5;
+  --color-secondary-50: #EEF2FF;
+  --color-secondary-100: #E0E7FF;
+  --color-secondary-200: #C7D2FE;
+  --color-secondary-300: #A5B4FC;
+  --color-secondary-400: #818CF8;
+  --color-secondary-500: #6366F1;
+  --color-secondary-600: #4F46E5;
+  --color-secondary-700: #4338CA;
+  --color-secondary-800: #3730A3;
+  --color-secondary-900: #312E81;
+
+  /* Accent Colors */
+  --color-accent: #63ACE5;
+  --color-accent-light: #34D399;
+  --color-accent-dark: #059669;
+  --color-accent-50: #ECFDF5;
+  --color-accent-100: #D1FAE5;
+  --color-accent-200: #A7F3D0;
+  --color-accent-300: #6EE7B7;
+  --color-accent-400: #34D399;
+  --color-accent-500: #10B981;
+  --color-accent-600: #059669;
+  --color-accent-700: #047857;
+  --color-accent-800: #065F46;
+  --color-accent-900: #064E3B;
+
+  /* Neutral Colors */
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+  --color-gray-950: #030712;
+
+  /* Semantic Colors */
+  --color-success-50: #ECFDF5;
+  --color-success-100: #D1FAE5;
+  --color-success-500: #10B981;
+  --color-success-600: #059669;
+  --color-success-700: #047857;
+
+  --color-warning-50: #FFFBEB;
+  --color-warning-100: #FEF3C7;
+  --color-warning-500: #F59E0B;
+  --color-warning-600: #D97706;
+  --color-warning-700: #B45309;
+
+  --color-error-50: #FEF2F2;
+  --color-error-100: #FEE2E2;
+  --color-error-500: #EF4444;
+  --color-error-600: #DC2626;
+  --color-error-700: #B91C1C;
+
+  /* ===== LIGHT MODE COLORS ===== */
+  
+  /* Background Colors */
+  --color-background: #FFFFFF;
+  --color-background-secondary: #F9FAFB;
+  --color-background-tertiary: #F3F4F6;
+  
+  /* Surface Colors */
+  --color-surface: #FFFFFF;
+  --color-surface-secondary: #F9FAFB;
+  --color-surface-tertiary: #F3F4F6;
+  
+  /* Text Colors */
+  --color-text-primary: #111827;
+  --color-text-secondary: #6B7280;
+  --color-text-tertiary: #9CA3AF;
+  --color-text-inverse: #FFFFFF;
+  --color-text-disabled: #9CA3AF;
+  --color-text-link: #3B82F6;
+  
+  /* Border Colors */
+  --color-border-primary: #E5E7EB;
+  --color-border-secondary: #F3F4F6;
+  --color-border-tertiary: #F9FAFB;
+  --color-border-focus: #3B82F6;
+  --color-border-error: #EF4444;
+  --color-border-success: #10B981;
+  --color-border-warning: #F59E0B;
+  
+  /* Status Colors */
+  --color-border-success: #10B981;
+  --color-border-warning: #F59E0B;
+  --color-border-error: #EF4444;
+  
+  /* White */
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+
+  /* ===== SPACING SCALE ===== */
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 1rem;      /* 16px */
+  --spacing-lg: 1.5rem;    /* 24px */
+  --spacing-xl: 2rem;      /* 32px */
+  --spacing-2xl: 3rem;     /* 48px */
+  --spacing-3xl: 4rem;     /* 64px */
+  --spacing-4xl: 6rem;     /* 96px */
+
+  /* ===== TYPOGRAPHY ===== */
+  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Cascadia Code', monospace;
+  
+  /* Font Sizes */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;  /* 30px */
+  --font-size-4xl: 2.25rem;   /* 36px */
+  
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  
+  /* Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* ===== BORDER RADIUS ===== */
+  --radius-none: 0;
+  --radius-xs: 0.125rem;   /* 2px */
+  --radius-sm: 0.25rem;    /* 4px */
+  --radius-base: 0.375rem; /* 6px */
+  --radius-md: 0.375rem;   /* 6px */
+  --radius-lg: 0.5rem;     /* 8px */
+  --radius-xl: 0.75rem;    /* 12px */
+  --radius-2xl: 1rem;      /* 16px */
+  --radius-full: 9999px;
+
+  /* ===== SHADOWS ===== */
+  --shadow-none: none;
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+  /* Legacy shadow names for compatibility */
+  --shadow-light: var(--shadow-sm);
+  --shadow-medium: var(--shadow-md);
+  --shadow-heavy: var(--shadow-lg);
+  --shadow-elevated: var(--shadow-xl);
+
+  /* ===== TRANSITIONS ===== */
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 200ms ease-in-out;
+  --transition-slow: 300ms ease-in-out;
+  --transition-slower: 500ms ease-in-out;
+
+  /* ===== Z-INDEX ===== */
+  --z-index-dropdown: 1000;
+  --z-index-sticky: 1020;
+  --z-index-fixed: 1030;
+  --z-index-modal-backdrop: 1040;
+  --z-index-modal: 1050;
+  --z-index-popover: 1060;
+  --z-index-tooltip: 1070;
+
+  /* ===== CONTAINER ===== */
+  --container-max-width: 1200px;
+}
+
+/* ===== DARK MODE ===== */
+.dark-mode {
+  /* Background Colors */
+  --color-background: #111827;
+  --color-background-secondary: #1F2937;
+  --color-background-tertiary: #374151;
+  
+  /* Surface Colors */
+  --color-surface: #1F2937;
+  --color-surface-secondary: #374151;
+  --color-surface-tertiary: #4B5563;
+  
+  /* Text Colors */
+  --color-text-primary: #F9FAFB;
+  --color-text-secondary: #D1D5DB;
+  --color-text-tertiary: #9CA3AF;
+  --color-text-inverse: #111827;
+  --color-text-disabled: #6B7280;
+  --color-text-link: #60A5FA;
+  
+  /* Border Colors */
+  --color-border-primary: #374151;
+  --color-border-secondary: #4B5563;
+  --color-border-tertiary: #6B7280;
+  --color-border-focus: #60A5FA;
+  --color-border-error: #F87171;
+  --color-border-success: #34D399;
+  --color-border-warning: #FBBF24;
+}
+
+/* ===== SYSTEM PREFERENCES ===== */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    /* Background Colors */
+    --color-background: #111827;
+    --color-background-secondary: #1F2937;
+    --color-background-tertiary: #374151;
+    
+    /* Surface Colors */
+    --color-surface: #1F2937;
+    --color-surface-secondary: #374151;
+    --color-surface-tertiary: #4B5563;
+    
+    /* Text Colors */
+    --color-text-primary: #F9FAFB;
+    --color-text-secondary: #D1D5DB;
+    --color-text-tertiary: #9CA3AF;
+    --color-text-inverse: #111827;
+    --color-text-disabled: #6B7280;
+    --color-text-link: #60A5FA;
+    
+    /* Border Colors */
+    --color-border-primary: #374151;
+    --color-border-secondary: #4B5563;
+    --color-border-tertiary: #6B7280;
+    --color-border-focus: #60A5FA;
+    --color-border-error: #F87171;
+    --color-border-success: #34D399;
+    --color-border-warning: #FBBF24;
+  }
+}
+
+/* ===== BASE STYLES ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family-primary);
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-normal);
+  transition: background-color var(--transition-base), color var(--transition-base);
+}
+
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-contrast: high) {
+  :root {
+    --color-text-primary: #000000;
+    --color-text-secondary: #333333;
+    --color-border-primary: #000000;
+  }
+  
+  .dark-mode {
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #CCCCCC;
+    --color-border-primary: #FFFFFF;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  :root {
+    --color-background: #FFFFFF;
+    --color-text-primary: #000000;
+    --color-text-secondary: #333333;
+    --color-border-primary: #000000;
+  }
+  
+  * {
+    box-shadow: none !important;
+  }
+}
+
+/* ===== UTILITY CLASSES ===== */
+
+/* Text Colors */
+.text-primary { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-tertiary { color: var(--color-text-tertiary); }
+.text-disabled { color: var(--color-text-disabled); }
+.text-inverse { color: var(--color-text-inverse); }
+.text-link { color: var(--color-text-link); }
+
+/* Background Colors */
+.bg-primary { background-color: var(--color-background); }
+.bg-secondary { background-color: var(--color-background-secondary); }
+.bg-tertiary { background-color: var(--color-background-tertiary); }
+.bg-surface { background-color: var(--color-surface); }
+
+/* Border Colors */
+.border-primary { border-color: var(--color-border-primary); }
+.border-focus { border-color: var(--color-border-focus); }
+.border-error { border-color: var(--color-border-error); }
+.border-success { border-color: var(--color-border-success); }
+.border-warning { border-color: var(--color-border-warning); }
+
+/* Spacing */
+.p-0 { padding: 0; }
+.p-xs { padding: var(--spacing-xs); }
+.p-sm { padding: var(--spacing-sm); }
+.p-md { padding: var(--spacing-md); }
+.p-lg { padding: var(--spacing-lg); }
+.p-xl { padding: var(--spacing-xl); }
+
+.m-0 { margin: 0; }
+.m-xs { margin: var(--spacing-xs); }
+.m-sm { margin: var(--spacing-sm); }
+.m-md { margin: var(--spacing-md); }
+.m-lg { margin: var(--spacing-lg); }
+.m-xl { margin: var(--spacing-xl); }
+
+/* Typography */
+.text-xs { font-size: var(--font-size-xs); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+.text-2xl { font-size: var(--font-size-2xl); }
+.text-3xl { font-size: var(--font-size-3xl); }
+.text-4xl { font-size: var(--font-size-4xl); }
+
+.font-light { font-weight: var(--font-weight-light); }
+.font-normal { font-weight: var(--font-weight-normal); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: var(--font-weight-bold); }
+.font-extrabold { font-weight: var(--font-weight-extrabold); }
+
+/* Border Radius */
+.rounded-none { border-radius: var(--radius-none); }
+.rounded-xs { border-radius: var(--radius-xs); }
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded { border-radius: var(--radius-base); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-xl { border-radius: var(--radius-xl); }
+.rounded-2xl { border-radius: var(--radius-2xl); }
+.rounded-full { border-radius: var(--radius-full); }
+
+/* Shadows */
+.shadow-none { box-shadow: var(--shadow-none); }
+.shadow-xs { box-shadow: var(--shadow-xs); }
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+.shadow-xl { box-shadow: var(--shadow-xl); }
+.shadow-2xl { box-shadow: var(--shadow-2xl); }
+
+/* Legacy shadow names for compatibility */
+.shadow-light { box-shadow: var(--shadow-light); }
+.shadow-medium { box-shadow: var(--shadow-medium); }
+.shadow-heavy { box-shadow: var(--shadow-heavy); }
+.shadow-elevated { box-shadow: var(--shadow-elevated); }
+
+/* Transitions */
+.transition-fast { transition: var(--transition-fast); }
+.transition { transition: var(--transition-base); }
+.transition-slow { transition: var(--transition-slow); }
+.transition-slower { transition: var(--transition-slower); }
+
+/* Focus States */
+.focus-ring {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-border-focus);
+}
+
+/* Component-specific tokens */
+:root {
+  /* Button tokens */
+  --button-height-sm: 2rem;    /* 32px */
+  --button-height-md: 2.5rem;  /* 40px */
+  --button-height-lg: 2.75rem; /* 44px */
+  
+  /* Card tokens */
+  --card-padding: var(--spacing-md);
+  --card-border-radius: var(--radius-lg);
+  --card-shadow: var(--shadow-sm);
+  
+  /* Input tokens */
+  --input-height: 2.5rem;      /* 40px */
+  --input-padding: var(--spacing-sm) var(--spacing-md);
+  --input-border-radius: var(--radius-md);
+  
+  /* Modal tokens */
+  --modal-backdrop-bg: rgba(0, 0, 0, 0.5);
+  --modal-border-radius: var(--radius-lg);
+  --modal-shadow: var(--shadow-xl);
+} 
