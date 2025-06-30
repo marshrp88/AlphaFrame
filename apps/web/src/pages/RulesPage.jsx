@@ -44,10 +44,11 @@ const RulesPage = () => {
 
   // Diagnostic logging and test mode setup
   useEffect(() => {
-    if (env.VITE_APP_ENV === 'test') {
-      console.log('RulesPage: Test mode active');
+    // Set test mode for development
+    if (import.meta.env.DEV) {
+      localStorage.setItem('test_mode', 'true');
     }
-  }, [showRuleBinder, currentRule]);
+  }, []);
 
   const handleCreateRule = () => {
     setCurrentRule({
@@ -104,20 +105,6 @@ const RulesPage = () => {
                   Create automated rules to manage your finances intelligently
                 </p>
               </div>
-              
-              {/* Test mode indicator */}
-              {env.VITE_APP_ENV === 'test' && (
-                <motion.div 
-                  className="test-mode-indicator"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <StatusBadge variant="warning" size="sm">
-                    🧪 Test Mode Active
-                  </StatusBadge>
-                </motion.div>
-              )}
             </div>
 
             {!showRuleBinder ? (

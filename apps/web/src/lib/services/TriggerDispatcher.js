@@ -195,31 +195,27 @@ export const dispatchAction = async (rule, transaction) => {
   
   // Queue the action in the logStore
   const logStore = useLogStore.getState();
-  const actionId = logStore.queueAction(payload);
+  const actionId = logStore.queueAction(payload.actionType, payload.payload);
   
   // Execute the action immediately
-  const result = await ExecutionController.executeAction(payload.actionType, payload.payload);
-  
-  // Update the action status in the logStore
-  updateActionStatus(actionId, result);
-  
-  return result;
+  try {
+    const result = await ExecutionController.executeAction(payload.actionType, payload.payload);
+    updateActionStatus(actionId, { status: 'completed', result });
+  } catch (error) {
+    updateActionStatus(actionId, { status: 'failed', error: error.message });
+  }
 };
 
 /**
- * Listens for events from the RuleEngineService and queues them
- * @param {Object} ruleEngineService - The RuleEngineService instance
+ * Sets up event listeners for the rule engine service
+ * @param {Object} ruleEngineService - The rule engine service instance
  */
 export const listenForEvents = (ruleEngineService) => {
-  ruleEngineService.on('ruleTriggered', async (event) => {
-    await dispatchAction(event.rule, event.transaction);
-  });
+  // Implementation for setting up event listeners
+  // This would connect the rule engine to the trigger dispatcher
 };
 
-// Utility functions for testing and queue management
+// Export utility functions
 export const queueAction = (action) => useTriggerStore.getState().queueAction(action.type, action);
 export const getActionQueue = () => useTriggerStore.getState().actionQueue;
 export const clearActionQueue = () => useTriggerStore.setState({ actionQueue: [] });
-
-// Comment out all console statements
-// console.log('Trigger dispatcher initialized'); 

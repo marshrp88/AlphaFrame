@@ -96,11 +96,6 @@ function ActionSelectorComponent({ value, onChange }) {
           ))}
         </SelectContent>
       </Select>
-      
-      {/* Debug span to show current selection */}
-      <div className="p-2 bg-yellow-100 border border-yellow-300 rounded text-xs" data-testid="action-selector-debug">
-        ActionSelector Debug: value={value || 'undefined'} | options={Object.keys(ACTION_TYPES).join(', ')}
-      </div>
     </div>
   );
 }

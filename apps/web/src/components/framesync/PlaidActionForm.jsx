@@ -75,24 +75,6 @@ export const PlaidActionForm = ({ initialPayload, onChange }) => {
       variant="elevated"
       className="plaid-action-form"
     >
-      {/* Debug info in test mode */}
-      {localStorage.getItem('test_mode') === 'true' && (
-        <CompositeCard 
-          variant="outlined" 
-          className="debug-info"
-          style={{ 
-            backgroundColor: 'var(--color-primary-50)', 
-            borderColor: 'var(--color-primary-300)',
-            marginBottom: 'var(--spacing-md)'
-          }}
-        >
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--color-primary-700)' }}>
-            <div>🔍 PlaidForm Debug: formData = {JSON.stringify(formData)}</div>
-            <div>🔍 PlaidForm Debug: errors = {JSON.stringify(errors)}</div>
-          </div>
-        </CompositeCard>
-      )}
-      
       <div className="form-section">
         <label htmlFor="from-account" className="form-label">From Account</label>
         <select

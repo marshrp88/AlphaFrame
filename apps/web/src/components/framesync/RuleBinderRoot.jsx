@@ -221,19 +221,6 @@ function RuleBinderRoot({ initialConfig, onConfigurationChange }) {
   try {
     return (
       <div className="space-y-6 p-4">
-        {/* Debug mount confirmation */}
-        <div className="p-2 bg-green-100 border border-green-300 rounded text-xs" data-testid="debug-mounted">
-          RuleBinderRoot mounted - actionType: {actionType || 'undefined'} - payload: {JSON.stringify(payload)}
-        </div>
-        
-        {/* Debug action type display */}
-        <div className="p-2 bg-blue-100 border border-blue-300 rounded text-xs" data-testid="debug-action-type">
-          Current actionType: {actionType || 'undefined'}
-        </div>
-        
-        {/* State debug */}
-        <span data-testid="state-debug">{JSON.stringify({ actionType, payload, safeguards })}</span>
-        
         <div className="space-y-4">
           <h3 className="text-lg font-medium">Configure Action</h3>
           

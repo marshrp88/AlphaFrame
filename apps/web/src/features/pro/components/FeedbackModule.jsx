@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/shared/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/shared/ui/Card';
-// import { executionLogService } from '@/core/services/ExecutionLogService'; // Commented out - not currently used
+import { executionLogService } from '@/core/services/ExecutionLogService';
 
 /**
  * FeedbackModule Component
@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/sha
  * 
  * Procedure:
  * 1. Collects execution logs from ExecutionLogService
- * 2. Generates narrative insights (placeholder for now)
+ * 2. Generates narrative insights from execution data
  * 3. Creates a structured feedback report
  * 4. Exports the report as a downloadable JSON file
  * 5. Handles errors gracefully with user feedback
@@ -26,46 +26,98 @@ const FeedbackModule = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  // Diagnostic: Log when component mounts
-  // useEffect(() => {
-  //   console.log('🧪 [FeedbackModule] mounted');
-  // }, []);
+  /**
+   * Generates narrative insights from execution logs
+   * @param {Array} logs - The execution logs to analyze
+   * @returns {Array} Array of narrative insights
+   */
+  const generateNarrativeInsights = (logs) => {
+    const insights = [];
+    
+    // Analyze rule execution patterns
+    const ruleExecutions = logs.filter(log => log.type === 'rule_triggered');
+    if (ruleExecutions.length > 0) {
+      insights.push({
+        type: 'rule_activity',
+        title: 'Rule Execution Summary',
+        description: `You have ${ruleExecutions.length} rule executions in this period`,
+        priority: 'medium',
+        timestamp: new Date().toISOString()
+      });
+    }
 
-  // Diagnostic: Log state changes
-  // useEffect(() => {
-  //   console.log('🧪 [FeedbackModule] state:', { isGenerating, error, success });
-  // }, [isGenerating, error, success]);
+    // Analyze portfolio changes
+    const portfolioLogs = logs.filter(log => log.type === 'portfolio_analysis');
+    if (portfolioLogs.length > 0) {
+      insights.push({
+        type: 'portfolio_insight',
+        title: 'Portfolio Analysis',
+        description: 'Portfolio analysis has been performed to optimize your investments',
+        priority: 'high',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    // Analyze budget activity
+    const budgetLogs = logs.filter(log => log.type === 'budget_forecast');
+    if (budgetLogs.length > 0) {
+      insights.push({
+        type: 'budget_insight',
+        title: 'Budget Forecasting',
+        description: 'Budget forecasting has been used to plan your financial future',
+        priority: 'medium',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    return insights;
+  };
 
   const handleGenerateReport = async () => {
-    // console.log('🧪 [FeedbackModule] handleGenerateReport ENTRY - handler called!');
     setIsGenerating(true);
     setError(null);
     setSuccess(false);
 
     try {
       // Collect execution logs
-      // const executionLogs = await executionLogService.queryLogs(); // Commented out - not currently used
-      // console.log('🧪 [FeedbackModule] queryLogs returned:', executionLogs);
+      const executionLogs = await executionLogService.queryLogs();
       
-      // TEMPORARILY DISABLED: DOM-heavy file download operations for test isolation
+      // Generate narrative insights
+      const narrativeInsights = generateNarrativeInsights(executionLogs);
+      
+      // Create comprehensive feedback report
+      const feedbackReport = {
+        metadata: {
+          generatedAt: new Date().toISOString(),
+          version: '1.0.0',
+          userId: localStorage.getItem('userId') || 'anonymous'
+        },
+        executionLogs: executionLogs,
+        narrativeInsights: narrativeInsights,
+        summary: {
+          totalLogs: executionLogs.length,
+          totalInsights: narrativeInsights.length,
+          dateRange: {
+            start: executionLogs.length > 0 ? executionLogs[executionLogs.length - 1].timestamp : null,
+            end: executionLogs.length > 0 ? executionLogs[0].timestamp : null
+          }
+        }
+      };
+
       // Convert to JSON and create downloadable file
-      // const jsonString = JSON.stringify(feedbackReport, null, 2);
-      // const blob = new Blob([jsonString], { type: 'application/json' });
-      // const url = URL.createObjectURL(blob);
-      // console.log('🧪 [FeedbackModule] About to create download link...');
-      // const link = document.createElement('a');
-      // link.href = url;
-      // link.download = `alphapro-feedback-report-${Date.now()}.json`;
-      // document.body.appendChild(link);
-      // link.click();
-      // document.body.removeChild(link);
-      // URL.revokeObjectURL(url);
+      const jsonString = JSON.stringify(feedbackReport, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `alphapro-feedback-report-${Date.now()}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
       
-      // console.log('🧪 [FeedbackModule] DOM operations disabled - setting success state');
       setSuccess(true);
-      // console.log('🧪 [FeedbackModule] Report generation completed successfully');
     } catch (err) {
-      // console.error('🧪 [FeedbackModule] Failed to generate feedback report:', err);
       setError('Could not generate the report. Please check the console for details.');
     } finally {
       setIsGenerating(false);
@@ -75,7 +127,6 @@ const FeedbackModule = () => {
   const handleReset = () => {
     setError(null);
     setSuccess(false);
-    // console.log('🧪 [FeedbackModule] Reset clicked');
   };
 
   return (
@@ -89,13 +140,11 @@ const FeedbackModule = () => {
       <CardContent className="space-y-4">
         {error && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-            {/* {console.log('🧪 [FeedbackModule] Rendering error message:', error)} */}
             <p className="text-red-700 text-sm">{error}</p>
           </div>
         )}
         {success && (
           <div className="p-3 bg-green-50 border border-green-200 rounded-md">
-            {/* {console.log('🧪 [FeedbackModule] Rendering success message')} */}
             <p className="text-green-700 text-sm">
               ✅ Feedback report generated and downloaded successfully!
             </p>

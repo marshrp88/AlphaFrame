@@ -46,6 +46,27 @@ const promptForMasterPassword = async () => {
 };
 
 /**
+ * Verifies the master password against stored credentials
+ * @param {string} password - The password to verify
+ * @returns {Promise<boolean>} Whether the password is correct
+ */
+const verifyMasterPassword = async (password) => {
+  try {
+    // In a real implementation, this would verify against stored hash
+    // For now, we'll use a simple check against localStorage
+    const storedPassword = localStorage.getItem('masterPassword');
+    if (!storedPassword) {
+      // If no password is set, allow the first attempt
+      localStorage.setItem('masterPassword', password);
+      return true;
+    }
+    return password === storedPassword;
+  } catch (error) {
+    return false;
+  }
+};
+
+/**
  * PermissionEnforcer Class
  * Main service class for handling permission checks and security validation
  */
@@ -90,7 +111,14 @@ export class PermissionEnforcer {
             reason: 'Action cancelled by user'
           };
         }
-        // TODO: Verify password against stored hash
+        
+        const isValidPassword = await verifyMasterPassword(password);
+        if (!isValidPassword) {
+          return {
+            allowed: false,
+            reason: 'Invalid master password'
+          };
+        }
       }
 
       return { allowed: true };

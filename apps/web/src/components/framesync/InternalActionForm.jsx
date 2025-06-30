@@ -87,8 +87,6 @@ function InternalActionFormComponent({ initialPayload, onChange }) {
   try {
     return (
       <div className="space-y-4">
-        {/* Debug span to confirm InternalActionForm mounts */}
-        <span data-testid="internal-form-debug">InternalActionForm mounted</span>
         <div className="space-y-2">
           <Label htmlFor="amount">Amount</Label>
           <Input

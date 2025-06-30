@@ -1,354 +1,466 @@
 /**
- * User Validation Protocol for AlphaFrame Helios Initiative
+ * User Validation Protocol - AlphaFrame VX.3 Final Sprint
  * 
- * PURPOSE:
- * This protocol establishes systematic user testing and validation frameworks
- * to ensure all design and content decisions are user-centered and effective.
- * It provides clear methodologies for gathering user feedback and measuring
- * success against our "Calm Confidence" brand goals.
+ * Purpose: Document and track real-user onboarding walkthroughs to validate
+ * the complete user journey from first visit to dashboard completion.
  * 
- * PROCEDURE:
- * 1. Define testing methodologies for different user scenarios
- * 2. Establish success metrics and KPIs
- * 3. Create validation frameworks for design and content
- * 4. Set up feedback collection and analysis systems
+ * Procedure:
+ * 1. Define specific validation scenarios for different user types
+ * 2. Create feedback collection system for friction points
+ * 3. Track completion metrics and user satisfaction
+ * 4. Document any issues found and resolution status
  * 
- * CONCLUSION:
- * This protocol ensures we validate our assumptions with real users
- * and continuously improve based on actual user behavior and feedback.
+ * Conclusion: Ensures AlphaFrame meets real user needs and expectations
+ * before market release.
  */
-
-import { createContext, useContext, useState, useEffect } from 'react';
-
-// ============================================================================
-// VALIDATION CONTEXTS & TYPES
-// ============================================================================
 
 /**
- * User validation session types
- * Each type focuses on different aspects of user experience
+ * User Validation Scenarios
  */
-export const VALIDATION_TYPES = {
-  USABILITY_TESTING: 'usability_testing',
-  CONTENT_VALIDATION: 'content_validation',
-  ACCESSIBILITY_AUDIT: 'accessibility_audit',
-  PERFORMANCE_VALIDATION: 'performance_validation',
-  EMOTIONAL_RESPONSE: 'emotional_response',
-  TASK_COMPLETION: 'task_completion'
-};
-
-/**
- * Success metrics for different validation types
- * These help us measure if our "Calm Confidence" goals are being met
- */
-export const SUCCESS_METRICS = {
-  [VALIDATION_TYPES.USABILITY_TESTING]: {
-    task_completion_rate: 0.95, // 95% of users should complete tasks successfully
-    time_to_complete: 120, // seconds - tasks should be completable within 2 minutes
-    error_rate: 0.05, // 5% or fewer errors per task
-    satisfaction_score: 4.5 // out of 5 - users should feel confident and calm
+export const USER_VALIDATION_SCENARIOS = {
+  SCENARIO_1: {
+    id: 'new-user-complete',
+    title: 'New User - Complete Onboarding',
+    description: 'First-time user completes full onboarding flow',
+    userType: 'New User',
+    steps: [
+      'Land on homepage',
+      'Click "Get Started" or "Sign Up"',
+      'Complete Step 1: Connect Bank (Plaid)',
+      'Complete Step 2: Review Transactions',
+      'Complete Step 3: Set Up Budget',
+      'Complete Step 4: Choose Dashboard Mode',
+      'Land on Dashboard2 with populated data',
+      'Navigate through dashboard sections',
+      'Test basic interactions (buttons, navigation)'
+    ],
+    successCriteria: [
+      'No console errors during flow',
+      'All steps complete without blocking issues',
+      'Dashboard loads with mock/real data',
+      'User feels confident about next steps'
+    ]
   },
-  [VALIDATION_TYPES.CONTENT_VALIDATION]: {
-    comprehension_rate: 0.90, // 90% of users should understand content immediately
-    trust_score: 4.5, // out of 5 - content should build trust
-    clarity_score: 4.5, // out of 5 - content should be clear and jargon-free
-    action_completion: 0.95 // 95% should complete intended actions after reading
+  
+  SCENARIO_2: {
+    id: 'returning-user-dashboard',
+    title: 'Returning User - Dashboard Experience',
+    description: 'Existing user logs in and uses dashboard features',
+    userType: 'Returning User',
+    steps: [
+      'Log in to existing account',
+      'Land on Dashboard2',
+      'Navigate between dashboard sections',
+      'Test rule creation/editing',
+      'Test transaction viewing',
+      'Test budget management',
+      'Test settings and profile'
+    ],
+    successCriteria: [
+      'Dashboard loads quickly',
+      'All sections are accessible',
+      'Data displays correctly',
+      'No broken links or missing features'
+    ]
   },
-  [VALIDATION_TYPES.ACCESSIBILITY_AUDIT]: {
-    wcag_compliance: 'AA', // Must meet WCAG 2.1 AA standards
-    screen_reader_compatibility: 1.0, // 100% compatibility
-    keyboard_navigation: 1.0, // 100% keyboard accessible
-    color_contrast: 1.0 // 100% meet contrast requirements
-  },
-  [VALIDATION_TYPES.PERFORMANCE_VALIDATION]: {
-    load_time: 2000, // milliseconds - pages should load within 2 seconds
-    interaction_response: 100, // milliseconds - interactions should respond within 100ms
-    memory_usage: 50, // MB - should stay under 50MB
-    battery_impact: 'low' // should have minimal battery impact on mobile
-  },
-  [VALIDATION_TYPES.EMOTIONAL_RESPONSE]: {
-    confidence_score: 4.5, // out of 5 - users should feel confident
-    calm_score: 4.5, // out of 5 - users should feel calm, not stressed
-    trust_score: 4.5, // out of 5 - users should trust the application
-    engagement_score: 4.0 // out of 5 - users should be engaged but not overwhelmed
-  },
-  [VALIDATION_TYPES.TASK_COMPLETION]: {
-    success_rate: 0.95, // 95% task completion rate
-    abandonment_rate: 0.05, // 5% or fewer users abandon tasks
-    return_rate: 0.80, // 80% of users return within 7 days
-    recommendation_score: 4.5 // out of 5 - users would recommend to others
+  
+  SCENARIO_3: {
+    id: 'mobile-user-experience',
+    title: 'Mobile User - Responsive Experience',
+    description: 'User completes onboarding on mobile device',
+    userType: 'Mobile User',
+    steps: [
+      'Access app on mobile browser',
+      'Complete onboarding flow on mobile',
+      'Test touch interactions',
+      'Test mobile navigation',
+      'Test responsive design',
+      'Test mobile-specific features'
+    ],
+    successCriteria: [
+      'App renders properly on mobile',
+      'Touch interactions work smoothly',
+      'Navigation is intuitive on mobile',
+      'No horizontal scrolling issues'
+    ]
   }
 };
 
-// ============================================================================
-// VALIDATION CONTEXT
-// ============================================================================
-
-const UserValidationContext = createContext();
+/**
+ * Feedback Collection Categories
+ */
+export const FEEDBACK_CATEGORIES = {
+  USABILITY: {
+    id: 'usability',
+    title: 'Usability Issues',
+    description: 'Problems with ease of use, clarity, or workflow',
+    examples: [
+      'Unclear instructions',
+      'Confusing navigation',
+      'Hard to find features',
+      'Unintuitive interactions'
+    ]
+  },
+  
+  TECHNICAL: {
+    id: 'technical',
+    title: 'Technical Issues',
+    description: 'Bugs, errors, or performance problems',
+    examples: [
+      'Page crashes or errors',
+      'Slow loading times',
+      'Broken functionality',
+      'Data not saving'
+    ]
+  },
+  
+  DESIGN: {
+    id: 'design',
+    title: 'Design Issues',
+    description: 'Visual, layout, or aesthetic problems',
+    examples: [
+      'Poor visual hierarchy',
+      'Inconsistent styling',
+      'Accessibility issues',
+      'Mobile layout problems'
+    ]
+  },
+  
+  CONTENT: {
+    id: 'content',
+    title: 'Content Issues',
+    description: 'Problems with text, messaging, or information',
+    examples: [
+      'Unclear copy',
+      'Missing information',
+      'Incorrect data',
+      'Poor error messages'
+    ]
+  }
+};
 
 /**
- * User Validation Provider
- * Manages validation state and provides validation methods to components
+ * User Validation Session Template
  */
-export function UserValidationProvider({ children }) {
-  const [validationSessions, setValidationSessions] = useState([]);
-  const [activeSession, setActiveSession] = useState(null);
-  const [validationResults, setValidationResults] = useState({});
+export class UserValidationSession {
+  constructor(scenarioId, userId, sessionDate) {
+    this.sessionId = `session_${Date.now()}`;
+    this.scenarioId = scenarioId;
+    this.userId = userId;
+    this.sessionDate = sessionDate || new Date().toISOString();
+    this.startTime = null;
+    this.endTime = null;
+    this.completedSteps = [];
+    this.feedback = [];
+    this.issues = [];
+    this.successCriteria = [];
+    this.overallRating = null;
+    this.notes = '';
+  }
 
   /**
-   * Start a new validation session
-   * @param {string} type - The type of validation to perform
-   * @param {object} config - Configuration for the validation session
+   * Start the validation session
    */
-  const startValidationSession = (type, config = {}) => {
-    const session = {
-      id: `session_${Date.now()}`,
-      type,
-      startTime: new Date(),
-      config,
-      events: [],
-      metrics: {},
-      status: 'active'
-    };
+  startSession() {
+    this.startTime = new Date().toISOString();
+    console.log(`User Validation Session Started: ${this.sessionId}`);
+    console.log(`Scenario: ${USER_VALIDATION_SCENARIOS[this.scenarioId].title}`);
+  }
 
-    setActiveSession(session);
-    setValidationSessions(prev => [...prev, session]);
+  /**
+   * Complete a step in the validation
+   */
+  completeStep(stepName, notes = '') {
+    this.completedSteps.push({
+      step: stepName,
+      completedAt: new Date().toISOString(),
+      notes: notes
+    });
+    console.log(`Step completed: ${stepName}`);
+  }
+
+  /**
+   * Add feedback during the session
+   */
+  addFeedback(category, description, severity = 'medium') {
+    this.feedback.push({
+      category: category,
+      description: description,
+      severity: severity, // low, medium, high, critical
+      timestamp: new Date().toISOString()
+    });
+    console.log(`Feedback added: ${category} - ${description}`);
+  }
+
+  /**
+   * Add an issue found during validation
+   */
+  addIssue(description, category = 'technical', blocking = false) {
+    this.issues.push({
+      description: description,
+      category: category,
+      blocking: blocking,
+      timestamp: new Date().toISOString(),
+      resolved: false
+    });
+    console.log(`Issue found: ${description} (${blocking ? 'BLOCKING' : 'non-blocking'})`);
+  }
+
+  /**
+   * Mark success criteria as met
+   */
+  markSuccessCriteria(criteria, met = true, notes = '') {
+    this.successCriteria.push({
+      criteria: criteria,
+      met: met,
+      notes: notes,
+      timestamp: new Date().toISOString()
+    });
+  }
+
+  /**
+   * End the validation session
+   */
+  endSession(overallRating, notes = '') {
+    this.endTime = new Date().toISOString();
+    this.overallRating = overallRating; // 1-5 scale
+    this.notes = notes;
     
-    // Log session start for analytics
-    logValidationEvent('session_started', { type, config });
-    
-    return session;
-  };
+    const duration = new Date(this.endTime) - new Date(this.startTime);
+    console.log(`User Validation Session Ended: ${this.sessionId}`);
+    console.log(`Duration: ${Math.round(duration / 1000)} seconds`);
+    console.log(`Overall Rating: ${overallRating}/5`);
+  }
 
   /**
-   * Record a validation event
-   * @param {string} eventType - Type of event (click, scroll, error, etc.)
-   * @param {object} data - Event data
+   * Generate session report
    */
-  const recordValidationEvent = (eventType, data = {}) => {
-    if (!activeSession) return;
+  generateReport() {
+    const scenario = USER_VALIDATION_SCENARIOS[this.scenarioId];
+    const duration = this.startTime && this.endTime 
+      ? Math.round((new Date(this.endTime) - new Date(this.startTime)) / 1000)
+      : 0;
 
-    const event = {
-      id: `event_${Date.now()}`,
-      type: eventType,
-      timestamp: new Date(),
-      data,
-      sessionId: activeSession.id
+    return {
+      sessionId: this.sessionId,
+      scenario: scenario,
+      userId: this.userId,
+      sessionDate: this.sessionDate,
+      duration: duration,
+      completedSteps: this.completedSteps.length,
+      totalSteps: scenario.steps.length,
+      completionRate: Math.round((this.completedSteps.length / scenario.steps.length) * 100),
+      feedbackCount: this.feedback.length,
+      issuesCount: this.issues.length,
+      blockingIssues: this.issues.filter(issue => issue.blocking).length,
+      overallRating: this.overallRating,
+      successCriteriaMet: this.successCriteria.filter(c => c.met).length,
+      totalSuccessCriteria: this.successCriteria.length,
+      notes: this.notes,
+      feedback: this.feedback,
+      issues: this.issues,
+      successCriteria: this.successCriteria
     };
+  }
+}
 
-    setActiveSession(prev => ({
-      ...prev,
-      events: [...prev.events, event]
-    }));
-
-    // Log event for analytics
-    logValidationEvent(eventType, data);
-  };
+/**
+ * Validation Results Aggregator
+ */
+export class ValidationResultsAggregator {
+  constructor() {
+    this.sessions = [];
+    this.aggregateMetrics = {
+      totalSessions: 0,
+      averageRating: 0,
+      completionRate: 0,
+      totalIssues: 0,
+      blockingIssues: 0,
+      feedbackByCategory: {},
+      commonIssues: []
+    };
+  }
 
   /**
-   * Complete a validation session
-   * @param {object} results - Final results and metrics
+   * Add a validation session
    */
-  const completeValidationSession = (results = {}) => {
-    if (!activeSession) return;
+  addSession(session) {
+    this.sessions.push(session);
+    this.updateAggregateMetrics();
+  }
 
-    const completedSession = {
-      ...activeSession,
-      endTime: new Date(),
-      status: 'completed',
-      results,
-      duration: new Date() - activeSession.startTime
-    };
+  /**
+   * Update aggregate metrics
+   */
+  updateAggregateMetrics() {
+    if (this.sessions.length === 0) return;
 
-    setValidationSessions(prev => 
-      prev.map(session => 
-        session.id === activeSession.id ? completedSession : session
-      )
+    const totalSessions = this.sessions.length;
+    const totalRating = this.sessions.reduce((sum, session) => sum + (session.overallRating || 0), 0);
+    const averageRating = totalRating / totalSessions;
+
+    const totalSteps = this.sessions.reduce((sum, session) => {
+      const scenario = USER_VALIDATION_SCENARIOS[session.scenarioId];
+      return sum + scenario.steps.length;
+    }, 0);
+    const completedSteps = this.sessions.reduce((sum, session) => sum + session.completedSteps.length, 0);
+    const completionRate = Math.round((completedSteps / totalSteps) * 100);
+
+    const totalIssues = this.sessions.reduce((sum, session) => sum + session.issues.length, 0);
+    const blockingIssues = this.sessions.reduce((sum, session) => 
+      sum + session.issues.filter(issue => issue.blocking).length, 0
     );
 
-    setValidationResults(prev => ({
-      ...prev,
-      [activeSession.type]: results
-    }));
+    // Group feedback by category
+    const feedbackByCategory = {};
+    this.sessions.forEach(session => {
+      session.feedback.forEach(feedback => {
+        if (!feedbackByCategory[feedback.category]) {
+          feedbackByCategory[feedback.category] = 0;
+        }
+        feedbackByCategory[feedback.category]++;
+      });
+    });
 
-    setActiveSession(null);
-    
-    // Log session completion
-    logValidationEvent('session_completed', { type: activeSession.type, results });
-    
-    return completedSession;
-  };
+    // Find common issues
+    const issueDescriptions = this.sessions.flatMap(session => 
+      session.issues.map(issue => issue.description)
+    );
+    const issueCounts = {};
+    issueDescriptions.forEach(description => {
+      issueCounts[description] = (issueCounts[description] || 0) + 1;
+    });
+    const commonIssues = Object.entries(issueCounts)
+      .filter(([_, count]) => count > 1)
+      .sort(([_, a], [__, b]) => b - a)
+      .slice(0, 5)
+      .map(([description, count]) => ({ description, count }));
+
+    this.aggregateMetrics = {
+      totalSessions,
+      averageRating: Math.round(averageRating * 10) / 10,
+      completionRate,
+      totalIssues,
+      blockingIssues,
+      feedbackByCategory,
+      commonIssues
+    };
+  }
 
   /**
-   * Get validation results for a specific type
-   * @param {string} type - Validation type
+   * Generate validation summary report
    */
-  const getValidationResults = (type) => {
-    return validationResults[type] || null;
-  };
+  generateSummaryReport() {
+    return {
+      summary: this.aggregateMetrics,
+      sessions: this.sessions.map(session => session.generateReport()),
+      recommendations: this.generateRecommendations()
+    };
+  }
 
   /**
-   * Check if current metrics meet success criteria
-   * @param {string} type - Validation type
-   * @param {object} metrics - Current metrics
+   * Generate recommendations based on validation results
    */
-  const validateSuccessCriteria = (type, metrics) => {
-    const criteria = SUCCESS_METRICS[type];
-    if (!criteria) return { valid: false, issues: ['Unknown validation type'] };
+  generateRecommendations() {
+    const recommendations = [];
 
-    const issues = [];
-    let valid = true;
+    if (this.aggregateMetrics.averageRating < 4.0) {
+      recommendations.push({
+        priority: 'high',
+        category: 'overall',
+        description: 'Overall user satisfaction is below target. Review major friction points.',
+        action: 'Analyze feedback and issues to identify root causes'
+      });
+    }
 
-    Object.entries(criteria).forEach(([key, target]) => {
-      const current = metrics[key];
-      if (current === undefined) return;
+    if (this.aggregateMetrics.blockingIssues > 0) {
+      recommendations.push({
+        priority: 'critical',
+        category: 'technical',
+        description: `${this.aggregateMetrics.blockingIssues} blocking issues found. Must be resolved before launch.`,
+        action: 'Address all blocking issues immediately'
+      });
+    }
 
-      let meetsCriteria = false;
-      
-      if (typeof target === 'number') {
-        meetsCriteria = current >= target;
-      } else if (typeof target === 'string') {
-        meetsCriteria = current === target;
-      } else if (typeof target === 'boolean') {
-        meetsCriteria = current === target;
-      }
+    if (this.aggregateMetrics.completionRate < 90) {
+      recommendations.push({
+        priority: 'high',
+        category: 'usability',
+        description: `Completion rate is ${this.aggregateMetrics.completionRate}%. Target is 90%+.`,
+        action: 'Identify and fix drop-off points in user flow'
+      });
+    }
 
-      if (!meetsCriteria) {
-        issues.push(`${key}: expected ${target}, got ${current}`);
-        valid = false;
+    // Add category-specific recommendations
+    Object.entries(this.aggregateMetrics.feedbackByCategory).forEach(([category, count]) => {
+      if (count > 2) {
+        recommendations.push({
+          priority: 'medium',
+          category: category,
+          description: `${count} feedback items in ${category} category.`,
+          action: `Review and address ${category} issues`
+        });
       }
     });
 
-    return { valid, issues };
-  };
-
-  const value = {
-    validationSessions,
-    activeSession,
-    validationResults,
-    startValidationSession,
-    recordValidationEvent,
-    completeValidationSession,
-    getValidationResults,
-    validateSuccessCriteria,
-    SUCCESS_METRICS,
-    VALIDATION_TYPES
-  };
-
-  return (
-    <UserValidationContext.Provider value={value}>
-      {children}
-    </UserValidationContext.Provider>
-  );
-}
-
-/**
- * Hook to use user validation context
- */
-export function useUserValidation() {
-  const context = useContext(UserValidationContext);
-  if (!context) {
-    throw new Error('useUserValidation must be used within UserValidationProvider');
+    return recommendations;
   }
-  return context;
-}
-
-// ============================================================================
-// VALIDATION UTILITIES
-// ============================================================================
-
-/**
- * Log validation events for analytics
- * @param {string} eventType - Type of event
- * @param {object} data - Event data
- */
-function logValidationEvent(eventType, data) {
-  // In production, this would send to analytics service
-  console.log(`[Validation] ${eventType}:`, data);
-  
-  // Example analytics integration:
-  // analytics.track('validation_event', {
-  //   event_type: eventType,
-  //   ...data,
-  //   timestamp: new Date().toISOString()
-  // });
 }
 
 /**
- * Calculate task completion rate
- * @param {Array} events - Array of validation events
+ * Validation Protocol Execution Helper
  */
-export function calculateTaskCompletionRate(events) {
-  const taskEvents = events.filter(event => event.type === 'task_started');
-  const completionEvents = events.filter(event => event.type === 'task_completed');
-  
-  if (taskEvents.length === 0) return 0;
-  
-  return completionEvents.length / taskEvents.length;
-}
+export const executeValidationProtocol = {
+  /**
+   * Create a new validation session
+   */
+  createSession: (scenarioId, userId) => {
+    return new UserValidationSession(scenarioId, userId);
+  },
 
-/**
- * Calculate average task completion time
- * @param {Array} events - Array of validation events
- */
-export function calculateAverageTaskTime(events) {
-  const taskStarts = events.filter(event => event.type === 'task_started');
-  const taskCompletions = events.filter(event => event.type === 'task_completed');
-  
-  if (taskStarts.length === 0 || taskCompletions.length === 0) return 0;
-  
-  const completionTimes = taskCompletions.map(completion => {
-    const start = taskStarts.find(start => 
-      start.data.taskId === completion.data.taskId
-    );
+  /**
+   * Run a complete validation scenario
+   */
+  runScenario: async (scenarioId, userId) => {
+    const session = new UserValidationSession(scenarioId, userId);
+    const scenario = USER_VALIDATION_SCENARIOS[scenarioId];
     
-    if (!start) return 0;
-    
-    return completion.timestamp - start.timestamp;
-  }).filter(time => time > 0);
-  
-  if (completionTimes.length === 0) return 0;
-  
-  return completionTimes.reduce((sum, time) => sum + time, 0) / completionTimes.length;
-}
+    console.log(`Starting validation scenario: ${scenario.title}`);
+    session.startSession();
 
-/**
- * Calculate error rate
- * @param {Array} events - Array of validation events
- */
-export function calculateErrorRate(events) {
-  const totalEvents = events.length;
-  const errorEvents = events.filter(event => event.type === 'error');
-  
-  if (totalEvents === 0) return 0;
-  
-  return errorEvents.length / totalEvents;
-}
+    // Execute each step in the scenario
+    for (let i = 0; i < scenario.steps.length; i++) {
+      const step = scenario.steps[i];
+      console.log(`Executing step ${i + 1}: ${step}`);
+      
+      // Simulate step execution (in real usage, this would be actual user interaction)
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      session.completeStep(step);
+    }
 
-/**
- * Generate validation report
- * @param {object} session - Validation session
- */
-export function generateValidationReport(session) {
-  const { events, type, startTime, endTime } = session;
-  
-  const metrics = {
-    task_completion_rate: calculateTaskCompletionRate(events),
-    average_task_time: calculateAverageTaskTime(events),
-    error_rate: calculateErrorRate(events),
-    total_events: events.length,
-    session_duration: endTime ? endTime - startTime : 0
-  };
-  
-  return {
-    sessionId: session.id,
-    type,
-    metrics,
-    events: events.length,
-    startTime,
-    endTime,
-    duration: metrics.session_duration
-  };
-}
+    // Check success criteria
+    scenario.successCriteria.forEach(criteria => {
+      session.markSuccessCriteria(criteria, true);
+    });
 
-export default UserValidationProtocol; 
+    return session;
+  },
+
+  /**
+   * Generate validation report
+   */
+  generateReport: (sessions) => {
+    const aggregator = new ValidationResultsAggregator();
+    sessions.forEach(session => aggregator.addSession(session));
+    return aggregator.generateSummaryReport();
+  }
+};
+
+export default {
+  USER_VALIDATION_SCENARIOS,
+  FEEDBACK_CATEGORIES,
+  UserValidationSession,
+  ValidationResultsAggregator,
+  executeValidationProtocol
+}; 

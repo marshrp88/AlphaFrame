@@ -189,8 +189,6 @@ export class ExecutionController {
    */
   static async executeAction(actionType, payload, confirmed = false) {
     try {
-      // console.log('Executing action:', actionType, payload);
-      
       const validationData = { type: actionType, payload };
       const parsed = ActionSchema.safeParse(validationData);
       if (!parsed.success) {
@@ -198,167 +196,119 @@ export class ExecutionController {
       }
 
       // Check for sandbox mode
-      const { isSandboxMode } = useUIStore.getState();
+      const isSandboxMode = localStorage.getItem('sandbox_mode') === 'true';
       if (isSandboxMode) {
-        // In sandbox mode, log the action and return a mocked result
-        console.log('[SANDBOX] Action execution simulated:', { actionType, payload });
-        return { success: true, sandbox: true, actionType, payload };
+        return {
+          success: true,
+          message: 'Action executed in sandbox mode',
+          sandbox: true,
+          actionType,
+          payload
+        };
       }
 
       // Check permissions
-      const permissionResult = await canExecuteAction(actionType);
-      if (!permissionResult.allowed) {
-        throw new Error(permissionResult.reason || 'Permission denied');
+      const permissionCheck = await canExecuteAction(actionType);
+      if (!permissionCheck.allowed) {
+        throw new Error(`Permission denied: ${permissionCheck.reason}`);
       }
 
-      // Handle high-risk actions
+      // Check if confirmation is required
       if (requiresConfirmation(actionType) && !confirmed) {
         const password = await promptForMasterPassword();
         if (!password) {
           throw new Error('Action cancelled by user');
         }
-        return this.executeAction(actionType, payload, true);
       }
 
-      // Add diagnostic logs for internal action routing
-      console.log('[DEBUG] INTERNAL_ACTIONS =', INTERNAL_ACTIONS);
-      console.log('[DEBUG] actionType =', actionType);
-      console.log('[DEBUG] isInternal =', INTERNAL_ACTIONS.includes(actionType));
-
-      // Handle internal actions
+      // Execute the action based on type
+      let result;
       if (INTERNAL_ACTIONS.includes(actionType)) {
-        console.log('[EXECUTION] Handling internal action:', actionType);
-        return handleInternalAction({ type: actionType, payload });
+        result = await handleInternalAction({ type: actionType, payload });
+      } else {
+        switch (actionType) {
+          case 'PLAID_TRANSFER':
+            result = await handlePlaidTransfer({ payload });
+            break;
+          case 'WEBHOOK':
+            result = await executeWebhook(payload);
+            break;
+          case 'SEND_EMAIL':
+          case 'SEND_NOTIFICATION':
+          case 'CREATE_ALERT':
+            result = await handleCommunicationAction({ actionType, payload });
+            break;
+          default:
+            throw new Error(`Unsupported action type: ${actionType}`);
+        }
       }
 
-      // Execute the appropriate action handler for non-internal actions
-      switch (actionType) {
-        case 'PLAID_TRANSFER':
-          return this.executePlaidTransfer(payload);
-        case 'WEBHOOK':
-          return this.handleWebhook(payload);
-        case 'SEND_EMAIL':
-        case 'SEND_NOTIFICATION':
-        case 'CREATE_ALERT':
-          return handleCommunicationAction({ actionType, payload });
-        case 'ADD_MEMO':
-          return this.handleMemoAddition(payload);
-        default:
-          console.warn('[EXECUTION] Unknown action type:', actionType);
-          throw new Error(`Unsupported action type: ${actionType}`);
-      }
-    } catch (error) {
-      throw new Error(`Action execution failed: ${error.message}`);
-    }
-  }
-
-  /**
-   * Handles Plaid transfer actions
-   * @param {Object} payload - The transfer configuration
-   * @returns {Promise<Object>} The result of the transfer
-   * @private
-   */
-  static async executePlaidTransfer(payload) {
-    return handlePlaidTransfer({ type: 'PLAID_TRANSFER', payload });
-  }
-
-  /**
-   * Handles webhook actions
-   * @param {Object} payload - The webhook configuration
-   * @returns {Promise<Object>} The result of the webhook call
-   * @private
-   */
-  static async handleWebhook(payload) {
-    try {
-      // Validate webhook payload
-      if (!payload.url) {
-        throw new Error('Webhook URL is required');
-      }
-
-      // Execute webhook using real service
-      const result = await executeWebhook(payload);
-      
-      // Log successful webhook execution
-      useLogStore.getState().queueAction({ 
-        type: 'WEBHOOK_EXECUTED', 
-        payload: { 
-          url: payload.url, 
-          result,
-          timestamp: Date.now() 
-        } 
+      // Log the successful execution
+      const logStore = useLogStore.getState();
+      const logId = logStore.addLogEntry(actionType, payload);
+      logStore.updateLogEntry(logId, {
+        status: 'completed',
+        result
       });
 
+      // Return the result directly for backward compatibility
       return result;
     } catch (error) {
-      // Log failed webhook execution
-      useLogStore.getState().queueAction({ 
-        type: 'WEBHOOK_FAILED', 
-        payload: { 
-          url: payload.url, 
-          error: error.message,
-          timestamp: Date.now() 
-        } 
+      // Log the failed execution
+      const logStore = useLogStore.getState();
+      const logId = logStore.addLogEntry(actionType, payload);
+      logStore.updateLogEntry(logId, {
+        status: 'failed',
+        error: error.message
       });
-      
+
       throw error;
     }
   }
 
   /**
-   * Handles goal adjustment actions
-   * @returns {Promise<Object>} The result of the goal adjustment
-   * @private
+   * Executes a Plaid transfer with proper error handling
+   * @param {Object} payload - The transfer configuration
+   * @returns {Promise<Object>} The transfer result
+   */
+  static async executePlaidTransfer(payload) {
+    return this.executeAction('PLAID_TRANSFER', payload);
+  }
+
+  /**
+   * Handles webhook execution
+   * @param {Object} payload - The webhook configuration
+   * @returns {Promise<Object>} The webhook result
+   */
+  static async handleWebhook(payload) {
+    return this.executeAction('WEBHOOK', payload);
+  }
+
+  /**
+   * Handles goal adjustment
+   * @returns {Promise<Object>} The adjustment result
    */
   static async handleGoalAdjustment() {
-    // Implementation for goal adjustments
-    return { success: true, adjustmentId: 'mock_adjustment_id' };
+    return this.executeAction('ADJUST_GOAL', {});
   }
 
   /**
-   * Handles memo addition actions
+   * Handles memo addition
    * @param {Object} payload - The memo configuration
-   * @returns {Promise<Object>} The result of the memo addition
-   * @private
+   * @returns {Promise<Object>} The memo result
    */
   static async handleMemoAddition(payload) {
-    // Implementation for memo additions
-    useLogStore.getState().queueAction({ type: 'ADD_MEMO', payload: { memo: payload.memo, timestamp: Date.now() } });
-    return { success: true, memoId: 'mock_memo_id' };
+    return this.executeAction('ADD_MEMO', payload);
   }
 
   /**
-   * Handles communication actions (email, notifications)
-   * @param {Object} payload - The communication configuration
-   * @returns {Promise<Object>} The result of the communication
-   * @private
+   * Handles communication actions
+   * @param {Object} params - The communication parameters
+   * @returns {Promise<Object>} The communication result
    */
   static async handleCommunicationAction({ actionType, payload }) {
-    try {
-      switch (actionType) {
-        case 'SEND_EMAIL':
-          return await sendEmail(payload);
-        
-        case 'SEND_NOTIFICATION':
-          // For now, treat notifications as emails
-          return await sendEmail({
-            ...payload,
-            template: payload.template || 'notification'
-          });
-        
-        case 'CREATE_ALERT':
-          // Create in-app alert
-          useUIStore.getState().showAlert({
-            type: payload.type || 'info',
-            message: payload.message,
-            title: payload.title
-          });
-          return { success: true, alertId: `alert_${Date.now()}` };
-        
-        default:
-          throw new Error(`Unsupported communication action: ${actionType}`);
-      }
-    } catch (error) {
-      throw new Error(`Communication action failed: ${error.message}`);
-    }
+    return this.executeAction(actionType, payload);
   }
-} 
+}
+
+export default ExecutionController; 
