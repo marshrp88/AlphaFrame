@@ -5,10 +5,10 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
+import Card, { CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 import { Loader2 } from 'lucide-react';
-import { runSimulation } from '@/lib/services/SimulationService';
+import simulationService from '@/lib/services/SimulationService';
 
 /**
  * SimulationPreview Component Props
@@ -32,7 +32,7 @@ function SimulationPreview({ actionType, payload, currentState }) {
     try {
       setIsLoading(true);
       setError(null);
-      const result = await runSimulation(actionType, payload, currentState);
+      const result = await simulationService.runSimulation(simulationId);
       setSimulationResult(result);
     } catch (err) {
       setError(err.message);

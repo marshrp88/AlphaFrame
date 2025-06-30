@@ -15,10 +15,10 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Button } from '../../../shared/ui/Button.jsx';
-import { Card } from '../../../shared/ui/Card.jsx';
-import { Input } from '../../../shared/ui/Input.jsx';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../shared/ui/Select.jsx';
+import Button from '../../../shared/ui/Button.jsx';
+import Card from '../../../shared/ui/Card.jsx';
+import Input from '../../../shared/ui/Input.jsx';
+import Select, { SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../shared/ui/Select.jsx';
 import { FileText, DollarSign, Calendar, ArrowRight, CheckCircle } from 'lucide-react';
 import { getTransactions } from '../../../lib/services/syncEngine.js';
 

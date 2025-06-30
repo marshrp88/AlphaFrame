@@ -13,7 +13,7 @@ import {
   DialogDescription,
   DialogFooter
 } from "@/shared/ui/dialog";
-import { Button } from "@/shared/ui/Button";
+import Button from "@/shared/ui/Button";
 import { AlertTriangle, Loader2 } from "lucide-react";
 import { runSimulation } from '@/lib/services/SimulationService';
 import { useFinancialStateStore } from '@/lib/store/financialStateStore';

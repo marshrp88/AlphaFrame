@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Badge } from "@/shared/ui/badge";
+import Badge from "@/shared/ui/badge";
 import { format } from "date-fns";
 
 /**

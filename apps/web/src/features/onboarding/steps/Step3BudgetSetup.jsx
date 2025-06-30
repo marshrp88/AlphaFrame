@@ -15,9 +15,9 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Button } from '../../../shared/ui/Button.jsx';
-import { Card } from '../../../shared/ui/Card.jsx';
-import { Input } from '../../../shared/ui/Input.jsx';
+import Button from '../../../shared/ui/Button.jsx';
+import Card from '../../../shared/ui/Card.jsx';
+import Input from '../../../shared/ui/Input.jsx';
 import Label from '../../../shared/ui/Label.jsx';
 import { PieChart, DollarSign, TrendingUp, ArrowRight, Plus, Trash2 } from 'lucide-react';
 

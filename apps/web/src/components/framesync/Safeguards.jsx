@@ -5,11 +5,11 @@
  */
 
 import React, { memo, useCallback } from 'react';
-import { Input } from "@/shared/ui/Input";
+import Input from "@/shared/ui/Input";
 import Label from "@/shared/ui/Label";
-import { Switch } from "@/shared/ui/switch";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/Card";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import Switch from "@/shared/ui/switch";
+import Card, { CardContent, CardHeader, CardTitle } from "@/shared/ui/Card";
+import Tooltip from '@/components/ui/tooltip';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 
 /**
@@ -70,16 +70,14 @@ function SafeguardsComponent({ value, onChange }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Label htmlFor="require-confirmation">Require Confirmation</Label>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <InfoCircledIcon className="h-4 w-4 text-muted-foreground" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Show a confirmation dialog for high-risk actions</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <Tooltip>
+              <Tooltip.Trigger>
+                <InfoCircledIcon className="h-4 w-4 text-muted-foreground" />
+              </Tooltip.Trigger>
+              <Tooltip.Content>
+                <p>Show a confirmation dialog for high-risk actions</p>
+              </Tooltip.Content>
+            </Tooltip>
           </div>
           <Switch
             id="require-confirmation"
@@ -121,16 +119,14 @@ function SafeguardsComponent({ value, onChange }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Label htmlFor="run-simulation">Run Simulation Preview</Label>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <InfoCircledIcon className="h-4 w-4 text-muted-foreground" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Show a preview of the action&apos;s impact before execution</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <Tooltip>
+              <Tooltip.Trigger>
+                <InfoCircledIcon className="h-4 w-4 text-muted-foreground" />
+              </Tooltip.Trigger>
+              <Tooltip.Content>
+                <p>Show a preview of the action&apos;s impact before execution</p>
+              </Tooltip.Content>
+            </Tooltip>
           </div>
           <Switch
             id="run-simulation"

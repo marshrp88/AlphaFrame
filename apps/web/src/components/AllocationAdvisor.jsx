@@ -17,9 +17,9 @@
 
 import React, { useState, useEffect } from 'react';
 import portfolioAnalyzer from '../lib/services/PortfolioAnalyzer.js';
-import { Card } from './ui/Card.jsx';
-import { Button } from './ui/Button.jsx';
-import { Select } from './ui/Select.jsx';
+import Card from './ui/Card.jsx';
+import Button from './ui/Button.jsx';
+import Select from '../shared/ui/Select.jsx';
 
 const AllocationAdvisor = ({ currentHoldings = [], onRecommendationSelect }) => {
   const [selectedModel, setSelectedModel] = useState('moderate');

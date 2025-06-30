@@ -6,7 +6,7 @@
  */
 
 import React, { memo, useCallback, useState, useEffect } from 'react';
-import { Input } from '@/shared/ui/Input';
+import Input from '@/shared/ui/Input';
 import Label from '@/shared/ui/Label';
 import Textarea from '@/shared/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';

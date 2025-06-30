@@ -6,11 +6,11 @@
 
 import React, { useState, useCallback } from 'react';
 import { dispatchAction } from '@/lib/services/TriggerDispatcher';
-import { Button } from '@/components/ui/Button';
+import Button from '@/components/ui/Button';
 import { useToast } from '@/components/ui/use-toast';
 import { ActionSelector } from './ActionSelector';
 import { PlaidActionForm } from './PlaidActionForm';
-import { WebhookActionForm } from './WebhookActionForm';
+import WebhookActionForm from './WebhookActionForm';
 import { InternalActionForm } from './InternalActionForm';
 import { Safeguards } from './Safeguards';
 import { Loader2 } from 'lucide-react';

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from '@/shared/ui/Button.jsx';
+import Button from '@/shared/ui/Button.jsx';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/shared/ui/Card.jsx';
 import executionLogService from '@/core/services/ExecutionLogService.js';
 // Note: We will need to import NarrativeService once it exists and is exposed.

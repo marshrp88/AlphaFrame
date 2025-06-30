@@ -18,7 +18,7 @@
 
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Button } from '../shared/ui/Button.jsx';
+import Button from '../shared/ui/Button.jsx';
 
 const LoginButton = ({ className = '', variant = 'default', size = 'default' }) => {
   const {

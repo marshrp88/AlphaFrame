@@ -16,8 +16,8 @@
  */
 
 import React from 'react';
-import { Button } from '../ui/Button.jsx';
-import { Card } from '../ui/Card.jsx';
+import Button from '../ui/Button.jsx';
+import Card from '../ui/Card.jsx';
 import { AlertTriangle, RefreshCw, HelpCircle, Home } from 'lucide-react';
 
 /**

@@ -15,9 +15,9 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Card } from '../../shared/ui/Card.jsx';
-import { Button } from '../../shared/ui/Button.jsx';
-import { Badge } from '../../shared/ui/badge.jsx';
+import Card from '../../shared/ui/Card.jsx';
+import Button from '../../shared/ui/Button.jsx';
+import Badge from '../../shared/ui/badge.jsx';
 import { 
   RefreshCw, 
   CheckCircle, 

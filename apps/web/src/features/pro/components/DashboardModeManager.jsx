@@ -1,10 +1,53 @@
 import React, { useState, useEffect } from 'react';
-import { useDashboardModeStore, DASHBOARD_MODES, MODE_CONFIGS } from '@/core/store/dashboardModeStore.js';
+import { useDashboardModeStore } from '@/core/store/dashboardModeStore.js';
 import DashboardPicker from '@/components/DashboardPicker.jsx';
-import { Card } from '@/shared/ui/Card.jsx';
-import { Button } from '@/shared/ui/Button.jsx';
-import { Badge } from '@/shared/ui/badge.jsx';
+import Card from '@/shared/ui/Card.jsx';
+import Button from '@/shared/ui/Button.jsx';
+import Badge from '@/shared/ui/badge.jsx';
 import executionLogService from '@/core/services/ExecutionLogService.js';
+
+// Dashboard mode configurations (copied from DashboardPicker.jsx for consistency)
+const MODE_CONFIGS = {
+  PLANNER: {
+    id: 'PLANNER',
+    name: 'Planner',
+    description: 'Comprehensive view for detailed financial planning',
+    icon: '📊',
+    color: 'blue',
+    features: [
+      'Budget Tracking',
+      'Cash Flow Analysis',
+      'Goal Progress',
+    ],
+    bestFor: 'Users who want comprehensive financial oversight.'
+  },
+  INVESTOR: {
+    id: 'INVESTOR',
+    name: 'Investor',
+    description: 'Portfolio-focused view for investment decisions',
+    icon: '📈',
+    color: 'green',
+    features: [
+      'Portfolio Analysis',
+      'Allocation Drift',
+      'Performance Metrics',
+    ],
+    bestFor: 'Active investors and portfolio managers.'
+  },
+  MINIMALIST: {
+    id: 'MINIMALIST',
+    name: 'Minimalist',
+    description: 'Clean, essential view for a quick overview',
+    icon: '🎯',
+    color: 'purple',
+    features: [
+      'Key Metrics',
+      'Recent Activity',
+      'Quick Actions',
+    ],
+    bestFor: 'Users who prefer simplicity and quick insights.'
+  }
+};
 
 const DashboardModeManager = ({ 
   showPicker = true, 

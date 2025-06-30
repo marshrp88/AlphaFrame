@@ -18,7 +18,8 @@
  */
 
 import { z } from 'zod';
-import { config, getFeatureFlag } from '../config.js';
+import config from '../config.js';
+import { getFeatureFlag } from '../env.js';
 import executionLogService from '../../core/services/ExecutionLogService.js';
 
 /**

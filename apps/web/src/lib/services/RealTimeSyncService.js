@@ -15,7 +15,7 @@
  * that feels current and trustworthy, similar to modern trading platforms.
  */
 
-import { executionLogService } from '../../core/services/ExecutionLogService.js';
+import executionLogService from '../../core/services/ExecutionLogService.js';
 
 class RealTimeSyncService {
   constructor() {

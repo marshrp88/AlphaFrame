@@ -5,13 +5,7 @@
  */
 
 import React, { memo } from 'react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/shared/ui/Select";
+import Select, { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/Select";
 import Label from '@/shared/ui/Label';
 
 // Action categories and their options

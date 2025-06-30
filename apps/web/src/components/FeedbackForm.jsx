@@ -21,7 +21,7 @@ import Card from './ui/Card.jsx';
 import Button from './ui/Button.jsx';
 import Switch from './ui/switch.jsx';
 import Textarea from './ui/textarea.jsx';
-import { Select } from './ui/select.jsx';
+import Select from '../shared/ui/Select.jsx';
 import Badge from '../shared/ui/badge.jsx';
 import feedbackUploader from '../lib/services/FeedbackUploader.js';
 import executionLogService from '../lib/services/ExecutionLogService.js';

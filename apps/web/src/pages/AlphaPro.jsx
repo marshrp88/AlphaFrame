@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card } from '@/shared/ui/Card.jsx';
-import { Badge } from '@/shared/ui/badge.jsx';
+import Card from '@/shared/ui/Card.jsx';
+import Badge from '@/shared/ui/badge.jsx';
 import DashboardModeManager from '../features/pro/components/DashboardModeManager.jsx';
 import FeedbackModule from '../features/pro/components/FeedbackModule.jsx';
 

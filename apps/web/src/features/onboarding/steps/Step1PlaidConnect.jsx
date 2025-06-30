@@ -15,8 +15,8 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Button } from '../../../shared/ui/Button.jsx';
-import { Card } from '../../../shared/ui/Card.jsx';
+import Button from '../../../shared/ui/Button.jsx';
+import Card from '../../../shared/ui/Card.jsx';
 import { Shield, CreditCard, ArrowRight, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { initializePlaid, createLinkToken, exchangePublicToken, getAccounts } from '../../../lib/services/syncEngine.js';
 import { config } from '../../../lib/config.js';
