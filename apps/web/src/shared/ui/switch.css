@@ -1,0 +1,171 @@
+/**
+ * Switch Component Styles - Phoenix Initiative V3.1
+ * 
+ * Purpose: Provides consistent switch styling using design tokens
+ * instead of Tailwind classes for better maintainability.
+ * 
+ * Procedure:
+ * 1. Use CSS custom properties from tokens.css
+ * 2. Define base switch styles with proper states
+ * 3. Create focus, hover, and disabled states
+ * 4. Support accessibility with ARIA attributes
+ * 5. Ensure proper thumb animation
+ * 
+ * Conclusion: Centralized switch styling that maintains design system
+ * consistency and enables easy theme switching with vanilla CSS only.
+ */
+
+.switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all var(--transition-base);
+}
+
+.switch:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-primary-100);
+  border-radius: var(--radius-full);
+}
+
+.switch:focus-visible {
+  box-shadow: 0 0 0 3px var(--color-primary-100);
+}
+
+.switch-track {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 44px;
+  height: 24px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-full);
+  transition: background-color var(--transition-base);
+  cursor: pointer;
+}
+
+.switch-thumb {
+  position: absolute;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background-color: var(--color-white);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base);
+  pointer-events: none;
+}
+
+/* Checked State */
+.switch-checked .switch-track {
+  background-color: var(--color-primary-600);
+}
+
+.switch-checked .switch-thumb {
+  transform: translateX(20px);
+}
+
+/* Hover States */
+.switch:hover:not(.switch-disabled) .switch-track {
+  background-color: var(--color-gray-300);
+}
+
+.switch-checked:hover:not(.switch-disabled) .switch-track {
+  background-color: var(--color-primary-700);
+}
+
+/* Disabled State */
+.switch-disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.switch-disabled .switch-track {
+  background-color: var(--color-gray-100);
+  cursor: not-allowed;
+}
+
+.switch-disabled .switch-thumb {
+  background-color: var(--color-gray-300);
+}
+
+/* Size Variations */
+.switch-sm .switch-track {
+  width: 36px;
+  height: 20px;
+}
+
+.switch-sm .switch-thumb {
+  width: 16px;
+  height: 16px;
+}
+
+.switch-sm.switch-checked .switch-thumb {
+  transform: translateX(16px);
+}
+
+.switch-lg .switch-track {
+  width: 52px;
+  height: 28px;
+}
+
+.switch-lg .switch-thumb {
+  width: 24px;
+  height: 24px;
+}
+
+.switch-lg.switch-checked .switch-thumb {
+  transform: translateX(24px);
+}
+
+/* Dark Mode Support */
+.dark-mode .switch-track {
+  background-color: var(--color-gray-600);
+}
+
+.dark-mode .switch-thumb {
+  background-color: var(--color-gray-200);
+}
+
+.dark-mode .switch:hover:not(.switch-disabled) .switch-track {
+  background-color: var(--color-gray-500);
+}
+
+.dark-mode .switch-checked .switch-track {
+  background-color: var(--color-primary-500);
+}
+
+.dark-mode .switch-checked:hover:not(.switch-disabled) .switch-track {
+  background-color: var(--color-primary-600);
+}
+
+.dark-mode .switch-disabled .switch-track {
+  background-color: var(--color-gray-700);
+}
+
+.dark-mode .switch-disabled .switch-thumb {
+  background-color: var(--color-gray-500);
+}
+
+.dark-mode .switch:focus {
+  box-shadow: 0 0 0 3px var(--color-primary-900);
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .switch-track,
+  .switch-thumb {
+    transition: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .switch {
+    display: none;
+  }
+} 

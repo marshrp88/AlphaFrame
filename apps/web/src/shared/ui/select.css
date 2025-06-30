@@ -1,0 +1,185 @@
+/**
+ * Select Component Styles - Phoenix Initiative V3.1
+ * 
+ * Purpose: Provides consistent select styling using design tokens
+ * instead of Tailwind classes for better maintainability.
+ * 
+ * Procedure:
+ * 1. Use CSS custom properties from tokens.css
+ * 2. Define base select styles with proper states
+ * 3. Create focus, hover, and disabled states
+ * 4. Support accessibility with ARIA attributes
+ * 5. Ensure proper dropdown arrow styling
+ * 
+ * Conclusion: Centralized select styling that maintains design system
+ * consistency and enables easy theme switching with vanilla CSS only.
+ */
+
+.select {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-base);
+  color: var(--color-text-primary);
+  background-color: var(--color-background-primary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right var(--spacing-sm) center;
+  background-repeat: no-repeat;
+  background-size: 16px 12px;
+  padding-right: calc(var(--spacing-md) + 20px);
+}
+
+/* Focus State */
+.select:focus {
+  outline: none;
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-100);
+}
+
+/* Hover State */
+.select:hover:not(:disabled) {
+  border-color: var(--color-gray-400);
+}
+
+/* Disabled State */
+.select-disabled,
+.select:disabled {
+  background-color: var(--color-gray-100);
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.select-disabled:hover,
+.select:disabled:hover {
+  border-color: var(--color-border-default);
+}
+
+/* Error State */
+.select-error {
+  border-color: var(--color-error-500);
+}
+
+.select-error:focus {
+  border-color: var(--color-error-500);
+  box-shadow: 0 0 0 3px var(--color-error-100);
+}
+
+/* Size Variations */
+.select-sm {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-sm);
+}
+
+.select-lg {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-lg);
+  border-radius: var(--radius-lg);
+}
+
+/* Variant Styles */
+.select-outline {
+  background-color: transparent;
+  border-width: 2px;
+}
+
+.select-outline:focus {
+  background-color: var(--color-background-primary);
+}
+
+.select-filled {
+  background-color: var(--color-gray-50);
+  border-color: var(--color-gray-200);
+}
+
+.select-filled:focus {
+  background-color: var(--color-background-primary);
+  border-color: var(--color-primary-500);
+}
+
+/* Dark Mode Support */
+.dark-mode .select {
+  background-color: var(--color-gray-800);
+  color: var(--color-text-primary);
+  border-color: var(--color-gray-600);
+}
+
+.dark-mode .select:focus {
+  border-color: var(--color-primary-400);
+  box-shadow: 0 0 0 3px var(--color-primary-900);
+}
+
+.dark-mode .select:hover:not(:disabled) {
+  border-color: var(--color-gray-500);
+}
+
+.dark-mode .select-disabled,
+.dark-mode .select:disabled {
+  background-color: var(--color-gray-700);
+  color: var(--color-text-disabled);
+}
+
+.dark-mode .select-error {
+  border-color: var(--color-error-400);
+}
+
+.dark-mode .select-error:focus {
+  border-color: var(--color-error-400);
+  box-shadow: 0 0 0 3px var(--color-error-900);
+}
+
+.dark-mode .select-filled {
+  background-color: var(--color-gray-700);
+  border-color: var(--color-gray-600);
+}
+
+.dark-mode .select-filled:focus {
+  background-color: var(--color-gray-800);
+  border-color: var(--color-primary-400);
+}
+
+/* Option Styling */
+.select option {
+  background-color: var(--color-background-primary);
+  color: var(--color-text-primary);
+  padding: var(--spacing-sm);
+}
+
+.dark-mode .select option {
+  background-color: var(--color-gray-800);
+  color: var(--color-text-primary);
+}
+
+/* Group Styling */
+.select optgroup {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.dark-mode .select optgroup {
+  color: var(--color-text-secondary);
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .select {
+    transition: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .select {
+    border: 1px solid var(--color-gray-400);
+    background-color: transparent;
+    background-image: none;
+  }
+} 

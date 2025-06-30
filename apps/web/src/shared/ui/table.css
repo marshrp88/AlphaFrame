@@ -1,0 +1,209 @@
+/**
+ * Table Component Styles - Phoenix Initiative V3.1
+ * 
+ * Purpose: Provides consistent table styling using design tokens
+ * instead of Tailwind classes for better maintainability.
+ * 
+ * Procedure:
+ * 1. Use CSS custom properties from tokens.css
+ * 2. Define base table styles with proper borders
+ * 3. Create responsive behavior and accessibility
+ * 4. Support proper spacing and typography
+ * 5. Ensure proper header styling
+ * 
+ * Conclusion: Centralized table styling that maintains design system
+ * consistency and enables easy theme switching with vanilla CSS only.
+ */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: var(--color-background-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.table-row {
+  border-bottom: 1px solid var(--color-border-default);
+  transition: background-color var(--transition-base);
+}
+
+.table-row:hover {
+  background-color: var(--color-gray-50);
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-cell {
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: left;
+  vertical-align: middle;
+  border-right: 1px solid var(--color-border-default);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+}
+
+.table-cell:last-child {
+  border-right: none;
+}
+
+.table-header {
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: left;
+  vertical-align: middle;
+  background-color: var(--color-gray-100);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  border-right: 1px solid var(--color-border-default);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table-header:last-child {
+  border-right: none;
+}
+
+/* Table Variants */
+.table-striped .table-row:nth-child(even) {
+  background-color: var(--color-gray-50);
+}
+
+.table-striped .table-row:nth-child(even):hover {
+  background-color: var(--color-gray-100);
+}
+
+.table-bordered .table-cell,
+.table-bordered .table-header {
+  border: 1px solid var(--color-border-default);
+}
+
+.table-compact .table-cell,
+.table-compact .table-header {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+}
+
+.table-large .table-cell,
+.table-large .table-header {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-lg);
+}
+
+/* Responsive Table */
+.table-responsive {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.table-responsive .table {
+  min-width: 600px;
+  border: none;
+  box-shadow: none;
+}
+
+/* Dark Mode Support */
+.dark-mode .table {
+  background-color: var(--color-gray-800);
+  border-color: var(--color-gray-600);
+}
+
+.dark-mode .table-row {
+  border-bottom-color: var(--color-gray-600);
+}
+
+.dark-mode .table-row:hover {
+  background-color: var(--color-gray-700);
+}
+
+.dark-mode .table-cell {
+  border-right-color: var(--color-gray-600);
+  color: var(--color-text-primary);
+}
+
+.dark-mode .table-header {
+  background-color: var(--color-gray-700);
+  color: var(--color-text-primary);
+  border-right-color: var(--color-gray-600);
+}
+
+.dark-mode .table-striped .table-row:nth-child(even) {
+  background-color: var(--color-gray-700);
+}
+
+.dark-mode .table-striped .table-row:nth-child(even):hover {
+  background-color: var(--color-gray-600);
+}
+
+/* Table with Actions */
+.table-with-actions .table-cell:last-child {
+  text-align: right;
+  width: 120px;
+}
+
+/* Sortable Headers */
+.table-header-sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+
+.table-header-sortable:hover {
+  background-color: var(--color-gray-200);
+}
+
+.dark-mode .table-header-sortable:hover {
+  background-color: var(--color-gray-600);
+}
+
+.table-header-sortable::after {
+  content: '↕';
+  position: absolute;
+  right: var(--spacing-sm);
+  opacity: 0.5;
+}
+
+.table-header-sorted-asc::after {
+  content: '↑';
+  opacity: 1;
+}
+
+.table-header-sorted-desc::after {
+  content: '↓';
+  opacity: 1;
+}
+
+/* Empty State */
+.table-empty {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+/* Loading State */
+.table-loading .table-row {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Print Styles */
+@media print {
+  .table {
+    border: 1px solid var(--color-gray-400);
+    box-shadow: none;
+  }
+  
+  .table-row:hover {
+    background-color: transparent;
+  }
+  
+  .table-header {
+    background-color: var(--color-gray-200);
+  }
+} 

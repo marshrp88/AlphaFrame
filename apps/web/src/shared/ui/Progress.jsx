@@ -1,69 +1,57 @@
 /**
- * Progress.jsx - AlphaFrame VX.1 Finalization
+ * Progress Component - Phoenix Initiative V3.1
  * 
- * Purpose: Progress indicator component for multi-step flows
- * like onboarding and setup processes.
+ * Purpose: Provides consistent progress bar functionality across the application
+ * using ONLY design tokens - NO TAILWIND, NO TYPESCRIPT, NO SVELTE.
  * 
- * Procedure:
- * 1. Display current step and total steps
- * 2. Show visual progress bar
- * 3. Handle step completion states
- * 4. Provide accessibility features
+ * Procedure: 
+ * 1. Use CSS classes that reference design tokens
+ * 2. Apply consistent progress styling with proper states
+ * 3. Support different variants and sizes
+ * 4. Ensure proper accessibility
  * 
- * Conclusion: Provides clear visual feedback for
- * multi-step user flows and progress tracking.
+ * Conclusion: Ensures uniform progress behavior and appearance
+ * while maintaining design system consistency with vanilla CSS only.
  */
-
 import React from 'react';
+import { cn } from '@/lib/utils.js';
+import './progress.css';
 
-/**
- * Progress indicator component
- * @param {Object} props - Component props
- * @param {number} props.currentStep - Current step number
- * @param {number} props.totalSteps - Total number of steps
- * @param {string[]} props.steps - Optional array of step labels
- * @param {string} props.className - Optional CSS class name
- */
-export const Progress = ({ 
-  currentStep, 
-  totalSteps, 
-  steps = [], 
-  className = '' 
+const Progress = ({ 
+  value = 0, 
+  max = 100, 
+  size = 'md',
+  variant = 'default',
+  showLabel = false,
+  showValue = false,
+  className = '',
+  ...props 
 }) => {
-  const progressPercentage = (currentStep / totalSteps) * 100;
-
+  const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
+  
   return (
-    <div className={`w-full ${className}`}>
-      {/* Progress Bar */}
-      <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-        <div 
-          className="bg-blue-600 h-2 rounded-full transition-all duration-300 ease-in-out"
-          style={{ width: `${progressPercentage}%` }}
-          role="progressbar"
-          aria-valuenow={currentStep}
-          aria-valuemin={1}
-          aria-valuemax={totalSteps}
-        />
-      </div>
-
-      {/* Step Information */}
-      <div className="flex justify-between items-center text-sm text-gray-600">
-        <span>
-          Step {currentStep} of {totalSteps}
-        </span>
-        <span>
-          {Math.round(progressPercentage)}% Complete
-        </span>
-      </div>
-
-      {/* Step Labels */}
-      {steps.length > 0 && (
-        <div className="mt-2">
-          <span className="text-sm font-medium text-gray-900">
-            {steps[currentStep - 1] || `Step ${currentStep}`}
-          </span>
+    <div className={cn('progress-container', className)} {...props}>
+      {(showLabel || showValue) && (
+        <div className="progress-header">
+          {showLabel && <span className="progress-label">Progress</span>}
+          {showValue && (
+            <span className="progress-value">
+              {Math.round(percentage)}%
+            </span>
+          )}
         </div>
       )}
+      
+      <div className={cn('progress', `progress-${size}`, `progress-${variant}`)}>
+        <div 
+          className="progress-bar"
+          role="progressbar"
+          aria-valuenow={value}
+          aria-valuemin={0}
+          aria-valuemax={max}
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
     </div>
   );
 };

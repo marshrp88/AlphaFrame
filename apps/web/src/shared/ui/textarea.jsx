@@ -1,27 +1,47 @@
-import React from 'react';
-
 /**
- * Textarea Component - A multi-line text input component
+ * Textarea Component - Phoenix Initiative V3.1
  * 
- * Purpose: Provides consistent textarea functionality for longer text input
- * Procedure: Renders a textarea element with proper styling and accessibility
- * Conclusion: Enables uniform textarea behavior across the application
+ * Purpose: Provides consistent textarea functionality across the application
+ * using ONLY design tokens - NO TAILWIND, NO TYPESCRIPT, NO SVELTE.
+ * 
+ * Procedure: 
+ * 1. Use CSS classes that reference design tokens
+ * 2. Apply consistent textarea styling with proper states
+ * 3. Support disabled states and accessibility
+ * 4. Ensure proper resize behavior
+ * 
+ * Conclusion: Ensures uniform textarea behavior and appearance
+ * while maintaining design system consistency with vanilla CSS only.
  */
+import React from 'react';
+import { cn } from '@/lib/utils.js';
+import './textarea.css';
+
 const Textarea = ({ 
-  placeholder,
-  value,
-  onChange,
-  rows = 4,
   className = '', 
+  disabled = false,
+  error = false,
+  size = 'md',
+  variant = 'default',
+  resize = 'vertical',
+  rows = 4,
   ...props 
 }) => {
   return (
-    <textarea 
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
+    <textarea
+      className={cn(
+        'textarea',
+        `textarea-${size}`,
+        `textarea-${variant}`,
+        `textarea-resize-${resize}`,
+        {
+          'textarea-disabled': disabled,
+          'textarea-error': error
+        },
+        className
+      )}
+      disabled={disabled}
       rows={rows}
-      className={`block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 resize-vertical ${className}`}
       {...props}
     />
   );

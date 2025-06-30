@@ -1,0 +1,201 @@
+/**
+ * Radio Group Component Styles - Phoenix Initiative V3.1
+ * 
+ * Purpose: Provides consistent radio group styling using design tokens
+ * instead of Tailwind classes for better maintainability.
+ * 
+ * Procedure:
+ * 1. Use CSS custom properties from tokens.css
+ * 2. Define base radio styles with proper states
+ * 3. Create focus, hover, and disabled states
+ * 4. Support accessibility with ARIA attributes
+ * 5. Ensure proper radio button appearance
+ * 
+ * Conclusion: Centralized radio group styling that maintains design system
+ * consistency and enables easy theme switching with vanilla CSS only.
+ */
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.radio-group-horizontal {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.radio-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+
+.radio-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.radio-control {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color-gray-300);
+  border-radius: var(--radius-full);
+  background-color: var(--color-background-primary);
+  transition: all var(--transition-base);
+  flex-shrink: 0;
+}
+
+.radio-control::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-primary-600);
+  border-radius: var(--radius-full);
+  transition: transform var(--transition-base);
+}
+
+/* Checked State */
+.radio-input:checked + .radio-control {
+  border-color: var(--color-primary-600);
+  background-color: var(--color-background-primary);
+}
+
+.radio-input:checked + .radio-control::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Focus State */
+.radio-input:focus + .radio-control {
+  box-shadow: 0 0 0 3px var(--color-primary-100);
+}
+
+.radio-input:focus-visible + .radio-control {
+  box-shadow: 0 0 0 3px var(--color-primary-100);
+}
+
+/* Hover State */
+.radio-item:hover:not(.radio-item-disabled) .radio-control {
+  border-color: var(--color-gray-400);
+}
+
+.radio-input:checked:hover + .radio-control {
+  border-color: var(--color-primary-700);
+}
+
+/* Disabled State */
+.radio-item-disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.radio-item-disabled .radio-control {
+  background-color: var(--color-gray-100);
+  border-color: var(--color-gray-200);
+  cursor: not-allowed;
+}
+
+.radio-item-disabled .radio-label {
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+}
+
+.radio-input:disabled + .radio-control::after {
+  background-color: var(--color-gray-400);
+}
+
+/* Label Styling */
+.radio-label {
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-base);
+}
+
+/* Size Variations */
+.radio-item-sm .radio-control {
+  width: 14px;
+  height: 14px;
+}
+
+.radio-item-sm .radio-control::after {
+  width: 5px;
+  height: 5px;
+}
+
+.radio-item-lg .radio-control {
+  width: 20px;
+  height: 20px;
+}
+
+.radio-item-lg .radio-control::after {
+  width: 8px;
+  height: 8px;
+}
+
+/* Dark Mode Support */
+.dark-mode .radio-control {
+  background-color: var(--color-gray-800);
+  border-color: var(--color-gray-600);
+}
+
+.dark-mode .radio-input:checked + .radio-control {
+  border-color: var(--color-primary-400);
+}
+
+.dark-mode .radio-control::after {
+  background-color: var(--color-primary-400);
+}
+
+.dark-mode .radio-item:hover:not(.radio-item-disabled) .radio-control {
+  border-color: var(--color-gray-500);
+}
+
+.dark-mode .radio-input:checked:hover + .radio-control {
+  border-color: var(--color-primary-500);
+}
+
+.dark-mode .radio-item-disabled .radio-control {
+  background-color: var(--color-gray-700);
+  border-color: var(--color-gray-600);
+}
+
+.dark-mode .radio-input:disabled + .radio-control::after {
+  background-color: var(--color-gray-500);
+}
+
+.dark-mode .radio-input:focus + .radio-control {
+  box-shadow: 0 0 0 3px var(--color-primary-900);
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .radio-control,
+  .radio-control::after {
+    transition: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .radio-control {
+    border: 1px solid var(--color-gray-400);
+  }
+  
+  .radio-input:checked + .radio-control {
+    background-color: var(--color-gray-400);
+  }
+} 

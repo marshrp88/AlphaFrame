@@ -1,17 +1,50 @@
-import React from "react";
+/**
+ * Table Components - Phoenix Initiative V3.1
+ * 
+ * Purpose: Provides consistent table functionality across the application
+ * using ONLY design tokens - NO TAILWIND, NO TYPESCRIPT, NO SVELTE.
+ * 
+ * Procedure: 
+ * 1. Use CSS classes that reference design tokens
+ * 2. Apply consistent table styling with proper borders
+ * 3. Support responsive behavior and accessibility
+ * 4. Ensure proper spacing and typography
+ * 
+ * Conclusion: Ensures uniform table behavior and appearance
+ * while maintaining design system consistency with vanilla CSS only.
+ */
+import React from 'react';
+import { cn } from '@/lib/utils.js';
+import './table.css';
 
-export function Table({ children, ...props }) {
-  return <table className="w-full border" {...props}>{children}</table>;
-}
+export const Table = ({ children, className = '', ...props }) => {
+  return (
+    <table className={cn('table', className)} {...props}>
+      {children}
+    </table>
+  );
+};
 
-export function TableRow({ children }) {
-  return <tr className="border-t">{children}</tr>;
-}
+export const TableRow = ({ children, className = '', ...props }) => {
+  return (
+    <tr className={cn('table-row', className)} {...props}>
+      {children}
+    </tr>
+  );
+};
 
-export function TableCell({ children }) {
-  return <td className="p-2 border">{children}</td>;
-}
+export const TableCell = ({ children, className = '', ...props }) => {
+  return (
+    <td className={cn('table-cell', className)} {...props}>
+      {children}
+    </td>
+  );
+};
 
-export function TableHeader({ children }) {
-  return <th className="p-2 border text-left bg-gray-100">{children}</th>;
-} 
+export const TableHeader = ({ children, className = '', ...props }) => {
+  return (
+    <th className={cn('table-header', className)} {...props}>
+      {children}
+    </th>
+  );
+}; 

@@ -18,11 +18,8 @@ export const mockUIComponents = {
   RadioGroup: vi.fn(({ children, onValueChange }) => (
     <div onChange={(e) => onValueChange?.(e.target.value)}>{children}</div>
   )),
-  RadioGroupItem: vi.fn(({ children }) => (
-    <div>
-      <input type="radio" />
-      {children}
-    </div>
+  RadioItem: vi.fn(({ children }) => (
+    <div data-testid="radio-item">{children}</div>
   ))
 };
 
@@ -73,7 +70,7 @@ export const setupTest = () => {
 
   vi.mock('@/components/ui/radio-group', () => ({
     RadioGroup: mockUIComponents.RadioGroup,
-    RadioGroupItem: mockUIComponents.RadioGroupItem
+    RadioItem: mockUIComponents.RadioItem
   }));
 
   // Mock stores

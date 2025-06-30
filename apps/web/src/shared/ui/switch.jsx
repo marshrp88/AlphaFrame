@@ -1,17 +1,28 @@
-import React from 'react';
-
 /**
- * Switch Component - A toggle switch component
+ * Switch Component - Phoenix Initiative V3.1
  * 
- * Purpose: Provides toggle functionality with visual feedback
- * Procedure: Renders a custom switch element with proper accessibility
- * Conclusion: Enables consistent toggle behavior across the application
+ * Purpose: Provides consistent toggle switch functionality across the application
+ * using ONLY design tokens - NO TAILWIND, NO TYPESCRIPT, NO SVELTE.
+ * 
+ * Procedure: 
+ * 1. Use CSS classes that reference design tokens
+ * 2. Apply consistent switch styling with proper states
+ * 3. Support disabled states and accessibility
+ * 4. Ensure proper focus management
+ * 
+ * Conclusion: Ensures uniform switch behavior and appearance
+ * while maintaining design system consistency with vanilla CSS only.
  */
+import React from 'react';
+import { cn } from '@/lib/utils.js';
+import './switch.css';
+
 const Switch = ({ 
-  checked,
-  onChange,
+  checked = false, 
+  onChange, 
   disabled = false,
-  className = '', 
+  size = 'md',
+  className = '',
   ...props 
 }) => {
   return (
@@ -20,19 +31,21 @@ const Switch = ({
       role="switch"
       aria-checked={checked}
       disabled={disabled}
-      onClick={() => !disabled && onChange(!checked)}
-      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${
-        checked 
-          ? 'bg-blue-600 dark:bg-blue-500' 
-          : 'bg-gray-200 dark:bg-gray-700'
-      } ${className}`}
+      className={cn(
+        'switch',
+        `switch-${size}`,
+        {
+          'switch-checked': checked,
+          'switch-disabled': disabled
+        },
+        className
+      )}
+      onClick={() => !disabled && onChange?.(!checked)}
       {...props}
     >
-      <span
-        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-          checked ? 'translate-x-6' : 'translate-x-1'
-        }`}
-      />
+      <span className="switch-track">
+        <span className="switch-thumb" />
+      </span>
     </button>
   );
 };

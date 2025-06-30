@@ -1,0 +1,210 @@
+/**
+ * Tooltip Component Styles - Phoenix Initiative V3.1
+ * 
+ * Purpose: Provides consistent tooltip styling using design tokens
+ * instead of Tailwind classes for better maintainability.
+ * 
+ * Procedure:
+ * 1. Use CSS custom properties from tokens.css
+ * 2. Define base tooltip styles with proper positioning
+ * 3. Create hover states and animations
+ * 4. Support accessibility with ARIA attributes
+ * 5. Ensure proper z-index management
+ * 
+ * Conclusion: Centralized tooltip styling that maintains design system
+ * consistency and enables easy theme switching with vanilla CSS only.
+ */
+
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-trigger {
+  cursor: help;
+}
+
+.tooltip-content {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--color-gray-800);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-normal);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-base);
+  z-index: var(--z-index-tooltip);
+  pointer-events: none;
+  box-shadow: var(--shadow-md);
+}
+
+/* Arrow */
+.tooltip-content::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: var(--spacing-xs) solid transparent;
+  border-top-color: var(--color-gray-800);
+}
+
+/* Hover State */
+.tooltip-container:hover .tooltip-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-2px);
+}
+
+/* Position Variations */
+.tooltip-top .tooltip-content {
+  bottom: 100%;
+  top: auto;
+  margin-bottom: var(--spacing-xs);
+}
+
+.tooltip-top .tooltip-content::after {
+  top: 100%;
+  border-top-color: var(--color-gray-800);
+  border-bottom-color: transparent;
+}
+
+.tooltip-bottom .tooltip-content {
+  top: 100%;
+  bottom: auto;
+  margin-top: var(--spacing-xs);
+}
+
+.tooltip-bottom .tooltip-content::after {
+  bottom: 100%;
+  top: auto;
+  border-bottom-color: var(--color-gray-800);
+  border-top-color: transparent;
+}
+
+.tooltip-left .tooltip-content {
+  right: 100%;
+  left: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: var(--spacing-xs);
+}
+
+.tooltip-left .tooltip-content::after {
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left-color: var(--color-gray-800);
+  border-right-color: transparent;
+}
+
+.tooltip-right .tooltip-content {
+  left: 100%;
+  right: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: var(--spacing-xs);
+}
+
+.tooltip-right .tooltip-content::after {
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-right-color: var(--color-gray-800);
+  border-left-color: transparent;
+}
+
+/* Size Variations */
+.tooltip-sm .tooltip-content {
+  font-size: var(--font-size-xs);
+  padding: var(--spacing-xs);
+}
+
+.tooltip-lg .tooltip-content {
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  white-space: normal;
+  max-width: 200px;
+}
+
+/* Theme Variations */
+.tooltip-primary .tooltip-content {
+  background-color: var(--color-primary-600);
+}
+
+.tooltip-primary .tooltip-content::after {
+  border-top-color: var(--color-primary-600);
+}
+
+.tooltip-success .tooltip-content {
+  background-color: var(--color-success-600);
+}
+
+.tooltip-success .tooltip-content::after {
+  border-top-color: var(--color-success-600);
+}
+
+.tooltip-warning .tooltip-content {
+  background-color: var(--color-warning-600);
+}
+
+.tooltip-warning .tooltip-content::after {
+  border-top-color: var(--color-warning-600);
+}
+
+.tooltip-error .tooltip-content {
+  background-color: var(--color-error-600);
+}
+
+.tooltip-error .tooltip-content::after {
+  border-top-color: var(--color-error-600);
+}
+
+/* Dark Mode Support */
+.dark-mode .tooltip-content {
+  background-color: var(--color-gray-900);
+  color: var(--color-text-inverse);
+}
+
+.dark-mode .tooltip-content::after {
+  border-top-color: var(--color-gray-900);
+}
+
+.dark-mode .tooltip-primary .tooltip-content {
+  background-color: var(--color-primary-500);
+}
+
+.dark-mode .tooltip-primary .tooltip-content::after {
+  border-top-color: var(--color-primary-500);
+}
+
+/* Accessibility */
+.tooltip-container:focus-within .tooltip-content {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .tooltip-content {
+    transition: none;
+  }
+  
+  .tooltip-container:hover .tooltip-content {
+    transform: translateX(-50%);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .tooltip-content {
+    display: none;
+  }
+} 

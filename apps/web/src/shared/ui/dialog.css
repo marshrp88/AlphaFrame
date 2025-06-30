@@ -1,0 +1,206 @@
+/**
+ * Dialog Component Styles - Phoenix Initiative V3.1
+ * 
+ * Purpose: Provides consistent dialog styling using design tokens
+ * instead of Tailwind classes for better maintainability.
+ * 
+ * Procedure:
+ * 1. Use CSS custom properties from tokens.css
+ * 2. Define base dialog styles with proper states
+ * 3. Create different sizes and variants
+ * 4. Support accessibility with ARIA attributes
+ * 5. Ensure proper focus management
+ * 
+ * Conclusion: Centralized dialog styling that maintains design system
+ * consistency and enables easy theme switching with vanilla CSS only.
+ */
+
+.dialog {
+  background-color: var(--color-background-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--color-border-default);
+  overflow: hidden;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Size Variations */
+.dialog-sm {
+  width: 400px;
+  max-width: 90vw;
+}
+
+.dialog-md {
+  width: 500px;
+  max-width: 90vw;
+}
+
+.dialog-lg {
+  width: 600px;
+  max-width: 90vw;
+}
+
+.dialog-xl {
+  width: 800px;
+  max-width: 90vw;
+}
+
+.dialog-full {
+  width: 95vw;
+  height: 95vh;
+  max-width: none;
+  max-height: none;
+}
+
+/* Dialog Title */
+.dialog-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+  padding: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+/* Dialog Content */
+.dialog-content {
+  flex: 1;
+  padding: var(--spacing-lg);
+  overflow-y: auto;
+  color: var(--color-text-primary);
+}
+
+/* Dialog Footer */
+.dialog-footer {
+  padding: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border-default);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+  background-color: var(--color-gray-50);
+}
+
+/* Dialog Overlay */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-index-modal);
+  padding: var(--spacing-md);
+}
+
+/* Dialog Variants */
+.dialog-centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog-scrollable .dialog-content {
+  overflow-y: auto;
+  max-height: 60vh;
+}
+
+/* Dark Mode Support */
+.dark-mode .dialog {
+  background-color: var(--color-gray-800);
+  border-color: var(--color-gray-600);
+}
+
+.dark-mode .dialog-title {
+  color: var(--color-text-primary);
+  border-bottom-color: var(--color-gray-600);
+}
+
+.dark-mode .dialog-content {
+  color: var(--color-text-primary);
+}
+
+.dark-mode .dialog-footer {
+  border-top-color: var(--color-gray-600);
+  background-color: var(--color-gray-700);
+}
+
+/* Focus Management */
+.dialog:focus {
+  outline: none;
+}
+
+.dialog:focus-visible {
+  box-shadow: 0 0 0 3px var(--color-primary-100), var(--shadow-xl);
+}
+
+/* Animation */
+.dialog-enter {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.dialog-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 200ms ease-out, transform 200ms ease-out;
+}
+
+.dialog-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.dialog-exit-active {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 200ms ease-in, transform 200ms ease-in;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .dialog {
+    width: 95vw;
+    max-width: none;
+    margin: var(--spacing-sm);
+  }
+  
+  .dialog-title,
+  .dialog-content,
+  .dialog-footer {
+    padding: var(--spacing-md);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .dialog-enter,
+  .dialog-enter-active,
+  .dialog-exit,
+  .dialog-exit-active {
+    transition: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .dialog {
+    box-shadow: none;
+    border: 1px solid var(--color-gray-400);
+    max-width: none;
+    max-height: none;
+  }
+  
+  .dialog-overlay {
+    position: static;
+    background-color: transparent;
+    padding: 0;
+  }
+} 

@@ -1,32 +1,67 @@
-import React from "react";
+/**
+ * Radio Group Component - Phoenix Initiative V3.1
+ * 
+ * Purpose: Provides consistent radio group functionality across the application
+ * using ONLY design tokens - NO TAILWIND, NO TYPESCRIPT, NO SVELTE.
+ * 
+ * Procedure: 
+ * 1. Use CSS classes that reference design tokens
+ * 2. Apply consistent radio styling with proper states
+ * 3. Support disabled states and accessibility
+ * 4. Ensure proper focus management
+ * 
+ * Conclusion: Ensures uniform radio behavior and appearance
+ * while maintaining design system consistency with vanilla CSS only.
+ */
+import React from 'react';
+import { cn } from '@/lib/utils.js';
+import './radio-group.css';
 
-export function RadioGroup({ children, onValueChange, className = '' }) {
+const RadioGroup = ({ 
+  children, 
+  className = '', 
+  orientation = 'vertical',
+  ...props 
+}) => {
   return (
     <div 
-      role="radiogroup" 
-      className={className}
-      onChange={(e) => {
-        if (e.target.type === 'radio') {
-          onValueChange?.(e.target.value);
-        }
-      }}
+      className={cn(
+        'radio-group',
+        `radio-group-${orientation}`,
+        className
+      )}
+      role="radiogroup"
+      {...props}
     >
       {children}
     </div>
   );
-}
+};
 
-export function RadioGroupItem({ value, id, children, ...props }) {
+const RadioItem = ({ 
+  children, 
+  value, 
+  checked, 
+  onChange, 
+  disabled = false,
+  className = '',
+  ...props 
+}) => {
   return (
-    <div className="flex items-center space-x-2">
+    <label className={cn('radio-item', { 'radio-item-disabled': disabled }, className)}>
       <input
         type="radio"
-        id={id}
         value={value}
-        className="h-4 w-4 border-gray-300 text-primary focus:ring-primary"
+        checked={checked}
+        onChange={onChange}
+        disabled={disabled}
+        className="radio-input"
         {...props}
       />
-      {children}
-    </div>
+      <span className="radio-control" />
+      <span className="radio-label">{children}</span>
+    </label>
   );
-} 
+};
+
+export { RadioGroup, RadioItem }; 

@@ -1,0 +1,209 @@
+/**
+ * Textarea Component Styles - Phoenix Initiative V3.1
+ * 
+ * Purpose: Provides consistent textarea styling using design tokens
+ * instead of Tailwind classes for better maintainability.
+ * 
+ * Procedure:
+ * 1. Use CSS custom properties from tokens.css
+ * 2. Define base textarea styles with proper states
+ * 3. Create focus, hover, and disabled states
+ * 4. Support accessibility with ARIA attributes
+ * 5. Ensure proper resize behavior options
+ * 
+ * Conclusion: Centralized textarea styling that maintains design system
+ * consistency and enables easy theme switching with vanilla CSS only.
+ */
+
+.textarea {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-base);
+  color: var(--color-text-primary);
+  background-color: var(--color-background-primary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Focus State */
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-100);
+}
+
+/* Hover State */
+.textarea:hover:not(:disabled) {
+  border-color: var(--color-gray-400);
+}
+
+/* Disabled State */
+.textarea-disabled,
+.textarea:disabled {
+  background-color: var(--color-gray-100);
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.textarea-disabled:hover,
+.textarea:disabled:hover {
+  border-color: var(--color-border-default);
+}
+
+/* Error State */
+.textarea-error {
+  border-color: var(--color-error-500);
+}
+
+.textarea-error:focus {
+  border-color: var(--color-error-500);
+  box-shadow: 0 0 0 3px var(--color-error-100);
+}
+
+/* Size Variations */
+.textarea-sm {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-sm);
+  min-height: 80px;
+}
+
+.textarea-lg {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-lg);
+  border-radius: var(--radius-lg);
+  min-height: 120px;
+}
+
+/* Variant Styles */
+.textarea-outline {
+  background-color: transparent;
+  border-width: 2px;
+}
+
+.textarea-outline:focus {
+  background-color: var(--color-background-primary);
+}
+
+.textarea-filled {
+  background-color: var(--color-gray-50);
+  border-color: var(--color-gray-200);
+}
+
+.textarea-filled:focus {
+  background-color: var(--color-background-primary);
+  border-color: var(--color-primary-500);
+}
+
+/* Resize Variations */
+.textarea-resize-none {
+  resize: none;
+}
+
+.textarea-resize-vertical {
+  resize: vertical;
+}
+
+.textarea-resize-horizontal {
+  resize: horizontal;
+}
+
+.textarea-resize-both {
+  resize: both;
+}
+
+/* Dark Mode Support */
+.dark-mode .textarea {
+  background-color: var(--color-gray-800);
+  color: var(--color-text-primary);
+  border-color: var(--color-gray-600);
+}
+
+.dark-mode .textarea:focus {
+  border-color: var(--color-primary-400);
+  box-shadow: 0 0 0 3px var(--color-primary-900);
+}
+
+.dark-mode .textarea:hover:not(:disabled) {
+  border-color: var(--color-gray-500);
+}
+
+.dark-mode .textarea-disabled,
+.dark-mode .textarea:disabled {
+  background-color: var(--color-gray-700);
+  color: var(--color-text-disabled);
+}
+
+.dark-mode .textarea-error {
+  border-color: var(--color-error-400);
+}
+
+.dark-mode .textarea-error:focus {
+  border-color: var(--color-error-400);
+  box-shadow: 0 0 0 3px var(--color-error-900);
+}
+
+.dark-mode .textarea-filled {
+  background-color: var(--color-gray-700);
+  border-color: var(--color-gray-600);
+}
+
+.dark-mode .textarea-filled:focus {
+  background-color: var(--color-gray-800);
+  border-color: var(--color-primary-400);
+}
+
+/* Placeholder Styling */
+.textarea::placeholder {
+  color: var(--color-text-placeholder);
+  opacity: 1;
+}
+
+.dark-mode .textarea::placeholder {
+  color: var(--color-text-placeholder);
+}
+
+/* Character Count (if needed) */
+.textarea-with-count {
+  position: relative;
+}
+
+.textarea-count {
+  position: absolute;
+  bottom: var(--spacing-xs);
+  right: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  background-color: var(--color-background-primary);
+  padding: 2px var(--spacing-xs);
+  border-radius: var(--radius-sm);
+}
+
+.dark-mode .textarea-count {
+  color: var(--color-text-secondary);
+  background-color: var(--color-gray-800);
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .textarea {
+    transition: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .textarea {
+    border: 1px solid var(--color-gray-400);
+    background-color: transparent;
+    resize: none;
+  }
+} 

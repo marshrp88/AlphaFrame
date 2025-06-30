@@ -4,13 +4,23 @@
 // 10th grade level comments included
 
 import React from 'react';
+import { cn } from '@/lib/utils.js';
+import './select.css';
 
 /**
- * Select Component - A dropdown selection component
+ * Select Component - Phoenix Initiative V3.1
  * 
- * Purpose: Provides dropdown selection functionality with consistent styling
- * Procedure: Renders a select element with proper accessibility attributes
- * Conclusion: Enables consistent form input behavior across the application
+ * Purpose: Provides consistent select dropdown functionality across the application
+ * using ONLY design tokens - NO TAILWIND, NO TYPESCRIPT, NO SVELTE.
+ * 
+ * Procedure: 
+ * 1. Use CSS classes that reference design tokens
+ * 2. Apply consistent select styling with proper states
+ * 3. Support disabled states and accessibility
+ * 4. Ensure proper focus management
+ * 
+ * Conclusion: Ensures uniform select behavior and appearance
+ * while maintaining design system consistency with vanilla CSS only.
  */
 const Select = ({ 
   children, 
@@ -18,13 +28,27 @@ const Select = ({
   onChange, 
   placeholder = 'Select an option',
   className = '', 
+  disabled = false,
+  error = false,
+  size = 'md',
+  variant = 'default',
   ...props 
 }) => {
   return (
-    <select 
+    <select
       value={value}
       onChange={onChange}
-      className={`block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 ${className}`}
+      className={cn(
+        'select',
+        `select-${size}`,
+        `select-${variant}`,
+        {
+          'select-disabled': disabled,
+          'select-error': error
+        },
+        className
+      )}
+      disabled={disabled}
       {...props}
     >
       {placeholder && (
