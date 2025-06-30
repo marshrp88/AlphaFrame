@@ -17,12 +17,12 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Card } from './ui/Card.jsx';
-import { Button } from './ui/Button.jsx';
-import { Checkbox } from './ui/switch.jsx';
-import { Textarea } from './ui/textarea.jsx';
-import { Select } from './ui/Select.jsx';
-import { Badge } from '../shared/ui/badge.jsx';
+import Card from './ui/Card.jsx';
+import Button from './ui/Button.jsx';
+import Switch from './ui/switch.jsx';
+import Textarea from './ui/textarea.jsx';
+import { Select } from './ui/select.jsx';
+import Badge from '../shared/ui/badge.jsx';
 import feedbackUploader from '../lib/services/FeedbackUploader.js';
 import executionLogService from '../lib/services/ExecutionLogService.js';
 
@@ -128,14 +128,19 @@ const FeedbackForm = () => {
   };
 
   const handleSubmit = async () => {
+    console.log('[DEBUG] handleSubmit called with:', { selectedCategory, feedbackText: feedbackText.trim() });
+    
     if (!selectedCategory || !feedbackText.trim()) {
+      console.log('[DEBUG] Validation failed, showing alert');
       alert('Please select a category and provide feedback text.');
       return;
     }
 
+    console.log('[DEBUG] Starting snapshot generation...');
     setIsSubmitting(true);
     try {
       // Generate snapshot with selected data
+      console.log('[DEBUG] Calling feedbackUploader.generateSnapshot...');
       const snapshot = await feedbackUploader.generateSnapshot({
         category: selectedCategory,
         feedback: feedbackText,
@@ -143,33 +148,57 @@ const FeedbackForm = () => {
         timestamp: new Date().toISOString()
       });
 
+      console.log('[DEBUG] Snapshot generated successfully:', snapshot);
       setSnapshotData(snapshot);
+      console.log('[DEBUG] About to call setSnapshotGenerated(true)');
       setSnapshotGenerated(true);
+      console.log('[DEBUG] setSnapshotGenerated was called, state should now be true');
 
+      console.log('[DEBUG] Calling executionLogService.log...');
       await executionLogService.log('feedback.snapshot.created', {
         category: selectedCategory,
         dataIncluded: Object.keys(includedData).filter(key => includedData[key]),
         totalSize: `${totalSize}KB`
       });
+      console.log('[DEBUG] Execution log completed');
 
     } catch (error) {
+      console.error('[DEBUG] Error in handleSubmit:', error);
       alert('Error generating snapshot. Please try again.');
     } finally {
+      console.log('[DEBUG] Setting isSubmitting to false');
       setIsSubmitting(false);
     }
   };
 
   const handleExport = async () => {
-    if (!snapshotData) return;
+    if (!snapshotData) {
+      // Debug log
+      console.log('[DEBUG] snapshotData is null or undefined:', snapshotData);
+      return;
+    }
 
     try {
-      await feedbackUploader.exportSnapshot(snapshotData, 'file');
+      // Debug log
+      console.log('[DEBUG] snapshotData before export:', snapshotData);
+      let exportResult;
+      try {
+        exportResult = await feedbackUploader.exportSnapshot(snapshotData, 'file');
+        console.log('[DEBUG] export result:', exportResult);
+      } catch (e) {
+        console.error('[ERROR] exportSnapshot threw:', e);
+        throw e;
+      }
+      // Debug log
+      console.log('[DEBUG] logger exists:', typeof executionLogService.log);
       await executionLogService.log('feedback.snapshot.exported', {
         category: selectedCategory,
         totalSize: `${totalSize}KB`
       });
+      console.log('[DEBUG] alert: Snapshot exported successfully!');
       alert('Snapshot exported successfully!');
     } catch (error) {
+      console.log('[DEBUG] alert: Error exporting snapshot. Please try again.', error);
       alert('Error exporting snapshot. Please try again.');
     }
   };
@@ -283,7 +312,7 @@ const FeedbackForm = () => {
             <div className="space-y-3">
               {DATA_INCLUSION_OPTIONS.map((option) => (
                 <div key={option.id} className="flex items-start space-x-3 p-3 border rounded-lg">
-                  <Checkbox
+                  <Switch
                     checked={includedData[option.id]}
                     onCheckedChange={() => handleDataToggle(option.id)}
                     className="mt-1"
