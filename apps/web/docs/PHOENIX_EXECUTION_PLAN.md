@@ -192,4 +192,56 @@ This plan bridges the engineering-to-product gap completely—ensuring AlphaFram
 
 **Prepared by:** AlphaFrame CTO
 **Approved by:** CEO, Product, Engineering Leadership
-**Status:** Locked for Execution — Galileo dependent on Phoenix V3.0 full completion. 
+**Status:** Locked for Execution — Galileo dependent on Phoenix V3.0 full completion.
+
+---
+
+## CTO Response & Reinforcement (V3.1)
+
+**Date:** June 30, 2025  
+**Owner:** Chief Technology Officer  
+**Purpose:** Capture authoritative answers, technical constraints, and process clarifications for Phoenix Initiative V3.1. This section supersedes any prior ambiguity and is the reference for all contributors.
+
+### Strategic Alignment & Vision
+- **Top 3 User Personas:** Solo Founders, Freelance Professionals, High-agency Individuals
+- **Primary 'Aha!' Moment:** Rule creation triggers instant dashboard update
+- **Delight & Adoption Metrics:** Rule creation in 10 min, recurring simulation use, feedback rate
+
+### Technical Feasibility & Architecture
+- **Design System:** Modular CSS tokens in `/src/styles/tokens.css`, no Tailwind; stylelint + PR review
+- **Routing:** React Router v6 SPA
+- **State:** Zustand + localStorage; onboarding/session persistence
+- **Route Guards:** AppRouter wrapper (isOnboarded, isProUser)
+- **Performance:** <3s load, <100ms interaction, <350KB gzip, code splitting, Lighthouse/CI
+
+### UX, Delight & Accessibility
+- **Motion:** CSS transitions, React Spring, prefers-reduced-motion
+- **Onboarding:** Multi-step, skippable, resumable, dummy fallback data
+- **Empty/Error States:** Designed empty states, branded error boundary, offline banner
+- **A11y:** axe-core, eslint-plugin-jsx-a11y, ARIA, focus management, logs in `/docs/a11y-report.md`
+
+### Monetization & Commercialization
+- **Pro Features:** Monte Carlo, automation, insight archive; blurred/locked cards for gating
+- **Billing:** Stripe, monthly/annual, dashboard banner for failed payments
+
+### QA, Validation & Feedback
+- **E2E:** Cypress only, 90%+ coverage, onboarding/rule/dashboard tests
+- **Mobile:** Manual + BrowserStack, viewport matrix, Kanban for bugs
+- **Feedback:** GitHub board, monthly review, rolling deploys (no feature flags)
+
+### Governance, Communication & Risk
+- **Decision Hierarchy:** Product final on design, CTO veto on timeline; post-Sprint 2 review gates
+- **Docs:** Storybook for components, docblocks for services, onboarding doc in `/docs/dev-setup.md`
+- **Risks:** Mobile QA, rule UX, design consistency; mitigated by daily/weekly audits
+
+### Open-Ended/Challenging
+- **If We Changed One Thing:** Add "Rule Impact Simulator" post-onboarding
+- **What Would Make AlphaFrame Loved:** Predictive, safe automation; frictionless control; calendar-like intuitiveness
+
+### Policy Notes
+- **Strict Stack:** React + Vanilla JS + modular CSS only (NO Tailwind, TypeScript, Svelte)
+- **No feature flags for Phoenix**
+- **Phoenix V3.1 is now the active plan**
+
+**Closing Statement:**
+> The Phoenix Initiative V3.1 is fully aligned with AlphaFrame's tech stack, product vision, and customer-readiness goals. All contributors must adhere to these clarified policies and priorities. Further questions or deviations must be escalated to the CTO for review. 
