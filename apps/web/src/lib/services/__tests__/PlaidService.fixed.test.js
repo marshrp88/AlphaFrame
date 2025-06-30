@@ -14,22 +14,62 @@
 
 import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
 
-// Mock plaid module
-jest.mock('plaid', () => {
-  return {
-    Configuration: jest.fn(),
-    PlaidApi: jest.fn(() => (global.testUtils && global.testUtils.mockPlaidClient) || {}),
-    PlaidEnvironments: {
-      sandbox: 'https://sandbox.plaid.com'
-    }
-  };
-});
+// Mock Plaid API at module level before any imports
+jest.mock('plaid', () => ({
+  Configuration: jest.fn(),
+  PlaidApi: jest.fn().mockImplementation(() => ({
+    linkTokenCreate: jest.fn().mockResolvedValue({
+      data: {
+        link_token: 'test-link-token',
+        expiration: '2024-12-31',
+        request_id: 'test-request-id'
+      }
+    }),
+    itemPublicTokenExchange: jest.fn().mockResolvedValue({
+      data: {
+        access_token: 'test-access-token',
+        item_id: 'test-item-id'
+      }
+    }),
+    accountsBalanceGet: jest.fn().mockResolvedValue({
+      data: {
+        accounts: [
+          {
+            account_id: 'test-account',
+            balances: { available: 1000, current: 1000 }
+          }
+        ]
+      }
+    }),
+    transactionsGet: jest.fn().mockResolvedValue({
+      data: {
+        transactions: [{ transaction_id: 'test_transaction', amount: 100 }],
+        total_transactions: 1,
+        accounts: [{ account_id: 'test_account' }]
+      }
+    })
+  })),
+  PlaidEnvironments: {
+    sandbox: 'https://sandbox.plaid.com'
+  }
+}));
+
+jest.mock("@/lib/env", () => ({
+  env: {
+    VITE_PLAID_CLIENT_ID: "test-client-id",
+    VITE_PLAID_SECRET: "test-secret",
+    VITE_PLAID_ENV: "sandbox"
+  }
+}));
 
 // Mock CryptoService
 jest.mock('../../../core/services/CryptoService.js', () => ({
   encrypt: jest.fn().mockResolvedValue('encrypted_token'),
   decrypt: jest.fn().mockResolvedValue('decrypted_token')
 }));
+
+// Import PlaidService at module level to fix scope issues
+import { PlaidService } from '../PlaidService.js';
 
 describe('PlaidService - Fixed', () => {
   let plaidService;
@@ -39,13 +79,39 @@ describe('PlaidService - Fixed', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     
+    // Set environment variables BEFORE importing PlaidService
+    process.env.VITE_PLAID_CLIENT_ID = 'test_client_id';
+    process.env.VITE_PLAID_SECRET = 'test_secret';
+    process.env.VITE_PLAID_ENV = 'sandbox';
+    
     // Set up Plaid client mock for each test
     if (!global.testUtils) global.testUtils = {};
     global.testUtils.mockPlaidClient = {
-      linkTokenCreate: jest.fn(),
-      itemPublicTokenExchange: jest.fn(),
-      accountsBalanceGet: jest.fn(),
-      transactionsGet: jest.fn(),
+      linkTokenCreate: jest.fn().mockResolvedValue({
+        data: {
+          link_token: 'test_link_token_12345',
+          expiration: '2024-12-31T23:59:59Z',
+          request_id: 'test_request_id'
+        }
+      }),
+      itemPublicTokenExchange: jest.fn().mockResolvedValue({
+        data: {
+          access_token: 'test-access-token',
+          item_id: 'test-item-id'
+        }
+      }),
+      accountsBalanceGet: jest.fn().mockResolvedValue({
+        data: {
+          accounts: [{ account_id: 'test_account', balances: { available: 1000 } }]
+        }
+      }),
+      transactionsGet: jest.fn().mockResolvedValue({
+        data: { 
+          transactions: [{ transaction_id: 'test_transaction', amount: 100 }],
+          total_transactions: 1,
+          accounts: [{ account_id: 'test_account' }]
+        }
+      }),
     };
 
     // Set up storage mock
@@ -66,14 +132,6 @@ describe('PlaidService - Fixed', () => {
       writable: true
     });
 
-    // Set environment variables
-    process.env.VITE_PLAID_CLIENT_ID = 'test_client_id';
-    process.env.VITE_PLAID_SECRET = 'test_secret';
-    process.env.VITE_PLAID_ENV = 'sandbox';
-
-    // Dynamic import with singleton override pattern
-    const { PlaidService } = await import('../PlaidService.js');
-    
     // Override CryptoService singleton
     const cryptoModule = await import('../../../core/services/CryptoService.js');
     mockCryptoService = {
@@ -93,6 +151,9 @@ describe('PlaidService - Fixed', () => {
 
     // Instantiate PlaidService after all mocks are set
     plaidService = new PlaidService();
+    
+    // CRITICAL FIX: Override the client with our mock
+    plaidService.client = global.testUtils.mockPlaidClient;
   });
 
   afterEach(() => {
@@ -148,17 +209,13 @@ describe('PlaidService - Fixed', () => {
     });
 
     it('should handle uninitialized client', async () => {
-      const originalClient = plaidService.client;
-      plaidService.client = null;
-
-      const result = await plaidService.createLinkToken({
-        user: { id: 'test_user_123' }
-      });
-
-      expect(result.success).toBe(false);
-      expect(result.error).toContain('Plaid client not initialized');
+      const newPlaidService = new PlaidService();
+      newPlaidService.client = null; // Force uninitialized state
       
-      plaidService.client = originalClient;
+      const result = await newPlaidService.createLinkToken({ user: { id: 'test' } });
+      
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Plaid client not initialized');
     });
   });
 
@@ -166,21 +223,21 @@ describe('PlaidService - Fixed', () => {
     it('should exchange public token successfully', async () => {
       // CLUSTER 2 FIX: Ensure the mock returns the expected structure
       global.testUtils.mockPlaidClient.itemPublicTokenExchange.mockResolvedValue({
-        data: { access_token: 'test_access_token_67890', item_id: 'test_item_id' }
+        data: { access_token: 'test-access-token', item_id: 'test-item-id' }
       });
 
       const result = await plaidService.exchangePublicToken('test_public_token');
 
       expect(result.success).toBe(true);
-      expect(result.accessToken).toBe('test_access_token_67890');
-      expect(result.itemId).toBe('test_item_id');
+      expect(result.accessToken).toBe('test-access-token');
+      expect(result.itemId).toBe('test-item-id');
       expect(global.testUtils.mockPlaidClient.itemPublicTokenExchange).toHaveBeenCalledWith({
         public_token: 'test_public_token'
       });
     });
 
     it('should handle token exchange errors', async () => {
-      global.testUtils.mockPlaidClient.itemPublicTokenExchange.mockRejectedValueOnce(
+      global.testUtils.mockPlaidClient.itemPublicTokenExchange.mockRejectedValue(
         new Error('Invalid public token')
       );
 
@@ -216,7 +273,7 @@ describe('PlaidService - Fixed', () => {
       const result = await plaidService.getAccountBalances();
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('access token not available');
+      expect(result.error).toContain('Plaid client or access token not available');
     });
   });
 
@@ -289,6 +346,7 @@ describe('PlaidService - Fixed', () => {
 
   describe('Service Status', () => {
     it('should check if service is configured', () => {
+      // The service should be configured if environment variables are set
       expect(plaidService.isConfigured()).toBe(true);
     });
 
