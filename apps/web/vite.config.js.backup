@@ -22,12 +22,15 @@ export default defineConfig({
       'react-dom',
       'zustand',
       'framer-motion',
-      '@radix-ui/react-icons',
-      '@radix-ui/react-slot',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-select',
+      '@radix-ui/react-tabs',
+      '@radix-ui/react-toast',
       'date-fns',
-      'react-router-dom',
-      'react-hot-toast',
-      'zod'
+      'lodash',
+      'clsx',
+      'tailwind-merge'
     ],
   },
   build: {
@@ -41,14 +44,17 @@ export default defineConfig({
             'framer-motion'
           ],
           ui: [
-            '@radix-ui/react-icons',
-            '@radix-ui/react-slot',
-            'react-hot-toast'
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-select',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-toast'
           ],
           utils: [
             'date-fns',
-            'zod',
-            'react-router-dom'
+            'lodash',
+            'clsx',
+            'tailwind-merge'
           ]
         }
       }
