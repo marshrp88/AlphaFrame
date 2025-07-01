@@ -30,8 +30,6 @@ export default function NavBar({ items, currentPath, ...rest }) {
                 console.log(`Nav: Navigating to ${item.to}`);
               }}
             >
-              {/* Remove emoji icons for now, or use SVGs if provided */}
-              {/* {item.icon && <span className="navbar__icon">{item.icon}</span>} */}
               <span className="navbar__label">{item.label}</span>
             </NavLink>
           </li>

@@ -24,7 +24,7 @@ const STORAGE_KEYS = {
   USER_TRANSACTIONS: 'alphaframe_user_transactions',
   DASHBOARD_MODE: 'alphaframe_dashboard_mode',
   THEME_PREFERENCE: 'alphaframe-theme',
-  PL AID_CONNECTION: 'plaid_connection',
+  PLAID_CONNECTION: 'plaid_connection',
   TEST_MODE: 'test_mode',
   USER_PREFERENCES: 'alphaframe_user_preferences',
   SESSION_DATA: 'alphaframe_session_data'

@@ -67,13 +67,13 @@ const Navigation = () => {
   const { isAuthenticated, user } = useAuth0();
 
   const navigationItems = [
-    { to: '/', label: 'Home', icon: '🏠' },
-    { to: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { to: '/rules', label: 'Rules', icon: '⚙️' },
-    { to: '/settings', label: 'Settings', icon: '⚙️' },
-    { to: '/about', label: 'About', icon: 'ℹ️' },
-    { to: '/profile', label: 'Profile', icon: '👤' },
-    { to: '/onboarding', label: 'Onboarding', icon: '🚀' }
+    { to: '/', label: 'Home' },
+    { to: '/dashboard', label: 'Dashboard' },
+    { to: '/rules', label: 'Rules' },
+    { to: '/settings', label: 'Settings' },
+    { to: '/about', label: 'About' },
+    { to: '/profile', label: 'Profile' },
+    { to: '/onboarding', label: 'Onboarding' }
   ];
 
   return (
@@ -106,8 +106,8 @@ const Navigation = () => {
   );
 };
 
-// Main App component with performance optimizations
-const App = () => {
+// Move all logic that uses useNavigate into AppContent
+const AppContent = () => {
   const { isLoading, error } = useAuth0();
   const navigate = useNavigate();
 
@@ -140,62 +140,41 @@ const App = () => {
   }
 
   return (
-    <ErrorBoundary>
-      <ToastProvider>
-        <Router>
-          <div className="app">
-            <Navigation />
-            
-            <main className="app-main">
-              <Suspense fallback={<PageLoader />}>
-                <Routes>
-                  {/* Public Routes */}
-                  <Route path="/" element={<Home />} />
-                  <Route path="/about" element={<About />} />
-                  
-                  {/* Protected Routes with new page shells */}
-                  <Route 
-                    path="/dashboard" 
-                    element={<DashboardPage />}
-                  />
-                  <Route 
-                    path="/profile" 
-                    element={<Profile />}
-                  />
-                  <Route 
-                    path="/rules" 
-                    element={<RulesPage />}
-                  />
-                  <Route 
-                    path="/settings" 
-                    element={<SettingsPage />}
-                  />
-                  <Route 
-                    path="/onboarding" 
-                    element={<OnboardingPage />}
-                  />
-                  <Route 
-                    path="/alphapro" 
-                    element={<AlphaPro />}
-                  />
-                  <Route 
-                    path="/test" 
-                    element={<TestMount />}
-                  />
-                  
-                  {/* 404 Route */}
-                  <Route path="*" element={<NotFoundPage />} />
-                </Routes>
-              </Suspense>
-            </main>
-            
-            {/* Development Performance Monitor */}
-            <PerformanceMonitor />
-          </div>
-        </Router>
-      </ToastProvider>
-    </ErrorBoundary>
+    <div className="app">
+      <Navigation />
+      <main className="app-main">
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            {/* Protected Routes with new page shells */}
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/rules" element={<RulesPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/onboarding" element={<OnboardingPage />} />
+            <Route path="/alphapro" element={<AlphaPro />} />
+            <Route path="/test" element={<TestMount />} />
+            {/* 404 Route */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
+      </main>
+      {/* Development Performance Monitor */}
+      <PerformanceMonitor />
+    </div>
   );
 };
+
+const App = () => (
+  <ErrorBoundary>
+    <ToastProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </ToastProvider>
+  </ErrorBoundary>
+);
 
 export default App;

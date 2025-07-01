@@ -23,6 +23,7 @@ import PageLayout from '../components/PageLayout.jsx';
 import CompositeCard from '../components/ui/CompositeCard.jsx';
 import StyledButton from '../components/ui/StyledButton.jsx';
 import StatusBadge from '../components/ui/StatusBadge.jsx';
+import RuleCreationModal from '../components/ui/RuleCreationModal.jsx';
 import { CheckCircle, Sparkles, TrendingUp, Zap, ArrowRight, X, Plus, BarChart3, Target } from 'lucide-react';
 import { useToast } from '../components/ui/use-toast';
 import storageService from '../lib/services/StorageService';
@@ -35,6 +36,9 @@ const DashboardPage = () => {
   const [showSuccessBanner, setShowSuccessBanner] = useState(false);
   const [firstRule, setFirstRule] = useState(null);
   const [hasData, setHasData] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showRuleModal, setShowRuleModal] = useState(false);
+  const [userRules, setUserRules] = useState([]);
 
   // Check for onboarding completion and first rule creation
   useEffect(() => {
@@ -61,10 +65,11 @@ const DashboardPage = () => {
       storageService.setUserId(user.sub);
       
       // Check for user data using enhanced service
-      const userRules = storageService.getUserRules();
+      const rules = JSON.parse(localStorage.getItem('alphaframe_user_rules') || '[]');
       const hasTransactions = storageService.getItem('alphaframe_user_transactions');
       
-      setHasData(userRules.length > 0 || hasTransactions);
+      setUserRules(rules);
+      setHasData(rules.length > 0 || hasTransactions);
     }
   }, [user]);
 
@@ -73,28 +78,51 @@ const DashboardPage = () => {
   };
 
   const handleCreateFirstRule = () => {
-    // Navigate to rules page with first rule creation mode using SPA navigation
-    navigate('/rules?createFirst=true');
+    setShowRuleModal(true);
+  };
+
+  const handleRuleCreated = (newRule) => {
+    setUserRules(prev => [...prev, newRule]);
+    setHasData(true);
+    setFirstRule(newRule);
+    
+    // Show success banner
+    setShowSuccessBanner(true);
+    
+    // Hide success banner after 5 seconds
+    setTimeout(() => setShowSuccessBanner(false), 5000);
   };
 
   const handleConnectAccounts = () => {
+    setIsLoading(true);
     // Navigate to onboarding using SPA navigation
     navigate('/onboarding');
+    // Reset loading state after navigation
+    setTimeout(() => setIsLoading(false), 500);
   };
 
   const handleGoToRules = () => {
+    setIsLoading(true);
     // Navigate to rules using SPA navigation
     navigate('/rules');
+    // Reset loading state after navigation
+    setTimeout(() => setIsLoading(false), 500);
   };
 
   const handleGoToProfile = () => {
+    setIsLoading(true);
     // Navigate to profile using SPA navigation
     navigate('/profile');
+    // Reset loading state after navigation
+    setTimeout(() => setIsLoading(false), 500);
   };
 
   const handleGoToSettings = () => {
+    setIsLoading(true);
     // Navigate to settings using SPA navigation
     navigate('/settings');
+    // Reset loading state after navigation
+    setTimeout(() => setIsLoading(false), 500);
   };
 
   // Empty state component for when user has no data
@@ -198,12 +226,106 @@ const DashboardPage = () => {
           }}>
             <p style={{ 
               fontSize: 'var(--font-size-sm)',
-              color: 'var(--color-text-tertiary)',
+              color: 'var(--color-text-secondary)',
               margin: 0
             }}>
-              💡 <strong>Tip:</strong> Start with a simple rule like "Alert me when my checking account balance is low" 
-              to see how AlphaFrame can help automate your finances.
+              💡 <strong>Tip:</strong> Start with a simple spending limit rule to see how AlphaFrame monitors your finances automatically.
             </p>
+          </div>
+        </div>
+      </CompositeCard>
+    </motion.div>
+  );
+
+  // Rules display component for when user has rules
+  const RulesDisplay = () => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.4 }}
+      style={{ marginTop: '2rem' }}
+    >
+      <CompositeCard variant="elevated">
+        <div style={{ padding: '2rem' }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            marginBottom: '1.5rem'
+          }}>
+            <h2 style={{ 
+              fontSize: 'var(--font-size-lg)',
+              fontWeight: 'var(--font-weight-semibold)',
+              color: 'var(--color-text-primary)',
+              margin: 0
+            }}>
+              Your Active Rules ({userRules.length})
+            </h2>
+            <StyledButton
+              onClick={handleCreateFirstRule}
+              size="sm"
+              style={{
+                background: 'var(--color-primary-600)',
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}
+            >
+              <Plus size={16} />
+              Add Rule
+            </StyledButton>
+          </div>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {userRules.map((rule) => (
+              <div
+                key={rule.id}
+                style={{
+                  padding: '1rem',
+                  border: '1px solid var(--color-border-primary)',
+                  borderRadius: 'var(--radius-md)',
+                  backgroundColor: 'var(--color-surface)'
+                }}
+              >
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between',
+                  marginBottom: '0.5rem'
+                }}>
+                  <h3 style={{ 
+                    fontSize: 'var(--font-size-base)',
+                    fontWeight: 'var(--font-weight-medium)',
+                    color: 'var(--color-text-primary)',
+                    margin: 0
+                  }}>
+                    {rule.name}
+                  </h3>
+                  <StatusBadge variant="success" size="sm">
+                    <CheckCircle size={12} />
+                    Active
+                  </StatusBadge>
+                </div>
+                <p style={{ 
+                  fontSize: 'var(--font-size-sm)',
+                  color: 'var(--color-text-secondary)',
+                  margin: '0 0 0.5rem 0'
+                }}>
+                  {rule.description || 'No description provided'}
+                </p>
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '1rem',
+                  fontSize: 'var(--font-size-sm)',
+                  color: 'var(--color-text-secondary)'
+                }}>
+                  <span>Type: {rule.type.replace('_', ' ')}</span>
+                  <span>Amount: ${rule.amount}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </CompositeCard>
@@ -278,8 +400,12 @@ const DashboardPage = () => {
           </div>
         </CompositeCard>
 
-        {/* Show empty state if no data */}
-        {!hasData && !showSuccessBanner && <EmptyState />}
+        {/* Main Content */}
+        {hasData ? (
+          <RulesDisplay />
+        ) : (
+          <EmptyState />
+        )}
 
         {/* First Rule Creation Section for New Users */}
         {showSuccessBanner && !firstRule && (
@@ -421,6 +547,13 @@ const DashboardPage = () => {
           </CompositeCard>
         </motion.div>
       </motion.div>
+
+      {/* Rule Creation Modal */}
+      <RuleCreationModal
+        isOpen={showRuleModal}
+        onClose={() => setShowRuleModal(false)}
+        onRuleCreated={handleRuleCreated}
+      />
     </PageLayout>
   );
 };

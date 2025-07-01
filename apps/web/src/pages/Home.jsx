@@ -15,7 +15,7 @@
  * and guides users to key features and functionality.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useFinancialStateStore } from '@/core/store/financialStateStore';
 import PageLayout from '../components/PageLayout';
@@ -39,6 +39,7 @@ const Home = () => {
   // Get store functions
   const { setAccountBalance, getAccountBalance, setGoal, getGoal } = useFinancialStateStore();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   // Test store functionality
   useEffect(() => {
@@ -100,19 +101,49 @@ const Home = () => {
                 <StyledButton size="lg" className="primary-action"
                   onClick={() => {
                     console.log('CTA: Get Started clicked');
+                    setIsLoading(true);
                     navigate('/onboarding');
+                    setTimeout(() => setIsLoading(false), 500);
+                  }}
+                  disabled={isLoading}
+                  style={{
+                    opacity: isLoading ? 0.7 : 1,
+                    cursor: isLoading ? 'not-allowed' : 'pointer'
                   }}
                 >
-                  Get Started
-                  <ArrowRight size={16} />
+                  {isLoading ? (
+                    <>
+                      <div className="loader-spinner" style={{ width: '16px', height: '16px' }}></div>
+                      Loading...
+                    </>
+                  ) : (
+                    <>
+                      Get Started
+                      <ArrowRight size={16} />
+                    </>
+                  )}
                 </StyledButton>
                 <StyledButton variant="secondary" size="lg"
                   onClick={() => {
                     console.log('CTA: Learn More clicked');
+                    setIsLoading(true);
                     navigate('/about');
+                    setTimeout(() => setIsLoading(false), 500);
+                  }}
+                  disabled={isLoading}
+                  style={{
+                    opacity: isLoading ? 0.7 : 1,
+                    cursor: isLoading ? 'not-allowed' : 'pointer'
                   }}
                 >
-                  Learn More
+                  {isLoading ? (
+                    <>
+                      <div className="loader-spinner" style={{ width: '16px', height: '16px' }}></div>
+                      Loading...
+                    </>
+                  ) : (
+                    'Learn More'
+                  )}
                 </StyledButton>
               </div>
             </div>

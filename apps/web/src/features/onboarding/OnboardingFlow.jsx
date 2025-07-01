@@ -90,7 +90,7 @@ export const OnboardingFlow = () => {
   // Check if user is already onboarded
   useEffect(() => {
     if (user?.onboarded) {
-      navigate('/dashboard2');
+      navigate('/dashboard');
     }
   }, [user, navigate]);
 
@@ -138,7 +138,7 @@ export const OnboardingFlow = () => {
       });
       
       // Redirect to dashboard
-      navigate('/dashboard2', { 
+      navigate('/dashboard', { 
         state: { 
           welcome: true,
           onboardingComplete: true 
