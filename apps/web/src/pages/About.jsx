@@ -36,7 +36,7 @@ import './About.css';
 
 const About = () => {
   return (
-    <PageLayout>
+    <PageLayout title="About AlphaFrame" description="Learn about our mission, team, and technology.">
       <motion.div
         className="about-container"
         initial={{ opacity: 0, y: 20 }}

@@ -117,7 +117,7 @@ const Profile = () => {
   // Show loading state
   if (isLoading) {
     return (
-      <PageLayout>
+      <PageLayout title="User Profile" description="Manage your account, roles, and security.">
         <motion.div 
           className="profile-loading"
           initial={{ opacity: 0 }}
@@ -138,7 +138,7 @@ const Profile = () => {
   // Show error if not authenticated
   if (!isAuthenticated || !user) {
     return (
-      <PageLayout>
+      <PageLayout title="User Profile" description="Manage your account, roles, and security.">
         <motion.div 
           className="profile-error"
           initial={{ opacity: 0 }}
@@ -164,7 +164,7 @@ const Profile = () => {
   const userPermissions = user['https://alphaframe.com/permissions'] || [];
 
   return (
-    <PageLayout>
+    <PageLayout title="User Profile" description="Manage your account, roles, and security.">
       <motion.div 
         className="profile-container"
         initial={{ opacity: 0, y: 20 }}

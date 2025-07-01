@@ -86,7 +86,7 @@ const RulesPage = () => {
   };
 
   return (
-    <PageLayout>
+    <PageLayout title="FrameSync Rules" description="Create and manage automated financial rules">
       <ErrorCatcher>
         <motion.div
           className="rules-container"
