@@ -7,7 +7,7 @@
  * Procedure:
  * 1. Check if user is already onboarded and redirect appropriately
  * 2. Integrate the existing OnboardingFlow component
- * 3. Implement persistent onboarding state in localStorage
+ * 3. Implement persistent onboarding state in localStorage using StorageService
  * 4. Handle new user detection and routing
  * 5. Provide fallback for returning users
  * 
@@ -24,6 +24,7 @@ import CompositeCard from '../components/ui/CompositeCard';
 import StyledButton from '../components/ui/StyledButton';
 import { CheckCircle, ArrowRight } from 'lucide-react';
 import { useToast } from '../components/ui/use-toast';
+import storageService from '../lib/services/StorageService';
 
 const OnboardingPage = () => {
   const { isAuthenticated, user, isLoading } = useAuth0();
@@ -33,12 +34,15 @@ const OnboardingPage = () => {
 
   // Check onboarding state on mount
   useEffect(() => {
-    if (!isLoading && isAuthenticated) {
-      const storedState = localStorage.getItem('alphaframe_onboarding_state');
-      const userOnboardingState = storedState ? JSON.parse(storedState) : null;
+    if (!isLoading && isAuthenticated && user?.sub) {
+      // Set user ID for storage isolation
+      storageService.setUserId(user.sub);
+      
+      // Get stored onboarding state using enhanced service
+      const userOnboardingState = storageService.getOnboardingState();
       
       // Check if user has completed onboarding
-      if (userOnboardingState?.completed && userOnboardingState?.userId === user?.sub) {
+      if (userOnboardingState?.completed && userOnboardingState?.userId === user.sub) {
         // User has completed onboarding, redirect to dashboard
         toast({
           title: "Welcome Back!",
@@ -49,7 +53,7 @@ const OnboardingPage = () => {
       } else {
         // New user or incomplete onboarding
         setOnboardingState(userOnboardingState || {
-          userId: user?.sub,
+          userId: user.sub,
           started: true,
           currentStep: 1,
           completed: false,
@@ -70,8 +74,12 @@ const OnboardingPage = () => {
       data: onboardingData
     };
     
-    // Save to localStorage
-    localStorage.setItem('alphaframe_onboarding_state', JSON.stringify(completedState));
+    // Save to localStorage using enhanced service
+    const saveSuccess = storageService.setOnboardingState(completedState);
+    
+    if (!saveSuccess) {
+      console.warn('Failed to save onboarding state, but continuing...');
+    }
     
     // Show success message
     toast({

@@ -18,15 +18,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useAuth0 } from '@auth0/auth0-react';
 import RuleBinderRoot from '../components/framesync/RuleBinderRoot';
 import StyledButton from '../components/ui/StyledButton';
 import CompositeCard from '../components/ui/CompositeCard';
 import StatusBadge from '../components/ui/StatusBadge';
 import PageLayout from '../components/PageLayout';
-import { useToast } from '../components/ui/use-toast.jsx';
-import { Plus, X, Settings, Zap, Shield, TrendingUp } from 'lucide-react';
+import { useToast } from '../components/ui/use-toast';
+import { Plus, X, Settings, Zap, Shield, TrendingUp, Trash2, Play, Pause } from 'lucide-react';
 import './RulesPage.css';
 import env from '../lib/env.js';
+import storageService from '../lib/services/StorageService';
 
 // Error Catcher Component to catch runtime exceptions
 const ErrorCatcher = ({ children }) => {
@@ -42,26 +44,25 @@ const RulesPage = () => {
   const [currentRule, setCurrentRule] = useState(null);
   const [userRules, setUserRules] = useState([]); // Track user's rules
   const { toast } = useToast();
+  const { user } = useAuth0();
 
   // Check for existing rules on mount
   useEffect(() => {
-    // For now, we'll simulate checking for existing rules
-    // In a real implementation, this would fetch from the user's actual rules
-    const storedRules = localStorage.getItem('alphaframe_user_rules');
-    if (storedRules) {
-      try {
-        setUserRules(JSON.parse(storedRules));
-      } catch (error) {
-        console.error('Error parsing stored rules:', error);
-      }
+    if (user?.sub) {
+      // Set user ID for storage isolation
+      storageService.setUserId(user.sub);
+      
+      // Get stored rules using enhanced service
+      const storedRules = storageService.getUserRules();
+      setUserRules(storedRules);
     }
-  }, []);
+  }, [user]);
 
   // Diagnostic logging and test mode setup
   useEffect(() => {
     // Set test mode for development
     if (import.meta.env.DEV) {
-      localStorage.setItem('test_mode', 'true');
+      storageService.setItem('test_mode', 'true');
     }
   }, []);
 
@@ -96,7 +97,13 @@ const RulesPage = () => {
     
     const updatedRules = [...userRules, newRule];
     setUserRules(updatedRules);
-    localStorage.setItem('alphaframe_user_rules', JSON.stringify(updatedRules));
+    
+    // Save using enhanced storage service
+    const saveSuccess = storageService.setUserRules(updatedRules);
+    
+    if (!saveSuccess) {
+      console.warn('Failed to save rules, but continuing...');
+    }
     
     toast({
       title: "Rule Created!",

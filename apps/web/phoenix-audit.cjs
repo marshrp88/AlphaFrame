@@ -116,9 +116,13 @@ logResult('Onboarding', 'OnboardingFlow component exists',
 logResult('Onboarding', 'OnboardingPage exists',
   checkFileExists('src/pages/OnboardingPage.jsx') ? 'PASS' : 'FAIL');
 
-// Check if localStorage persistence is implemented
-logResult('Onboarding', 'localStorage persistence',
-  checkFileContent('src/features/onboarding/OnboardingFlow.jsx', ['localStorage']) ? 'PASS' : 'WARN');
+// Check if enhanced StorageService exists
+logResult('Onboarding', 'Enhanced StorageService exists',
+  checkFileExists('src/lib/services/StorageService.js') ? 'PASS' : 'FAIL');
+
+// Check if localStorage persistence is enhanced
+logResult('Onboarding', 'Enhanced localStorage persistence',
+  checkFileContent('src/lib/services/StorageService.js', ['localStorage', 'setItem', 'getItem', 'validation']) ? 'PASS' : 'WARN');
 
 // STEP 3: Visual & UX Consistency
 console.log('\n🎨 STEP 3: Visual & UX Consistency');
