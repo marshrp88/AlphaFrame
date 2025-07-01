@@ -25,8 +25,13 @@ export default function NavBar({ items, currentPath, ...rest }) {
               }
               aria-current={currentPath === item.to ? 'page' : undefined}
               tabIndex={0}
+              onClick={() => {
+                // Debug log for navigation
+                console.log(`Nav: Navigating to ${item.to}`);
+              }}
             >
-              {item.icon && <span className="navbar__icon">{item.icon}</span>}
+              {/* Remove emoji icons for now, or use SVGs if provided */}
+              {/* {item.icon && <span className="navbar__icon">{item.icon}</span>} */}
               <span className="navbar__label">{item.label}</span>
             </NavLink>
           </li>

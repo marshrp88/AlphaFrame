@@ -33,10 +33,12 @@ import {
   DollarSign
 } from 'lucide-react';
 import './Home.css';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   // Get store functions
   const { setAccountBalance, getAccountBalance, setGoal, getGoal } = useFinancialStateStore();
+  const navigate = useNavigate();
 
   // Test store functionality
   useEffect(() => {
@@ -94,12 +96,22 @@ const Home = () => {
                   </StatusBadge>
                 </div>
               </div>
-              <div className="hero-actions">
-                <StyledButton size="lg" className="primary-action">
+              <div className="hero-actions" style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                <StyledButton size="lg" className="primary-action"
+                  onClick={() => {
+                    console.log('CTA: Get Started clicked');
+                    navigate('/onboarding');
+                  }}
+                >
                   Get Started
                   <ArrowRight size={16} />
                 </StyledButton>
-                <StyledButton variant="secondary" size="lg">
+                <StyledButton variant="secondary" size="lg"
+                  onClick={() => {
+                    console.log('CTA: Learn More clicked');
+                    navigate('/about');
+                  }}
+                >
                   Learn More
                 </StyledButton>
               </div>

@@ -16,23 +16,27 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth0 } from '@auth0/auth0-react';
 import PageLayout from '../components/PageLayout.jsx';
 import CompositeCard from '../components/ui/CompositeCard.jsx';
 import StyledButton from '../components/ui/StyledButton.jsx';
 import StatusBadge from '../components/ui/StatusBadge.jsx';
 import { CheckCircle, Sparkles, TrendingUp, Zap, ArrowRight, X, Plus, BarChart3, Target } from 'lucide-react';
 import { useToast } from '../components/ui/use-toast';
+import storageService from '../lib/services/StorageService';
 
 const DashboardPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAuth0();
   const { toast } = useToast();
   const [showSuccessBanner, setShowSuccessBanner] = useState(false);
   const [firstRule, setFirstRule] = useState(null);
   const [hasData, setHasData] = useState(false);
 
-  // Check for onboarding completion on mount
+  // Check for onboarding completion and first rule creation
   useEffect(() => {
     if (location.state?.onboardingComplete) {
       setShowSuccessBanner(true);
@@ -40,37 +44,57 @@ const DashboardPage = () => {
       // Show welcome toast
       toast({
         title: "🎉 Welcome to AlphaFrame!",
-        description: "Your account is set up and ready to go. Let's explore your financial insights!",
+        description: "Your account is set up and ready to go!",
         variant: "default"
       });
-
-      // Check for first rule creation
-      if (location.state?.firstRuleCreated) {
-        setFirstRule(location.state.firstRuleCreated);
-      }
-
-      // Clear the state to prevent showing banner on refresh
-      window.history.replaceState({}, document.title);
+    }
+    
+    if (location.state?.firstRuleCreated) {
+      setFirstRule(location.state.firstRuleCreated);
     }
   }, [location.state, toast]);
 
   // Check if user has any data (rules, transactions, etc.)
   useEffect(() => {
-    // For now, we'll simulate checking for data
-    // In a real implementation, this would check the user's actual data
-    const hasRules = localStorage.getItem('alphaframe_user_rules');
-    const hasTransactions = localStorage.getItem('alphaframe_user_transactions');
-    
-    setHasData(hasRules || hasTransactions);
-  }, []);
+    if (user?.sub) {
+      // Set user ID for storage isolation
+      storageService.setUserId(user.sub);
+      
+      // Check for user data using enhanced service
+      const userRules = storageService.getUserRules();
+      const hasTransactions = storageService.getItem('alphaframe_user_transactions');
+      
+      setHasData(userRules.length > 0 || hasTransactions);
+    }
+  }, [user]);
 
   const handleDismissBanner = () => {
     setShowSuccessBanner(false);
   };
 
   const handleCreateFirstRule = () => {
-    // Navigate to rules page with first rule creation mode
-    window.location.href = '/rules?createFirst=true';
+    // Navigate to rules page with first rule creation mode using SPA navigation
+    navigate('/rules?createFirst=true');
+  };
+
+  const handleConnectAccounts = () => {
+    // Navigate to onboarding using SPA navigation
+    navigate('/onboarding');
+  };
+
+  const handleGoToRules = () => {
+    // Navigate to rules using SPA navigation
+    navigate('/rules');
+  };
+
+  const handleGoToProfile = () => {
+    // Navigate to profile using SPA navigation
+    navigate('/profile');
+  };
+
+  const handleGoToSettings = () => {
+    // Navigate to settings using SPA navigation
+    navigate('/settings');
   };
 
   // Empty state component for when user has no data
@@ -120,14 +144,18 @@ const DashboardPage = () => {
           </p>
           
           <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '1rem',
-            maxWidth: '600px',
-            margin: '0 auto'
+            display: 'flex', 
+            flexWrap: 'wrap', 
+            gap: '1rem', 
+            justifyContent: 'center', 
+            maxWidth: '600px', 
+            margin: '0 auto' 
           }}>
             <StyledButton 
-              onClick={handleCreateFirstRule}
+              onClick={() => { 
+                console.log('CTA: Create First Rule clicked');
+                handleCreateFirstRule();
+              }}
               style={{ 
                 background: 'var(--color-primary-600)',
                 color: 'white',
@@ -144,7 +172,10 @@ const DashboardPage = () => {
             
             <StyledButton 
               variant="outline"
-              onClick={() => window.location.href = '/onboarding'}
+              onClick={() => { 
+                console.log('CTA: Connect Accounts clicked');
+                handleConnectAccounts();
+              }}
               style={{ 
                 padding: '1rem 1.5rem',
                 display: 'flex',
@@ -332,7 +363,7 @@ const DashboardPage = () => {
                 </p>
                 <StyledButton 
                   variant="secondary"
-                  onClick={() => window.location.href = '/rules'}
+                  onClick={handleGoToRules}
                 >
                   View All Rules
                 </StyledButton>
@@ -364,7 +395,7 @@ const DashboardPage = () => {
             }}>
               <StyledButton 
                 variant="outline"
-                onClick={() => window.location.href = '/rules'}
+                onClick={handleGoToRules}
                 style={{ padding: '1rem', textAlign: 'center' }}
               >
                 <Zap size={20} style={{ marginBottom: '0.5rem' }} />
@@ -372,7 +403,7 @@ const DashboardPage = () => {
               </StyledButton>
               <StyledButton 
                 variant="outline"
-                onClick={() => window.location.href = '/profile'}
+                onClick={handleGoToProfile}
                 style={{ padding: '1rem', textAlign: 'center' }}
               >
                 <TrendingUp size={20} style={{ marginBottom: '0.5rem' }} />
@@ -380,7 +411,7 @@ const DashboardPage = () => {
               </StyledButton>
               <StyledButton 
                 variant="outline"
-                onClick={() => window.location.href = '/settings'}
+                onClick={handleGoToSettings}
                 style={{ padding: '1rem', textAlign: 'center' }}
               >
                 <Sparkles size={20} style={{ marginBottom: '0.5rem' }} />
