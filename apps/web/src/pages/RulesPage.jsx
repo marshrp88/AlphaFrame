@@ -40,7 +40,22 @@ const ErrorCatcher = ({ children }) => {
 const RulesPage = () => {
   const [showRuleBinder, setShowRuleBinder] = useState(false);
   const [currentRule, setCurrentRule] = useState(null);
+  const [userRules, setUserRules] = useState([]); // Track user's rules
   const { toast } = useToast();
+
+  // Check for existing rules on mount
+  useEffect(() => {
+    // For now, we'll simulate checking for existing rules
+    // In a real implementation, this would fetch from the user's actual rules
+    const storedRules = localStorage.getItem('alphaframe_user_rules');
+    if (storedRules) {
+      try {
+        setUserRules(JSON.parse(storedRules));
+      } catch (error) {
+        console.error('Error parsing stored rules:', error);
+      }
+    }
+  }, []);
 
   // Diagnostic logging and test mode setup
   useEffect(() => {
@@ -68,9 +83,24 @@ const RulesPage = () => {
 
   const handleConfigurationChange = () => {
     setShowRuleBinder(false);
+    
+    // Save the new rule
+    const newRule = {
+      id: currentRule.id,
+      name: `Rule ${userRules.length + 1}`,
+      trigger: currentRule.trigger,
+      action: currentRule.action,
+      enabled: true,
+      createdAt: new Date().toISOString()
+    };
+    
+    const updatedRules = [...userRules, newRule];
+    setUserRules(updatedRules);
+    localStorage.setItem('alphaframe_user_rules', JSON.stringify(updatedRules));
+    
     toast({
-      title: "Rule Updated",
-      description: "Your rule has been saved successfully.",
+      title: "Rule Created!",
+      description: "Your new rule has been saved and is now active.",
       variant: "default"
     });
   };
@@ -84,6 +114,141 @@ const RulesPage = () => {
       variant: "default"
     });
   };
+
+  // Empty state component for when user has no rules
+  const EmptyRulesState = () => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.3 }}
+      style={{ marginTop: '2rem' }}
+    >
+      <CompositeCard variant="elevated">
+        <div style={{ textAlign: 'center', padding: '3rem' }}>
+          {/* Empty State Illustration */}
+          <div style={{ 
+            width: '120px', 
+            height: '120px', 
+            margin: '0 auto 2rem',
+            background: 'linear-gradient(135deg, var(--color-primary-100), var(--color-warning-100))',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: '3px solid var(--color-primary-200)'
+          }}>
+            <Zap size={48} style={{ color: 'var(--color-primary-600)' }} />
+          </div>
+          
+          <h2 style={{ 
+            fontSize: 'var(--font-size-xl)',
+            fontWeight: 'var(--font-weight-semibold)',
+            color: 'var(--color-text-primary)',
+            marginBottom: '1rem'
+          }}>
+            No Rules Created Yet
+          </h2>
+          
+          <p style={{ 
+            fontSize: 'var(--font-size-base)',
+            color: 'var(--color-text-secondary)',
+            marginBottom: '2rem',
+            maxWidth: '500px',
+            margin: '0 auto 2rem',
+            lineHeight: '1.6'
+          }}>
+            FrameSync rules automate your financial management. Create your first rule to start 
+            monitoring your accounts and get intelligent insights automatically.
+          </p>
+          
+          <StyledButton 
+            onClick={handleCreateRule}
+            style={{ 
+              background: 'var(--color-primary-600)',
+              color: 'white',
+              padding: '1rem 2rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              margin: '0 auto'
+            }}
+          >
+            <Plus size={16} />
+            Create Your First Rule
+          </StyledButton>
+          
+          <div style={{ 
+            marginTop: '2rem',
+            padding: '1.5rem',
+            background: 'var(--color-background-secondary)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--color-border-secondary)'
+          }}>
+            <h4 style={{ 
+              fontSize: 'var(--font-size-base)',
+              fontWeight: 'var(--font-weight-semibold)',
+              color: 'var(--color-text-primary)',
+              marginBottom: '1rem'
+            }}>
+              💡 Popular Rule Examples:
+            </h4>
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+              gap: '1rem',
+              textAlign: 'left'
+            }}>
+              <div style={{ 
+                padding: '1rem',
+                background: 'var(--color-surface)',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--color-border-primary)'
+              }}>
+                <h5 style={{ 
+                  fontSize: 'var(--font-size-sm)',
+                  fontWeight: 'var(--font-weight-semibold)',
+                  color: 'var(--color-text-primary)',
+                  marginBottom: '0.5rem'
+                }}>
+                  Low Balance Alert
+                </h5>
+                <p style={{ 
+                  fontSize: 'var(--font-size-sm)',
+                  color: 'var(--color-text-secondary)',
+                  margin: 0
+                }}>
+                  Get notified when your checking account balance falls below $500
+                </p>
+              </div>
+              <div style={{ 
+                padding: '1rem',
+                background: 'var(--color-surface)',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--color-border-primary)'
+              }}>
+                <h5 style={{ 
+                  fontSize: 'var(--font-size-sm)',
+                  fontWeight: 'var(--font-weight-semibold)',
+                  color: 'var(--color-text-primary)',
+                  marginBottom: '0.5rem'
+                }}>
+                  High Spending Alert
+                </h5>
+                <p style={{ 
+                  fontSize: 'var(--font-size-sm)',
+                  color: 'var(--color-text-secondary)',
+                  margin: 0
+                }}>
+                  Alert when daily spending exceeds your budget limit
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </CompositeCard>
+    </motion.div>
+  );
 
   return (
     <PageLayout title="FrameSync Rules" description="Create and manage automated financial rules">
@@ -125,53 +290,112 @@ const RulesPage = () => {
                   </StyledButton>
                 </div>
                 
-                <div className="rules-info-grid">
-                  <CompositeCard variant="elevated" className="info-card">
-                    <div className="info-card-header">
-                      <Settings className="info-icon" />
-                      <h3 className="info-title">What are FrameSync Rules?</h3>
+                {/* Show empty state if no rules exist */}
+                {userRules.length === 0 ? (
+                  <EmptyRulesState />
+                ) : (
+                  <>
+                    {/* Show existing rules */}
+                    <div style={{ marginBottom: '2rem' }}>
+                      <h3 style={{ 
+                        fontSize: 'var(--font-size-lg)',
+                        fontWeight: 'var(--font-weight-semibold)',
+                        color: 'var(--color-text-primary)',
+                        marginBottom: '1rem'
+                      }}>
+                        Your Active Rules ({userRules.length})
+                      </h3>
+                      <div style={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                        gap: '1rem'
+                      }}>
+                        {userRules.map((rule) => (
+                          <CompositeCard key={rule.id} variant="elevated">
+                            <div style={{ padding: '1rem' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                                <Zap size={16} style={{ color: 'var(--color-success-600)' }} />
+                                <h4 style={{ 
+                                  fontSize: 'var(--font-size-base)',
+                                  fontWeight: 'var(--font-weight-semibold)',
+                                  color: 'var(--color-text-primary)',
+                                  margin: 0
+                                }}>
+                                  {rule.name}
+                                </h4>
+                                <StatusBadge variant="success" size="sm">
+                                  Active
+                                </StatusBadge>
+                              </div>
+                              <p style={{ 
+                                fontSize: 'var(--font-size-sm)',
+                                color: 'var(--color-text-secondary)',
+                                margin: '0.5rem 0'
+                              }}>
+                                {rule.trigger}
+                              </p>
+                              <p style={{ 
+                                fontSize: 'var(--font-size-xs)',
+                                color: 'var(--color-text-tertiary)',
+                                margin: 0
+                              }}>
+                                Created: {new Date(rule.createdAt).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </CompositeCard>
+                        ))}
+                      </div>
                     </div>
-                    <p className="info-description">
-                      FrameSync rules automatically monitor your financial data and 
-                      execute actions when specific conditions are met. For example, 
-                      automatically transfer money when your checking account balance 
-                      exceeds a certain threshold.
-                    </p>
-                  </CompositeCard>
+                    
+                    <div className="rules-info-grid">
+                      <CompositeCard variant="elevated" className="info-card">
+                        <div className="info-card-header">
+                          <Settings className="info-icon" />
+                          <h3 className="info-title">What are FrameSync Rules?</h3>
+                        </div>
+                        <p className="info-description">
+                          FrameSync rules automatically monitor your financial data and 
+                          execute actions when specific conditions are met. For example, 
+                          automatically transfer money when your checking account balance 
+                          exceeds a certain threshold.
+                        </p>
+                      </CompositeCard>
 
-                  <CompositeCard variant="elevated" className="info-card">
-                    <div className="info-card-header">
-                      <Shield className="info-icon" />
-                      <h3 className="info-title">Security & Safety</h3>
-                    </div>
-                    <p className="info-description">
-                      All rules are executed with bank-level security. You can review, 
-                      pause, or delete rules at any time. We never make changes without 
-                      your explicit approval.
-                    </p>
-                  </CompositeCard>
+                      <CompositeCard variant="elevated" className="info-card">
+                        <div className="info-card-header">
+                          <Shield className="info-icon" />
+                          <h3 className="info-title">Security & Safety</h3>
+                        </div>
+                        <p className="info-description">
+                          All rules are executed with bank-level security. You can review, 
+                          pause, or delete rules at any time. We never make changes without 
+                          your explicit approval.
+                        </p>
+                      </CompositeCard>
 
-                  <CompositeCard variant="elevated" className="info-card">
-                    <div className="info-card-header">
-                      <TrendingUp className="info-icon" />
-                      <h3 className="info-title">Smart Automation</h3>
+                      <CompositeCard variant="elevated" className="info-card">
+                        <div className="info-card-header">
+                          <TrendingUp className="info-icon" />
+                          <h3 className="info-title">Smart Automation</h3>
+                        </div>
+                        <p className="info-description">
+                          Build intelligent rules that adapt to your financial patterns. 
+                          Save time and reduce stress with automated financial management 
+                          that works 24/7.
+                        </p>
+                      </CompositeCard>
                     </div>
-                    <p className="info-description">
-                      Build intelligent rules that adapt to your financial patterns. 
-                      Save time and reduce stress with automated financial management 
-                      that works 24/7.
-                    </p>
-                  </CompositeCard>
-                </div>
-                
-                <div className="rules-status">
-                  <StatusBadge variant="info" size="sm">
-                    Ready to create rules
-                  </StatusBadge>
-                  <p className="timestamp">
-                    Last updated: {new Date().toLocaleString()}
-                  </p>
-                </div>
+                    
+                    <div className="rules-status">
+                      <StatusBadge variant="success" size="sm">
+                        {userRules.length} rule{userRules.length !== 1 ? 's' : ''} active
+                      </StatusBadge>
+                      <p className="timestamp">
+                        Last updated: {new Date().toLocaleString()}
+                      </p>
+                    </div>
+                  </>
+                )}
               </motion.div>
             ) : (
               <motion.div 

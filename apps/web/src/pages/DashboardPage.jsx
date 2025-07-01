@@ -22,7 +22,7 @@ import PageLayout from '../components/PageLayout.jsx';
 import CompositeCard from '../components/ui/CompositeCard.jsx';
 import StyledButton from '../components/ui/StyledButton.jsx';
 import StatusBadge from '../components/ui/StatusBadge.jsx';
-import { CheckCircle, Sparkles, TrendingUp, Zap, ArrowRight, X } from 'lucide-react';
+import { CheckCircle, Sparkles, TrendingUp, Zap, ArrowRight, X, Plus, BarChart3, Target } from 'lucide-react';
 import { useToast } from '../components/ui/use-toast';
 
 const DashboardPage = () => {
@@ -30,6 +30,7 @@ const DashboardPage = () => {
   const { toast } = useToast();
   const [showSuccessBanner, setShowSuccessBanner] = useState(false);
   const [firstRule, setFirstRule] = useState(null);
+  const [hasData, setHasData] = useState(false);
 
   // Check for onboarding completion on mount
   useEffect(() => {
@@ -53,6 +54,16 @@ const DashboardPage = () => {
     }
   }, [location.state, toast]);
 
+  // Check if user has any data (rules, transactions, etc.)
+  useEffect(() => {
+    // For now, we'll simulate checking for data
+    // In a real implementation, this would check the user's actual data
+    const hasRules = localStorage.getItem('alphaframe_user_rules');
+    const hasTransactions = localStorage.getItem('alphaframe_user_transactions');
+    
+    setHasData(hasRules || hasTransactions);
+  }, []);
+
   const handleDismissBanner = () => {
     setShowSuccessBanner(false);
   };
@@ -61,6 +72,112 @@ const DashboardPage = () => {
     // Navigate to rules page with first rule creation mode
     window.location.href = '/rules?createFirst=true';
   };
+
+  // Empty state component for when user has no data
+  const EmptyState = () => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.4 }}
+      style={{ marginTop: '2rem' }}
+    >
+      <CompositeCard variant="elevated">
+        <div style={{ textAlign: 'center', padding: '3rem' }}>
+          {/* Empty State Illustration */}
+          <div style={{ 
+            width: '120px', 
+            height: '120px', 
+            margin: '0 auto 2rem',
+            background: 'linear-gradient(135deg, var(--color-primary-100), var(--color-secondary-100))',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: '3px solid var(--color-primary-200)'
+          }}>
+            <BarChart3 size={48} style={{ color: 'var(--color-primary-600)' }} />
+          </div>
+          
+          <h2 style={{ 
+            fontSize: 'var(--font-size-xl)',
+            fontWeight: 'var(--font-weight-semibold)',
+            color: 'var(--color-text-primary)',
+            marginBottom: '1rem'
+          }}>
+            Welcome to Your Financial Dashboard
+          </h2>
+          
+          <p style={{ 
+            fontSize: 'var(--font-size-base)',
+            color: 'var(--color-text-secondary)',
+            marginBottom: '2rem',
+            maxWidth: '500px',
+            margin: '0 auto 2rem',
+            lineHeight: '1.6'
+          }}>
+            Your dashboard will show your financial insights, automated rules, and spending patterns. 
+            Let's get started by creating your first rule or connecting your accounts.
+          </p>
+          
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '1rem',
+            maxWidth: '600px',
+            margin: '0 auto'
+          }}>
+            <StyledButton 
+              onClick={handleCreateFirstRule}
+              style={{ 
+                background: 'var(--color-primary-600)',
+                color: 'white',
+                padding: '1rem 1.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem'
+              }}
+            >
+              <Zap size={16} />
+              Create First Rule
+            </StyledButton>
+            
+            <StyledButton 
+              variant="outline"
+              onClick={() => window.location.href = '/onboarding'}
+              style={{ 
+                padding: '1rem 1.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem'
+              }}
+            >
+              <Target size={16} />
+              Connect Accounts
+            </StyledButton>
+          </div>
+          
+          <div style={{ 
+            marginTop: '2rem',
+            padding: '1rem',
+            background: 'var(--color-background-secondary)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--color-border-secondary)'
+          }}>
+            <p style={{ 
+              fontSize: 'var(--font-size-sm)',
+              color: 'var(--color-text-tertiary)',
+              margin: 0
+            }}>
+              💡 <strong>Tip:</strong> Start with a simple rule like "Alert me when my checking account balance is low" 
+              to see how AlphaFrame can help automate your finances.
+            </p>
+          </div>
+        </div>
+      </CompositeCard>
+    </motion.div>
+  );
 
   return (
     <PageLayout title="Dashboard" description="Your main financial overview and insights">
@@ -129,6 +246,9 @@ const DashboardPage = () => {
             </p>
           </div>
         </CompositeCard>
+
+        {/* Show empty state if no data */}
+        {!hasData && !showSuccessBanner && <EmptyState />}
 
         {/* First Rule Creation Section for New Users */}
         {showSuccessBanner && !firstRule && (
