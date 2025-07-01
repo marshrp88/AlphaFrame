@@ -1,0 +1,232 @@
+{
+  "timestamp": "2025-07-01T06:13:42.783Z",
+  "summary": {
+    "totalChecks": 34,
+    "passed": 33,
+    "failed": 0,
+    "warnings": 1,
+    "criticalIssues": 0
+  },
+  "details": {
+    "Navigation": [
+      {
+        "check": "App.jsx exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.798Z"
+      },
+      {
+        "check": "React Router setup",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.799Z"
+      },
+      {
+        "check": "Home exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.799Z"
+      },
+      {
+        "check": "DashboardPage exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.799Z"
+      },
+      {
+        "check": "RulesPage exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.800Z"
+      },
+      {
+        "check": "Profile exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.800Z"
+      },
+      {
+        "check": "SettingsPage exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.800Z"
+      },
+      {
+        "check": "OnboardingPage exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.801Z"
+      },
+      {
+        "check": "NotFoundPage exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.801Z"
+      },
+      {
+        "check": "About exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.801Z"
+      }
+    ],
+    "Onboarding": [
+      {
+        "check": "OnboardingFlow component exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.802Z"
+      },
+      {
+        "check": "OnboardingPage exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.802Z"
+      },
+      {
+        "check": "localStorage persistence",
+        "status": "WARN",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.803Z"
+      }
+    ],
+    "Design System": [
+      {
+        "check": "PageLayout exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.804Z"
+      },
+      {
+        "check": "StyledButton exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.804Z"
+      },
+      {
+        "check": "CompositeCard exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.805Z"
+      },
+      {
+        "check": "NavBar exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.805Z"
+      },
+      {
+        "check": "design-tokens exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.806Z"
+      }
+    ],
+    "UX": [
+      {
+        "check": "Framer Motion integration",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.807Z"
+      },
+      {
+        "check": "CSS animations",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.809Z"
+      }
+    ],
+    "A11y": [
+      {
+        "check": "ARIA attributes in PageLayout",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.812Z"
+      },
+      {
+        "check": "Keyboard navigation support",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.813Z"
+      },
+      {
+        "check": "Focus management",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.814Z"
+      }
+    ],
+    "Dev Experience": [
+      {
+        "check": "Build script exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.815Z"
+      },
+      {
+        "check": "Dev script exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.815Z"
+      },
+      {
+        "check": "Test script exists",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.815Z"
+      },
+      {
+        "check": "Vite configuration",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.816Z"
+      },
+      {
+        "check": "Environment examples",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.816Z"
+      }
+    ],
+    "User Value": [
+      {
+        "check": "Dashboard insights",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.817Z"
+      },
+      {
+        "check": "Rules creation",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.818Z"
+      },
+      {
+        "check": "Onboarding value",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.819Z"
+      }
+    ],
+    "Production": [
+      {
+        "check": "Error boundaries",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.820Z"
+      },
+      {
+        "check": "Loading states",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.820Z"
+      },
+      {
+        "check": "404 handling",
+        "status": "PASS",
+        "details": "",
+        "timestamp": "2025-07-01T06:13:42.822Z"
+      }
+    ]
+  }
+}
