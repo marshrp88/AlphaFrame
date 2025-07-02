@@ -33,7 +33,6 @@ import {
   Eye,
   ArrowRight,
   CheckCircle,
-  TrendingUp2,
   Calendar,
   Activity
 } from 'lucide-react';
@@ -416,7 +415,7 @@ const DynamicInsightCard = ({
                     gap: '0.25rem',
                     marginBottom: '0.25rem'
                   }}>
-                    <TrendingUp2 size={12} style={{ color: 'var(--color-success-600)' }} />
+                    <TrendingUp size={12} style={{ color: 'var(--color-success-600)' }} />
                     <span style={{
                       fontSize: 'var(--font-size-xs)',
                       color: 'var(--color-text-secondary)'
