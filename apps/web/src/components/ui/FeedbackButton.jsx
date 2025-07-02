@@ -223,7 +223,7 @@ const FeedbackButton = () => {
         )}
       </AnimatePresence>
 
-      <style jsx>{`
+      <style>{`
         .feedback-modal {
           padding: 24px;
         }
@@ -285,6 +285,13 @@ const FeedbackButton = () => {
           margin: 0;
           color: #718096;
           font-size: 14px;
+        }
+
+        .feedback {
+          position: fixed;
+          bottom: 1rem;
+          right: 1rem;
+          z-index: 9999;
         }
       `}</style>
     </>
