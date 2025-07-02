@@ -26,10 +26,11 @@ import StatusBadge from '../components/ui/StatusBadge.jsx';
 import RuleCreationModal from '../components/ui/RuleCreationModal.jsx';
 import RuleStatusCard from '../components/ui/RuleStatusCard.jsx';
 import InsightCard from '../components/ui/InsightCard.jsx';
+import DynamicInsightCard from '../components/ui/DynamicInsightCard.jsx';
 import { CheckCircle, Sparkles, TrendingUp, Zap, ArrowRight, X, Plus, BarChart3, Target, AlertTriangle, Crown } from 'lucide-react';
 import { useToast } from '../components/ui/use-toast';
 import storageService from '../lib/services/StorageService';
-import { evaluateAllRules, getRuleExecutionSummary } from '../lib/services/RuleEngineExecutor.js';
+import ruleExecutionEngine from '../lib/services/RuleExecutionEngine.js';
 import { getMockTransactions } from '../lib/mock/transactions.js';
 
 import { DollarSign, Calendar } from 'lucide-react';
@@ -51,6 +52,8 @@ const DashboardPage = () => {
   const [transactions, setTransactions] = useState([]);
   const [ruleExecutionResults, setRuleExecutionResults] = useState([]);
   const [ruleSummary, setRuleSummary] = useState(null);
+  const [engineStatus, setEngineStatus] = useState({});
+  const [recentTriggers, setRecentTriggers] = useState([]);
 
   // Check for onboarding completion and first rule creation
   useEffect(() => {
@@ -103,25 +106,44 @@ const DashboardPage = () => {
       const mockTransactions = getMockTransactions();
       setTransactions(mockTransactions);
       
-      // Evaluate rules if they exist
-      if (rules.length > 0) {
-        const results = evaluateAllRules(rules, mockTransactions, 'monthly');
-        setRuleExecutionResults(results);
-        
-        const summary = getRuleExecutionSummary(results);
-        setRuleSummary(summary);
-        
-        // Show alerts for triggered rules
-        if (summary.hasAlerts) {
-          const triggeredRules = results.filter(r => r.status === 'triggered');
-          triggeredRules.forEach(rule => {
-            toast({
-              title: `🚨 Rule Alert: ${rule.ruleName}`,
-              description: rule.message,
-              variant: "destructive"
+      // Initialize and start rule execution engine
+      const initializeEngine = async () => {
+        try {
+          // Initialize the engine with user rules and transactions
+          await ruleExecutionEngine.initialize(rules, mockTransactions);
+          
+          // Start periodic evaluation
+          await ruleExecutionEngine.startPeriodicEvaluation(30000); // 30 seconds
+          
+          // Get initial evaluation results
+          const evaluation = await ruleExecutionEngine.evaluateAllRules();
+          setRuleExecutionResults(evaluation.results);
+          setRuleSummary(evaluation.summary);
+          setEngineStatus(ruleExecutionEngine.getStatus());
+          setRecentTriggers(ruleExecutionEngine.getRecentTriggers(24));
+          
+          // Show alerts for new triggers
+          if (evaluation.newTriggers.length > 0) {
+            evaluation.newTriggers.forEach(trigger => {
+              toast({
+                title: `🚨 Rule Alert: ${trigger.ruleName}`,
+                description: trigger.message,
+                variant: "destructive"
+              });
             });
+          }
+        } catch (error) {
+          console.error('Failed to initialize rule engine:', error);
+          toast({
+            title: "⚠️ Rule Engine Error",
+            description: "Unable to start automated monitoring. Please try refreshing the page.",
+            variant: "destructive"
           });
         }
+      };
+      
+      if (rules.length > 0) {
+        initializeEngine();
       }
       
       // ALWAYS show insights - NEVER EMPTY DASHBOARD
@@ -175,6 +197,13 @@ const DashboardPage = () => {
     }
   }, [user, toast]);
 
+  // Cleanup rule engine on unmount
+  useEffect(() => {
+    return () => {
+      ruleExecutionEngine.stopPeriodicEvaluation();
+    };
+  }, []);
+
   const handleDismissBanner = () => {
     setShowOnboardingBanner(false);
     localStorage.setItem('alphaframe_onboarding_banner_dismissed', 'true');
@@ -198,16 +227,39 @@ const DashboardPage = () => {
     });
   };
 
-  const handleRuleCreated = (newRule) => {
+  const handleRuleCreated = async (newRule) => {
     setUserRules(prev => [...prev, newRule]);
     setHasData(true);
     setFirstRule(newRule);
     
-    // Show success banner
-    setShowSuccessBanner(true);
-    
-    // Hide success banner after 5 seconds
-    setTimeout(() => setShowSuccessBanner(false), 5000);
+    // Add rule to execution engine
+    try {
+      const evaluation = await ruleExecutionEngine.addRule(newRule);
+      setRuleExecutionResults(evaluation.results);
+      setRuleSummary(evaluation.summary);
+      setEngineStatus(ruleExecutionEngine.getStatus());
+      setRecentTriggers(ruleExecutionEngine.getRecentTriggers(24));
+      
+      // Show success banner
+      setShowSuccessBanner(true);
+      
+      // Show success toast
+      toast({
+        title: "✅ Rule Created Successfully!",
+        description: "Your rule is now active and monitoring your finances.",
+        variant: "default"
+      });
+      
+      // Hide success banner after 5 seconds
+      setTimeout(() => setShowSuccessBanner(false), 5000);
+    } catch (error) {
+      console.error('Failed to add rule to engine:', error);
+      toast({
+        title: "⚠️ Rule Creation Error",
+        description: "Rule was created but there was an issue with the monitoring system.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleConnectAccounts = () => {
@@ -247,20 +299,18 @@ const DashboardPage = () => {
     navigate('/rules', { state: { editRule: rule } });
   };
 
-  const handleDeleteRule = (ruleId) => {
+  const handleDeleteRule = async (ruleId) => {
     const updatedRules = userRules.filter(rule => rule.id !== ruleId);
     setUserRules(updatedRules);
     localStorage.setItem('alphaframe_user_rules', JSON.stringify(updatedRules));
     
-    // Re-evaluate rules
-    if (updatedRules.length > 0) {
-      const results = evaluateAllRules(updatedRules, transactions, 'monthly');
-      setRuleExecutionResults(results);
-      const summary = getRuleExecutionSummary(results);
-      setRuleSummary(summary);
-    } else {
-      setRuleExecutionResults([]);
-      setRuleSummary(null);
+    // Remove rule from execution engine
+    try {
+      await ruleExecutionEngine.removeRule(ruleId);
+      setEngineStatus(ruleExecutionEngine.getStatus());
+      setRecentTriggers(ruleExecutionEngine.getRecentTriggers(24));
+    } catch (error) {
+      console.error('Failed to remove rule from engine:', error);
     }
     
     toast({
@@ -268,6 +318,44 @@ const DashboardPage = () => {
       description: "Your rule has been successfully removed.",
       variant: "default"
     });
+  };
+
+  const handleInsightAction = (actionType, ruleResult) => {
+    switch (actionType) {
+      case 'create-rule':
+        setShowRuleModal(true);
+        break;
+      case 'view-details':
+        // Navigate to rules page with rule details
+        navigate('/rules', { state: { selectedRule: ruleResult } });
+        break;
+      case 'review':
+        // Show rule review modal or navigate to rules
+        navigate('/rules', { state: { reviewRule: ruleResult } });
+        break;
+      case 'view-status':
+        // Show detailed rule status
+        toast({
+          title: "Rule Status",
+          description: `Rule "${ruleResult.ruleName}" is actively monitoring your finances.`,
+          variant: "default"
+        });
+        break;
+      case 'check-status':
+        // Refresh rule evaluation
+        ruleExecutionEngine.evaluateAllRules().then(evaluation => {
+          setRuleExecutionResults(evaluation.results);
+          setRuleSummary(evaluation.summary);
+          toast({
+            title: "Status Updated",
+            description: "Rule evaluation completed successfully.",
+            variant: "default"
+        });
+        });
+        break;
+      default:
+        console.log('Unknown insight action:', actionType);
+    }
   };
 
   // Empty state component for when user has no data
@@ -415,6 +503,29 @@ const DashboardPage = () => {
             }}>
               Your Financial Insights
             </h2>
+            {engineStatus.isRunning && (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.25rem 0.75rem',
+                backgroundColor: 'var(--color-success-50)',
+                color: 'var(--color-success-700)',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: 'var(--font-size-xs)',
+                fontWeight: 'var(--font-weight-medium)',
+                border: '1px solid var(--color-success-200)'
+              }}>
+                <div style={{
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  backgroundColor: 'var(--color-success-500)',
+                  animation: 'pulse 2s infinite'
+                }} />
+                Auto-monitoring Active
+              </div>
+            )}
             <div style={{ 
               display: 'flex', 
               alignItems: 'center', 
@@ -454,9 +565,51 @@ const DashboardPage = () => {
             gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
             gap: '1.25rem'
           }}>
-            {mockInsights.map((insight) => (
-              <InsightCard key={insight.id} insight={insight} />
-            ))}
+            {/* Show dynamic insights based on rule execution results */}
+            {ruleExecutionResults.length > 0 ? (
+              ruleExecutionResults.map((result) => (
+                <DynamicInsightCard
+                  key={result.ruleId}
+                  ruleResult={result}
+                  transactions={transactions}
+                  onActionClick={handleInsightAction}
+                  showDetails={result.status === 'triggered'}
+                />
+              ))
+            ) : (
+              // Show default insight when no rules are active
+              <DynamicInsightCard
+                ruleResult={null}
+                transactions={transactions}
+                onActionClick={handleInsightAction}
+              />
+            )}
+            
+            {/* Show recent triggers if any */}
+            {recentTriggers.length > 0 && (
+              <CompositeCard variant="elevated" style={{
+                backgroundColor: 'var(--color-background-secondary)',
+                border: '1px solid var(--color-border-secondary)'
+              }}>
+                <div style={{ padding: '1rem' }}>
+                  <h3 style={{
+                    fontSize: 'var(--font-size-sm)',
+                    fontWeight: 'var(--font-weight-medium)',
+                    margin: '0 0 0.5rem 0',
+                    color: 'var(--color-text-primary)'
+                  }}>
+                    Recent Activity
+                  </h3>
+                  <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
+                    {recentTriggers.slice(0, 3).map((trigger, index) => (
+                      <div key={index} style={{ marginBottom: '0.25rem' }}>
+                        {trigger.ruleName}: {trigger.message}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </CompositeCard>
+            )}
           </div>
         </div>
 
