@@ -34,7 +34,7 @@ import Step5GuidedRuleCreation from './steps/Step5GuidedRuleCreation.jsx';
 import Step6SetMode from './steps/Step6SetMode.jsx';
 import { useAuthStore } from '../../core/store/authStore.js';
 import { useFinancialStateStore } from '../../core/store/financialStateStore.js';
-import { useToast, useAutomationToast } from '../../components/ui/use-toast.jsx';
+import { useToast } from '../../components/ui/use-toast.jsx';
 import { trackOnboardStarted, trackOnboardCompleted } from '@/lib/analytics.js';
 import './OnboardingFlow.css';
 
@@ -105,7 +105,7 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
   const navigate = useNavigate();
   const { user, updateUserProfile } = useAuthStore();
   const { initializeFinancialState } = useFinancialStateStore();
-  const { toast, automationToast } = useToast();
+  const { toast } = useToast();
   
   const [currentStep, setCurrentStep] = useState(initialState?.currentStep || 1);
   const [stepData, setStepData] = useState(initialState?.data || {});
@@ -122,14 +122,14 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
       trackOnboardStarted();
       
       // Phase 4: Show automation welcome message
-      automationToast({
+      toast({
         type: 'automationGuidance',
         message: 'Welcome to AlphaFrame! We\'ll teach you how automation can transform your financial monitoring.',
         action: null,
         actionLabel: null
       });
     }
-  }, [navigate, initialState, automationToast]);
+  }, [navigate, initialState, toast]);
 
   /**
    * Handle step completion - Enhanced for Phase 4
@@ -144,7 +144,7 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
     
     if (stepId === 4) {
       // Automation education completed
-      automationToast({
+      toast({
         type: 'automationGuidance',
         message: 'Great! You now understand how automation works. Let\'s create your first rule together.',
         action: () => setCurrentStep(5),
@@ -152,7 +152,7 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
       });
     } else if (stepId === 5) {
       // First rule created
-      automationToast({
+      toast({
         type: 'ruleCreated',
         ruleName: data.ruleName || 'Your First Rule',
         ruleId: data.ruleId,
@@ -194,7 +194,7 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
       trackOnboardCompleted();
       
       // Phase 4: Show automation success message
-      automationToast({
+      toast({
         type: 'automationGuidance',
         message: 'Welcome to AlphaFrame! Your automation is now active. You\'ll receive alerts when your rules trigger.',
         action: () => navigate('/dashboard'),
@@ -262,7 +262,7 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
     
     // Simulate rule trigger for demo
     setTimeout(() => {
-      automationToast({
+      toast({
         type: 'ruleTriggered',
         ruleName: 'Demo Spending Alert',
         message: 'This is how you\'ll be notified when your rules trigger!',
