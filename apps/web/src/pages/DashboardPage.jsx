@@ -565,25 +565,114 @@ const DashboardPage = () => {
             gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
             gap: '1.25rem'
           }}>
-            {/* Show dynamic insights based on rule execution results */}
-            {ruleExecutionResults.length > 0 ? (
-              ruleExecutionResults.map((result) => (
-                <DynamicInsightCard
-                  key={result.ruleId}
-                  ruleResult={result}
-                  transactions={transactions}
-                  onActionClick={handleInsightAction}
-                  showDetails={result.status === 'triggered'}
-                />
-              ))
-            ) : (
-              // Show default insight when no rules are active
-              <DynamicInsightCard
-                ruleResult={null}
-                transactions={transactions}
-                onActionClick={handleInsightAction}
-              />
-            )}
+            {/* Generate insights array - always show at least 3 insights */}
+            {(() => {
+              const insights = [];
+              
+              // 1. Show dynamic insights based on rule execution results
+              if (ruleExecutionResults.length > 0) {
+                ruleExecutionResults.forEach((result) => {
+                  insights.push(
+                    <DynamicInsightCard
+                      key={result.ruleId}
+                      ruleResult={result}
+                      transactions={transactions}
+                      onActionClick={handleInsightAction}
+                      showDetails={result.status === 'triggered'}
+                    />
+                  );
+                });
+              }
+              
+              // 2. Show default insight when no rules are active
+              if (insights.length === 0) {
+                insights.push(
+                  <DynamicInsightCard
+                    key="no-rules"
+                    ruleResult={null}
+                    transactions={transactions}
+                    onActionClick={handleInsightAction}
+                  />
+                );
+              }
+              
+              // 3. Add system insights to ensure at least 3 cards
+              if (insights.length < 3) {
+                // Add spending overview insight
+                const totalSpent = transactions.reduce((sum, t) => sum + Math.abs(t.amount), 0);
+                insights.push(
+                  <CompositeCard key="spending-overview" variant="elevated">
+                    <div style={{ padding: '1.5rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                        <BarChart3 size={24} style={{ color: 'var(--color-primary-600)' }} />
+                        <h3 style={{ 
+                          fontSize: 'var(--font-size-base)',
+                          fontWeight: 'var(--font-weight-semibold)',
+                          color: 'var(--color-text-primary)',
+                          margin: 0
+                        }}>
+                          Spending Overview
+                        </h3>
+                      </div>
+                      <p style={{ 
+                        fontSize: 'var(--font-size-sm)',
+                        color: 'var(--color-text-secondary)',
+                        marginBottom: '1rem'
+                      }}>
+                        You've spent ${totalSpent.toFixed(2)} this month across {transactions.length} transactions.
+                      </p>
+                      <StyledButton
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleInsightAction('view-spending', { type: 'spending-overview' })}
+                      >
+                        View Details
+                        <ArrowRight size={14} />
+                      </StyledButton>
+                    </div>
+                  </CompositeCard>
+                );
+              }
+              
+              // 4. Add account balance insight if we still need more
+              if (insights.length < 3) {
+                const checkingBalance = 5000; // Mock data
+                insights.push(
+                  <CompositeCard key="account-balance" variant="elevated">
+                    <div style={{ padding: '1.5rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                        <DollarSign size={24} style={{ color: 'var(--color-success-600)' }} />
+                        <h3 style={{ 
+                          fontSize: 'var(--font-size-base)',
+                          fontWeight: 'var(--font-weight-semibold)',
+                          color: 'var(--color-text-primary)',
+                          margin: 0
+                        }}>
+                          Account Balance
+                        </h3>
+                      </div>
+                      <p style={{ 
+                        fontSize: 'var(--font-size-sm)',
+                        color: 'var(--color-text-secondary)',
+                        marginBottom: '1rem'
+                      }}>
+                        Your checking account balance is ${checkingBalance.toFixed(2)}.
+                      </p>
+                      <StyledButton
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleInsightAction('view-balance', { type: 'account-balance' })}
+                      >
+                        View Details
+                        <ArrowRight size={14} />
+                      </StyledButton>
+                    </div>
+                  </CompositeCard>
+                );
+              }
+              
+              return insights;
+            })()}
             
             {/* Show recent triggers if any */}
             {recentTriggers.length > 0 && (

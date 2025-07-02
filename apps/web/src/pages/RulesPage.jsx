@@ -23,12 +23,15 @@ import RuleBinderRoot from '../components/framesync/RuleBinderRoot';
 import StyledButton from '../components/ui/StyledButton';
 import CompositeCard from '../components/ui/CompositeCard';
 import StatusBadge from '../components/ui/StatusBadge';
+import RuleStatusCard from '../components/ui/RuleStatusCard';
+import RuleCreationModal from '../components/ui/RuleCreationModal';
 import PageLayout from '../components/PageLayout';
 import { useToast } from '../components/ui/use-toast';
-import { Plus, X, Settings, Zap, Shield, TrendingUp, Trash2, Play, Pause } from 'lucide-react';
+import { Plus, X, Settings, Zap, Shield, TrendingUp, Trash2, Play, Pause, Edit, Eye } from 'lucide-react';
 import './RulesPage.css';
 import env from '../lib/env.js';
 import storageService from '../lib/services/StorageService';
+import ruleExecutionEngine from '../lib/services/RuleExecutionEngine.js';
 
 // Error Catcher Component to catch runtime exceptions
 const ErrorCatcher = ({ children }) => {
@@ -41,8 +44,11 @@ const ErrorCatcher = ({ children }) => {
 
 const RulesPage = () => {
   const [showRuleBinder, setShowRuleBinder] = useState(false);
+  const [showRuleModal, setShowRuleModal] = useState(false);
   const [currentRule, setCurrentRule] = useState(null);
   const [userRules, setUserRules] = useState([]); // Track user's rules
+  const [ruleExecutionResults, setRuleExecutionResults] = useState([]);
+  const [engineStatus, setEngineStatus] = useState({});
   const { toast } = useToast();
   const { user } = useAuth0();
 
@@ -55,8 +61,30 @@ const RulesPage = () => {
       // Get stored rules using enhanced service
       const storedRules = storageService.getUserRules();
       setUserRules(storedRules);
+      
+      // Initialize rule execution engine if rules exist
+      if (storedRules.length > 0) {
+        initializeRuleEngine(storedRules);
+      }
     }
   }, [user]);
+
+  const initializeRuleEngine = async (rules) => {
+    try {
+      // Initialize the engine with user rules
+      await ruleExecutionEngine.initialize(rules);
+      
+      // Start periodic evaluation
+      await ruleExecutionEngine.startPeriodicEvaluation(30000); // 30 seconds
+      
+      // Get initial evaluation results
+      const evaluation = await ruleExecutionEngine.evaluateAllRules();
+      setRuleExecutionResults(evaluation.results);
+      setEngineStatus(ruleExecutionEngine.getStatus());
+    } catch (error) {
+      console.error('Failed to initialize rule engine:', error);
+    }
+  };
 
   // Diagnostic logging and test mode setup
   useEffect(() => {
@@ -67,17 +95,67 @@ const RulesPage = () => {
   }, []);
 
   const handleCreateRule = () => {
-    setCurrentRule({
-      id: `rule_${Date.now()}`,
-      trigger: 'checking_account_balance > 5000',
-      action: '',
-      enabled: true
-    });
-    setShowRuleBinder(true);
+    setShowRuleModal(true);
     
     toast({
       title: "Creating New Rule",
       description: "Opening rule builder...",
+      variant: "default"
+    });
+  };
+
+  const handleRuleCreated = async (newRule) => {
+    const updatedRules = [...userRules, newRule];
+    setUserRules(updatedRules);
+    
+    // Save using enhanced storage service
+    const saveSuccess = storageService.setUserRules(updatedRules);
+    
+    if (!saveSuccess) {
+      console.warn('Failed to save rules, but continuing...');
+    }
+    
+    // Add rule to execution engine
+    try {
+      const evaluation = await ruleExecutionEngine.addRule(newRule);
+      setRuleExecutionResults(evaluation.results);
+      setEngineStatus(ruleExecutionEngine.getStatus());
+    } catch (error) {
+      console.error('Failed to add rule to engine:', error);
+    }
+    
+    toast({
+      title: "Rule Created!",
+      description: "Your new rule has been saved and is now active.",
+      variant: "default"
+    });
+  };
+
+  const handleEditRule = (rule) => {
+    setCurrentRule(rule);
+    setShowRuleModal(true);
+  };
+
+  const handleDeleteRule = async (ruleId) => {
+    const updatedRules = userRules.filter(rule => rule.id !== ruleId);
+    setUserRules(updatedRules);
+    
+    // Save using enhanced storage service
+    storageService.setUserRules(updatedRules);
+    
+    // Remove rule from execution engine
+    try {
+      await ruleExecutionEngine.removeRule(ruleId);
+      const evaluation = await ruleExecutionEngine.evaluateAllRules();
+      setRuleExecutionResults(evaluation.results);
+      setEngineStatus(ruleExecutionEngine.getStatus());
+    } catch (error) {
+      console.error('Failed to remove rule from engine:', error);
+    }
+    
+    toast({
+      title: "Rule Deleted",
+      description: "Your rule has been successfully removed.",
       variant: "default"
     });
   };
@@ -260,6 +338,13 @@ const RulesPage = () => {
   return (
     <PageLayout title="FrameSync Rules" description="Create and manage automated financial rules">
       <ErrorCatcher>
+        {/* Rule Creation Modal */}
+        <RuleCreationModal
+          isOpen={showRuleModal}
+          onClose={() => setShowRuleModal(false)}
+          onRuleCreated={handleRuleCreated}
+        />
+
         <motion.div
           className="rules-container"
           initial={{ opacity: 0, y: 20 }}
@@ -302,7 +387,40 @@ const RulesPage = () => {
                   <EmptyRulesState />
                 ) : (
                   <>
-                    {/* Show existing rules */}
+                    {/* Engine Status */}
+                    {engineStatus.isRunning && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        style={{
+                          marginBottom: '1rem',
+                          padding: '0.75rem 1rem',
+                          backgroundColor: 'var(--color-success-50)',
+                          border: '1px solid var(--color-success-200)',
+                          borderRadius: 'var(--radius-md)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem'
+                        }}
+                      >
+                        <div style={{
+                          width: '8px',
+                          height: '8px',
+                          borderRadius: '50%',
+                          backgroundColor: 'var(--color-success-500)',
+                          animation: 'pulse 2s infinite'
+                        }} />
+                        <span style={{
+                          fontSize: 'var(--font-size-sm)',
+                          color: 'var(--color-success-700)',
+                          fontWeight: 'var(--font-weight-medium)'
+                        }}>
+                          Auto-monitoring Active - {userRules.length} rule{userRules.length !== 1 ? 's' : ''} being evaluated
+                        </span>
+                      </motion.div>
+                    )}
+
+                    {/* Show existing rules with RuleStatusCard */}
                     <div style={{ marginBottom: '2rem' }}>
                       <h3 style={{ 
                         fontSize: 'var(--font-size-lg)',
@@ -313,44 +431,51 @@ const RulesPage = () => {
                         Your Active Rules ({userRules.length})
                       </h3>
                       <div style={{ 
-                        display: 'grid', 
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                        display: 'flex', 
+                        flexDirection: 'column',
                         gap: '1rem'
                       }}>
-                        {userRules.map((rule) => (
-                          <CompositeCard key={rule.id} variant="elevated">
-                            <div style={{ padding: '1rem' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                                <Zap size={16} style={{ color: 'var(--color-success-600)' }} />
-                                <h4 style={{ 
-                                  fontSize: 'var(--font-size-base)',
-                                  fontWeight: 'var(--font-weight-semibold)',
-                                  color: 'var(--color-text-primary)',
-                                  margin: 0
-                                }}>
-                                  {rule.name}
-                                </h4>
-                                <StatusBadge variant="success" size="sm">
-                                  Active
-                                </StatusBadge>
+                        {userRules.map((rule) => {
+                          const executionResult = ruleExecutionResults.find(r => r.ruleId === rule.id) || {
+                            status: 'ok',
+                            message: 'Rule is active and monitoring',
+                            metrics: {}
+                          };
+                          
+                          return (
+                            <div key={rule.id} style={{ position: 'relative' }}>
+                              <RuleStatusCard
+                                rule={rule}
+                                executionResult={executionResult}
+                              />
+                              {/* Action buttons */}
+                              <div style={{
+                                position: 'absolute',
+                                top: '1rem',
+                                right: '1rem',
+                                display: 'flex',
+                                gap: '0.5rem'
+                              }}>
+                                <StyledButton
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleEditRule(rule)}
+                                  style={{ padding: '0.5rem' }}
+                                >
+                                  <Edit size={16} />
+                                </StyledButton>
+                                <StyledButton
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleDeleteRule(rule.id)}
+                                  style={{ padding: '0.5rem', color: 'var(--color-destructive-600)' }}
+                                >
+                                  <Trash2 size={16} />
+                                </StyledButton>
                               </div>
-                              <p style={{ 
-                                fontSize: 'var(--font-size-sm)',
-                                color: 'var(--color-text-secondary)',
-                                margin: '0.5rem 0'
-                              }}>
-                                {rule.trigger}
-                              </p>
-                              <p style={{ 
-                                fontSize: 'var(--font-size-xs)',
-                                color: 'var(--color-text-tertiary)',
-                                margin: 0
-                              }}>
-                                Created: {new Date(rule.createdAt).toLocaleDateString()}
-                              </p>
                             </div>
-                          </CompositeCard>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                     
@@ -398,66 +523,18 @@ const RulesPage = () => {
                         {userRules.length} rule{userRules.length !== 1 ? 's' : ''} active
                       </StatusBadge>
                       <p className="timestamp">
-                        Last updated: {new Date().toLocaleString()}
+                        Last updated: {new Date().toLocaleTimeString()}
                       </p>
                     </div>
                   </>
                 )}
               </motion.div>
             ) : (
-              <motion.div 
-                className="rule-builder-container"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="builder-header">
-                  <div className="builder-title">
-                    <h2 className="builder-title-text">Create New Rule</h2>
-                    <p className="builder-subtitle">Configure your automated financial rule</p>
-                  </div>
-                  <StyledButton 
-                    onClick={handleCancel}
-                    variant="secondary"
-                    className="cancel-button"
-                  >
-                    <X size={16} />
-                    Cancel
-                  </StyledButton>
-                </div>
-                
-                {(() => {
-                  try {
-                    return (
-                      <RuleBinderRoot
-                        initialConfig={{
-                          rule: currentRule,
-                          currentState: {
-                            checking_account_balance: 6000,
-                            savings_account_balance: 15000,
-                            credit_score: 750
-                          }
-                        }}
-                        onConfigurationChange={handleConfigurationChange}
-                      />
-                    );
-                  } catch (err) {
-                    return (
-                      <CompositeCard className="error-container">
-                        <div className="error-content">
-                          <StatusBadge variant="error" size="sm">
-                            Error Loading Rule Builder
-                          </StatusBadge>
-                          <span data-testid="rulespage-render-error">
-                            {err?.message || "Unknown error"}
-                          </span>
-                          <pre className="error-stack">{err?.stack}</pre>
-                        </div>
-                      </CompositeCard>
-                    );
-                  }
-                })()}
-              </motion.div>
+              <RuleBinderRoot
+                rule={currentRule}
+                onConfigurationChange={handleConfigurationChange}
+                onCancel={handleCancel}
+              />
             )}
           </CompositeCard>
         </motion.div>

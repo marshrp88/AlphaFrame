@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CompositeCard from './CompositeCard.jsx';
 import StyledButton from './StyledButton.jsx';
-import { X, Zap, Target, DollarSign, Calendar, Sparkles, Shield, TrendingUp } from 'lucide-react';
+import { X, Zap, Target, DollarSign, Calendar, Sparkles, Shield, TrendingUp, ArrowRight } from 'lucide-react';
 import { useToast } from './use-toast.jsx';
 import ruleTemplateService from '../../lib/services/RuleTemplateService.js';
 import { trackRuleCreated } from '@/lib/analytics.js';
@@ -15,6 +15,7 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
   const [customizations, setCustomizations] = useState({});
   const [templates, setTemplates] = useState([]);
   const [showCustomForm, setShowCustomForm] = useState(false);
+  const [showCustomization, setShowCustomization] = useState(false);
   const [ruleData, setRuleData] = useState({
     name: '',
     description: '',
@@ -43,7 +44,7 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
       let newRule;
       
       if (selectedTemplate && !showCustomForm) {
-        // Create rule from template
+        // Create rule from template with customizations
         newRule = ruleTemplateService.createRuleFromTemplate(selectedTemplate.id, customizations);
       } else {
         // Create custom rule
@@ -92,6 +93,29 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
     setRuleData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleCustomizationChange = (key, value) => {
+    setCustomizations(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleTemplateSelect = (template) => {
+    setSelectedTemplate(template);
+    setShowCustomization(true);
+    // Initialize customizations with template defaults
+    const defaultCustomizations = {};
+    if (template.customizationOptions) {
+      template.customizationOptions.forEach(option => {
+        defaultCustomizations[option.key] = option.default;
+      });
+    }
+    setCustomizations(defaultCustomizations);
+  };
+
+  const handleBackToTemplates = () => {
+    setSelectedTemplate(null);
+    setShowCustomization(false);
+    setCustomizations({});
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -129,7 +153,7 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
             stiffness: 300
           }}
           onClick={(e) => e.stopPropagation()}
-          style={{ width: '100%', maxWidth: '500px' }}
+          style={{ width: '100%', maxWidth: '600px' }}
         >
           <CompositeCard variant="elevated">
             <div style={{ padding: '2rem' }}>
@@ -147,14 +171,16 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                     color: 'var(--color-text-primary)',
                     margin: 0
                   }}>
-                    Create Your First Rule
+                    {showCustomization && selectedTemplate ? `Customize ${selectedTemplate.name}` : 
+                     showCustomForm ? 'Create Custom Rule' : 'Create Your First Rule'}
                   </h2>
                   <p style={{ 
                     fontSize: 'var(--font-size-sm)',
                     color: 'var(--color-text-secondary)',
                     margin: '0.5rem 0 0 0'
                   }}>
-                    Set up automated financial monitoring
+                    {showCustomization && selectedTemplate ? 'Configure your rule settings' :
+                     showCustomForm ? 'Set up a custom financial rule' : 'Set up automated financial monitoring'}
                   </p>
                 </div>
                 <StyledButton
@@ -167,232 +193,382 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                 </StyledButton>
               </div>
 
-              {/* Template Selection or Custom Form */}
+              {/* Template Selection, Customization, or Custom Form */}
               <form onSubmit={handleSubmit}>
-                {!showCustomForm ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                  {/* Template Grid */}
-                  <div>
-                    <h3 style={{ 
-                      fontSize: 'var(--font-size-lg)',
-                      fontWeight: 'var(--font-weight-semibold)',
-                      color: 'var(--color-text-primary)',
-                      marginBottom: '1rem'
-                    }}>
-                      Choose a Rule Template
-                    </h3>
-                    <div style={{ 
-                      display: 'grid', 
-                      gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-                      gap: '1rem'
-                    }}>
-                      {templates.map((template) => (
-                        <div
-                          key={template.id}
-                          onClick={() => setSelectedTemplate(template)}
-                          style={{
-                            padding: '1rem',
-                            border: `2px solid ${selectedTemplate?.id === template.id ? 'var(--color-primary-500)' : 'var(--color-border-primary)'}`,
-                            borderRadius: 'var(--radius-md)',
-                            backgroundColor: selectedTemplate?.id === template.id ? 'var(--color-primary-50)' : 'var(--color-surface)',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s ease'
-                          }}
-                        >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                            <span style={{ fontSize: '1.5rem' }}>{template.icon}</span>
-                            <h4 style={{ 
-                              fontSize: 'var(--font-size-base)',
-                              fontWeight: 'var(--font-weight-semibold)',
-                              color: 'var(--color-text-primary)',
+                {!showCustomForm && !showCustomization ? (
+                  // Template Selection
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    <div>
+                      <h3 style={{ 
+                        fontSize: 'var(--font-size-lg)',
+                        fontWeight: 'var(--font-weight-semibold)',
+                        color: 'var(--color-text-primary)',
+                        marginBottom: '1rem'
+                      }}>
+                        Choose a Rule Template
+                      </h3>
+                      <div style={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                        gap: '1rem'
+                      }}>
+                        {templates.map((template) => (
+                          <div
+                            key={template.id}
+                            onClick={() => handleTemplateSelect(template)}
+                            style={{
+                              padding: '1rem',
+                              border: '2px solid var(--color-border-primary)',
+                              borderRadius: 'var(--radius-md)',
+                              backgroundColor: 'var(--color-surface)',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s ease',
+                              ':hover': {
+                                borderColor: 'var(--color-primary-500)',
+                                backgroundColor: 'var(--color-primary-50)'
+                              }
+                            }}
+                            onMouseEnter={(e) => {
+                              e.target.style.borderColor = 'var(--color-primary-500)';
+                              e.target.style.backgroundColor = 'var(--color-primary-50)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.borderColor = 'var(--color-border-primary)';
+                              e.target.style.backgroundColor = 'var(--color-surface)';
+                            }}
+                          >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                              <span style={{ fontSize: '1.5rem' }}>{template.icon}</span>
+                              <h4 style={{ 
+                                fontSize: 'var(--font-size-base)',
+                                fontWeight: 'var(--font-weight-semibold)',
+                                color: 'var(--color-text-primary)',
+                                margin: 0
+                              }}>
+                                {template.name}
+                              </h4>
+                            </div>
+                            <p style={{ 
+                              fontSize: 'var(--font-size-sm)',
+                              color: 'var(--color-text-secondary)',
                               margin: 0
                             }}>
-                              {template.name}
-                            </h4>
+                              {template.description}
+                            </p>
+                            <div style={{ 
+                              marginTop: '0.5rem',
+                              padding: '0.25rem 0.5rem',
+                              backgroundColor: 'var(--color-muted-100)',
+                              borderRadius: 'var(--radius-sm)',
+                              fontSize: 'var(--font-size-xs)',
+                              color: 'var(--color-text-secondary)',
+                              display: 'inline-block'
+                            }}>
+                              {template.difficulty} level
+                            </div>
                           </div>
-                          <p style={{ 
-                            fontSize: 'var(--font-size-sm)',
-                            color: 'var(--color-text-secondary)',
-                            margin: 0
-                          }}>
-                            {template.description}
-                          </p>
-                          <div style={{ 
-                            marginTop: '0.5rem',
-                            padding: '0.25rem 0.5rem',
-                            backgroundColor: 'var(--color-muted-100)',
-                            borderRadius: 'var(--radius-sm)',
-                            fontSize: 'var(--font-size-xs)',
-                            color: 'var(--color-text-secondary)',
-                            display: 'inline-block'
-                          }}>
-                            {template.difficulty} level
-                          </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Custom Rule Option */}
+                    <div style={{ 
+                      textAlign: 'center',
+                      padding: '1rem',
+                      border: '1px dashed var(--color-border-primary)',
+                      borderRadius: 'var(--radius-md)'
+                    }}>
+                      <p style={{ 
+                        fontSize: 'var(--font-size-sm)',
+                        color: 'var(--color-text-secondary)',
+                        marginBottom: '0.5rem'
+                      }}>
+                        Don't see what you need?
+                      </p>
+                      <StyledButton
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setShowCustomForm(true)}
+                      >
+                        Create Custom Rule
+                      </StyledButton>
                     </div>
                   </div>
+                ) : showCustomization && selectedTemplate ? (
+                  // Template Customization
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    {/* Back to Templates */}
+                    <div style={{ textAlign: 'left' }}>
+                      <StyledButton
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleBackToTemplates}
+                      >
+                        ← Back to Templates
+                      </StyledButton>
+                    </div>
 
-                  {/* Custom Rule Option */}
-                  <div style={{ 
-                    textAlign: 'center',
-                    padding: '1rem',
-                    border: '1px dashed var(--color-border-primary)',
-                    borderRadius: 'var(--radius-md)'
-                  }}>
-                    <p style={{ 
-                      fontSize: 'var(--font-size-sm)',
-                      color: 'var(--color-text-secondary)',
-                      marginBottom: '0.5rem'
+                    {/* Template Info */}
+                    <div style={{
+                      padding: '1rem',
+                      backgroundColor: 'var(--color-primary-50)',
+                      border: '1px solid var(--color-primary-200)',
+                      borderRadius: 'var(--radius-md)'
                     }}>
-                      Don't see what you need?
-                    </p>
-                    <StyledButton
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setShowCustomForm(true)}
-                    >
-                      Create Custom Rule
-                    </StyledButton>
-                  </div>
-                </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                  {/* Back to Templates */}
-                  <div style={{ textAlign: 'left' }}>
-                    <StyledButton
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowCustomForm(false)}
-                    >
-                      ← Back to Templates
-                    </StyledButton>
-                  </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.5rem' }}>{selectedTemplate.icon}</span>
+                        <h4 style={{ 
+                          fontSize: 'var(--font-size-base)',
+                          fontWeight: 'var(--font-weight-semibold)',
+                          color: 'var(--color-text-primary)',
+                          margin: 0
+                        }}>
+                          {selectedTemplate.name}
+                        </h4>
+                      </div>
+                      <p style={{ 
+                        fontSize: 'var(--font-size-sm)',
+                        color: 'var(--color-text-secondary)',
+                        margin: 0
+                      }}>
+                        {selectedTemplate.description}
+                      </p>
+                    </div>
 
-                  {/* Custom Form Fields */}
-                  <div>
-                    <label style={{ 
-                      display: 'block',
-                      fontSize: 'var(--font-size-sm)',
-                      fontWeight: 'var(--font-weight-medium)',
-                      color: 'var(--color-text-primary)',
-                      marginBottom: '0.5rem'
-                    }}>
-                      Rule Name
-                    </label>
-                    <input
-                      type="text"
-                      value={ruleData.name}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
-                      placeholder="e.g., Monthly Coffee Budget"
-                      required
-                      style={{
-                        width: '100%',
-                        padding: '0.75rem',
-                        border: '1px solid var(--color-border-primary)',
-                        borderRadius: 'var(--radius-md)',
-                        fontSize: 'var(--font-size-base)',
-                        backgroundColor: 'var(--color-surface)',
+                    {/* Customization Options */}
+                    {selectedTemplate.customizationOptions && (
+                      <div>
+                        <h3 style={{ 
+                          fontSize: 'var(--font-size-base)',
+                          fontWeight: 'var(--font-weight-semibold)',
+                          color: 'var(--color-text-primary)',
+                          marginBottom: '1rem'
+                        }}>
+                          Customize Your Rule
+                        </h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                          {selectedTemplate.customizationOptions.map((option) => (
+                            <div key={option.key}>
+                              <label style={{ 
+                                display: 'block',
+                                fontSize: 'var(--font-size-sm)',
+                                fontWeight: 'var(--font-weight-medium)',
+                                color: 'var(--color-text-primary)',
+                                marginBottom: '0.5rem'
+                              }}>
+                                {option.label}
+                                {option.required && <span style={{ color: 'var(--color-destructive-500)' }}> *</span>}
+                              </label>
+                              
+                              {option.type === 'select' ? (
+                                <select
+                                  value={customizations[option.key] || option.default || ''}
+                                  onChange={(e) => handleCustomizationChange(option.key, e.target.value)}
+                                  required={option.required}
+                                  style={{
+                                    width: '100%',
+                                    padding: '0.75rem',
+                                    border: '1px solid var(--color-border-primary)',
+                                    borderRadius: 'var(--radius-md)',
+                                    fontSize: 'var(--font-size-base)',
+                                    backgroundColor: 'var(--color-surface)',
+                                    color: 'var(--color-text-primary)',
+                                    transition: 'all 0.2s ease',
+                                    outline: 'none'
+                                  }}
+                                >
+                                  {option.options.map((opt) => (
+                                    <option key={opt.value || opt} value={opt.value || opt}>
+                                      {opt.label || opt}
+                                    </option>
+                                  ))}
+                                </select>
+                              ) : option.type === 'number' ? (
+                                <input
+                                  type="number"
+                                  value={customizations[option.key] || option.default || ''}
+                                  onChange={(e) => handleCustomizationChange(option.key, parseFloat(e.target.value))}
+                                  placeholder={option.placeholder}
+                                  min={option.min}
+                                  max={option.max}
+                                  step={option.step}
+                                  required={option.required}
+                                  style={{
+                                    width: '100%',
+                                    padding: '0.75rem',
+                                    border: '1px solid var(--color-border-primary)',
+                                    borderRadius: 'var(--radius-md)',
+                                    fontSize: 'var(--font-size-base)',
+                                    backgroundColor: 'var(--color-surface)',
+                                    color: 'var(--color-text-primary)',
+                                    transition: 'all 0.2s ease',
+                                    outline: 'none'
+                                  }}
+                                />
+                              ) : (
+                                <input
+                                  type="text"
+                                  value={customizations[option.key] || option.default || ''}
+                                  onChange={(e) => handleCustomizationChange(option.key, e.target.value)}
+                                  placeholder={option.placeholder}
+                                  required={option.required}
+                                  style={{
+                                    width: '100%',
+                                    padding: '0.75rem',
+                                    border: '1px solid var(--color-border-primary)',
+                                    borderRadius: 'var(--radius-md)',
+                                    fontSize: 'var(--font-size-base)',
+                                    backgroundColor: 'var(--color-surface)',
+                                    color: 'var(--color-text-primary)',
+                                    transition: 'all 0.2s ease',
+                                    outline: 'none'
+                                  }}
+                                />
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  // Custom Form
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    {/* Back to Templates */}
+                    <div style={{ textAlign: 'left' }}>
+                      <StyledButton
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowCustomForm(false)}
+                      >
+                        ← Back to Templates
+                      </StyledButton>
+                    </div>
+
+                    {/* Custom Form Fields */}
+                    <div>
+                      <label style={{ 
+                        display: 'block',
+                        fontSize: 'var(--font-size-sm)',
+                        fontWeight: 'var(--font-weight-medium)',
                         color: 'var(--color-text-primary)',
-                        transition: 'all 0.2s ease',
-                        outline: 'none'
-                      }}
-                    />
-                  </div>
+                        marginBottom: '0.5rem'
+                      }}>
+                        Rule Name
+                      </label>
+                      <input
+                        type="text"
+                        value={ruleData.name}
+                        onChange={(e) => handleInputChange('name', e.target.value)}
+                        placeholder="e.g., Monthly Coffee Budget"
+                        required
+                        style={{
+                          width: '100%',
+                          padding: '0.75rem',
+                          border: '1px solid var(--color-border-primary)',
+                          borderRadius: 'var(--radius-md)',
+                          fontSize: 'var(--font-size-base)',
+                          backgroundColor: 'var(--color-surface)',
+                          color: 'var(--color-text-primary)',
+                          transition: 'all 0.2s ease',
+                          outline: 'none'
+                        }}
+                      />
+                    </div>
 
-                  <div>
-                    <label style={{ 
-                      display: 'block',
-                      fontSize: 'var(--font-size-sm)',
-                      fontWeight: 'var(--font-weight-medium)',
-                      color: 'var(--color-text-primary)',
-                      marginBottom: '0.5rem'
-                    }}>
-                      Rule Type
-                    </label>
-                    <select
-                      value={ruleData.type}
-                      onChange={(e) => handleInputChange('type', e.target.value)}
-                      style={{
-                        width: '100%',
-                        padding: '0.75rem',
-                        border: '1px solid var(--color-border-primary)',
-                        borderRadius: 'var(--radius-md)',
-                        fontSize: 'var(--font-size-base)',
-                        backgroundColor: 'var(--color-surface)',
+                    <div>
+                      <label style={{ 
+                        display: 'block',
+                        fontSize: 'var(--font-size-sm)',
+                        fontWeight: 'var(--font-weight-medium)',
                         color: 'var(--color-text-primary)',
-                        transition: 'all 0.2s ease',
-                        outline: 'none'
-                      }}
-                    >
-                      <option value="spending_limit">Spending Limit</option>
-                      <option value="savings_goal">Savings Goal</option>
-                      <option value="bill_reminder">Bill Reminder</option>
-                      <option value="category_tracking">Category Tracking</option>
-                    </select>
-                  </div>
+                        marginBottom: '0.5rem'
+                      }}>
+                        Rule Type
+                      </label>
+                      <select
+                        value={ruleData.type}
+                        onChange={(e) => handleInputChange('type', e.target.value)}
+                        style={{
+                          width: '100%',
+                          padding: '0.75rem',
+                          border: '1px solid var(--color-border-primary)',
+                          borderRadius: 'var(--radius-md)',
+                          fontSize: 'var(--font-size-base)',
+                          backgroundColor: 'var(--color-surface)',
+                          color: 'var(--color-text-primary)',
+                          transition: 'all 0.2s ease',
+                          outline: 'none'
+                        }}
+                      >
+                        <option value="spending_limit">Spending Limit</option>
+                        <option value="savings_goal">Savings Goal</option>
+                        <option value="bill_reminder">Bill Reminder</option>
+                        <option value="category_tracking">Category Tracking</option>
+                      </select>
+                    </div>
 
-                  <div>
-                    <label style={{ 
-                      display: 'block',
-                      fontSize: 'var(--font-size-sm)',
-                      fontWeight: 'var(--font-weight-medium)',
-                      color: 'var(--color-text-primary)',
-                      marginBottom: '0.5rem'
-                    }}>
-                      Amount
-                    </label>
-                    <input
-                      type="number"
-                      value={ruleData.amount}
-                      onChange={(e) => handleInputChange('amount', e.target.value)}
-                      placeholder="0.00"
-                      required
-                      style={{
-                        width: '100%',
-                        padding: '0.75rem',
-                        border: '1px solid var(--color-border-primary)',
-                        borderRadius: 'var(--radius-md)',
-                        fontSize: 'var(--font-size-base)',
-                        backgroundColor: 'var(--color-surface)',
+                    <div>
+                      <label style={{ 
+                        display: 'block',
+                        fontSize: 'var(--font-size-sm)',
+                        fontWeight: 'var(--font-weight-medium)',
                         color: 'var(--color-text-primary)',
-                        transition: 'all 0.2s ease',
-                        outline: 'none'
-                      }}
-                    />
-                  </div>
+                        marginBottom: '0.5rem'
+                      }}>
+                        Amount
+                      </label>
+                      <input
+                        type="number"
+                        value={ruleData.amount}
+                        onChange={(e) => handleInputChange('amount', e.target.value)}
+                        placeholder="0.00"
+                        required
+                        style={{
+                          width: '100%',
+                          padding: '0.75rem',
+                          border: '1px solid var(--color-border-primary)',
+                          borderRadius: 'var(--radius-md)',
+                          fontSize: 'var(--font-size-base)',
+                          backgroundColor: 'var(--color-surface)',
+                          color: 'var(--color-text-primary)',
+                          transition: 'all 0.2s ease',
+                          outline: 'none'
+                        }}
+                      />
+                    </div>
 
-                  <div>
-                    <label style={{ 
-                      display: 'block',
-                      fontSize: 'var(--font-size-sm)',
-                      fontWeight: 'var(--font-weight-medium)',
-                      color: 'var(--color-text-primary)',
-                      marginBottom: '0.5rem'
-                    }}>
-                      Description
-                    </label>
-                    <textarea
-                      value={ruleData.description}
-                      onChange={(e) => handleInputChange('description', e.target.value)}
-                      placeholder="Describe what this rule should monitor..."
-                      rows={3}
-                      style={{
-                        width: '100%',
-                        padding: '0.75rem',
-                        border: '1px solid var(--color-border-primary)',
-                        borderRadius: 'var(--radius-md)',
-                        fontSize: 'var(--font-size-base)',
-                        backgroundColor: 'var(--color-surface)',
+                    <div>
+                      <label style={{ 
+                        display: 'block',
+                        fontSize: 'var(--font-size-sm)',
+                        fontWeight: 'var(--font-weight-medium)',
                         color: 'var(--color-text-primary)',
-                        resize: 'vertical',
-                        transition: 'all 0.2s ease',
-                        outline: 'none'
-                      }}
-                    />
+                        marginBottom: '0.5rem'
+                      }}>
+                        Description
+                      </label>
+                      <textarea
+                        value={ruleData.description}
+                        onChange={(e) => handleInputChange('description', e.target.value)}
+                        placeholder="Describe what this rule should monitor..."
+                        rows={3}
+                        style={{
+                          width: '100%',
+                          padding: '0.75rem',
+                          border: '1px solid var(--color-border-primary)',
+                          borderRadius: 'var(--radius-md)',
+                          fontSize: 'var(--font-size-base)',
+                          backgroundColor: 'var(--color-surface)',
+                          color: 'var(--color-text-primary)',
+                          resize: 'vertical',
+                          transition: 'all 0.2s ease',
+                          outline: 'none'
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
                 {/* Actions */}
                 <div style={{ 
@@ -411,7 +587,10 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                   </StyledButton>
                   <StyledButton
                     type="submit"
-                    disabled={isLoading || !ruleData.name || !ruleData.amount}
+                    disabled={isLoading || 
+                      (showCustomForm && (!ruleData.name || !ruleData.amount)) ||
+                      (showCustomization && selectedTemplate?.customizationOptions?.some(opt => opt.required && !customizations[opt.key]))
+                    }
                     style={{
                       background: 'var(--color-primary-600)',
                       color: 'white',
@@ -429,6 +608,7 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                       <>
                         <Zap size={16} />
                         Create Rule
+                        <ArrowRight size={16} />
                       </>
                     )}
                   </StyledButton>
