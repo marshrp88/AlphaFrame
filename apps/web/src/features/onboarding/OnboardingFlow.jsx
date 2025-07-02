@@ -1,20 +1,23 @@
 /**
  * OnboardingFlow.jsx - AlphaFrame VX.1 Consumer-Ready Onboarding
+ * Enhanced for Phase 4: Automation Education & Guided Rule Creation
  * 
- * Purpose: Complete first-time user onboarding experience
- * that guides users through bank connection, transaction review,
- * budget setup, and dashboard configuration with professional styling.
+ * Purpose: Complete first-time user onboarding experience that guides users through
+ * bank connection, transaction review, budget setup, and automation education with
+ * guided rule creation and visual rule mapping.
  * 
  * Procedure:
  * 1. Detect first-time users and redirect to onboarding
  * 2. Guide through Plaid bank connection with enhanced UI
  * 3. Review imported transactions with better visualization
  * 4. Set up initial budget categories with intuitive interface
- * 5. Choose default dashboard mode with clear options
- * 6. Mark user as onboarded and redirect to dashboard
+ * 5. Phase 4: Teach automation value proposition with guided rule creation
+ * 6. Phase 4: Demonstrate automation in action with visual rule map
+ * 7. Choose default dashboard mode with clear options
+ * 8. Mark user as onboarded and redirect to dashboard
  * 
- * Conclusion: Ensures users have a complete setup
- * and positive first experience with AlphaFrame.
+ * Conclusion: Ensures users have a complete setup, understand automation value,
+ * and experience their first "aha moment" with guided rule creation.
  */
 
 import React, { useState, useEffect } from 'react';
@@ -22,19 +25,21 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import CompositeCard from '../../components/ui/CompositeCard.jsx';
 import StyledButton from '../../components/ui/StyledButton.jsx';
-import { CheckCircle, ArrowRight, ArrowLeft, Sparkles, Shield, Zap } from 'lucide-react';
+import { CheckCircle, ArrowRight, ArrowLeft, Sparkles, Shield, Zap, Target, Brain, Play, Eye } from 'lucide-react';
 import Step1PlaidConnect from './steps/Step1PlaidConnect.jsx';
 import Step2ReviewTransactions from './steps/Step2ReviewTransactions.jsx';
 import Step3BudgetSetup from './steps/Step3BudgetSetup.jsx';
-import Step4SetMode from './steps/Step4SetMode.jsx';
+import Step4AutomationEducation from './steps/Step4AutomationEducation.jsx';
+import Step5GuidedRuleCreation from './steps/Step5GuidedRuleCreation.jsx';
+import Step6SetMode from './steps/Step6SetMode.jsx';
 import { useAuthStore } from '../../core/store/authStore.js';
 import { useFinancialStateStore } from '../../core/store/financialStateStore.js';
-import { useToast } from '../../components/ui/use-toast.jsx';
+import { useToast, useAutomationToast } from '../../components/ui/use-toast.jsx';
 import { trackOnboardStarted, trackOnboardCompleted } from '@/lib/analytics.js';
 import './OnboardingFlow.css';
 
 /**
- * Onboarding steps configuration
+ * Onboarding steps configuration - Enhanced for Phase 4
  */
 const ONBOARDING_STEPS = [
   {
@@ -66,27 +71,46 @@ const ONBOARDING_STEPS = [
   },
   {
     id: 4,
+    title: 'Learn Automation',
+    description: 'Discover how AlphaFrame automates your financial monitoring',
+    component: Step4AutomationEducation,
+    required: true,
+    icon: Brain,
+    color: 'var(--color-info-600)'
+  },
+  {
+    id: 5,
+    title: 'Create Your First Rule',
+    description: 'Set up your first automated financial rule',
+    component: Step5GuidedRuleCreation,
+    required: true,
+    icon: Target,
+    color: 'var(--color-secondary-600)'
+  },
+  {
+    id: 6,
     title: 'Choose Dashboard',
     description: 'Select your preferred dashboard view',
-    component: Step4SetMode,
+    component: Step6SetMode,
     required: false,
-    icon: Sparkles,
-    color: 'var(--color-secondary-600)'
+    icon: Eye,
+    color: 'var(--color-tertiary-600)'
   }
 ];
 
 /**
- * Main onboarding flow component
+ * Main onboarding flow component - Enhanced for Phase 4
  */
 export const OnboardingFlow = ({ onComplete, initialState }) => {
   const navigate = useNavigate();
   const { user, updateUserProfile } = useAuthStore();
   const { initializeFinancialState } = useFinancialStateStore();
-  const { toast } = useToast();
+  const { toast, automationToast } = useToast();
   
   const [currentStep, setCurrentStep] = useState(initialState?.currentStep || 1);
   const [stepData, setStepData] = useState(initialState?.data || {});
   const [isLoading, setIsLoading] = useState(false);
+  const [automationDemoActive, setAutomationDemoActive] = useState(false);
 
   // Check if user is already onboarded
   useEffect(() => {
@@ -96,24 +120,54 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
     } else {
       // Track onboarding start for new users
       trackOnboardStarted();
+      
+      // Phase 4: Show automation welcome message
+      automationToast({
+        type: 'automationGuidance',
+        message: 'Welcome to AlphaFrame! We\'ll teach you how automation can transform your financial monitoring.',
+        action: null,
+        actionLabel: null
+      });
     }
-  }, [navigate, initialState]);
+  }, [navigate, initialState, automationToast]);
 
   /**
-   * Handle step completion
+   * Handle step completion - Enhanced for Phase 4
    * @param {number} stepId - Step ID
    * @param {Object} data - Step data
    */
   const handleStepComplete = (stepId, data) => {
     setStepData(prev => ({ ...prev, [stepId]: data }));
     
-    // Show success toast for step completion
+    // Phase 4: Enhanced step completion feedback
     const stepConfig = ONBOARDING_STEPS[stepId - 1];
-    toast({
-      title: "Step Complete!",
-      description: `${stepConfig.title} completed successfully.`,
-      variant: "default"
-    });
+    
+    if (stepId === 4) {
+      // Automation education completed
+      automationToast({
+        type: 'automationGuidance',
+        message: 'Great! You now understand how automation works. Let\'s create your first rule together.',
+        action: () => setCurrentStep(5),
+        actionLabel: 'Create Rule'
+      });
+    } else if (stepId === 5) {
+      // First rule created
+      automationToast({
+        type: 'ruleCreated',
+        ruleName: data.ruleName || 'Your First Rule',
+        ruleId: data.ruleId,
+        message: 'Congratulations! Your first automation rule is now active and monitoring your finances.',
+        action: () => setCurrentStep(6),
+        actionLabel: 'Continue'
+      });
+    } else {
+      // Regular step completion
+      toast({
+        title: "Step Complete!",
+        description: `${stepConfig.title} completed successfully.`,
+        variant: "default"
+      });
+    }
     
     if (stepId < ONBOARDING_STEPS.length) {
       setCurrentStep(stepId + 1);
@@ -123,7 +177,7 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
   };
 
   /**
-   * Handle onboarding completion
+   * Handle onboarding completion - Enhanced for Phase 4
    */
   const handleOnboardingComplete = async () => {
     setIsLoading(true);
@@ -139,22 +193,25 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
       // Track onboarding completion
       trackOnboardCompleted();
       
-      // Show success toast
-      toast({
-        title: "Welcome to AlphaFrame!",
-        description: "Your account has been set up successfully. Let's get started!",
-        variant: "default"
+      // Phase 4: Show automation success message
+      automationToast({
+        type: 'automationGuidance',
+        message: 'Welcome to AlphaFrame! Your automation is now active. You\'ll receive alerts when your rules trigger.',
+        action: () => navigate('/dashboard'),
+        actionLabel: 'Go to Dashboard'
       });
       
       // Call parent completion handler if provided
       if (onComplete) {
         onComplete(stepData);
       } else {
-        // Redirect to dashboard
+        // Redirect to dashboard with enhanced state
         navigate('/dashboard', { 
           state: { 
             welcome: true,
-            onboardingComplete: true 
+            onboardingComplete: true,
+            firstRuleCreated: stepData[5]?.rule || null,
+            automationDemo: true
           } 
         });
       }
@@ -197,6 +254,24 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
     }
   };
 
+  /**
+   * Phase 4: Start automation demo
+   */
+  const startAutomationDemo = () => {
+    setAutomationDemoActive(true);
+    
+    // Simulate rule trigger for demo
+    setTimeout(() => {
+      automationToast({
+        type: 'ruleTriggered',
+        ruleName: 'Demo Spending Alert',
+        message: 'This is how you\'ll be notified when your rules trigger!',
+        action: () => setAutomationDemoActive(false),
+        actionLabel: 'Got it!'
+      });
+    }, 2000);
+  };
+
   const currentStepConfig = ONBOARDING_STEPS[currentStep - 1];
   const CurrentStepComponent = currentStepConfig.component;
   const progress = (currentStep / ONBOARDING_STEPS.length) * 100;
@@ -221,8 +296,23 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
                 <h1 className="onboarding-title">Welcome to AlphaFrame</h1>
               </div>
               <p className="onboarding-subtitle">
-                Let's get you set up in just a few minutes
+                Let's get you set up with automated financial monitoring
               </p>
+              
+              {/* Phase 4: Automation preview */}
+              {currentStep >= 4 && (
+                <motion.div 
+                  className="automation-preview"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
+                  <div className="preview-badge">
+                    <Brain size={16} />
+                    <span>Automation Active</span>
+                  </div>
+                </motion.div>
+              )}
             </motion.div>
 
             {/* Progress Indicator */}
@@ -287,6 +377,8 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
                   onComplete={(data) => handleStepComplete(currentStep, data)}
                   data={stepData[currentStep]}
                   isLoading={isLoading}
+                  automationDemoActive={automationDemoActive}
+                  onStartDemo={startAutomationDemo}
                 />
               </AnimatePresence>
             </motion.div>
