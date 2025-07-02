@@ -80,6 +80,7 @@
     "@sentry/react": "^7.120.3",
     "@sentry/tracing": "^7.120.3",
     "date-fns": "^4.1.0",
+    "firebase": "^11.10.0",
     "framer-motion": "^12.19.1",
     "lucide-react": "^0.516.0",
     "plaid": "^18.0.0",

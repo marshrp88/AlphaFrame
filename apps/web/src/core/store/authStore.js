@@ -21,7 +21,7 @@ import {
   isAuthenticated as checkAuth,
   getUserPermissions,
   hasPermission,
-  updateProfile as authUpdateProfile
+  updateUserProfile as authUpdateProfile
 } from '../../lib/services/AuthService.js';
 
 /**

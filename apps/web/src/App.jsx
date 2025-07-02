@@ -1,14 +1,14 @@
 /**
- * App.jsx - PHASE 1 IMPLEMENTATION
+ * App.jsx - PHASE 2 IMPLEMENTATION
  * 
- * TODO [MVEP_PHASE_2]:
- * This module is currently using localStorage-based authentication.
- * Will be upgraded to Firebase Auth in Phase 2 for production security.
+ * TODO [MVEP_PHASE_3]:
+ * This module is currently using localStorage-based authentication and data persistence.
+ * Will be upgraded to Firebase Auth and Firestore in Phase 3 for production scalability.
  * 
  * Purpose: Provides main application component with routing, authentication,
- * onboarding flow, and error boundaries for production readiness.
+ * data initialization, onboarding flow, and error boundaries for production readiness.
  * 
- * Current Status: Working authentication with localStorage-based auth
+ * Current Status: Working authentication and data layer with localStorage persistence
  */
 
 import React, { Suspense, lazy, useState, useEffect } from "react";
@@ -21,6 +21,7 @@ import FeedbackButton from './components/ui/FeedbackButton.jsx';
 import SoftLaunchBanner from './components/ui/SoftLaunchBanner.jsx';
 import UserStateSnapshot from './components/ui/UserStateSnapshot.jsx';
 import { useAuthStore } from './core/store/authStore.js';
+import { useDataStore } from './core/store/dataStore.js';
 
 // Import design system components
 import NavBar from "./components/ui/NavBar.jsx";
@@ -265,20 +266,39 @@ const Navigation = () => {
 
 // Move all logic that uses useNavigate into AppContent
 const AppContent = () => {
-  const { isLoading, error } = useAuthStore();
+  const { user, isAuthenticated, isLoading: authLoading, error: authError, initialize: initAuth } = useAuthStore();
+  const { isLoading: dataLoading, error: dataError, initialize: initData } = useDataStore();
   const navigate = useNavigate();
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
 
-  // Initialize auth on mount
+  // Initialize auth and data on mount
   useEffect(() => {
-    const initAuth = async () => {
-      await useAuthStore.getState().initialize();
+    const initializeApp = async () => {
+      try {
+        // Initialize authentication first
+        await initAuth();
+        
+        // If user is authenticated, initialize data
+        if (isAuthenticated && user) {
+          await initData(user.id);
+        }
+      } catch (error) {
+        console.error('App initialization failed:', error);
+      }
     };
-    initAuth();
-  }, []);
+    
+    initializeApp();
+  }, [initAuth, initData, isAuthenticated, user]);
+
+  // Initialize data when user logs in
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      initData(user.id);
+    }
+  }, [isAuthenticated, user, initData]);
 
   // Show loading state
-  if (isLoading) {
+  if (authLoading || dataLoading) {
     return (
       <div className="app-loading">
         <div className="loading-container">
@@ -291,12 +311,12 @@ const AppContent = () => {
   }
 
   // Show error state
-  if (error) {
+  if (authError || dataError) {
     return (
       <div className="app-error">
         <div className="error-container">
-          <h2>Authentication Error</h2>
-          <p>{error}</p>
+          <h2>Initialization Error</h2>
+          <p>{authError || dataError}</p>
           <StyledButton onClick={() => navigate(0)}>
             Retry
           </StyledButton>

@@ -1,15 +1,27 @@
 /**
- * AuthService.js - PHASE 1 IMPLEMENTATION
+ * AuthService.js - PHASE 3 IMPLEMENTATION
  * 
- * TODO [MVEP_PHASE_2]:
- * This module is currently using localStorage-based authentication.
- * Will be upgraded to Firebase Auth in Phase 2 for production security.
+ * TODO [MVEP_PHASE_4]:
+ * This module is now using Firebase Auth for production security.
+ * Will be enhanced with real-time sync and advanced features in Phase 4.
  * 
- * Purpose: Provides working authentication service with secure session management
+ * Purpose: Provides Firebase Auth integration with secure session management
  * and role-based access control for the MVEP rebuild.
  * 
- * Current Status: Functional localStorage-based auth with proper security patterns
+ * Current Status: Firebase Auth integration with proper security patterns
  */
+
+import { 
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  updateProfile as updateFirebaseProfile,
+  sendPasswordResetEmail,
+  sendEmailVerification
+} from 'firebase/auth';
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase/init.js';
 
 /**
  * User roles and permissions
@@ -50,43 +62,10 @@ const USER_ROLES = {
 };
 
 /**
- * Session storage keys
- */
-const STORAGE_KEYS = {
-  ACCESS_TOKEN: 'alphaframe_access_token',
-  USER_PROFILE: 'alphaframe_user_profile',
-  SESSION_EXPIRY: 'alphaframe_session_expiry',
-  USER_ROLE: 'alphaframe_user_role'
-};
-
-/**
  * Current user session
  */
 let currentUser = null;
-let accessToken = null;
 let userRole = 'TRIAL'; // Default role
-
-/**
- * Generate a secure token
- * @returns {string} Secure token
- */
-const generateSecureToken = () => {
-  const array = new Uint8Array(32);
-  crypto.getRandomValues(array);
-  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
-};
-
-/**
- * Hash password for security
- * @param {string} password - Plain text password
- * @returns {string} Hashed password
- */
-const hashPassword = async (password) => {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hash = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(hash), byte => byte.toString(16).padStart(2, '0')).join('');
-};
 
 /**
  * Initialize authentication
@@ -94,22 +73,39 @@ const hashPassword = async (password) => {
  */
 export const initializeAuth = async () => {
   try {
-    // Load existing session
-    await loadSession();
-    
-    // Check if session is still valid
-    if (currentUser && accessToken) {
-      const isValid = await validateSession();
-      
-      if (isValid) {
-        console.log('Auth session restored successfully');
-        return true;
-      } else {
-        // Session expired, clear it
-        await clearSession();
-      }
-    }
+    // Set up auth state listener
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // User is signed in
+        currentUser = {
+          id: user.uid,
+          email: user.email,
+          name: user.displayName || user.email,
+          emailVerified: user.emailVerified,
+          createdAt: user.metadata.creationTime,
+          lastLogin: user.metadata.lastSignInTime
+        };
 
+        // Get user role from Firestore
+        try {
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            userRole = userData.role || 'TRIAL';
+            currentUser = { ...currentUser, ...userData };
+          }
+        } catch (error) {
+          console.error('Failed to get user data:', error);
+          userRole = 'TRIAL';
+        }
+      } else {
+        // User is signed out
+        currentUser = null;
+        userRole = 'TRIAL';
+      }
+    });
+
+    console.log('Firebase Auth initialized successfully');
     return true;
   } catch (error) {
     console.error('Auth initialization failed:', error);
@@ -135,43 +131,53 @@ export const register = async (userData) => {
       throw new Error('Password must be at least 8 characters long');
     }
     
-    // Check if user already exists
-    const existingUsers = JSON.parse(localStorage.getItem('alphaframe_users') || '[]');
-    const existingUser = existingUsers.find(u => u.email === email);
+    // Create user with Firebase Auth
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
     
-    if (existingUser) {
-      throw new Error('User with this email already exists');
-    }
+    // Update display name
+    await updateFirebaseProfile(user, { displayName: name });
     
-    // Hash password
-    const hashedPassword = await hashPassword(password);
-    
-    // Create user
-    const newUser = {
-      id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      email,
-      name,
-      password: hashedPassword,
+    // Create user document in Firestore
+    const userDoc = {
+      id: user.uid,
+      email: user.email,
+      name: name,
       role: 'TRIAL',
       createdAt: new Date().toISOString(),
-      lastLogin: null
+      lastLogin: new Date().toISOString(),
+      emailVerified: false
     };
     
-    // Save user
-    existingUsers.push(newUser);
-    localStorage.setItem('alphaframe_users', JSON.stringify(existingUsers));
+    await setDoc(doc(db, 'users', user.uid), userDoc);
     
-    // Auto-login after registration
-    const loginResult = await login({ email, password });
+    // Send email verification
+    await sendEmailVerification(user);
+    
+    // Update current user
+    currentUser = userDoc;
+    userRole = 'TRIAL';
+    
+    console.log('Registration successful:', user.email);
     
     return {
       success: true,
-      user: loginResult.user,
-      message: 'Registration successful'
+      user: currentUser,
+      message: 'Registration successful. Please check your email for verification.'
     };
     
   } catch (error) {
     console.error('Registration failed:', error);
+    
+    // Handle specific Firebase errors
+    if (error.code === 'auth/email-already-in-use') {
+      throw new Error('An account with this email already exists');
+    } else if (error.code === 'auth/weak-password') {
+      throw new Error('Password is too weak. Please choose a stronger password');
+    } else if (error.code === 'auth/invalid-email') {
+      throw new Error('Invalid email address');
+    }
+    
     throw new Error(`Registration failed: ${error.message}`);
   }
 };
@@ -190,52 +196,56 @@ export const login = async (credentials) => {
       throw new Error('Email and password are required');
     }
     
-    // Get users
-    const users = JSON.parse(localStorage.getItem('alphaframe_users') || '[]');
-    const user = users.find(u => u.email === email);
+    // Sign in with Firebase Auth
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
     
-    if (!user) {
-      throw new Error('Invalid email or password');
+    // Get user data from Firestore
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    let userData = {};
+    
+    if (userDoc.exists()) {
+      userData = userDoc.data();
+      userRole = userData.role || 'TRIAL';
     }
-    
-    // Verify password
-    const hashedPassword = await hashPassword(password);
-    if (user.password !== hashedPassword) {
-      throw new Error('Invalid email or password');
-    }
-    
-    // Generate access token
-    accessToken = generateSecureToken();
-    
-    // Update user profile
-    currentUser = {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
-      createdAt: user.createdAt,
-      lastLogin: new Date().toISOString()
-    };
-    
-    userRole = user.role;
     
     // Update last login
-    user.lastLogin = currentUser.lastLogin;
-    localStorage.setItem('alphaframe_users', JSON.stringify(users));
+    await updateDoc(doc(db, 'users', user.uid), {
+      lastLogin: new Date().toISOString()
+    });
     
-    // Save session
-    await saveSession();
+    // Update current user
+    currentUser = {
+      id: user.uid,
+      email: user.email,
+      name: user.displayName || userData.name || user.email,
+      role: userRole,
+      createdAt: userData.createdAt || user.metadata.creationTime,
+      lastLogin: new Date().toISOString(),
+      emailVerified: user.emailVerified
+    };
     
     console.log('Login successful:', currentUser.email);
     
     return {
       success: true,
-      user: currentUser,
-      accessToken
+      user: currentUser
     };
     
   } catch (error) {
     console.error('Login failed:', error);
+    
+    // Handle specific Firebase errors
+    if (error.code === 'auth/user-not-found') {
+      throw new Error('No account found with this email address');
+    } else if (error.code === 'auth/wrong-password') {
+      throw new Error('Incorrect password');
+    } else if (error.code === 'auth/invalid-email') {
+      throw new Error('Invalid email address');
+    } else if (error.code === 'auth/too-many-requests') {
+      throw new Error('Too many failed login attempts. Please try again later');
+    }
+    
     throw new Error(`Login failed: ${error.message}`);
   }
 };
@@ -250,8 +260,12 @@ export const logout = async () => {
       console.log('Logout successful:', currentUser.email);
     }
 
-    // Clear session
-    await clearSession();
+    // Sign out from Firebase Auth
+    await signOut(auth);
+    
+    // Clear current user
+    currentUser = null;
+    userRole = 'TRIAL';
 
     return { success: true, message: 'Logout successful' };
   } catch (error) {
@@ -273,7 +287,7 @@ export const getCurrentUser = () => {
  * @returns {boolean} Authentication status
  */
 export const isAuthenticated = () => {
-  return currentUser !== null && accessToken !== null;
+  return currentUser !== null;
 };
 
 /**
@@ -319,27 +333,30 @@ export const hasRole = (role) => {
  * @param {Object} updates - Profile updates
  * @returns {Promise<Object>} Update result
  */
-export const updateProfile = async (updates) => {
+export const updateUserProfile = async (updates) => {
   try {
     if (!currentUser) {
       throw new Error('No authenticated user');
     }
     
-    // Get users
-    const users = JSON.parse(localStorage.getItem('alphaframe_users') || '[]');
-    const userIndex = users.findIndex(u => u.id === currentUser.id);
-    
-    if (userIndex === -1) {
-      throw new Error('User not found');
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error('No authenticated user');
     }
     
-    // Update user
-    users[userIndex] = { ...users[userIndex], ...updates };
-    localStorage.setItem('alphaframe_users', JSON.stringify(users));
+    // Update Firebase Auth profile
+    if (updates.name) {
+      await updateFirebaseProfile(user, { displayName: updates.name });
+    }
+    
+    // Update Firestore document
+    await updateDoc(doc(db, 'users', user.uid), {
+      ...updates,
+      updatedAt: new Date().toISOString()
+    });
     
     // Update current user
     currentUser = { ...currentUser, ...updates };
-    await saveSession();
     
     return {
       success: true,
@@ -354,73 +371,48 @@ export const updateProfile = async (updates) => {
 };
 
 /**
+ * Send password reset email
+ * @param {string} email - User email
+ * @returns {Promise<Object>} Reset result
+ */
+export const sendPasswordReset = async (email) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    return {
+      success: true,
+      message: 'Password reset email sent successfully'
+    };
+  } catch (error) {
+    console.error('Password reset failed:', error);
+    throw new Error(`Password reset failed: ${error.message}`);
+  }
+};
+
+/**
  * Validate current session
  * @returns {Promise<boolean>} True if session is valid
  */
-const validateSession = async () => {
+export const validateSession = async () => {
   try {
-    if (!accessToken) return false;
-
-    // Check if token is expired
-    const expiry = localStorage.getItem(STORAGE_KEYS.SESSION_EXPIRY);
-    if (expiry && Date.now() > parseInt(expiry)) {
-      return false;
-    }
-
-    return true;
+    const user = auth.currentUser;
+    return user !== null;
   } catch {
     return false;
   }
 };
 
 /**
- * Save session to storage
- */
-const saveSession = async () => {
-  try {
-    localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
-    localStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(currentUser));
-    localStorage.setItem(STORAGE_KEYS.USER_ROLE, userRole);
-    localStorage.setItem(STORAGE_KEYS.SESSION_EXPIRY, (Date.now() + 24 * 60 * 60 * 1000).toString()); // 24 hours
-  } catch (error) {
-    console.error('Failed to save session:', error);
-  }
-};
-
-/**
- * Load session from storage
- */
-const loadSession = async () => {
-  try {
-    accessToken = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
-    const userProfile = localStorage.getItem(STORAGE_KEYS.USER_PROFILE);
-    const storedRole = localStorage.getItem(STORAGE_KEYS.USER_ROLE);
-    
-    if (userProfile) {
-      currentUser = JSON.parse(userProfile);
-    }
-    
-    if (storedRole) {
-      userRole = storedRole;
-    }
-  } catch (error) {
-    console.error('Failed to load session:', error);
-  }
-};
-
-/**
- * Clear session from storage
+ * Clear current session
+ * @returns {Promise<boolean>} Success status
  */
 export const clearSession = async () => {
   try {
-    localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-    localStorage.removeItem(STORAGE_KEYS.USER_PROFILE);
-    localStorage.removeItem(STORAGE_KEYS.USER_ROLE);
-    localStorage.removeItem(STORAGE_KEYS.SESSION_EXPIRY);
+    await signOut(auth);
     currentUser = null;
-    accessToken = null;
     userRole = 'TRIAL';
+    return true;
   } catch (error) {
     console.error('Failed to clear session:', error);
+    return false;
   }
 }; 
