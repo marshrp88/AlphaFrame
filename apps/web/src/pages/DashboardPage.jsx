@@ -39,7 +39,7 @@ const DashboardPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth0();
-  const { toast } = useToast();
+  const { toast, automationToast } = useToast();
   const [showSuccessBanner, setShowSuccessBanner] = useState(false);
   const [firstRule, setFirstRule] = useState(null);
   const [hasData, setHasData] = useState(false);
@@ -232,6 +232,16 @@ const DashboardPage = () => {
     setHasData(true);
     setFirstRule(newRule);
     
+    // Phase 3: Show rule creation feedback
+    automationToast({
+      type: 'ruleCreated',
+      ruleName: newRule.name,
+      ruleId: newRule.id,
+      message: `Your rule "${newRule.name}" is now active and monitoring your ${newRule.category} spending.`,
+      action: () => navigate('/rules', { state: { selectedRule: newRule } }),
+      actionLabel: 'View Rule'
+    });
+    
     // Add rule to execution engine
     try {
       const evaluation = await ruleExecutionEngine.addRule(newRule);
@@ -243,21 +253,26 @@ const DashboardPage = () => {
       // Show success banner
       setShowSuccessBanner(true);
       
-      // Show success toast
-      toast({
-        title: "✅ Rule Created Successfully!",
-        description: "Your rule is now active and monitoring your finances.",
-        variant: "default"
-      });
+      // Phase 3: Show automation guidance after successful rule creation
+      setTimeout(() => {
+        automationToast({
+          type: 'automationGuidance',
+          message: 'Your rule is now monitoring your finances automatically. You\'ll receive alerts when spending approaches your limit.',
+          action: () => navigate('/rules'),
+          actionLabel: 'Manage Rules'
+        });
+      }, 2000);
       
       // Hide success banner after 5 seconds
       setTimeout(() => setShowSuccessBanner(false), 5000);
     } catch (error) {
       console.error('Failed to add rule to engine:', error);
-      toast({
-        title: "⚠️ Rule Creation Error",
-        description: "Rule was created but there was an issue with the monitoring system.",
-        variant: "destructive"
+      automationToast({
+        type: 'ruleFailed',
+        ruleName: newRule.name,
+        message: 'Rule was created but there was an issue with the monitoring system. Please try refreshing the page.',
+        action: () => window.location.reload(),
+        actionLabel: 'Retry'
       });
     }
   };
@@ -320,10 +335,18 @@ const DashboardPage = () => {
     });
   };
 
+  // Phase 3: Enhanced automation feedback handler
   const handleInsightAction = (actionType, ruleResult) => {
     switch (actionType) {
       case 'create-rule':
         setShowRuleModal(true);
+        // Phase 3: Automation guidance toast
+        automationToast({
+          type: 'automationGuidance',
+          message: 'Creating a new rule will help you monitor your finances automatically. Choose a spending category and set a threshold.',
+          action: () => setShowRuleModal(true),
+          actionLabel: 'Continue'
+        });
         break;
       case 'view-details':
         // Navigate to rules page with rule details
@@ -334,28 +357,115 @@ const DashboardPage = () => {
         navigate('/rules', { state: { reviewRule: ruleResult } });
         break;
       case 'view-status':
-        // Show detailed rule status
-        toast({
-          title: "Rule Status",
-          description: `Rule "${ruleResult.ruleName}" is actively monitoring your finances.`,
-          variant: "default"
+        // Show detailed rule status with automation feedback
+        automationToast({
+          type: 'ruleActive',
+          ruleName: ruleResult.ruleName || ruleResult.name,
+          ruleId: ruleResult.id,
+          message: `Rule is actively monitoring your finances. Last evaluation: ${ruleResult.lastEvaluated ? new Date(ruleResult.lastEvaluated).toLocaleTimeString() : 'Unknown'}`,
+          action: () => navigate('/rules', { state: { selectedRule: ruleResult } }),
+          actionLabel: 'View Details'
         });
         break;
       case 'check-status':
-        // Refresh rule evaluation
+        // Refresh rule evaluation with real-time feedback
+        automationToast({
+          type: 'automationGuidance',
+          message: 'Refreshing rule evaluation...',
+          action: null,
+          actionLabel: null
+        });
+        
         ruleExecutionEngine.evaluateAllRules().then(evaluation => {
           setRuleExecutionResults(evaluation.results);
           setRuleSummary(evaluation.summary);
-          toast({
-            title: "Status Updated",
-            description: "Rule evaluation completed successfully.",
-            variant: "default"
+          
+          // Phase 3: Show evaluation results with automation feedback
+          const triggeredRules = evaluation.results.filter(r => r.status === 'triggered');
+          const warningRules = evaluation.results.filter(r => r.status === 'warning');
+          
+          if (triggeredRules.length > 0) {
+            triggeredRules.forEach(rule => {
+              automationToast({
+                type: 'ruleTriggered',
+                ruleName: rule.ruleName,
+                ruleId: rule.id,
+                message: rule.message,
+                action: () => navigate('/rules', { state: { selectedRule: rule } }),
+                actionLabel: 'Review Rule'
+              });
+            });
+          } else if (warningRules.length > 0) {
+            warningRules.forEach(rule => {
+              automationToast({
+                type: 'ruleWarning',
+                ruleName: rule.ruleName,
+                ruleId: rule.id,
+                message: rule.message,
+                action: () => navigate('/rules', { state: { selectedRule: rule } }),
+                actionLabel: 'Review'
+              });
+            });
+          } else {
+            automationToast({
+              type: 'ruleActive',
+              ruleName: 'All Rules',
+              message: 'All rules are functioning normally. No alerts at this time.',
+              action: null,
+              actionLabel: null
+            });
+          }
+        }).catch(error => {
+          automationToast({
+            type: 'ruleFailed',
+            ruleName: 'Rule Evaluation',
+            message: 'Failed to evaluate rules. Please check your connection and try again.',
+            action: () => window.location.reload(),
+            actionLabel: 'Retry'
+          });
         });
+        break;
+      case 'review-transactions':
+        // Navigate to transactions view
+        navigate('/transactions', { state: { filterRule: ruleResult } });
+        break;
+      case 'edit-rule':
+        // Navigate to rule editing
+        navigate('/rules', { state: { editRule: ruleResult } });
+        break;
+      case 'view-spending':
+        // Show spending breakdown
+        navigate('/spending', { state: { category: ruleResult.category } });
+        break;
+      case 'view-progress':
+        // Show progress towards limit
+        automationToast({
+          type: 'automationGuidance',
+          message: `You've used ${ruleResult.metrics?.percentageUsed?.toFixed(1)}% of your ${ruleResult.category} budget.`,
+          action: () => navigate('/spending', { state: { category: ruleResult.category } }),
+          actionLabel: 'View Details'
+        });
+        break;
+      case 'view-remaining':
+        // Show remaining budget
+        automationToast({
+          type: 'automationGuidance',
+          message: `You have ${ruleResult.metrics?.remaining ? formatCurrency(ruleResult.metrics.remaining) : 'unknown amount'} remaining in your ${ruleResult.category} budget.`,
+          action: () => navigate('/spending', { state: { category: ruleResult.category } }),
+          actionLabel: 'View Details'
         });
         break;
       default:
         console.log('Unknown insight action:', actionType);
     }
+  };
+
+  // Phase 3: Helper function for currency formatting
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount);
   };
 
   // Empty state component for when user has no data
