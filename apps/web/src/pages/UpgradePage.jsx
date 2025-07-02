@@ -20,6 +20,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../components/ui/use-toast';
 import PageLayout from '../components/PageLayout';
+import { trackUpgradeClicked } from '@/lib/analytics.js';
 import { 
   Check, 
   Crown, 
@@ -123,6 +124,7 @@ const UpgradePage = () => {
 
     try {
       // Track upgrade attempt
+      trackUpgradeClicked();
       localStorage.setItem('alphaframe_upgrade_attempted', 'true');
       localStorage.setItem('alphaframe_upgrade_plan', plan.id);
       localStorage.setItem('alphaframe_upgrade_period', selectedPlan);

@@ -16,7 +16,7 @@
  * all user flows and ensures robust error handling with optimal performance.
  */
 
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { usePlaidLink } from 'react-plaid-link';
@@ -30,6 +30,9 @@ import Dashboard2 from './components/dashboard/Dashboard2.jsx';
 import OnboardingFlow from './features/onboarding/OnboardingFlow.jsx';
 import { Auth0Provider } from '@auth0/auth0-react';
 import DemoModeBanner from './components/ui/DemoModeBanner';
+import FeedbackButton from './components/ui/FeedbackButton.jsx';
+import SoftLaunchBanner from './components/ui/SoftLaunchBanner.jsx';
+import UserStateSnapshot from './components/ui/UserStateSnapshot.jsx';
 
 // Import design system components
 import NavBar from "./components/ui/NavBar.jsx";
@@ -46,6 +49,7 @@ import NotFoundPage from './pages/NotFoundPage.jsx';
 import UpgradePage from './pages/UpgradePage';
 import About from './pages/About';
 import AlphaPro from './pages/AlphaPro';
+import TrustPage from './pages/TrustPage.jsx';
 
 // Lazy load existing pages for performance optimization
 const Profile = lazy(() => import('./pages/Profile.jsx'));
@@ -74,7 +78,8 @@ const Navigation = () => {
     { to: '/about', label: 'About' },
     { to: '/profile', label: 'Profile' },
     { to: '/onboarding', label: 'Onboarding' },
-    { to: '/upgrade', label: 'Upgrade' }
+    { to: '/upgrade', label: 'Upgrade' },
+    { to: '/trust', label: '🔒 Trust', icon: '🔒' }
   ];
 
   return (
@@ -111,6 +116,7 @@ const Navigation = () => {
 const AppContent = () => {
   const { isLoading, error } = useAuth0();
   const navigate = useNavigate();
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
 
   // Show loading state
   if (isLoading) {
@@ -143,6 +149,7 @@ const AppContent = () => {
   return (
     <div className="app">
       <DemoModeBanner />
+      <SoftLaunchBanner />
       <Navigation />
       <main className="app-main">
         <Suspense fallback={<PageLoader />}>
@@ -158,12 +165,17 @@ const AppContent = () => {
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/upgrade" element={<UpgradePage />} />
             <Route path="/alphapro" element={<AlphaPro />} />
+            <Route path="/trust" element={<TrustPage />} />
             <Route path="/test" element={<TestMount />} />
             {/* 404 Route */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
       </main>
+      {/* Galileo Initiative Feedback Button */}
+      <FeedbackButton />
+      {/* User State Snapshot */}
+      <UserStateSnapshot onFeedbackClick={() => setFeedbackModalOpen(true)} />
       {/* Development Performance Monitor */}
       <PerformanceMonitor />
     </div>

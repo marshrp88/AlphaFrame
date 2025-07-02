@@ -5,6 +5,7 @@ import StyledButton from './StyledButton.jsx';
 import { X, Zap, Target, DollarSign, Calendar, Sparkles, Shield, TrendingUp } from 'lucide-react';
 import { useToast } from './use-toast.jsx';
 import ruleTemplateService from '../../lib/services/RuleTemplateService.js';
+import { trackRuleCreated } from '@/lib/analytics.js';
 
 const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
   console.log('RuleCreationModal render - isOpen:', isOpen);
@@ -58,6 +59,13 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
       const existingRules = JSON.parse(localStorage.getItem('alphaframe_user_rules') || '[]');
       existingRules.push(newRule);
       localStorage.setItem('alphaframe_user_rules', JSON.stringify(existingRules));
+
+      // Track rule creation
+      trackRuleCreated({
+        type: selectedTemplate ? 'template' : 'custom',
+        name: newRule.name,
+        template: selectedTemplate?.id || null
+      });
 
       // Show success toast
       toast({

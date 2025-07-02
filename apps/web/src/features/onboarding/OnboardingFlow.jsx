@@ -30,6 +30,7 @@ import Step4SetMode from './steps/Step4SetMode.jsx';
 import { useAuthStore } from '../../core/store/authStore.js';
 import { useFinancialStateStore } from '../../core/store/financialStateStore.js';
 import { useToast } from '../../components/ui/use-toast.jsx';
+import { trackOnboardStarted, trackOnboardCompleted } from '@/lib/analytics.js';
 import './OnboardingFlow.css';
 
 /**
@@ -92,6 +93,9 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
     const onboardingComplete = localStorage.getItem('alphaframe_onboarding_complete');
     if (onboardingComplete === 'true' && !initialState) {
       navigate('/dashboard');
+    } else {
+      // Track onboarding start for new users
+      trackOnboardStarted();
     }
   }, [navigate, initialState]);
 
@@ -131,6 +135,9 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
       // Mark user as onboarded in localStorage
       localStorage.setItem('alphaframe_onboarding_complete', 'true');
       localStorage.setItem('alphaframe_onboarding_data', JSON.stringify(stepData));
+      
+      // Track onboarding completion
+      trackOnboardCompleted();
       
       // Show success toast
       toast({

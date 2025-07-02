@@ -34,6 +34,7 @@ export const config = {
     pro: getFeatureFlag('ENABLE_PRO', false),
     beta: getFeatureFlag('ENABLE_BETA', false),
     experimental: getFeatureFlag('ENABLE_EXPERIMENTAL', false),
+    softLaunch: getFeatureFlag('ENABLE_SOFT_LAUNCH', true), // Galileo Initiative
   },
   
   // UI configuration
