@@ -105,12 +105,25 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
   const navigate = useNavigate();
   const { user, updateUserProfile } = useAuthStore();
   const { initializeFinancialState } = useFinancialStateStore();
-  const { toast } = useToast();
+  const { toast, automationToast } = useToast();
   
-  const [currentStep, setCurrentStep] = useState(initialState?.currentStep || 1);
-  const [stepData, setStepData] = useState(initialState?.data || {});
+  const [currentStep, setCurrentStep] = useState(1); // Always start at step 1 for debug
+  const [stepData, setStepData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [automationDemoActive, setAutomationDemoActive] = useState(false);
+
+  // Debug: Add a button to reset onboarding state
+  const handleDebugReset = () => {
+    localStorage.removeItem('alphaframe_onboarding_complete');
+    localStorage.removeItem('alphaframe_onboarding_data');
+    setCurrentStep(1);
+    setStepData({});
+    toast({
+      title: 'Onboarding Reset',
+      description: 'Onboarding state has been reset. Starting from step 1.',
+      variant: 'info'
+    });
+  };
 
   // Check if user is already onboarded
   useEffect(() => {
@@ -281,6 +294,10 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
 
   return (
     <div className="onboarding-container">
+      {/* Debug Reset Button */}
+      <button onClick={handleDebugReset} style={{ position: 'fixed', top: 10, right: 10, zIndex: 2000, background: '#f5f5f5', border: '1px solid #ccc', borderRadius: 4, padding: '6px 12px', cursor: 'pointer' }}>
+        Debug: Reset Onboarding
+      </button>
       <div className="onboarding-background">
         <div className="onboarding-content">
           <CompositeCard variant="elevated" className="onboarding-card">
