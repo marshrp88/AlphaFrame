@@ -25,7 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import CompositeCard from '../../components/ui/CompositeCard.jsx';
 import StyledButton from '../../components/ui/StyledButton.jsx';
-import { CheckCircle, ArrowRight, ArrowLeft, Sparkles, Shield, Zap, Target, Brain, Play, Eye } from 'lucide-react';
+import { CheckCircle, ArrowRight, ArrowLeft, Sparkles, Shield, Zap, Target, Brain, Play, Eye, AlertTriangle, RefreshCw } from 'lucide-react';
 import Step1PlaidConnect from './steps/Step1PlaidConnect.jsx';
 import Step2ReviewTransactions from './steps/Step2ReviewTransactions.jsx';
 import Step3BudgetSetup from './steps/Step3BudgetSetup.jsx';
@@ -99,6 +99,41 @@ const ONBOARDING_STEPS = [
 ];
 
 /**
+ * Error State Component for Onboarding Recovery
+ */
+const OnboardingErrorState = ({ message, onReset, onRetry }) => (
+  <div className="onboarding-error-state" style={{
+    textAlign: 'center',
+    padding: '40px 20px',
+    backgroundColor: '#fef2f2',
+    border: '1px solid #fecaca',
+    borderRadius: '12px',
+    margin: '20px 0'
+  }}>
+    <AlertTriangle size={48} color="#dc2626" style={{ marginBottom: '16px' }} />
+    <h3 style={{ color: '#dc2626', marginBottom: '8px' }}>Onboarding Issue Detected</h3>
+    <p style={{ color: '#6b7280', marginBottom: '24px' }}>{message}</p>
+    <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+      <StyledButton
+        variant="secondary"
+        onClick={onRetry}
+        style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+      >
+        <RefreshCw size={16} />
+        Retry
+      </StyledButton>
+      <StyledButton
+        variant="primary"
+        onClick={onReset}
+        style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+      >
+        Reset Onboarding
+      </StyledButton>
+    </div>
+  </div>
+);
+
+/**
  * Main onboarding flow component - Enhanced for Phase 4
  */
 export const OnboardingFlow = ({ onComplete, initialState }) => {
@@ -107,40 +142,142 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
   const { initializeFinancialState } = useFinancialStateStore();
   const { toast, automationToast } = useToast();
   
-  const [currentStep, setCurrentStep] = useState(1); // Always start at step 1 for debug
+  // CRITICAL FIX: Always start at step 1, never undefined
+  const [currentStep, setCurrentStep] = useState(1);
   const [stepData, setStepData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [automationDemoActive, setAutomationDemoActive] = useState(false);
+  
+  // NEW: Error state management
+  const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loadingTimeout, setLoadingTimeout] = useState(null);
 
-  // Debug: Add a button to reset onboarding state
-  const handleDebugReset = () => {
+  // CRITICAL FIX: Clear onboarding state on load to prevent stuck states
+  useEffect(() => {
+    console.log('🔧 OnboardingFlow: Clearing localStorage to prevent stuck states');
     localStorage.removeItem('alphaframe_onboarding_complete');
     localStorage.removeItem('alphaframe_onboarding_data');
+    localStorage.removeItem('af:onboardingComplete');
+    localStorage.removeItem('af:userState');
+    
+    // Force step 1 rendering
+    setCurrentStep(1);
+    setHasError(false);
+    setErrorMessage('');
+    
+    console.log('🔧 OnboardingFlow: Current step set to 1, error state cleared');
+  }, []);
+
+  // NEW: Loading timeout to prevent infinite loading
+  useEffect(() => {
+    if (isLoading) {
+      const timeout = setTimeout(() => {
+        console.warn('⚠️ OnboardingFlow: Loading timeout exceeded (10 seconds)');
+        setIsLoading(false);
+        setHasError(true);
+        setErrorMessage('Onboarding is taking longer than expected. Please try again.');
+      }, 10000);
+      
+      setLoadingTimeout(timeout);
+    } else {
+      if (loadingTimeout) {
+        clearTimeout(loadingTimeout);
+        setLoadingTimeout(null);
+      }
+    }
+    
+    return () => {
+      if (loadingTimeout) {
+        clearTimeout(loadingTimeout);
+      }
+    };
+  }, [isLoading]);
+
+  // Enhanced debug reset with comprehensive state clearing
+  const handleDebugReset = () => {
+    console.log('🔧 OnboardingFlow: Debug reset triggered');
+    
+    // Clear all localStorage keys
+    const keysToRemove = [
+      'alphaframe_onboarding_complete',
+      'alphaframe_onboarding_data', 
+      'af:onboardingComplete',
+      'af:userState',
+      'alphaframe_user_profile',
+      'alphaframe_financial_state'
+    ];
+    
+    keysToRemove.forEach(key => {
+      localStorage.removeItem(key);
+      console.log(`🔧 OnboardingFlow: Removed localStorage key: ${key}`);
+    });
+    
+    // Reset all state
     setCurrentStep(1);
     setStepData({});
+    setIsLoading(false);
+    setHasError(false);
+    setErrorMessage('');
+    setAutomationDemoActive(false);
+    
+    // Clear any loading timeout
+    if (loadingTimeout) {
+      clearTimeout(loadingTimeout);
+      setLoadingTimeout(null);
+    }
+    
     toast({
-      title: 'Onboarding Reset',
-      description: 'Onboarding state has been reset. Starting from step 1.',
+      title: 'Onboarding Reset Complete',
+      description: 'All onboarding state has been cleared. Starting fresh from step 1.',
       variant: 'info'
     });
+    
+    console.log('🔧 OnboardingFlow: Debug reset completed successfully');
   };
 
-  // Check if user is already onboarded
+  // NEW: Retry functionality
+  const handleRetry = () => {
+    console.log('🔧 OnboardingFlow: Retry triggered');
+    setHasError(false);
+    setErrorMessage('');
+    setIsLoading(false);
+    
+    // Force re-render of current step
+    const currentStepCopy = currentStep;
+    setCurrentStep(0);
+    setTimeout(() => setCurrentStep(currentStepCopy), 100);
+  };
+
+  // Check if user is already onboarded - ENHANCED with error handling
   useEffect(() => {
-    const onboardingComplete = localStorage.getItem('alphaframe_onboarding_complete');
-    if (onboardingComplete === 'true' && !initialState) {
-      navigate('/dashboard');
-    } else {
-      // Track onboarding start for new users
-      trackOnboardStarted();
+    try {
+      console.log('🔧 OnboardingFlow: Checking onboarding status');
       
-      // Phase 4: Show automation welcome message
-      toast({
-        type: 'automationGuidance',
-        message: 'Welcome to AlphaFrame! We\'ll teach you how automation can transform your financial monitoring.',
-        action: null,
-        actionLabel: null
-      });
+      const onboardingComplete = localStorage.getItem('alphaframe_onboarding_complete');
+      console.log('🔧 OnboardingFlow: onboardingComplete =', onboardingComplete);
+      
+      if (onboardingComplete === 'true' && !initialState) {
+        console.log('🔧 OnboardingFlow: User already onboarded, redirecting to dashboard');
+        navigate('/dashboard');
+      } else {
+        console.log('🔧 OnboardingFlow: Starting new onboarding flow');
+        
+        // Track onboarding start for new users
+        trackOnboardStarted();
+        
+        // Phase 4: Show automation welcome message
+        toast({
+          type: 'automationGuidance',
+          message: 'Welcome to AlphaFrame! We\'ll teach you how automation can transform your financial monitoring.',
+          action: null,
+          actionLabel: null
+        });
+      }
+    } catch (error) {
+      console.error('❌ OnboardingFlow: Error checking onboarding status:', error);
+      setHasError(true);
+      setErrorMessage('Failed to check onboarding status. Please refresh the page.');
     }
   }, [navigate, initialState, toast]);
 
@@ -150,6 +287,8 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
    * @param {Object} data - Step data
    */
   const handleStepComplete = (stepId, data) => {
+    console.log(`🔧 OnboardingFlow: Step ${stepId} completed with data:`, data);
+    
     setStepData(prev => ({ ...prev, [stepId]: data }));
     
     // Phase 4: Enhanced step completion feedback
@@ -184,6 +323,7 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
     
     if (stepId < ONBOARDING_STEPS.length) {
       setCurrentStep(stepId + 1);
+      console.log(`🔧 OnboardingFlow: Moving to step ${stepId + 1}`);
     } else {
       handleOnboardingComplete();
     }
@@ -193,6 +333,7 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
    * Handle onboarding completion - Enhanced for Phase 4
    */
   const handleOnboardingComplete = async () => {
+    console.log('🔧 OnboardingFlow: Starting onboarding completion');
     setIsLoading(true);
     
     try {
@@ -230,12 +371,17 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
       }
       
     } catch (error) {
+      console.error('❌ OnboardingFlow: Error completing onboarding:', error);
+      
       // Show error toast
       toast({
         title: "Setup Error",
         description: "There was an issue completing your setup. Please try again.",
         variant: "destructive"
       });
+      
+      setHasError(true);
+      setErrorMessage('Failed to complete onboarding setup. Please try again or reset onboarding.');
     } finally {
       setIsLoading(false);
     }
@@ -246,6 +392,7 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
    */
   const handlePreviousStep = () => {
     if (currentStep > 1) {
+      console.log(`🔧 OnboardingFlow: Moving back to step ${currentStep - 1}`);
       setCurrentStep(currentStep - 1);
     }
   };
@@ -256,6 +403,8 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
   const handleSkipStep = () => {
     const currentStepConfig = ONBOARDING_STEPS[currentStep - 1];
     if (!currentStepConfig.required) {
+      console.log(`🔧 OnboardingFlow: Skipping step ${currentStep}`);
+      
       // Show skip confirmation toast
       toast({
         title: "Step Skipped",
@@ -285,19 +434,87 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
     }, 2000);
   };
 
-  const currentStepConfig = ONBOARDING_STEPS[currentStep - 1];
-  const CurrentStepComponent = currentStepConfig.component;
-  const progress = (currentStep / ONBOARDING_STEPS.length) * 100;
-  const canGoBack = currentStep > 1;
-  const canSkip = !currentStepConfig.required;
-  const isLastStep = currentStep === ONBOARDING_STEPS.length;
+  // CRITICAL FIX: Ensure currentStep is always valid
+  const validCurrentStep = currentStep >= 1 && currentStep <= ONBOARDING_STEPS.length ? currentStep : 1;
+  const currentStepConfig = ONBOARDING_STEPS[validCurrentStep - 1];
+  const CurrentStepComponent = currentStepConfig?.component;
+  const progress = (validCurrentStep / ONBOARDING_STEPS.length) * 100;
+  const canGoBack = validCurrentStep > 1;
+  const canSkip = !currentStepConfig?.required;
+  const isLastStep = validCurrentStep === ONBOARDING_STEPS.length;
+
+  // CRITICAL FIX: Show error state if onboarding is stuck
+  if (hasError) {
+    return (
+      <div className="onboarding-container">
+        {/* Debug Reset Button - Always visible */}
+        <button 
+          onClick={handleDebugReset} 
+          style={{ 
+            position: 'fixed', 
+            top: 10, 
+            right: 10, 
+            zIndex: 2000, 
+            background: '#dc2626', 
+            color: 'white',
+            border: 'none', 
+            borderRadius: 4, 
+            padding: '8px 16px', 
+            cursor: 'pointer',
+            fontSize: '12px',
+            fontWeight: 'bold'
+          }}
+        >
+          🚨 RESET ONBOARDING
+        </button>
+        
+        <div className="onboarding-background">
+          <div className="onboarding-content">
+            <CompositeCard variant="elevated" className="onboarding-card">
+              <OnboardingErrorState
+                message={errorMessage}
+                onReset={handleDebugReset}
+                onRetry={handleRetry}
+              />
+            </CompositeCard>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // CRITICAL FIX: Ensure component exists before rendering
+  if (!CurrentStepComponent) {
+    console.error('❌ OnboardingFlow: CurrentStepComponent is undefined for step:', validCurrentStep);
+    setHasError(true);
+    setErrorMessage('Invalid onboarding step. Please reset onboarding.');
+    return null;
+  }
 
   return (
     <div className="onboarding-container">
-      {/* Debug Reset Button */}
-      <button onClick={handleDebugReset} style={{ position: 'fixed', top: 10, right: 10, zIndex: 2000, background: '#f5f5f5', border: '1px solid #ccc', borderRadius: 4, padding: '6px 12px', cursor: 'pointer' }}>
-        Debug: Reset Onboarding
+      {/* Enhanced Debug Reset Button - Always visible and prominent */}
+      <button 
+        onClick={handleDebugReset} 
+        style={{ 
+          position: 'fixed', 
+          top: 10, 
+          right: 10, 
+          zIndex: 2000, 
+          background: '#3b82f6', 
+          color: 'white',
+          border: 'none', 
+          borderRadius: 6, 
+          padding: '8px 16px', 
+          cursor: 'pointer',
+          fontSize: '12px',
+          fontWeight: 'bold',
+          boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
+        }}
+      >
+        🔧 DEBUG RESET
       </button>
+      
       <div className="onboarding-background">
         <div className="onboarding-content">
           <CompositeCard variant="elevated" className="onboarding-card">
@@ -317,7 +534,7 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
               </p>
               
               {/* Phase 4: Automation preview */}
-              {currentStep >= 4 && (
+              {validCurrentStep >= 4 && (
                 <motion.div 
                   className="automation-preview"
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -341,8 +558,8 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
             >
               <div className="progress-steps">
                 {ONBOARDING_STEPS.map((step, index) => {
-                  const isActive = currentStep === step.id;
-                  const isCompleted = currentStep > step.id;
+                  const isActive = validCurrentStep === step.id;
+                  const isCompleted = validCurrentStep > step.id;
                   const IconComponent = step.icon;
                   
                   return (
@@ -379,10 +596,10 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
               </div>
             </motion.div>
 
-            {/* Step Content */}
+            {/* Step Content - CRITICAL FIX: Always render current step */}
             <motion.div 
               className="onboarding-step-content"
-              key={currentStep}
+              key={validCurrentStep}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
@@ -390,9 +607,9 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
             >
               <AnimatePresence mode="wait">
                 <CurrentStepComponent
-                  key={currentStep}
-                  onComplete={(data) => handleStepComplete(currentStep, data)}
-                  data={stepData[currentStep]}
+                  key={validCurrentStep}
+                  onComplete={(data) => handleStepComplete(validCurrentStep, data)}
+                  data={stepData[validCurrentStep]}
                   isLoading={isLoading}
                   automationDemoActive={automationDemoActive}
                   onStartDemo={startAutomationDemo}
