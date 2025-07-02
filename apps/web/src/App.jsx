@@ -28,6 +28,8 @@ import { config } from '@/lib/config.js';
 import LiveFinancialDashboard from './components/dashboard/LiveFinancialDashboard';
 import Dashboard2 from './components/dashboard/Dashboard2.jsx';
 import OnboardingFlow from './features/onboarding/OnboardingFlow.jsx';
+import { Auth0Provider } from '@auth0/auth0-react';
+import DemoModeBanner from './components/ui/DemoModeBanner';
 
 // Import design system components
 import NavBar from "./components/ui/NavBar.jsx";
@@ -41,15 +43,13 @@ import DashboardPage from './pages/DashboardPage.jsx';
 import SettingsPage from './pages/SettingsPage.jsx';
 import OnboardingPage from './pages/OnboardingPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
-
-// Import styles
-import "./App.css";
+import UpgradePage from './pages/UpgradePage';
+import About from './pages/About';
+import AlphaPro from './pages/AlphaPro';
 
 // Lazy load existing pages for performance optimization
 const Profile = lazy(() => import('./pages/Profile.jsx'));
 const Home = lazy(() => import('./pages/Home.jsx'));
-const About = lazy(() => import('./pages/About.jsx'));
-const AlphaPro = lazy(() => import('./pages/AlphaPro.jsx'));
 const RulesPage = lazy(() => import('./pages/RulesPage.jsx'));
 const TestMount = lazy(() => import('./pages/TestMount.jsx'));
 
@@ -73,7 +73,8 @@ const Navigation = () => {
     { to: '/settings', label: 'Settings' },
     { to: '/about', label: 'About' },
     { to: '/profile', label: 'Profile' },
-    { to: '/onboarding', label: 'Onboarding' }
+    { to: '/onboarding', label: 'Onboarding' },
+    { to: '/upgrade', label: 'Upgrade' }
   ];
 
   return (
@@ -141,6 +142,7 @@ const AppContent = () => {
 
   return (
     <div className="app">
+      <DemoModeBanner />
       <Navigation />
       <main className="app-main">
         <Suspense fallback={<PageLoader />}>
@@ -154,6 +156,7 @@ const AppContent = () => {
             <Route path="/rules" element={<RulesPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
+            <Route path="/upgrade" element={<UpgradePage />} />
             <Route path="/alphapro" element={<AlphaPro />} />
             <Route path="/test" element={<TestMount />} />
             {/* 404 Route */}
@@ -170,9 +173,19 @@ const AppContent = () => {
 const App = () => (
   <ErrorBoundary>
     <ToastProvider>
-      <Router>
-        <AppContent />
-      </Router>
+      <Auth0Provider
+        domain={process.env.REACT_APP_AUTH0_DOMAIN || 'dev-example.auth0.com'}
+        clientId={process.env.REACT_APP_AUTH0_CLIENT_ID || 'your-client-id'}
+        authorizationParams={{
+          redirect_uri: window.location.origin,
+          audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+          scope: 'openid profile email'
+        }}
+      >
+        <Router>
+          <AppContent />
+        </Router>
+      </Auth0Provider>
     </ToastProvider>
   </ErrorBoundary>
 );

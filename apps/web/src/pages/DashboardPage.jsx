@@ -26,7 +26,7 @@ import StatusBadge from '../components/ui/StatusBadge.jsx';
 import RuleCreationModal from '../components/ui/RuleCreationModal.jsx';
 import RuleStatusCard from '../components/ui/RuleStatusCard.jsx';
 import InsightCard from '../components/ui/InsightCard.jsx';
-import { CheckCircle, Sparkles, TrendingUp, Zap, ArrowRight, X, Plus, BarChart3, Target, AlertTriangle } from 'lucide-react';
+import { CheckCircle, Sparkles, TrendingUp, Zap, ArrowRight, X, Plus, BarChart3, Target, AlertTriangle, Crown } from 'lucide-react';
 import { useToast } from '../components/ui/use-toast';
 import storageService from '../lib/services/StorageService';
 import { evaluateAllRules, getRuleExecutionSummary } from '../lib/services/RuleEngineExecutor.js';
@@ -124,45 +124,54 @@ const DashboardPage = () => {
         }
       }
       
-      // Generate mock insights if user has data
-      if (rules.length > 0 || hasTransactions) {
-        const insights = [
-          {
-            id: 1,
-            type: 'spending_trend',
-            title: 'Spending Trend',
-            description: 'Your spending is 15% lower this month compared to last month. Great job staying on budget!',
-            status: 'positive',
-            statusLabel: 'Improving',
-            value: '$2,450',
-            valueLabel: 'This Month',
-            action: 'Keep up the good work! Consider setting a savings goal.'
-          },
-          {
-            id: 2,
-            type: 'balance_alert',
-            title: 'Account Balance',
-            description: 'Your checking account balance is healthy. You have sufficient funds for upcoming expenses.',
-            status: 'positive',
-            statusLabel: 'Good',
-            value: '$8,750',
-            valueLabel: 'Current Balance',
-            action: 'Consider moving excess funds to savings for better returns.'
-          },
-          {
-            id: 3,
-            type: 'category_spending',
-            title: 'Top Spending Category',
-            description: 'Food & Dining is your highest spending category this month.',
-            status: 'warning',
-            statusLabel: 'Monitor',
-            value: '$650',
-            valueLabel: 'Food & Dining',
-            action: 'Review your dining out habits and consider cooking more at home.'
-          }
-        ];
-        setMockInsights(insights);
-      }
+      // ALWAYS show insights - NEVER EMPTY DASHBOARD
+      const insights = [
+        {
+          id: 1,
+          type: 'spending_trend',
+          title: 'Spending Trend',
+          description: 'Your spending is 15% lower this month compared to last month. Great job staying on budget!',
+          status: 'positive',
+          statusLabel: 'Improving',
+          value: '$2,450',
+          valueLabel: 'This Month',
+          action: 'Keep up the good work! Consider setting a savings goal.'
+        },
+        {
+          id: 2,
+          type: 'balance_alert',
+          title: 'Account Balance',
+          description: 'Your checking account balance is healthy. You have sufficient funds for upcoming expenses.',
+          status: 'positive',
+          statusLabel: 'Good',
+          value: '$8,750',
+          valueLabel: 'Current Balance',
+          action: 'Consider moving excess funds to savings for better returns.'
+        },
+        {
+          id: 3,
+          type: 'category_spending',
+          title: 'Top Spending Category',
+          description: 'Food & Dining is your highest spending category this month.',
+          status: 'warning',
+          statusLabel: 'Monitor',
+          value: '$650',
+          valueLabel: 'Food & Dining',
+          action: 'Review your dining out habits and consider cooking more at home.'
+        },
+        {
+          id: 4,
+          type: 'savings_progress',
+          title: 'Savings Progress',
+          description: 'You\'re on track to reach your emergency fund goal by the end of the year.',
+          status: 'positive',
+          statusLabel: 'On Track',
+          value: '75%',
+          valueLabel: 'Goal Progress',
+          action: 'Continue your current savings rate to reach your target.'
+        }
+      ];
+      setMockInsights(insights);
     }
   }, [user, toast]);
 
@@ -180,6 +189,13 @@ const DashboardPage = () => {
     console.log('Opening rule creation modal...');
     setShowRuleModal(true);
     console.log('Modal state set to:', true);
+    
+    // Show immediate feedback
+    toast({
+      title: "Creating Your First Rule",
+      description: "Let's set up automated financial monitoring for you.",
+      variant: "default"
+    });
   };
 
   const handleRuleCreated = (newRule) => {
@@ -382,27 +398,67 @@ const DashboardPage = () => {
       transition={{ duration: 0.6, delay: 0.4 }}
       style={{ marginTop: '1rem' }}
     >
-      {/* Financial Insights Section */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <h2 style={{ 
-          fontSize: 'var(--font-size-xl)',
-          fontWeight: 'var(--font-weight-bold)',
-          color: 'var(--color-text-primary)',
-          margin: '0 0 1rem 0',
-          lineHeight: '1.2'
-        }}>
-          Your Financial Insights
-        </h2>
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '1.25rem'
-        }}>
-          {mockInsights.map((insight) => (
-            <InsightCard key={insight.id} insight={insight} />
-          ))}
+              {/* Financial Insights Section */}
+        <div style={{ marginBottom: '1.5rem' }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            marginBottom: '1rem'
+          }}>
+            <h2 style={{ 
+              fontSize: 'var(--font-size-xl)',
+              fontWeight: 'var(--font-weight-bold)',
+              color: 'var(--color-text-primary)',
+              margin: 0,
+              lineHeight: '1.2'
+            }}>
+              Your Financial Insights
+            </h2>
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '0.5rem'
+            }}>
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '0.5rem',
+                padding: '0.25rem 0.75rem',
+                backgroundColor: 'var(--color-primary-50)',
+                color: 'var(--color-primary-700)',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: 'var(--font-size-xs)',
+                fontWeight: 'var(--font-weight-medium)',
+                border: '1px solid var(--color-primary-200)'
+              }}>
+                <Crown size={12} />
+                Pro Features
+              </div>
+              <StyledButton
+                variant="primary"
+                size="sm"
+                onClick={() => navigate('/upgrade')}
+                style={{ 
+                  fontSize: 'var(--font-size-xs)',
+                  padding: '0.25rem 0.75rem'
+                }}
+              >
+                Upgrade
+                <ArrowRight size={12} />
+              </StyledButton>
+            </div>
+          </div>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1.25rem'
+          }}>
+            {mockInsights.map((insight) => (
+              <InsightCard key={insight.id} insight={insight} />
+            ))}
+          </div>
         </div>
-      </div>
 
       {/* Rules Section */}
       <CompositeCard variant="elevated">

@@ -77,23 +77,23 @@ const ONBOARDING_STEPS = [
 /**
  * Main onboarding flow component
  */
-export const OnboardingFlow = () => {
+export const OnboardingFlow = ({ onComplete, initialState }) => {
   const navigate = useNavigate();
   const { user, updateUserProfile } = useAuthStore();
   const { initializeFinancialState } = useFinancialStateStore();
   const { toast } = useToast();
   
-  const [currentStep, setCurrentStep] = useState(1);
-  const [stepData, setStepData] = useState({});
+  const [currentStep, setCurrentStep] = useState(initialState?.currentStep || 1);
+  const [stepData, setStepData] = useState(initialState?.data || {});
   const [isLoading, setIsLoading] = useState(false);
 
   // Check if user is already onboarded
   useEffect(() => {
     const onboardingComplete = localStorage.getItem('alphaframe_onboarding_complete');
-    if (onboardingComplete === 'true') {
+    if (onboardingComplete === 'true' && !initialState) {
       navigate('/dashboard');
     }
-  }, [navigate]);
+  }, [navigate, initialState]);
 
   /**
    * Handle step completion
@@ -139,13 +139,18 @@ export const OnboardingFlow = () => {
         variant: "default"
       });
       
-      // Redirect to dashboard
-      navigate('/dashboard', { 
-        state: { 
-          welcome: true,
-          onboardingComplete: true 
-        } 
-      });
+      // Call parent completion handler if provided
+      if (onComplete) {
+        onComplete(stepData);
+      } else {
+        // Redirect to dashboard
+        navigate('/dashboard', { 
+          state: { 
+            welcome: true,
+            onboardingComplete: true 
+          } 
+        });
+      }
       
     } catch (error) {
       // Show error toast

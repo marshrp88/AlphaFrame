@@ -51,7 +51,7 @@ const OnboardingPage = () => {
         });
         navigate('/dashboard', { replace: true });
       } else {
-        // New user or incomplete onboarding
+        // New user or incomplete onboarding - ALWAYS show onboarding
         setOnboardingState(userOnboardingState || {
           userId: user.sub,
           started: true,
@@ -60,6 +60,9 @@ const OnboardingPage = () => {
           data: {}
         });
       }
+    } else if (!isLoading && !isAuthenticated) {
+      // Not authenticated - show login prompt
+      setOnboardingState(null);
     }
   }, [isAuthenticated, isLoading, user, navigate, toast]);
 
