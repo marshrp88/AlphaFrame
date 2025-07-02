@@ -24,10 +24,15 @@ import CompositeCard from '../components/ui/CompositeCard.jsx';
 import StyledButton from '../components/ui/StyledButton.jsx';
 import StatusBadge from '../components/ui/StatusBadge.jsx';
 import RuleCreationModal from '../components/ui/RuleCreationModal.jsx';
+import RuleStatusCard from '../components/ui/RuleStatusCard.jsx';
 import InsightCard from '../components/ui/InsightCard.jsx';
-import { CheckCircle, Sparkles, TrendingUp, Zap, ArrowRight, X, Plus, BarChart3, Target } from 'lucide-react';
+import { CheckCircle, Sparkles, TrendingUp, Zap, ArrowRight, X, Plus, BarChart3, Target, AlertTriangle } from 'lucide-react';
 import { useToast } from '../components/ui/use-toast';
 import storageService from '../lib/services/StorageService';
+import { evaluateAllRules, getRuleExecutionSummary } from '../lib/services/RuleEngineExecutor.js';
+import { getMockTransactions } from '../lib/mock/transactions.js';
+
+import { DollarSign, Calendar } from 'lucide-react';
 
 const DashboardPage = () => {
   const location = useLocation();
@@ -40,8 +45,12 @@ const DashboardPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showRuleModal, setShowRuleModal] = useState(false);
   const [userRules, setUserRules] = useState([]);
+  const [showOnboardingBanner, setShowOnboardingBanner] = useState(false);
   const [mockInsights, setMockInsights] = useState([]);
   const [showWelcomeBack, setShowWelcomeBack] = useState(false);
+  const [transactions, setTransactions] = useState([]);
+  const [ruleExecutionResults, setRuleExecutionResults] = useState([]);
+  const [ruleSummary, setRuleSummary] = useState(null);
 
   // Check for onboarding completion and first rule creation
   useEffect(() => {
@@ -90,6 +99,31 @@ const DashboardPage = () => {
       setUserRules(rules);
       setHasData(rules.length > 0 || hasTransactions);
       
+      // Load mock transactions for rule evaluation
+      const mockTransactions = getMockTransactions();
+      setTransactions(mockTransactions);
+      
+      // Evaluate rules if they exist
+      if (rules.length > 0) {
+        const results = evaluateAllRules(rules, mockTransactions, 'monthly');
+        setRuleExecutionResults(results);
+        
+        const summary = getRuleExecutionSummary(results);
+        setRuleSummary(summary);
+        
+        // Show alerts for triggered rules
+        if (summary.hasAlerts) {
+          const triggeredRules = results.filter(r => r.status === 'triggered');
+          triggeredRules.forEach(rule => {
+            toast({
+              title: `🚨 Rule Alert: ${rule.ruleName}`,
+              description: rule.message,
+              variant: "destructive"
+            });
+          });
+        }
+      }
+      
       // Generate mock insights if user has data
       if (rules.length > 0 || hasTransactions) {
         const insights = [
@@ -130,10 +164,16 @@ const DashboardPage = () => {
         setMockInsights(insights);
       }
     }
-  }, [user]);
+  }, [user, toast]);
 
   const handleDismissBanner = () => {
-    setShowSuccessBanner(false);
+    setShowOnboardingBanner(false);
+    localStorage.setItem('alphaframe_onboarding_banner_dismissed', 'true');
+  };
+
+  const handleDismissWelcomeBack = () => {
+    setShowWelcomeBack(false);
+    localStorage.setItem('alphaframe_welcome_back_dismissed', 'true');
   };
 
   const handleCreateFirstRule = () => {
@@ -184,6 +224,34 @@ const DashboardPage = () => {
     navigate('/settings');
     // Reset loading state after navigation
     setTimeout(() => setIsLoading(false), 500);
+  };
+
+  const handleEditRule = (rule) => {
+    // Navigate to rules page with edit mode
+    navigate('/rules', { state: { editRule: rule } });
+  };
+
+  const handleDeleteRule = (ruleId) => {
+    const updatedRules = userRules.filter(rule => rule.id !== ruleId);
+    setUserRules(updatedRules);
+    localStorage.setItem('alphaframe_user_rules', JSON.stringify(updatedRules));
+    
+    // Re-evaluate rules
+    if (updatedRules.length > 0) {
+      const results = evaluateAllRules(updatedRules, transactions, 'monthly');
+      setRuleExecutionResults(results);
+      const summary = getRuleExecutionSummary(results);
+      setRuleSummary(summary);
+    } else {
+      setRuleExecutionResults([]);
+      setRuleSummary(null);
+    }
+    
+    toast({
+      title: "Rule Deleted",
+      description: "Your rule has been successfully removed.",
+      variant: "default"
+    });
   };
 
   // Empty state component for when user has no data
@@ -374,61 +442,18 @@ const DashboardPage = () => {
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
-            {userRules.map((rule) => (
-              <div
-                key={rule.id}
-                style={{
-                  padding: '1rem',
-                  border: '1px solid var(--color-border-primary)',
-                  borderRadius: 'var(--radius-md)',
-                  backgroundColor: 'var(--color-surface)',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                <div style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'space-between',
-                  marginBottom: '0.5rem'
-                }}>
-                  <h3 style={{ 
-                    fontSize: 'var(--font-size-base)',
-                    fontWeight: 'var(--font-weight-semibold)',
-                    color: 'var(--color-text-primary)',
-                    margin: 0,
-                    lineHeight: '1.3'
-                  }}>
-                    {rule.name}
-                  </h3>
-                  <StatusBadge variant="success" size="sm">
-                    <CheckCircle size={12} />
-                    Active
-                  </StatusBadge>
-                </div>
-                <p style={{ 
-                  fontSize: 'var(--font-size-sm)',
-                  color: 'var(--color-text-secondary)',
-                  margin: '0 0 0.75rem 0',
-                  lineHeight: '1.5'
-                }}>
-                  {rule.description || 'No description provided'}
-                </p>
-                <div style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '1rem',
-                  fontSize: 'var(--font-size-sm)',
-                  color: 'var(--color-text-secondary)'
-                }}>
-                  <span style={{ fontWeight: 'var(--font-weight-medium)' }}>
-                    Type: {rule.type.replace('_', ' ')}
-                  </span>
-                  <span style={{ fontWeight: 'var(--font-weight-medium)' }}>
-                    Amount: ${rule.amount}
-                  </span>
-                </div>
-              </div>
-            ))}
+            {userRules.map((rule) => {
+              const executionResult = ruleExecutionResults.find(r => r.ruleId === rule.id);
+              return (
+                <RuleStatusCard
+                  key={rule.id}
+                  rule={rule}
+                  executionResult={executionResult}
+                  onEdit={() => handleEditRule(rule)}
+                  onDelete={() => handleDeleteRule(rule.id)}
+                />
+              );
+            })}
           </div>
         </div>
       </CompositeCard>
@@ -559,7 +584,7 @@ const DashboardPage = () => {
                 <StyledButton
                   variant="ghost"
                   size="sm"
-                  onClick={() => setShowWelcomeBack(false)}
+                  onClick={handleDismissWelcomeBack}
                   style={{ color: 'var(--color-primary-600)' }}
                 >
                   <X size={20} />
@@ -742,6 +767,98 @@ const DashboardPage = () => {
             </div>
           </CompositeCard>
         </motion.div>
+
+        {/* Rule Summary */}
+        {ruleSummary && (
+          <div className="rule-summary" style={{
+            padding: '1.5rem',
+            backgroundColor: 'var(--color-surface)',
+            border: '1px solid var(--color-border-primary)',
+            borderRadius: 'var(--radius-lg)',
+            marginBottom: '2rem'
+          }}>
+            <h3 style={{ 
+              fontSize: 'var(--font-size-lg)',
+              fontWeight: 'var(--font-weight-semibold)',
+              color: 'var(--color-text-primary)',
+              margin: '0 0 1rem 0'
+            }}>
+              Rule Execution Summary
+            </h3>
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '1rem'
+            }}>
+              <div style={{
+                padding: '1rem',
+                backgroundColor: 'var(--color-primary-50)',
+                border: '1px solid var(--color-primary-200)',
+                borderRadius: 'var(--radius-md)',
+                textAlign: 'center'
+              }}>
+                <div style={{ 
+                  fontSize: 'var(--font-size-2xl)',
+                  fontWeight: 'var(--font-weight-bold)',
+                  color: 'var(--color-primary-600)',
+                  marginBottom: '0.5rem'
+                }}>
+                  {ruleSummary.totalRules}
+                </div>
+                <div style={{ 
+                  fontSize: 'var(--font-size-sm)',
+                  color: 'var(--color-text-secondary)'
+                }}>
+                  Total Rules
+                </div>
+              </div>
+              <div style={{
+                padding: '1rem',
+                backgroundColor: ruleSummary.hasAlerts ? 'var(--color-destructive-50)' : 'var(--color-success-50)',
+                border: `1px solid ${ruleSummary.hasAlerts ? 'var(--color-destructive-200)' : 'var(--color-success-200)'}`,
+                borderRadius: 'var(--radius-md)',
+                textAlign: 'center'
+              }}>
+                <div style={{ 
+                  fontSize: 'var(--font-size-2xl)',
+                  fontWeight: 'var(--font-weight-bold)',
+                  color: ruleSummary.hasAlerts ? 'var(--color-destructive-600)' : 'var(--color-success-600)',
+                  marginBottom: '0.5rem'
+                }}>
+                  {ruleSummary.triggeredRules}
+                </div>
+                <div style={{ 
+                  fontSize: 'var(--font-size-sm)',
+                  color: 'var(--color-text-secondary)'
+                }}>
+                  Rules Triggered
+                </div>
+              </div>
+              <div style={{
+                padding: '1rem',
+                backgroundColor: 'var(--color-muted-50)',
+                border: '1px solid var(--color-muted-200)',
+                borderRadius: 'var(--radius-md)',
+                textAlign: 'center'
+              }}>
+                <div style={{ 
+                  fontSize: 'var(--font-size-2xl)',
+                  fontWeight: 'var(--font-weight-bold)',
+                  color: 'var(--color-muted-600)',
+                  marginBottom: '0.5rem'
+                }}>
+                  {ruleSummary.totalTransactions}
+                </div>
+                <div style={{ 
+                  fontSize: 'var(--font-size-sm)',
+                  color: 'var(--color-text-secondary)'
+                }}>
+                  Transactions Analyzed
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </motion.div>
     </PageLayout>
   );
