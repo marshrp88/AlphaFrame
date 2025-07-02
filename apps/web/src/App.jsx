@@ -1,34 +1,21 @@
 /**
- * App.jsx - AlphaFrame VX.1 Finalization with Performance Optimization
+ * App.jsx - STUBBED FOR MVEP PHASE 0
  * 
- * Purpose: Main application component with routing, authentication,
+ * TODO [MVEP_PHASE_1]:
+ * This module is currently stubbed and non-functional.
+ * Real authentication will be implemented in Phase 1 of the MVEP rebuild plan.
+ * 
+ * Purpose: Will provide main application component with routing, authentication,
  * onboarding flow, and error boundaries for production readiness.
  * 
- * Procedure:
- * 1. Set up routing with protected and public routes
- * 2. Integrate onboarding flow for first-time users
- * 3. Wrap components with error boundaries
- * 4. Handle authentication state and redirects
- * 5. Provide navigation and user experience
- * 6. Implement lazy loading for performance optimization
- * 
- * Conclusion: Central application component that orchestrates
- * all user flows and ensures robust error handling with optimal performance.
+ * Current Status: Auth0 removed, using stubbed authentication
  */
 
 import React, { Suspense, lazy, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
-import { usePlaidLink } from 'react-plaid-link';
-import LoginButton from "./components/LoginButton.jsx";
-import PrivateRoute from "./components/PrivateRoute.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import { ToastProvider } from "./components/ui/use-toast.jsx";
 import { config } from '@/lib/config.js';
-import LiveFinancialDashboard from './components/dashboard/LiveFinancialDashboard';
-import Dashboard2 from './components/dashboard/Dashboard2.jsx';
-import OnboardingFlow from './features/onboarding/OnboardingFlow.jsx';
-import { Auth0Provider } from '@auth0/auth0-react';
 import DemoModeBanner from './components/ui/DemoModeBanner';
 import FeedbackButton from './components/ui/FeedbackButton.jsx';
 import SoftLaunchBanner from './components/ui/SoftLaunchBanner.jsx';
@@ -65,10 +52,26 @@ const PageLoader = () => (
   </div>
 );
 
+// Stubbed authentication hook for Phase 0
+const useStubbedAuth = () => {
+  return {
+    isAuthenticated: false,
+    isLoading: false,
+    user: null,
+    error: null,
+    loginWithRedirect: () => {
+      throw new Error("Authentication not yet implemented. This will be added in Phase 1 of the MVEP rebuild.");
+    },
+    logout: () => {
+      throw new Error("Authentication not yet implemented. This will be added in Phase 1 of the MVEP rebuild.");
+    }
+  };
+};
+
 // Navigation component with performance optimizations
 const Navigation = () => {
   const location = useLocation();
-  const { isAuthenticated, user } = useAuth0();
+  const { isAuthenticated, user } = useStubbedAuth();
 
   const navigationItems = [
     { to: '/', label: 'Home' },
@@ -78,7 +81,8 @@ const Navigation = () => {
     { to: '/about', label: 'About' },
     { to: '/profile', label: 'Profile' },
     { to: '/onboarding', label: 'Onboarding' },
-    { to: '/upgrade', label: 'Upgrade' },
+    // TODO [MVEP_PHASE_5]: Re-enable upgrade route when monetization is implemented
+    // { to: '/upgrade', label: 'Upgrade' },
     { to: '/trust', label: '🔒 Trust', icon: '🔒' }
   ];
 
@@ -103,7 +107,15 @@ const Navigation = () => {
                 <span className="user-name">{user?.name || 'Account'}</span>
               </StyledButton>
             ) : (
-              <LoginButton />
+              <StyledButton 
+                variant="secondary" 
+                size="sm"
+                onClick={() => {
+                  throw new Error("Authentication not yet implemented. This will be added in Phase 1 of the MVEP rebuild.");
+                }}
+              >
+                Login (Not Implemented)
+              </StyledButton>
             )}
           </div>
         </div>
@@ -114,7 +126,7 @@ const Navigation = () => {
 
 // Move all logic that uses useNavigate into AppContent
 const AppContent = () => {
-  const { isLoading, error } = useAuth0();
+  const { isLoading, error } = useStubbedAuth();
   const navigate = useNavigate();
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
 
@@ -163,7 +175,8 @@ const AppContent = () => {
             <Route path="/rules" element={<RulesPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
-            <Route path="/upgrade" element={<UpgradePage />} />
+            {/* TODO [MVEP_PHASE_5]: Re-enable upgrade route when monetization is implemented */}
+            {/* <Route path="/upgrade" element={<UpgradePage />} /> */}
             <Route path="/alphapro" element={<AlphaPro />} />
             <Route path="/trust" element={<TrustPage />} />
             <Route path="/test" element={<TestMount />} />
@@ -185,19 +198,9 @@ const AppContent = () => {
 const App = () => (
   <ErrorBoundary>
     <ToastProvider>
-      <Auth0Provider
-        domain={process.env.REACT_APP_AUTH0_DOMAIN || 'dev-example.auth0.com'}
-        clientId={process.env.REACT_APP_AUTH0_CLIENT_ID || 'your-client-id'}
-        authorizationParams={{
-          redirect_uri: window.location.origin,
-          audience: process.env.REACT_APP_AUTH0_AUDIENCE,
-          scope: 'openid profile email'
-        }}
-      >
-        <Router>
-          <AppContent />
-        </Router>
-      </Auth0Provider>
+      <Router>
+        <AppContent />
+      </Router>
     </ToastProvider>
   </ErrorBoundary>
 );

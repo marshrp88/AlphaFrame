@@ -1,9 +1,13 @@
 /**
- * Application Configuration - Centralized configuration management
+ * Application Configuration - STUBBED FOR MVEP PHASE 0
  * 
- * Purpose: Provides centralized access to application settings and environment variables
- * Procedure: Exports configuration objects with environment-specific values
- * Conclusion: Ensures consistent configuration access throughout the application
+ * TODO [MVEP_PHASE_1]:
+ * This module is currently stubbed and non-functional.
+ * Real configuration will be implemented in Phase 1 of the MVEP rebuild plan.
+ * 
+ * Purpose: Will provide centralized access to application settings and environment variables
+ * 
+ * Current Status: Auth0 removed, preparing for Firebase Auth
  */
 
 import { isDevelopment, isProduction, getFeatureFlag, getApiConfig, getUiConfig } from './env.js';
@@ -21,12 +25,11 @@ export const config = {
   // API configuration
   api: getApiConfig(),
   
-  // Auth0 configuration
-  auth0: {
-    domain: process.env.AUTH0_DOMAIN || 'alpha.auth0.com',
-    clientId: process.env.AUTH0_CLIENT_ID || 'alpha-default-client',
-    audience: process.env.AUTH0_AUDIENCE || 'https://api.alphaframe.com',
-    redirectUri: process.env.AUTH0_REDIRECT_URI || 'http://localhost:3000/callback',
+  // TODO [MVEP_PHASE_1]: Replace with Firebase Auth configuration
+  auth: {
+    // Firebase Auth configuration will be added here
+    provider: 'firebase',
+    status: 'not_implemented'
   },
   
   // Feature flags
@@ -41,4 +44,5 @@ export const config = {
   ui: getUiConfig(),
 };
 
+// Export default for backward compatibility
 export default config;
