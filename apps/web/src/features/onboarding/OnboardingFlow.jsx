@@ -89,10 +89,11 @@ export const OnboardingFlow = () => {
 
   // Check if user is already onboarded
   useEffect(() => {
-    if (user?.onboarded) {
+    const onboardingComplete = localStorage.getItem('alphaframe_onboarding_complete');
+    if (onboardingComplete === 'true') {
       navigate('/dashboard');
     }
-  }, [user, navigate]);
+  }, [navigate]);
 
   /**
    * Handle step completion
@@ -127,8 +128,9 @@ export const OnboardingFlow = () => {
       // Initialize financial state with onboarding data
       await initializeFinancialState(stepData);
       
-      // Mark user as onboarded
-      await updateUserProfile({ onboarded: true });
+      // Mark user as onboarded in localStorage
+      localStorage.setItem('alphaframe_onboarding_complete', 'true');
+      localStorage.setItem('alphaframe_onboarding_data', JSON.stringify(stepData));
       
       // Show success toast
       toast({

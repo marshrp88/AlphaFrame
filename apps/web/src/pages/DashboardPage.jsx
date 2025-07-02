@@ -41,6 +41,7 @@ const DashboardPage = () => {
   const [showRuleModal, setShowRuleModal] = useState(false);
   const [userRules, setUserRules] = useState([]);
   const [mockInsights, setMockInsights] = useState([]);
+  const [showWelcomeBack, setShowWelcomeBack] = useState(false);
 
   // Check for onboarding completion and first rule creation
   useEffect(() => {
@@ -57,6 +58,22 @@ const DashboardPage = () => {
     
     if (location.state?.firstRuleCreated) {
       setFirstRule(location.state.firstRuleCreated);
+    }
+
+    // Check if user is returning (has completed onboarding but no state passed)
+    const onboardingComplete = localStorage.getItem('alphaframe_onboarding_complete');
+    if (onboardingComplete === 'true' && !location.state?.onboardingComplete) {
+      setShowWelcomeBack(true);
+      
+      // Show welcome back toast
+      toast({
+        title: "👋 Welcome Back!",
+        description: "Great to see you again. Your dashboard is ready.",
+        variant: "default"
+      });
+      
+      // Hide welcome back banner after 5 seconds
+      setTimeout(() => setShowWelcomeBack(false), 5000);
     }
   }, [location.state, toast]);
 
@@ -175,15 +192,15 @@ const DashboardPage = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.4 }}
-      style={{ marginTop: '2rem' }}
+      style={{ marginTop: '1rem' }}
     >
       <CompositeCard variant="elevated">
-        <div style={{ textAlign: 'center', padding: '3rem' }}>
+        <div style={{ textAlign: 'center', padding: '2.5rem 2rem' }}>
           {/* Empty State Illustration */}
           <div style={{ 
-            width: '120px', 
-            height: '120px', 
-            margin: '0 auto 2rem',
+            width: '100px', 
+            height: '100px', 
+            margin: '0 auto 1.5rem',
             background: 'linear-gradient(135deg, var(--color-primary-100), var(--color-secondary-100))',
             borderRadius: '50%',
             display: 'flex',
@@ -191,14 +208,15 @@ const DashboardPage = () => {
             justifyContent: 'center',
             border: '3px solid var(--color-primary-200)'
           }}>
-            <BarChart3 size={48} style={{ color: 'var(--color-primary-600)' }} />
+            <BarChart3 size={40} style={{ color: 'var(--color-primary-600)' }} />
           </div>
           
           <h2 style={{ 
             fontSize: 'var(--font-size-xl)',
-            fontWeight: 'var(--font-weight-semibold)',
+            fontWeight: 'var(--font-weight-bold)',
             color: 'var(--color-text-primary)',
-            marginBottom: '1rem'
+            marginBottom: '0.75rem',
+            lineHeight: '1.2'
           }}>
             Welcome to Your Financial Dashboard
           </h2>
@@ -220,7 +238,7 @@ const DashboardPage = () => {
             flexWrap: 'wrap', 
             gap: '1rem', 
             justifyContent: 'center', 
-            maxWidth: '600px', 
+            maxWidth: '500px', 
             margin: '0 auto' 
           }}>
             <StyledButton 
@@ -231,11 +249,13 @@ const DashboardPage = () => {
               style={{ 
                 background: 'var(--color-primary-600)',
                 color: 'white',
-                padding: '1rem 1.5rem',
+                padding: '0.875rem 1.25rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.5rem'
+                gap: '0.5rem',
+                fontSize: 'var(--font-size-base)',
+                fontWeight: 'var(--font-weight-medium)'
               }}
             >
               <Zap size={16} />
@@ -249,11 +269,13 @@ const DashboardPage = () => {
                 handleConnectAccounts();
               }}
               style={{ 
-                padding: '1rem 1.5rem',
+                padding: '0.875rem 1.25rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.5rem'
+                gap: '0.5rem',
+                fontSize: 'var(--font-size-base)',
+                fontWeight: 'var(--font-weight-medium)'
               }}
             >
               <Target size={16} />
@@ -262,16 +284,19 @@ const DashboardPage = () => {
           </div>
           
           <div style={{ 
-            marginTop: '2rem',
+            marginTop: '1.5rem',
             padding: '1rem',
             background: 'var(--color-background-secondary)',
             borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--color-border-secondary)'
+            border: '1px solid var(--color-border-secondary)',
+            maxWidth: '400px',
+            margin: '1.5rem auto 0'
           }}>
             <p style={{ 
               fontSize: 'var(--font-size-sm)',
               color: 'var(--color-text-secondary)',
-              margin: 0
+              margin: 0,
+              lineHeight: '1.5'
             }}>
               💡 <strong>Tip:</strong> Start with a simple spending limit rule to see how AlphaFrame monitors your finances automatically.
             </p>
@@ -287,22 +312,23 @@ const DashboardPage = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.4 }}
-      style={{ marginTop: '2rem' }}
+      style={{ marginTop: '1rem' }}
     >
       {/* Financial Insights Section */}
-      <div style={{ marginBottom: '2rem' }}>
+      <div style={{ marginBottom: '1.5rem' }}>
         <h2 style={{ 
-          fontSize: 'var(--font-size-lg)',
-          fontWeight: 'var(--font-weight-semibold)',
+          fontSize: 'var(--font-size-xl)',
+          fontWeight: 'var(--font-weight-bold)',
           color: 'var(--color-text-primary)',
-          margin: '0 0 1.5rem 0'
+          margin: '0 0 1rem 0',
+          lineHeight: '1.2'
         }}>
           Your Financial Insights
         </h2>
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '1.5rem'
+          gap: '1.25rem'
         }}>
           {mockInsights.map((insight) => (
             <InsightCard key={insight.id} insight={insight} />
@@ -312,18 +338,19 @@ const DashboardPage = () => {
 
       {/* Rules Section */}
       <CompositeCard variant="elevated">
-        <div style={{ padding: '2rem' }}>
+        <div style={{ padding: '1.5rem' }}>
           <div style={{ 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'space-between',
-            marginBottom: '1.5rem'
+            marginBottom: '1.25rem'
           }}>
             <h2 style={{ 
-              fontSize: 'var(--font-size-lg)',
-              fontWeight: 'var(--font-weight-semibold)',
+              fontSize: 'var(--font-size-xl)',
+              fontWeight: 'var(--font-weight-bold)',
               color: 'var(--color-text-primary)',
-              margin: 0
+              margin: 0,
+              lineHeight: '1.2'
             }}>
               Your Active Rules ({userRules.length})
             </h2>
@@ -335,7 +362,10 @@ const DashboardPage = () => {
                 color: 'white',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem'
+                gap: '0.5rem',
+                padding: '0.75rem 1rem',
+                fontSize: 'var(--font-size-sm)',
+                fontWeight: 'var(--font-weight-medium)'
               }}
             >
               <Plus size={16} />
@@ -343,7 +373,7 @@ const DashboardPage = () => {
             </StyledButton>
           </div>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
             {userRules.map((rule) => (
               <div
                 key={rule.id}
@@ -351,7 +381,8 @@ const DashboardPage = () => {
                   padding: '1rem',
                   border: '1px solid var(--color-border-primary)',
                   borderRadius: 'var(--radius-md)',
-                  backgroundColor: 'var(--color-surface)'
+                  backgroundColor: 'var(--color-surface)',
+                  transition: 'all 0.2s ease'
                 }}
               >
                 <div style={{ 
@@ -362,9 +393,10 @@ const DashboardPage = () => {
                 }}>
                   <h3 style={{ 
                     fontSize: 'var(--font-size-base)',
-                    fontWeight: 'var(--font-weight-medium)',
+                    fontWeight: 'var(--font-weight-semibold)',
                     color: 'var(--color-text-primary)',
-                    margin: 0
+                    margin: 0,
+                    lineHeight: '1.3'
                   }}>
                     {rule.name}
                   </h3>
@@ -376,7 +408,8 @@ const DashboardPage = () => {
                 <p style={{ 
                   fontSize: 'var(--font-size-sm)',
                   color: 'var(--color-text-secondary)',
-                  margin: '0 0 0.5rem 0'
+                  margin: '0 0 0.75rem 0',
+                  lineHeight: '1.5'
                 }}>
                   {rule.description || 'No description provided'}
                 </p>
@@ -387,8 +420,12 @@ const DashboardPage = () => {
                   fontSize: 'var(--font-size-sm)',
                   color: 'var(--color-text-secondary)'
                 }}>
-                  <span>Type: {rule.type.replace('_', ' ')}</span>
-                  <span>Amount: ${rule.amount}</span>
+                  <span style={{ fontWeight: 'var(--font-weight-medium)' }}>
+                    Type: {rule.type.replace('_', ' ')}
+                  </span>
+                  <span style={{ fontWeight: 'var(--font-weight-medium)' }}>
+                    Amount: ${rule.amount}
+                  </span>
                 </div>
               </div>
             ))}
@@ -421,15 +458,39 @@ const DashboardPage = () => {
               background: 'linear-gradient(135deg, var(--color-success-50), var(--color-primary-50))',
               border: '2px solid var(--color-success-200)'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'space-between',
+                padding: '1.5rem'
+              }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <CheckCircle size={24} style={{ color: 'var(--color-success-600)' }} />
+                  <div style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    backgroundColor: 'var(--color-success-100)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <CheckCircle size={24} style={{ color: 'var(--color-success-600)' }} />
+                  </div>
                   <div>
-                    <h3 style={{ margin: 0, color: 'var(--color-success-800)', fontWeight: '600' }}>
-                      Welcome to AlphaFrame! 🎉
+                    <h3 style={{ 
+                      fontSize: 'var(--font-size-lg)',
+                      fontWeight: 'var(--font-weight-semibold)',
+                      color: 'var(--color-success-800)',
+                      margin: '0 0 0.25rem 0'
+                    }}>
+                      🎉 Welcome to AlphaFrame!
                     </h3>
-                    <p style={{ margin: '0.25rem 0 0 0', color: 'var(--color-success-700)' }}>
-                      Your account is set up and ready. Let's create your first automated rule!
+                    <p style={{ 
+                      fontSize: 'var(--font-size-sm)',
+                      color: 'var(--color-success-700)',
+                      margin: 0
+                    }}>
+                      Your account is set up and ready to go! Start by creating your first rule.
                     </p>
                   </div>
                 </div>
@@ -439,7 +500,69 @@ const DashboardPage = () => {
                   onClick={handleDismissBanner}
                   style={{ color: 'var(--color-success-600)' }}
                 >
-                  <X size={16} />
+                  <X size={20} />
+                </StyledButton>
+              </div>
+            </CompositeCard>
+          </motion.div>
+        )}
+
+        {/* Welcome Back Banner for Returning Users */}
+        {showWelcomeBack && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+            style={{ marginBottom: '2rem' }}
+          >
+            <CompositeCard variant="elevated" style={{ 
+              background: 'linear-gradient(135deg, var(--color-primary-50), var(--color-secondary-50))',
+              border: '2px solid var(--color-primary-200)'
+            }}>
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'space-between',
+                padding: '1.5rem'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <div style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    backgroundColor: 'var(--color-primary-100)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <Sparkles size={24} style={{ color: 'var(--color-primary-600)' }} />
+                  </div>
+                  <div>
+                    <h3 style={{ 
+                      fontSize: 'var(--font-size-lg)',
+                      fontWeight: 'var(--font-weight-semibold)',
+                      color: 'var(--color-primary-800)',
+                      margin: '0 0 0.25rem 0'
+                    }}>
+                      👋 Welcome Back!
+                    </h3>
+                    <p style={{ 
+                      fontSize: 'var(--font-size-sm)',
+                      color: 'var(--color-primary-700)',
+                      margin: 0
+                    }}>
+                      Great to see you again. Your dashboard is ready with your latest insights.
+                    </p>
+                  </div>
+                </div>
+                <StyledButton
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowWelcomeBack(false)}
+                  style={{ color: 'var(--color-primary-600)' }}
+                >
+                  <X size={20} />
                 </StyledButton>
               </div>
             </CompositeCard>

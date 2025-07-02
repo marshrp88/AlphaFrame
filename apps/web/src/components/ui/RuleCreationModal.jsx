@@ -84,15 +84,21 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 1000,
-          padding: '1rem'
+          padding: '1rem',
+          backdropFilter: 'blur(4px)'
         }}
         onClick={onClose}
       >
         <motion.div
           key="modal-content"
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.9, opacity: 0 }}
+          initial={{ scale: 0.9, opacity: 0, y: 20 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.9, opacity: 0, y: 20 }}
+          transition={{ 
+            type: "spring",
+            damping: 25,
+            stiffness: 300
+          }}
           onClick={(e) => e.stopPropagation()}
           style={{ width: '100%', maxWidth: '500px' }}
         >
@@ -159,7 +165,17 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                         borderRadius: 'var(--radius-md)',
                         fontSize: 'var(--font-size-base)',
                         backgroundColor: 'var(--color-surface)',
-                        color: 'var(--color-text-primary)'
+                        color: 'var(--color-text-primary)',
+                        transition: 'all 0.2s ease',
+                        outline: 'none'
+                      }}
+                      onFocus={(e) => {
+                        e.target.style.borderColor = 'var(--color-primary-500)';
+                        e.target.style.boxShadow = '0 0 0 3px var(--color-primary-100)';
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = 'var(--color-border-primary)';
+                        e.target.style.boxShadow = 'none';
                       }}
                     />
                   </div>
@@ -185,7 +201,17 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                         borderRadius: 'var(--radius-md)',
                         fontSize: 'var(--font-size-base)',
                         backgroundColor: 'var(--color-surface)',
-                        color: 'var(--color-text-primary)'
+                        color: 'var(--color-text-primary)',
+                        transition: 'all 0.2s ease',
+                        outline: 'none'
+                      }}
+                      onFocus={(e) => {
+                        e.target.style.borderColor = 'var(--color-primary-500)';
+                        e.target.style.boxShadow = '0 0 0 3px var(--color-primary-100)';
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = 'var(--color-border-primary)';
+                        e.target.style.boxShadow = 'none';
                       }}
                     >
                       <option value="spending_limit">Spending Limit</option>
@@ -219,7 +245,17 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                         borderRadius: 'var(--radius-md)',
                         fontSize: 'var(--font-size-base)',
                         backgroundColor: 'var(--color-surface)',
-                        color: 'var(--color-text-primary)'
+                        color: 'var(--color-text-primary)',
+                        transition: 'all 0.2s ease',
+                        outline: 'none'
+                      }}
+                      onFocus={(e) => {
+                        e.target.style.borderColor = 'var(--color-primary-500)';
+                        e.target.style.boxShadow = '0 0 0 3px var(--color-primary-100)';
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = 'var(--color-border-primary)';
+                        e.target.style.boxShadow = 'none';
                       }}
                     />
                   </div>
@@ -248,7 +284,17 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                         fontSize: 'var(--font-size-base)',
                         backgroundColor: 'var(--color-surface)',
                         color: 'var(--color-text-primary)',
-                        resize: 'vertical'
+                        resize: 'vertical',
+                        transition: 'all 0.2s ease',
+                        outline: 'none'
+                      }}
+                      onFocus={(e) => {
+                        e.target.style.borderColor = 'var(--color-primary-500)';
+                        e.target.style.boxShadow = '0 0 0 3px var(--color-primary-100)';
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = 'var(--color-border-primary)';
+                        e.target.style.boxShadow = 'none';
                       }}
                     />
                   </div>
