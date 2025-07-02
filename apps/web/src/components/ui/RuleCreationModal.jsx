@@ -6,6 +6,7 @@ import { X, Zap, Target, DollarSign, Calendar } from 'lucide-react';
 import { useToast } from './use-toast.jsx';
 
 const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
+  console.log('RuleCreationModal render - isOpen:', isOpen);
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [ruleData, setRuleData] = useState({
@@ -65,8 +66,9 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
   if (!isOpen) return null;
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       <motion.div
+        key="modal-overlay"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -87,6 +89,7 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
         onClick={onClose}
       >
         <motion.div
+          key="modal-content"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}

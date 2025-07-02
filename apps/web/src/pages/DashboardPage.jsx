@@ -24,6 +24,7 @@ import CompositeCard from '../components/ui/CompositeCard.jsx';
 import StyledButton from '../components/ui/StyledButton.jsx';
 import StatusBadge from '../components/ui/StatusBadge.jsx';
 import RuleCreationModal from '../components/ui/RuleCreationModal.jsx';
+import InsightCard from '../components/ui/InsightCard.jsx';
 import { CheckCircle, Sparkles, TrendingUp, Zap, ArrowRight, X, Plus, BarChart3, Target } from 'lucide-react';
 import { useToast } from '../components/ui/use-toast';
 import storageService from '../lib/services/StorageService';
@@ -39,6 +40,7 @@ const DashboardPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showRuleModal, setShowRuleModal] = useState(false);
   const [userRules, setUserRules] = useState([]);
+  const [mockInsights, setMockInsights] = useState([]);
 
   // Check for onboarding completion and first rule creation
   useEffect(() => {
@@ -70,6 +72,46 @@ const DashboardPage = () => {
       
       setUserRules(rules);
       setHasData(rules.length > 0 || hasTransactions);
+      
+      // Generate mock insights if user has data
+      if (rules.length > 0 || hasTransactions) {
+        const insights = [
+          {
+            id: 1,
+            type: 'spending_trend',
+            title: 'Spending Trend',
+            description: 'Your spending is 15% lower this month compared to last month. Great job staying on budget!',
+            status: 'positive',
+            statusLabel: 'Improving',
+            value: '$2,450',
+            valueLabel: 'This Month',
+            action: 'Keep up the good work! Consider setting a savings goal.'
+          },
+          {
+            id: 2,
+            type: 'balance_alert',
+            title: 'Account Balance',
+            description: 'Your checking account balance is healthy. You have sufficient funds for upcoming expenses.',
+            status: 'positive',
+            statusLabel: 'Good',
+            value: '$8,750',
+            valueLabel: 'Current Balance',
+            action: 'Consider moving excess funds to savings for better returns.'
+          },
+          {
+            id: 3,
+            type: 'category_spending',
+            title: 'Top Spending Category',
+            description: 'Food & Dining is your highest spending category this month.',
+            status: 'warning',
+            statusLabel: 'Monitor',
+            value: '$650',
+            valueLabel: 'Food & Dining',
+            action: 'Review your dining out habits and consider cooking more at home.'
+          }
+        ];
+        setMockInsights(insights);
+      }
     }
   }, [user]);
 
@@ -78,7 +120,9 @@ const DashboardPage = () => {
   };
 
   const handleCreateFirstRule = () => {
+    console.log('Opening rule creation modal...');
     setShowRuleModal(true);
+    console.log('Modal state set to:', true);
   };
 
   const handleRuleCreated = (newRule) => {
@@ -245,6 +289,28 @@ const DashboardPage = () => {
       transition={{ duration: 0.6, delay: 0.4 }}
       style={{ marginTop: '2rem' }}
     >
+      {/* Financial Insights Section */}
+      <div style={{ marginBottom: '2rem' }}>
+        <h2 style={{ 
+          fontSize: 'var(--font-size-lg)',
+          fontWeight: 'var(--font-weight-semibold)',
+          color: 'var(--color-text-primary)',
+          margin: '0 0 1.5rem 0'
+        }}>
+          Your Financial Insights
+        </h2>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: '1.5rem'
+        }}>
+          {mockInsights.map((insight) => (
+            <InsightCard key={insight.id} insight={insight} />
+          ))}
+        </div>
+      </div>
+
+      {/* Rules Section */}
       <CompositeCard variant="elevated">
         <div style={{ padding: '2rem' }}>
           <div style={{ 
@@ -334,6 +400,13 @@ const DashboardPage = () => {
 
   return (
     <PageLayout title="Dashboard" description="Your main financial overview and insights">
+      {/* Rule Creation Modal - Render at top level */}
+      <RuleCreationModal
+        isOpen={showRuleModal}
+        onClose={() => setShowRuleModal(false)}
+        onRuleCreated={handleRuleCreated}
+      />
+      
       <AnimatePresence>
         {/* Success Banner for New Users */}
         {showSuccessBanner && (
@@ -547,13 +620,6 @@ const DashboardPage = () => {
           </CompositeCard>
         </motion.div>
       </motion.div>
-
-      {/* Rule Creation Modal */}
-      <RuleCreationModal
-        isOpen={showRuleModal}
-        onClose={() => setShowRuleModal(false)}
-        onRuleCreated={handleRuleCreated}
-      />
     </PageLayout>
   );
 };
