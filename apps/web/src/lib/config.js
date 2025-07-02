@@ -1,16 +1,13 @@
 /**
- * Application Configuration - STUBBED FOR MVEP PHASE 0
+ * Application Configuration - Phase 5 Plaid Integration Ready
  * 
- * TODO [MVEP_PHASE_1]:
- * This module is currently stubbed and non-functional.
- * Real configuration will be implemented in Phase 1 of the MVEP rebuild plan.
+ * Purpose: Provides centralized access to application settings and environment variables
+ * including Plaid configuration for Phase 5 production integration.
  * 
- * Purpose: Will provide centralized access to application settings and environment variables
- * 
- * Current Status: Auth0 removed, preparing for Firebase Auth
+ * Current Status: Plaid configuration added for Phase 5 integration
  */
 
-import { isDevelopment, isProduction, getFeatureFlag, getApiConfig, getUiConfig } from './env.js';
+import { isDevelopment, isProduction, getFeatureFlag, getApiConfig, getUiConfig, getPlaidConfig } from './env.js';
 
 // Base configuration
 export const config = {
@@ -25,6 +22,9 @@ export const config = {
   // API configuration
   api: getApiConfig(),
   
+  // Plaid configuration for Phase 5 integration
+  plaid: getPlaidConfig(),
+  
   // TODO [MVEP_PHASE_1]: Replace with Firebase Auth configuration
   auth: {
     // Firebase Auth configuration will be added here
@@ -38,6 +38,7 @@ export const config = {
     beta: getFeatureFlag('ENABLE_BETA', false),
     experimental: getFeatureFlag('ENABLE_EXPERIMENTAL', false),
     softLaunch: getFeatureFlag('ENABLE_SOFT_LAUNCH', true), // Galileo Initiative
+    plaidIntegration: getFeatureFlag('ENABLE_PLAID_INTEGRATION', true), // Phase 5
   },
   
   // UI configuration

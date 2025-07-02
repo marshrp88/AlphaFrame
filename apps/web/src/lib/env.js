@@ -8,6 +8,7 @@
  * 1. Use only Node.js process.env for environment variables
  * 2. Provide fallback values for missing variables
  * 3. Detect environment using NODE_ENV
+ * 4. Support Plaid configuration for Phase 5 integration
  * 
  * Conclusion: Eliminates import.meta.env conflicts in Jest while maintaining
  * compatibility with browser environments through process.env
@@ -35,6 +36,15 @@ export const getApiConfig = () => ({
   timeout: parseInt(getEnvVar('VITE_API_TIMEOUT', '10000')),
 });
 
+// Plaid configuration for Phase 5 integration
+export const getPlaidConfig = () => ({
+  clientId: getEnvVar('VITE_PLAID_CLIENT_ID', ''),
+  secret: getEnvVar('VITE_PLAID_SECRET', ''),
+  env: getEnvVar('VITE_PLAID_ENV', 'sandbox'), // sandbox, development, production
+  webhookUrl: getEnvVar('VITE_WEBHOOK_URL', ''),
+  webhookSecret: getEnvVar('VITE_WEBHOOK_SECRET', ''),
+});
+
 // UI configuration
 export const getUiConfig = () => ({
   theme: getEnvVar('VITE_DEFAULT_THEME', 'light'),
@@ -54,6 +64,12 @@ export const env = {
   VITE_ENABLE_EXPERIMENTAL: getEnvVar('VITE_ENABLE_EXPERIMENTAL', 'false'),
   VITE_DEFAULT_THEME: getEnvVar('VITE_DEFAULT_THEME', 'light'),
   VITE_ENABLE_ANIMATIONS: getEnvVar('VITE_ENABLE_ANIMATIONS', 'true'),
+  // Plaid configuration
+  VITE_PLAID_CLIENT_ID: getEnvVar('VITE_PLAID_CLIENT_ID', ''),
+  VITE_PLAID_SECRET: getEnvVar('VITE_PLAID_SECRET', ''),
+  VITE_PLAID_ENV: getEnvVar('VITE_PLAID_ENV', 'sandbox'),
+  VITE_WEBHOOK_URL: getEnvVar('VITE_WEBHOOK_URL', ''),
+  VITE_WEBHOOK_SECRET: getEnvVar('VITE_WEBHOOK_SECRET', ''),
 };
 
 export default env; 

@@ -1,13 +1,13 @@
 /**
- * Step1PlaidConnect.jsx - AlphaFrame VX.1 Finalization
+ * Step1PlaidConnect.jsx - Phase 5 Plaid Production Integration
  * 
  * Purpose: First onboarding step that guides users through
- * secure bank connection via Plaid OAuth flow.
+ * secure bank connection via Plaid OAuth flow using real Plaid API.
  * 
  * Procedure:
  * 1. Explain the security and benefits of bank connection
- * 2. Initiate Plaid OAuth flow
- * 3. Handle connection success/failure
+ * 2. Initiate Plaid OAuth flow using real PlaidService
+ * 3. Handle connection success/failure with proper error handling
  * 4. Store connection data for next steps
  * 
  * Conclusion: Establishes secure bank data foundation
@@ -18,7 +18,7 @@ import React, { useState, useEffect } from 'react';
 import Button from '../../../shared/ui/Button.jsx';
 import Card from '../../../shared/ui/Card.jsx';
 import { Shield, CreditCard, ArrowRight, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
-import { initializePlaid, createLinkToken, exchangePublicToken, getAccounts } from '../../../lib/services/syncEngine.js';
+import PlaidService from '../../../lib/services/PlaidService.js';
 import { config } from '../../../lib/config.js';
 import { useToast } from '../../../components/ui/use-toast.jsx';
 
@@ -31,16 +31,42 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [error, setError] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [plaidService] = useState(() => new PlaidService());
   const { toast } = useToast();
 
   // Check for existing connection data
   useEffect(() => {
-    if (data?.connected) {
-      setConnectionStatus('connected');
-      setAccounts(data.accounts || []);
-      setSelectedAccount(data.selectedAccount);
-    }
-  }, [data]);
+    const checkExistingConnection = async () => {
+      try {
+        if (data?.connected) {
+          setConnectionStatus('connected');
+          setAccounts(data.accounts || []);
+          setSelectedAccount(data.selectedAccount);
+        } else {
+          // Try to load stored connection
+          const isConnected = await plaidService.loadStoredAccessToken();
+          if (isConnected) {
+            const accountsData = await plaidService.fetchAccounts();
+            setAccounts(accountsData);
+            setConnectionStatus('connected');
+            
+            // Show success toast
+            toast({
+              title: "Bank Connection Restored",
+              description: `Successfully reconnected to ${accountsData.length} account(s).`,
+              variant: "default"
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Failed to check existing connection:', error);
+        // Clear invalid stored data
+        plaidService.clearAccessToken();
+      }
+    };
+
+    checkExistingConnection();
+  }, [data, plaidService, toast]);
 
   /**
    * Initialize Plaid connection
@@ -58,17 +84,9 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
         variant: "default"
       });
 
-      // Initialize Plaid client
-      await initializePlaid(
-        config.plaid.clientId,
-        config.plaid.secret,
-        config.plaid.env
-      );
-
-      // Create link token
-      const linkTokenResponse = await createLinkToken(
-        'user_' + Date.now(), // Temporary user ID
-        'AlphaFrame'
+      // Create link token using PlaidService
+      const linkTokenResponse = await plaidService.createLinkToken(
+        'user_' + Date.now() // Temporary user ID
       );
 
       // Store link token for callback
@@ -110,11 +128,11 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
         variant: "default"
       });
 
-      // Exchange public token for access token
-      const tokenResponse = await exchangePublicToken(publicToken);
+      // Exchange public token for access token using PlaidService
+      const tokenResponse = await plaidService.exchangePublicToken(publicToken);
       
-      // Get accounts
-      const accountsData = await getAccounts(tokenResponse.access_token);
+      // Get accounts using PlaidService
+      const accountsData = await plaidService.fetchAccounts();
       
       setAccounts(accountsData);
       setConnectionStatus('connected');
@@ -188,7 +206,7 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
     if (selectedAccount) {
       onComplete({
         connected: true,
-        accessToken: JSON.parse(localStorage.getItem('plaid_connection') || '{}').accessToken,
+        accessToken: plaidService.accessToken,
         selectedAccount,
         accounts
       });
@@ -201,188 +219,150 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
   const handleRetry = () => {
     setConnectionStatus('idle');
     setError(null);
-    setAccounts([]);
-    setSelectedAccount(null);
+    handleConnectBank();
+  };
+
+  /**
+   * Skip bank connection
+   */
+  const handleSkip = () => {
+    toast({
+      title: "Bank Connection Skipped",
+      description: "You can connect your bank account later in settings.",
+      variant: "default"
+    });
+    onSkip();
   };
 
   return (
-    <div className="space-y-6">
-      {/* Connection Status */}
-      {connectionStatus === 'idle' && (
-        <Card className="p-6">
-          <div className="text-center">
-            <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-              <CreditCard className="w-8 h-8 text-blue-600" />
-            </div>
-            
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Connect Your Bank Account
-            </h2>
-            
-            <p className="text-gray-600 mb-6">
-              Securely connect your bank account to import transactions and get started with AlphaFrame.
-            </p>
+    <div className="step-container">
+      <Card className="step-card">
+        <div className="step-header">
+          <div className="step-icon">
+            <Shield className="icon" />
+          </div>
+          <h2>Connect Your Bank Account</h2>
+          <p className="step-description">
+            Securely connect your bank account to enable automated financial insights and rule-based alerts.
+          </p>
+        </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="text-center">
-                <Shield className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                <h3 className="font-medium text-gray-900">Secure</h3>
-                <p className="text-sm text-gray-500">Bank-level encryption</p>
-              </div>
-              <div className="text-center">
-                <CreditCard className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                <h3 className="font-medium text-gray-900">Fast</h3>
-                <p className="text-sm text-gray-500">Instant transaction sync</p>
-              </div>
-              <div className="text-center">
-                <CheckCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                <h3 className="font-medium text-gray-900">Reliable</h3>
-                <p className="text-sm text-gray-500">Trusted by millions</p>
+        <div className="step-content">
+          {/* Security Information */}
+          <div className="security-info">
+            <div className="security-item">
+              <Shield className="security-icon" />
+              <div>
+                <h4>Bank-Level Security</h4>
+                <p>Your credentials are never stored. We use Plaid's secure OAuth flow.</p>
               </div>
             </div>
-
-            <Button
-              onClick={handleConnectBank}
-              disabled={isLoading}
-              className="w-full md:w-auto"
-            >
-              Connect Bank Account
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </div>
-        </Card>
-      )}
-
-      {/* Connecting State */}
-      {connectionStatus === 'connecting' && (
-        <Card className="p-6">
-          <div className="text-center">
-            <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-              <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
-            </div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Connecting to Your Bank
-            </h2>
-            <p className="text-gray-600 mb-4">
-              Please complete the secure connection in the popup window.
-            </p>
-            
-            {/* Progress indicators */}
-            <div className="flex justify-center space-x-2 mb-4">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-              <div className="w-2 h-2 bg-blue-300 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-              <div className="w-2 h-2 bg-blue-300 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-            </div>
-            
-            <div className="text-sm text-gray-500">
-              <p>🔒 Secure connection in progress</p>
-              <p>⏳ Please wait while we establish the connection</p>
+            <div className="security-item">
+              <CreditCard className="security-icon" />
+              <div>
+                <h4>Read-Only Access</h4>
+                <p>We can only view your transactions. We cannot make any changes to your accounts.</p>
+              </div>
             </div>
           </div>
-        </Card>
-      )}
 
-      {/* Connected State */}
-      {connectionStatus === 'connected' && (
-        <Card className="p-6">
-          <div className="text-center mb-6">
-            <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-              <CheckCircle className="w-8 h-8 text-green-600" />
-            </div>
-            
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Bank Connected Successfully!
-            </h2>
-            
-            <p className="text-gray-600">
-              We found {accounts.length} account{accounts.length !== 1 ? 's' : ''}. Select the account you&apos;d like to use with AlphaFrame.
-            </p>
-          </div>
-
-          {/* Account Selection */}
-          <div className="space-y-3">
-            {accounts.map((account) => (
-              <div
-                key={account.id}
-                className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-                  selectedAccount?.id === account.id
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-                onClick={() => handleAccountSelect(account)}
-                tabIndex={0}
-                role="button"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleAccountSelect(account);
-                  }
-                }}
+          {/* Connection Status */}
+          {connectionStatus === 'idle' && (
+            <div className="connection-prompt">
+              <Button 
+                onClick={handleConnectBank}
+                disabled={isConnecting}
+                className="connect-button"
               >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium text-gray-900">{account.name}</h3>
-                    <p className="text-sm text-gray-500">
-                      {account.type} • {account.subtype} • *******{account.mask}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-medium text-gray-900">
-                      ${account.balances.current?.toLocaleString() || '0'}
-                    </p>
-                    <p className="text-sm text-gray-500">Available</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-6 text-center">
-            <Button
-              onClick={handleComplete}
-              disabled={!selectedAccount || isLoading}
-              className="w-full md:w-auto"
-            >
-              Continue with Selected Account
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </div>
-        </Card>
-      )}
-
-      {/* Failed State */}
-      {connectionStatus === 'failed' && (
-        <Card className="p-6">
-          <div className="text-center">
-            <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-              <AlertCircle className="w-8 h-8 text-red-600" />
-            </div>
-            
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Connection Failed
-            </h2>
-            
-            <p className="text-gray-600 mb-4">
-              {error || 'We couldn&apos;t connect to your bank. Please try again.'}
-            </p>
-
-            <div className="space-x-3">
-              <Button
-                onClick={handleRetry}
-                variant="outline"
-              >
-                Try Again
+                {isConnecting ? (
+                  <>
+                    <Loader2 className="spinner" />
+                    Connecting...
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="icon" />
+                    Connect Bank Account
+                  </>
+                )}
               </Button>
-              
-              <Button
-                onClick={onSkip}
+              <Button 
+                onClick={handleSkip}
                 variant="outline"
+                className="skip-button"
               >
                 Skip for Now
               </Button>
             </div>
-          </div>
-        </Card>
-      )}
+          )}
+
+          {connectionStatus === 'connecting' && (
+            <div className="connection-status">
+              <Loader2 className="spinner" />
+              <p>Connecting to your bank...</p>
+            </div>
+          )}
+
+          {connectionStatus === 'connected' && (
+            <div className="connection-success">
+              <CheckCircle className="success-icon" />
+              <h3>Bank Account Connected!</h3>
+              
+              {accounts.length > 0 && (
+                <div className="accounts-list">
+                  <h4>Available Accounts:</h4>
+                  {accounts.map((account) => (
+                    <div 
+                      key={account.account_id}
+                      className={`account-item ${selectedAccount?.account_id === account.account_id ? 'selected' : ''}`}
+                      onClick={() => handleAccountSelect(account)}
+                    >
+                      <div className="account-info">
+                        <h5>{account.name}</h5>
+                        <p>{account.type} • {account.subtype}</p>
+                      </div>
+                      {selectedAccount?.account_id === account.account_id && (
+                        <CheckCircle className="selected-icon" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {selectedAccount && (
+                <Button 
+                  onClick={handleComplete}
+                  className="continue-button"
+                >
+                  Continue with {selectedAccount.name}
+                  <ArrowRight className="icon" />
+                </Button>
+              )}
+            </div>
+          )}
+
+          {connectionStatus === 'failed' && (
+            <div className="connection-error">
+              <AlertCircle className="error-icon" />
+              <h3>Connection Failed</h3>
+              <p>{error}</p>
+              <Button 
+                onClick={handleRetry}
+                className="retry-button"
+              >
+                Try Again
+              </Button>
+              <Button 
+                onClick={handleSkip}
+                variant="outline"
+                className="skip-button"
+              >
+                Skip for Now
+              </Button>
+            </div>
+          )}
+        </div>
+      </Card>
     </div>
   );
 };
