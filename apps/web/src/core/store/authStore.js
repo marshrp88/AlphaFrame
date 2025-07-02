@@ -1,25 +1,27 @@
 /**
- * AuthStore.js - STUBBED FOR MVEP PHASE 0
+ * AuthStore.js - PHASE 1 IMPLEMENTATION
  * 
- * TODO [MVEP_PHASE_1]:
- * This module is currently stubbed and non-functional.
- * Real authentication state management will be implemented in Phase 1 of the MVEP rebuild plan.
+ * TODO [MVEP_PHASE_2]:
+ * This module is currently using localStorage-based authentication.
+ * Will be upgraded to Firebase Auth in Phase 2 for production security.
  * 
- * Purpose: Will provide Zustand store for authentication state management
- * with real Firebase Auth integration and user session handling.
+ * Purpose: Provides Zustand store for authentication state management
+ * with working localStorage-based authentication and user session handling.
  * 
- * Current Status: All methods return false/null values
+ * Current Status: Functional authentication state management
  */
 
 import { create } from 'zustand';
 import { 
   initializeAuth, 
   login as authLogin, 
-  logout as authLogout, 
+  logout as authLogout,
+  register as authRegister,
   getCurrentUser, 
   isAuthenticated as checkAuth,
   getUserPermissions,
-  hasPermission
+  hasPermission,
+  updateProfile as authUpdateProfile
 } from '../../lib/services/AuthService.js';
 
 /**
@@ -29,7 +31,7 @@ export const useAuthStore = create((set, get) => ({
   // State
   user: null,
   isAuthenticated: false,
-  isLoading: false, // Set to false since auth is not implemented
+  isLoading: true,
   error: null,
   permissions: [],
   
@@ -38,8 +40,7 @@ export const useAuthStore = create((set, get) => ({
     set({ isLoading: true, error: null });
     
     try {
-      // TODO [MVEP_PHASE_1]: Replace with real initialization
-      // const success = await initializeAuth();
+      const success = await initializeAuth();
       
       const user = getCurrentUser();
       const authenticated = checkAuth();
@@ -52,7 +53,7 @@ export const useAuthStore = create((set, get) => ({
         isLoading: false
       });
       
-      return false; // Always false until Phase 1 implementation
+      return success;
     } catch (error) {
       set({
         error: error.message,
@@ -62,17 +63,53 @@ export const useAuthStore = create((set, get) => ({
     }
   },
   
-  login: async (options = {}) => {
+  register: async (userData) => {
     set({ isLoading: true, error: null });
     
     try {
-      // TODO [MVEP_PHASE_1]: Replace with real login
-      // const result = await authLogin(options);
+      const result = await authRegister(userData);
       
-      // For now, just set loading to false
-      set({ isLoading: false });
+      // Update state after successful registration
+      const user = getCurrentUser();
+      const authenticated = checkAuth();
+      const permissions = getUserPermissions();
       
-      throw new Error("Authentication not yet implemented. This will be added in Phase 1 of the MVEP rebuild.");
+      set({
+        user,
+        isAuthenticated: authenticated,
+        permissions,
+        isLoading: false
+      });
+      
+      return result;
+    } catch (error) {
+      set({
+        error: error.message,
+        isLoading: false
+      });
+      throw error;
+    }
+  },
+  
+  login: async (credentials) => {
+    set({ isLoading: true, error: null });
+    
+    try {
+      const result = await authLogin(credentials);
+      
+      // Update state after successful login
+      const user = getCurrentUser();
+      const authenticated = checkAuth();
+      const permissions = getUserPermissions();
+      
+      set({
+        user,
+        isAuthenticated: authenticated,
+        permissions,
+        isLoading: false
+      });
+      
+      return result;
     } catch (error) {
       set({
         error: error.message,
@@ -86,9 +123,9 @@ export const useAuthStore = create((set, get) => ({
     set({ isLoading: true, error: null });
     
     try {
-      // TODO [MVEP_PHASE_1]: Replace with real logout
-      // await authLogout();
+      const result = await authLogout();
       
+      // Clear state after logout
       set({
         user: null,
         isAuthenticated: false,
@@ -96,7 +133,33 @@ export const useAuthStore = create((set, get) => ({
         isLoading: false
       });
       
-      return { success: true };
+      return result;
+    } catch (error) {
+      set({
+        error: error.message,
+        isLoading: false
+      });
+      throw error;
+    }
+  },
+  
+  updateProfile: async (updates) => {
+    set({ isLoading: true, error: null });
+    
+    try {
+      const result = await authUpdateProfile(updates);
+      
+      // Update state after successful profile update
+      const user = getCurrentUser();
+      const permissions = getUserPermissions();
+      
+      set({
+        user,
+        permissions,
+        isLoading: false
+      });
+      
+      return result;
     } catch (error) {
       set({
         error: error.message,
@@ -127,5 +190,20 @@ export const useAuthStore = create((set, get) => ({
   
   clearError: () => {
     set({ error: null });
+  },
+  
+  // Computed values
+  hasPermission: (permission) => {
+    return hasPermission(permission);
+  },
+  
+  isAdmin: () => {
+    const { permissions } = get();
+    return permissions.includes('*');
+  },
+  
+  isPremium: () => {
+    const { permissions } = get();
+    return permissions.includes('send:notifications');
   }
 })); 

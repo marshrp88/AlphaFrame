@@ -1,17 +1,17 @@
 /**
- * App.jsx - STUBBED FOR MVEP PHASE 0
+ * App.jsx - PHASE 1 IMPLEMENTATION
  * 
- * TODO [MVEP_PHASE_1]:
- * This module is currently stubbed and non-functional.
- * Real authentication will be implemented in Phase 1 of the MVEP rebuild plan.
+ * TODO [MVEP_PHASE_2]:
+ * This module is currently using localStorage-based authentication.
+ * Will be upgraded to Firebase Auth in Phase 2 for production security.
  * 
- * Purpose: Will provide main application component with routing, authentication,
+ * Purpose: Provides main application component with routing, authentication,
  * onboarding flow, and error boundaries for production readiness.
  * 
- * Current Status: Auth0 removed, using stubbed authentication
+ * Current Status: Working authentication with localStorage-based auth
  */
 
-import React, { Suspense, lazy, useState } from "react";
+import React, { Suspense, lazy, useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import { ToastProvider } from "./components/ui/use-toast.jsx";
@@ -20,6 +20,7 @@ import DemoModeBanner from './components/ui/DemoModeBanner';
 import FeedbackButton from './components/ui/FeedbackButton.jsx';
 import SoftLaunchBanner from './components/ui/SoftLaunchBanner.jsx';
 import UserStateSnapshot from './components/ui/UserStateSnapshot.jsx';
+import { useAuthStore } from './core/store/authStore.js';
 
 // Import design system components
 import NavBar from "./components/ui/NavBar.jsx";
@@ -52,26 +53,179 @@ const PageLoader = () => (
   </div>
 );
 
-// Stubbed authentication hook for Phase 0
-const useStubbedAuth = () => {
-  return {
-    isAuthenticated: false,
-    isLoading: false,
-    user: null,
-    error: null,
-    loginWithRedirect: () => {
-      throw new Error("Authentication not yet implemented. This will be added in Phase 1 of the MVEP rebuild.");
-    },
-    logout: () => {
-      throw new Error("Authentication not yet implemented. This will be added in Phase 1 of the MVEP rebuild.");
+// Authentication component
+const AuthComponent = () => {
+  const { user, isAuthenticated, isLoading, error, login, logout, register } = useAuthStore();
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
+  const [authData, setAuthData] = useState({ email: '', password: '', name: '' });
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      await login({ email: authData.email, password: authData.password });
+      setShowLogin(false);
+      setAuthData({ email: '', password: '', name: '' });
+    } catch (error) {
+      console.error('Login failed:', error);
     }
   };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    try {
+      await register({ email: authData.email, password: authData.password, name: authData.name });
+      setShowRegister(false);
+      setAuthData({ email: '', password: '', name: '' });
+    } catch (error) {
+      console.error('Registration failed:', error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <StyledButton variant="secondary" size="sm" disabled>
+        <div className="flex items-center space-x-2">
+          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+          <span>Loading...</span>
+        </div>
+      </StyledButton>
+    );
+  }
+
+  if (isAuthenticated && user) {
+    return (
+      <div className="flex items-center space-x-2">
+        <StyledButton variant="secondary" size="sm">
+          <span className="user-avatar">👤</span>
+          <span className="user-name">{user.name || user.email}</span>
+        </StyledButton>
+        <StyledButton variant="outline" size="sm" onClick={handleLogout}>
+          Logout
+        </StyledButton>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center space-x-2">
+      <StyledButton 
+        variant="secondary" 
+        size="sm"
+        onClick={() => setShowLogin(true)}
+      >
+        Login
+      </StyledButton>
+      <StyledButton 
+        variant="outline" 
+        size="sm"
+        onClick={() => setShowRegister(true)}
+      >
+        Register
+      </StyledButton>
+
+      {/* Login Modal */}
+      {showLogin && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold mb-4">Login</h3>
+            <form onSubmit={handleLogin}>
+              <input
+                type="email"
+                placeholder="Email"
+                value={authData.email}
+                onChange={(e) => setAuthData({ ...authData, email: e.target.value })}
+                className="w-full p-2 border rounded mb-2"
+                required
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={authData.password}
+                onChange={(e) => setAuthData({ ...authData, password: e.target.value })}
+                className="w-full p-2 border rounded mb-4"
+                required
+              />
+              <div className="flex space-x-2">
+                <StyledButton type="submit" variant="default">
+                  Login
+                </StyledButton>
+                <StyledButton 
+                  type="button" 
+                  variant="outline"
+                  onClick={() => setShowLogin(false)}
+                >
+                  Cancel
+                </StyledButton>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Register Modal */}
+      {showRegister && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold mb-4">Register</h3>
+            <form onSubmit={handleRegister}>
+              <input
+                type="text"
+                placeholder="Name"
+                value={authData.name}
+                onChange={(e) => setAuthData({ ...authData, name: e.target.value })}
+                className="w-full p-2 border rounded mb-2"
+                required
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                value={authData.email}
+                onChange={(e) => setAuthData({ ...authData, email: e.target.value })}
+                className="w-full p-2 border rounded mb-2"
+                required
+              />
+              <input
+                type="password"
+                placeholder="Password (min 8 characters)"
+                value={authData.password}
+                onChange={(e) => setAuthData({ ...authData, password: e.target.value })}
+                className="w-full p-2 border rounded mb-4"
+                required
+                minLength={8}
+              />
+              <div className="flex space-x-2">
+                <StyledButton type="submit" variant="default">
+                  Register
+                </StyledButton>
+                <StyledButton 
+                  type="button" 
+                  variant="outline"
+                  onClick={() => setShowRegister(false)}
+                >
+                  Cancel
+                </StyledButton>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 // Navigation component with performance optimizations
 const Navigation = () => {
   const location = useLocation();
-  const { isAuthenticated, user } = useStubbedAuth();
+  const { isAuthenticated, user } = useAuthStore();
 
   const navigationItems = [
     { to: '/', label: 'Home' },
@@ -101,22 +255,7 @@ const Navigation = () => {
           
           <div className="navbar-actions">
             <DarkModeToggle />
-            {isAuthenticated ? (
-              <StyledButton variant="secondary" size="sm">
-                <span className="user-avatar">👤</span>
-                <span className="user-name">{user?.name || 'Account'}</span>
-              </StyledButton>
-            ) : (
-              <StyledButton 
-                variant="secondary" 
-                size="sm"
-                onClick={() => {
-                  throw new Error("Authentication not yet implemented. This will be added in Phase 1 of the MVEP rebuild.");
-                }}
-              >
-                Login (Not Implemented)
-              </StyledButton>
-            )}
+            <AuthComponent />
           </div>
         </div>
       </CompositeCard>
@@ -126,9 +265,17 @@ const Navigation = () => {
 
 // Move all logic that uses useNavigate into AppContent
 const AppContent = () => {
-  const { isLoading, error } = useStubbedAuth();
+  const { isLoading, error } = useAuthStore();
   const navigate = useNavigate();
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+
+  // Initialize auth on mount
+  useEffect(() => {
+    const initAuth = async () => {
+      await useAuthStore.getState().initialize();
+    };
+    initAuth();
+  }, []);
 
   // Show loading state
   if (isLoading) {
@@ -149,7 +296,7 @@ const AppContent = () => {
       <div className="app-error">
         <div className="error-container">
           <h2>Authentication Error</h2>
-          <p>{error.message}</p>
+          <p>{error}</p>
           <StyledButton onClick={() => navigate(0)}>
             Retry
           </StyledButton>
