@@ -13,7 +13,7 @@ import { canExecuteAction } from './PermissionEnforcer';
 import { useLogStore } from '../../core/store/logStore';
 import { ActionSchema } from '../validation/schemas';
 import { executeWebhook } from './WebhookService.js';
-import { sendEmail } from './NotificationService.js';
+import notificationService from './NotificationService.js';
 
 const PLAID_API_BASE = 'https://api.plaid.com';
 
