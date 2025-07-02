@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CompositeCard from './CompositeCard.jsx';
 import StyledButton from './StyledButton.jsx';
-import { X, Zap, Target, DollarSign, Calendar } from 'lucide-react';
+import { X, Zap, Target, DollarSign, Calendar, Sparkles, Shield, TrendingUp } from 'lucide-react';
 import { useToast } from './use-toast.jsx';
+import ruleTemplateService from '../../lib/services/RuleTemplateService.js';
 
 const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
   console.log('RuleCreationModal render - isOpen:', isOpen);
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [customizations, setCustomizations] = useState({});
+  const [templates, setTemplates] = useState([]);
+  const [showCustomForm, setShowCustomForm] = useState(false);
   const [ruleData, setRuleData] = useState({
     name: '',
     description: '',
@@ -18,6 +23,14 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
     frequency: 'monthly'
   });
 
+  // Load templates on mount
+  useEffect(() => {
+    if (isOpen) {
+      const allTemplates = ruleTemplateService.getAllTemplates();
+      setTemplates(allTemplates);
+    }
+  }, [isOpen]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -26,12 +39,20 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      const newRule = {
-        id: Date.now().toString(),
-        ...ruleData,
-        createdAt: new Date().toISOString(),
-        isActive: true
-      };
+      let newRule;
+      
+      if (selectedTemplate && !showCustomForm) {
+        // Create rule from template
+        newRule = ruleTemplateService.createRuleFromTemplate(selectedTemplate.id, customizations);
+      } else {
+        // Create custom rule
+        newRule = {
+          id: Date.now().toString(),
+          ...ruleData,
+          createdAt: new Date().toISOString(),
+          isActive: true
+        };
+      }
 
       // Save to localStorage
       const existingRules = JSON.parse(localStorage.getItem('alphaframe_user_rules') || '[]');
@@ -138,10 +159,109 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                 </StyledButton>
               </div>
 
-              {/* Form */}
+              {/* Template Selection or Custom Form */}
               <form onSubmit={handleSubmit}>
+                {!showCustomForm ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                  {/* Rule Name */}
+                  {/* Template Grid */}
+                  <div>
+                    <h3 style={{ 
+                      fontSize: 'var(--font-size-lg)',
+                      fontWeight: 'var(--font-weight-semibold)',
+                      color: 'var(--color-text-primary)',
+                      marginBottom: '1rem'
+                    }}>
+                      Choose a Rule Template
+                    </h3>
+                    <div style={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                      gap: '1rem'
+                    }}>
+                      {templates.map((template) => (
+                        <div
+                          key={template.id}
+                          onClick={() => setSelectedTemplate(template)}
+                          style={{
+                            padding: '1rem',
+                            border: `2px solid ${selectedTemplate?.id === template.id ? 'var(--color-primary-500)' : 'var(--color-border-primary)'}`,
+                            borderRadius: 'var(--radius-md)',
+                            backgroundColor: selectedTemplate?.id === template.id ? 'var(--color-primary-50)' : 'var(--color-surface)',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease'
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                            <span style={{ fontSize: '1.5rem' }}>{template.icon}</span>
+                            <h4 style={{ 
+                              fontSize: 'var(--font-size-base)',
+                              fontWeight: 'var(--font-weight-semibold)',
+                              color: 'var(--color-text-primary)',
+                              margin: 0
+                            }}>
+                              {template.name}
+                            </h4>
+                          </div>
+                          <p style={{ 
+                            fontSize: 'var(--font-size-sm)',
+                            color: 'var(--color-text-secondary)',
+                            margin: 0
+                          }}>
+                            {template.description}
+                          </p>
+                          <div style={{ 
+                            marginTop: '0.5rem',
+                            padding: '0.25rem 0.5rem',
+                            backgroundColor: 'var(--color-muted-100)',
+                            borderRadius: 'var(--radius-sm)',
+                            fontSize: 'var(--font-size-xs)',
+                            color: 'var(--color-text-secondary)',
+                            display: 'inline-block'
+                          }}>
+                            {template.difficulty} level
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Custom Rule Option */}
+                  <div style={{ 
+                    textAlign: 'center',
+                    padding: '1rem',
+                    border: '1px dashed var(--color-border-primary)',
+                    borderRadius: 'var(--radius-md)'
+                  }}>
+                    <p style={{ 
+                      fontSize: 'var(--font-size-sm)',
+                      color: 'var(--color-text-secondary)',
+                      marginBottom: '0.5rem'
+                    }}>
+                      Don't see what you need?
+                    </p>
+                    <StyledButton
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowCustomForm(true)}
+                    >
+                      Create Custom Rule
+                    </StyledButton>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                  {/* Back to Templates */}
+                  <div style={{ textAlign: 'left' }}>
+                    <StyledButton
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowCustomForm(false)}
+                    >
+                      ← Back to Templates
+                    </StyledButton>
+                  </div>
+
+                  {/* Custom Form Fields */}
                   <div>
                     <label style={{ 
                       display: 'block',
@@ -169,18 +289,9 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                         transition: 'all 0.2s ease',
                         outline: 'none'
                       }}
-                      onFocus={(e) => {
-                        e.target.style.borderColor = 'var(--color-primary-500)';
-                        e.target.style.boxShadow = '0 0 0 3px var(--color-primary-100)';
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.borderColor = 'var(--color-border-primary)';
-                        e.target.style.boxShadow = 'none';
-                      }}
                     />
                   </div>
 
-                  {/* Rule Type */}
                   <div>
                     <label style={{ 
                       display: 'block',
@@ -205,14 +316,6 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                         transition: 'all 0.2s ease',
                         outline: 'none'
                       }}
-                      onFocus={(e) => {
-                        e.target.style.borderColor = 'var(--color-primary-500)';
-                        e.target.style.boxShadow = '0 0 0 3px var(--color-primary-100)';
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.borderColor = 'var(--color-border-primary)';
-                        e.target.style.boxShadow = 'none';
-                      }}
                     >
                       <option value="spending_limit">Spending Limit</option>
                       <option value="savings_goal">Savings Goal</option>
@@ -221,7 +324,6 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                     </select>
                   </div>
 
-                  {/* Amount */}
                   <div>
                     <label style={{ 
                       display: 'block',
@@ -249,18 +351,9 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                         transition: 'all 0.2s ease',
                         outline: 'none'
                       }}
-                      onFocus={(e) => {
-                        e.target.style.borderColor = 'var(--color-primary-500)';
-                        e.target.style.boxShadow = '0 0 0 3px var(--color-primary-100)';
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.borderColor = 'var(--color-border-primary)';
-                        e.target.style.boxShadow = 'none';
-                      }}
                     />
                   </div>
 
-                  {/* Description */}
                   <div>
                     <label style={{ 
                       display: 'block',
@@ -288,17 +381,10 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                         transition: 'all 0.2s ease',
                         outline: 'none'
                       }}
-                      onFocus={(e) => {
-                        e.target.style.borderColor = 'var(--color-primary-500)';
-                        e.target.style.boxShadow = '0 0 0 3px var(--color-primary-100)';
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.borderColor = 'var(--color-border-primary)';
-                        e.target.style.boxShadow = 'none';
-                      }}
                     />
                   </div>
                 </div>
+              )}
 
                 {/* Actions */}
                 <div style={{ 
