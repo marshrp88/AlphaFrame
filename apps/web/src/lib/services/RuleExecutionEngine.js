@@ -1,123 +1,292 @@
 /**
- * RuleExecutionEngine.js - STUBBED FOR MVEP PHASE 0
- * 
- * TODO [MVEP_PHASE_3]:
- * This module is currently stubbed and non-functional.
- * Real rule execution will be implemented in Phase 3 of the MVEP rebuild plan.
- * 
- * Purpose: Will provide real-time rule evaluation and execution system that provides
- * immediate visual feedback when rules are triggered, creating the "Aha!"
- * moment where AlphaFrame becomes a genuinely trusted financial automation tool.
- * 
- * Current Status: All methods throw "Not yet implemented" errors
+ * RuleExecutionEngine.js - Production-Grade Rule Execution Engine (Phase 1)
+ *
+ * Purpose: Provides real-time rule evaluation and execution system for AlphaFrame.
+ * Evaluates user-defined rules against transaction data (mock or Firestore),
+ * emits structured results, and logs all evaluation events for reporting.
+ *
+ * CTO-Level Requirements:
+ * - Modular, testable, and production-ready
+ * - Supports both simulation and production data
+ * - Emits events for triggers, misses, and errors
+ * - Logs all evaluation attempts and results
+ * - Exposes composable API for integration with UI and reporting
+ */
+
+/**
+ * @typedef {Object} Rule
+ * @property {string} id
+ * @property {string} name
+ * @property {string} type
+ * @property {Object} conditions
+ * @property {Object} actions
+ * @property {boolean} enabled
+ */
+
+/**
+ * @typedef {Object} Transaction
+ * @property {string} id
+ * @property {string} date
+ * @property {number} amount
+ * @property {string} category
+ * @property {string} description
+ * @property {string} accountId
  */
 
 class RuleExecutionEngine {
   constructor() {
-    // TODO [MVEP_PHASE_3]: Initialize with real rule execution configuration
     this.isRunning = false;
     this.executionInterval = null;
     this.lastExecutionTime = null;
-    this.triggerHistory = new Map();
+    this.triggerHistory = [];
     this.activeRules = [];
     this.transactions = [];
+    this.eventLog = [];
+    this.listeners = [];
   }
 
   /**
    * Initialize the rule execution engine
-   * @param {Array} rules - User's active rules
-   * @param {Array} transactions - Transaction data to evaluate against
+   * @param {Rule[]} rules
+   * @param {Transaction[]} transactions
    */
-  async initialize(rules = [], transactions = null) {
-    throw new Error("Not yet implemented. This will be added in Phase 3 of the MVEP rebuild.");
+  async initialize(rules = [], transactions = []) {
+    this.activeRules = rules;
+    this.transactions = transactions;
+    this.isRunning = false;
+    this.lastExecutionTime = null;
+    this.triggerHistory = [];
+    this.eventLog = [];
+    this.listeners = [];
+  }
+
+  /**
+   * Register a listener for rule events
+   * @param {(event: Object) => void} listener
+   */
+  onEvent(listener) {
+    this.listeners.push(listener);
+  }
+
+  /**
+   * Emit an event to all listeners and log it
+   * @param {Object} event
+   */
+  emitEvent(event) {
+    this.eventLog.push({ ...event, timestamp: new Date().toISOString() });
+    this.listeners.forEach((listener) => listener(event));
   }
 
   /**
    * Start periodic rule evaluation
-   * @param {number} intervalMs - Evaluation interval in milliseconds (default: 30 seconds)
+   * @param {number} intervalMs
    */
-  async startPeriodicEvaluation(intervalMs = 30000) {
-    throw new Error("Not yet implemented. This will be added in Phase 3 of the MVEP rebuild.");
+  startPeriodicEvaluation(intervalMs = 30000) {
+    if (this.isRunning) return;
+    this.isRunning = true;
+    this.executionInterval = setInterval(() => {
+      this.evaluateAllRules();
+    }, intervalMs);
   }
 
   /**
    * Stop periodic rule evaluation
    */
-  async stopPeriodicEvaluation() {
-    throw new Error("Not yet implemented. This will be added in Phase 3 of the MVEP rebuild.");
+  stopPeriodicEvaluation() {
+    if (this.executionInterval) {
+      clearInterval(this.executionInterval);
+      this.executionInterval = null;
+    }
+    this.isRunning = false;
   }
 
   /**
    * Evaluate all rules against current transaction data
-   * @returns {Object} Evaluation results with triggers and insights
+   * Emits events for each rule evaluation
+   * @returns {Object} { results: Array, summary: Object, newTriggers: Array }
    */
-  async evaluateAllRules() {
-    throw new Error("Not yet implemented. This will be added in Phase 3 of the MVEP rebuild.");
-  }
-
-  /**
-   * Process rule evaluation results and identify new triggers
-   * @param {Array} results - Rule evaluation results
-   * @returns {Array} New rule triggers
-   */
-  async processRuleResults(results) {
-    throw new Error("Not yet implemented. This will be added in Phase 3 of the MVEP rebuild.");
-  }
-
-  /**
-   * Get trigger statistics
-   * @returns {Object} Trigger statistics
-   */
-  getTriggerStatistics() {
-    return {
-      total: 0,
-      today: 0,
-      thisWeek: 0,
-      byStatus: {
-        triggered: 0,
-        warning: 0
+  evaluateAllRules() {
+    if (!this.activeRules.length || !this.transactions.length) {
+      return { results: [], summary: { total: 0, triggered: 0, missed: 0 }, newTriggers: [] };
+    }
+    
+    const results = [];
+    const newTriggers = [];
+    
+    this.activeRules.forEach((rule) => {
+      if (!rule.enabled) return;
+      const result = this.evaluateRule(rule, this.transactions);
+      results.push(result);
+      this.emitEvent(result);
+      
+      if (result.status === 'triggered') {
+        this.triggerHistory.push({ ruleId: rule.id, time: new Date().toISOString() });
+        newTriggers.push(result);
       }
+    });
+    
+    this.lastExecutionTime = new Date().toISOString();
+    
+    const summary = {
+      total: results.length,
+      triggered: results.filter(r => r.status === 'triggered').length,
+      missed: results.filter(r => r.status === 'missed').length,
+      errors: results.filter(r => r.status === 'error').length
     };
+    
+    return { results, summary, newTriggers };
   }
 
   /**
-   * Add a new rule to the active rules
-   * @param {Object} rule - Rule to add
+   * Evaluate a single rule against transactions
+   * @param {Rule} rule
+   * @param {Transaction[]} transactions
+   * @returns {Object} Evaluation result
    */
-  async addRule(rule) {
-    throw new Error("Not yet implemented. This will be added in Phase 3 of the MVEP rebuild.");
+  evaluateRule(rule, transactions) {
+    try {
+      let triggered = false;
+      let matchedTx = null;
+      let message = '';
+      
+      if (rule.type === 'spending_limit') {
+        const { category, limit } = rule.conditions;
+        const total = transactions
+          .filter((tx) => tx.category === category)
+          .reduce((sum, tx) => sum + tx.amount, 0);
+        
+        if (total > limit) {
+          triggered = true;
+          matchedTx = transactions.find((tx) => tx.category === category && tx.amount > 0);
+          message = `Spending limit exceeded for ${category}: $${total.toFixed(2)} > $${limit}`;
+        } else {
+          message = `Spending within limit for ${category}: $${total.toFixed(2)} <= $${limit}`;
+        }
+      } else if (rule.type === 'balance_check') {
+        const { threshold } = rule.conditions;
+        const totalBalance = transactions
+          .filter((tx) => tx.amount > 0)
+          .reduce((sum, tx) => sum + tx.amount, 0);
+        
+        if (totalBalance < threshold) {
+          triggered = true;
+          message = `Balance below threshold: $${totalBalance.toFixed(2)} < $${threshold}`;
+        } else {
+          message = `Balance above threshold: $${totalBalance.toFixed(2)} >= $${threshold}`;
+        }
+      } else {
+        // Unknown rule type
+        return {
+          ruleId: rule.id,
+          ruleName: rule.name,
+          status: 'error',
+          error: `Unknown rule type: ${rule.type}`,
+          evaluatedAt: new Date().toISOString(),
+          message: `Rule type '${rule.type}' is not supported`
+        };
+      }
+      
+      return {
+        ruleId: rule.id,
+        ruleName: rule.name,
+        status: triggered ? 'triggered' : 'missed',
+        matchedTransaction: matchedTx,
+        evaluatedAt: new Date().toISOString(),
+        message: message,
+        metrics: {
+          totalSpent: rule.type === 'spending_limit' ? 
+            transactions.filter((tx) => tx.category === rule.conditions.category)
+              .reduce((sum, tx) => sum + tx.amount, 0) : undefined,
+          threshold: rule.conditions.limit || rule.conditions.threshold
+        }
+      };
+    } catch (error) {
+      return {
+        ruleId: rule.id,
+        ruleName: rule.name,
+        status: 'error',
+        error: error.message,
+        evaluatedAt: new Date().toISOString(),
+        message: `Error evaluating rule: ${error.message}`
+      };
+    }
   }
 
   /**
-   * Remove a rule from active rules
-   * @param {string} ruleId - ID of rule to remove
+   * Add a new rule
+   * @param {Rule} rule
    */
-  async removeRule(ruleId) {
-    throw new Error("Not yet implemented. This will be added in Phase 3 of the MVEP rebuild.");
+  addRule(rule) {
+    this.activeRules.push(rule);
+  }
+
+  /**
+   * Remove a rule by ID
+   * @param {string} ruleId
+   */
+  removeRule(ruleId) {
+    this.activeRules = this.activeRules.filter((r) => r.id !== ruleId);
   }
 
   /**
    * Update transaction data
-   * @param {Array} transactions - New transaction data
+   * @param {Transaction[]} transactions
    */
-  async updateTransactions(transactions) {
-    throw new Error("Not yet implemented. This will be added in Phase 3 of the MVEP rebuild.");
+  updateTransactions(transactions) {
+    this.transactions = transactions;
   }
 
   /**
    * Get engine status
-   * @returns {Object} Engine status information
+   * @returns {Object}
    */
   getStatus() {
     return {
-      isRunning: false,
-      lastExecutionTime: null,
-      activeRules: 0,
-      transactionCount: 0,
-      triggerCount: 0,
+      isRunning: this.isRunning,
+      lastExecutionTime: this.lastExecutionTime,
+      activeRules: this.activeRules.length,
+      transactionCount: this.transactions.length,
+      triggerCount: this.triggerHistory.length,
       statistics: this.getTriggerStatistics(),
-      status: "Not implemented - Phase 3"
+      status: 'OK',
     };
+  }
+
+  /**
+   * Get trigger statistics
+   * @returns {Object}
+   */
+  getTriggerStatistics() {
+    const today = new Date().toISOString().slice(0, 10);
+    const todayTriggers = this.triggerHistory.filter((t) => t.time.slice(0, 10) === today).length;
+    return {
+      total: this.triggerHistory.length,
+      today: todayTriggers,
+      byStatus: {
+        triggered: this.triggerHistory.length,
+        warning: 0, // Extend as needed
+      },
+    };
+  }
+
+  /**
+   * Get event log
+   * @returns {Object[]}
+   */
+  getEventLog() {
+    return this.eventLog;
+  }
+
+  /**
+   * Get recent triggers within specified hours
+   * @param {number} hours - Number of hours to look back
+   * @returns {Object[]}
+   */
+  getRecentTriggers(hours = 24) {
+    const cutoffTime = new Date(Date.now() - hours * 60 * 60 * 1000);
+    return this.triggerHistory.filter(trigger => 
+      new Date(trigger.time) > cutoffTime
+    );
   }
 }
 

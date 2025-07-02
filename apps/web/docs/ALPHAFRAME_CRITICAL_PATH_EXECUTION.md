@@ -1,4 +1,28 @@
 # AlphaFrame Critical Path to Customer Readiness
+
+---
+
+## 🚦 Canonical Directive (Effective January 2025)
+
+**This document is the canonical strategic execution roadmap for all engineering and design work from January to April 2025.**
+
+- **Supersession:** This roadmap supersedes all previous roadmaps (Helios, Phase X, Galileo 1.0) unless explicitly amended by leadership.
+- **Preconditions:**
+  1. At least one user-defined rule must execute successfully against either mock or real data and produce a visible dashboard insight.
+  2. The onboarding flow must guide a user through rule setup that triggers an actual system response.
+  3. Plaid production integration must be live, OR simulation mode must mimic production-grade data fidelity.
+- **No new design systems, performance tuning, onboarding animations, or UI refreshes are to be started until the above preconditions are met.**
+- **Immediate Action:**
+  - Begin execution on Phase 1: Functional Rule Execution Layer.
+  - Prepare reporting infrastructure to monitor:
+    - Rule trigger rates
+    - Time to insight
+    - Simulation vs. real data adoption
+    - Dropoff during onboarding or rule creation
+  - Ensure all progress is trackable, composable, and logged at the file/component level.
+
+---
+
 ## Rank-Ordered Implementation Directive
 
 **Document Type:** CTO Implementation Directive  
