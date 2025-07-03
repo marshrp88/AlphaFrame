@@ -219,7 +219,7 @@ const Step5GuidedRuleCreation = ({ onComplete }) => {
           </AnimatePresence>
         </motion.div>
       </CompositeCard>
-      <style jsx>{`
+      <style>{`
         .guided-rule-creation {
           padding: 2rem 0;
         }

@@ -301,7 +301,7 @@ const Step4AutomationEducation = ({ onComplete, onStartDemo, automationDemoActiv
         </motion.div>
       </motion.div>
 
-      <style jsx>{`
+      <style>{`
         .automation-education {
           padding: 2rem 0;
         }
