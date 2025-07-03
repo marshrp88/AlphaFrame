@@ -542,4 +542,9 @@ export const subscribeToCollection = (collectionName, filters = {}, callback) =>
     console.error(`Failed to subscribe to ${collectionName}:`, error);
     throw error;
   }
-}; 
+};
+
+export const getDemoTransactions = () => ([
+  { id: 'demo1', description: 'Spotify', amount: 9.99, date: '2025-06-02' },
+  { id: 'demo2', description: 'Gas', amount: 44.90, date: '2025-06-05' },
+]);

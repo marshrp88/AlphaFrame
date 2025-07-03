@@ -35,7 +35,7 @@ import {
   Sparkles
 } from 'lucide-react';
 
-const Step4AutomationEducation = ({ onComplete, onStartDemo, automationDemoActive }) => {
+const Step4AutomationEducation = ({ onComplete, onSkip, data, isLoading }) => {
   const [currentSection, setCurrentSection] = useState(0);
   const [demoActive, setDemoActive] = useState(false);
   const [ruleMapVisible, setRuleMapVisible] = useState(false);
@@ -83,18 +83,26 @@ const Step4AutomationEducation = ({ onComplete, onStartDemo, automationDemoActiv
 
   const startDemo = () => {
     setDemoActive(true);
-    if (onStartDemo) {
-      onStartDemo();
+  };
+
+  const handleContinue = () => {
+    if (isLoading) return;
+
+    if (onSkip) {
+      onSkip();
+    }
+
+    if (onComplete) {
+      onComplete({
+        automationUnderstood: true,
+        demoCompleted: demoActive,
+        sectionsViewed: currentSection + 1
+      });
     }
   };
 
-  const handleComplete = () => {
-    onComplete({
-      automationUnderstood: true,
-      demoCompleted: demoActive,
-      sectionsViewed: currentSection + 1
-    });
-  };
+  // DEMO MODE: Always allow progression
+  const isDemo = !window.user || window.demoUser;
 
   return (
     <div className="automation-education">
@@ -288,7 +296,7 @@ const Step4AutomationEducation = ({ onComplete, onStartDemo, automationDemoActiv
         >
           <StyledButton
             variant="primary"
-            onClick={handleComplete}
+            onClick={handleContinue}
             className="continue-button"
           >
             Create My First Rule

@@ -9,6 +9,7 @@ import { useAppStore } from '@/core/store/useAppStore';
 import CompositeCard from '../ui/CompositeCard.jsx';
 import StyledButton from '../ui/StyledButton.jsx';
 import './PlaidActionForm.css';
+import Label from '@/shared/ui/Label';
 
 /**
  * PlaidActionForm Component

@@ -43,11 +43,29 @@ const TRANSACTION_CATEGORIES = [
 /**
  * Transaction review step component
  */
-const Step2ReviewTransactions = ({ onComplete, onSkip, isLoading }) => {
+const Step2ReviewTransactions = ({ onComplete, onSkip, data, isLoading }) => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedTransactions, setSelectedTransactions] = useState(new Set());
+
+  // DEMO MODE: Inject mock transactions and auto-complete if no user
+  useEffect(() => {
+    const isDemo = !window.user || window.demoUser;
+    if (isDemo) {
+      const mockTxns = [
+        { id: 'txn1', date: '2024-07-01', amount: -50, description: 'Demo Grocery Store' },
+        { id: 'txn2', date: '2024-07-02', amount: -20, description: 'Demo Gas Station' },
+        { id: 'txn3', date: '2024-07-03', amount: 1000, description: 'Demo Paycheck' }
+      ];
+      setTransactions(mockTxns);
+      setError(null);
+      // Immediately complete step in demo mode
+      if (onComplete) {
+        setTimeout(() => onComplete({ transactions: mockTxns, demo: true }), 500);
+      }
+    }
+  }, [onComplete]);
 
   // Load transactions on mount
   useEffect(() => {

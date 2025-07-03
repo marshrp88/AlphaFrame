@@ -83,39 +83,16 @@ const OnboardingPage = () => {
     }
   }, [isAuthenticated, isLoading, user, navigate, toast]);
 
-  // Handle onboarding completion
-  const handleOnboardingComplete = (onboardingData) => {
-    const completedState = {
-      userId: user?.id,
-      started: true,
-      currentStep: 4,
-      completed: true,
-      completedAt: new Date().toISOString(),
-      data: onboardingData
-    };
-    
-    // Save to localStorage using enhanced service
-    const saveSuccess = storageService.setOnboardingState(completedState);
-    
-    if (!saveSuccess) {
-      console.warn('Failed to save onboarding state, but continuing...');
+  const handleOnboardingComplete = () => {
+    const isDemo = !user;
+    if (isDemo) {
+      localStorage.setItem('alphaframe_onboarding_complete', 'true');
+      sessionStorage.setItem('demo_user', 'true');
+      navigate('/dashboard');
+      return;
     }
-    
-    // Show success message
-    toast({
-      title: "🎉 Welcome to AlphaFrame!",
-      description: "Your account is set up and ready to go. Let's explore your dashboard!",
-      variant: "default"
-    });
-    
-    // Redirect to dashboard with success state
-    navigate('/dashboard', { 
-      replace: true,
-      state: { 
-        onboardingComplete: true,
-        firstRuleCreated: onboardingData.firstRule
-      }
-    });
+    // ✅ Insert your real user completion logic below this
+    completeOnboardingWithBackend(user);
   };
 
   // Show loading state

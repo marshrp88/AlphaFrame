@@ -7,7 +7,7 @@
 import { useState, useEffect } from 'react';
 import Input from "@/shared/ui/Input";
 import Textarea from "@/shared/ui/textarea";
-import Label from "@/shared/ui/Label";
+import Label from '@/shared/ui/Label';
 
 /**
  * WebhookActionForm Component

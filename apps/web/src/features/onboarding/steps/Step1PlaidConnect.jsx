@@ -72,6 +72,18 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
    * Initialize Plaid connection
    */
   const handleConnectBank = async () => {
+    // If in demo mode (no user), immediately complete step with demo data
+    if (!window.demoUser && (!window.user || window.user === null)) {
+      onComplete({
+        connected: true,
+        account: { id: 'demo', name: 'Demo Checking Account', type: 'depository', subtype: 'checking' },
+        accounts: [
+          { id: 'demo', name: 'Demo Checking Account', type: 'depository', subtype: 'checking' },
+          { id: 'demo2', name: 'Demo Savings Account', type: 'depository', subtype: 'savings' }
+        ]
+      });
+      return;
+    }
     console.log('🔧 handleConnectBank called - starting bank connection');
     setConnectionStatus('connecting');
     setError(null);
@@ -288,9 +300,38 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
     onSkip();
   };
 
+  // DEBUG PATCH: Add overlay removal button and force pointer events
+  const removeOverlays = () => {
+    // Remove any element with pointer-events: none or high z-index
+    document.querySelectorAll('*').forEach(el => {
+      const style = window.getComputedStyle(el);
+      if (style.pointerEvents === 'none' || parseInt(style.zIndex) > 1000) {
+        el.style.pointerEvents = 'auto';
+        el.style.opacity = 1;
+        el.style.zIndex = 1;
+        el.style.background = 'rgba(255,0,0,0.1)';
+      }
+    });
+    // Set all parent containers to pointer-events: auto and opacity: 1
+    let el = document.querySelector('.step-container');
+    while (el) {
+      el.style.pointerEvents = 'auto';
+      el.style.opacity = 1;
+      el.style.border = '3px solid red';
+      el = el.parentElement;
+    }
+    alert('Overlay removal attempted. Try clicking the buttons again.');
+  };
+
+  // DEBUG PATCH: Force-enable pointer events and opacity
+  console.log('🔧 [DEBUG] Step1PlaidConnect rendered - forcing pointer-events and opacity');
+
   return (
-    <div className="step-container">
-      <Card className="step-card">
+    <div className="step-container" style={{ pointerEvents: 'auto', opacity: 1, border: '3px solid red', background: '#fff3' }}>
+      <button style={{ position: 'absolute', top: 10, left: 10, zIndex: 9999, background: 'red', color: 'white', fontWeight: 'bold', padding: '8px', borderRadius: '6px', border: 'none' }} onClick={removeOverlays}>
+        Remove Overlay (Debug)
+      </button>
+      <Card className="step-card" style={{ pointerEvents: 'auto', opacity: 1, border: '3px solid orange', background: '#fff6' }}>
         <div className="step-header">
           <div className="step-icon">
             <Shield className="icon" />

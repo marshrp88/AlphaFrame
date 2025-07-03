@@ -28,7 +28,10 @@ const CATEGORIES = [
   { label: 'Transportation', value: 'transportation', icon: <CheckCircle size={18} /> },
 ];
 
-const Step5GuidedRuleCreation = ({ onComplete }) => {
+const Step5GuidedRuleCreation = ({ onComplete, onSkip, data, isLoading }) => {
+  // DEMO MODE: Always allow progression
+  const isDemo = !window.user || window.demoUser;
+
   // State for the rule creation steps
   const [step, setStep] = useState(1); // 1: pick category, 2: set threshold, 3: confirm
   const [category, setCategory] = useState('food');
@@ -53,6 +56,13 @@ const Step5GuidedRuleCreation = ({ onComplete }) => {
 
   // Step 3: Confirm and "create" the rule
   const handleCreateRule = () => {
+    if (isDemo) {
+      onComplete && onComplete({
+        rule: { id: 'demo-rule', name: 'Demo Rule', condition: 'Spending > $100', action: 'Notify' },
+        demo: true
+      });
+      return;
+    }
     setRuleCreated(true);
     // Show a toast to confirm rule creation
     automationToast({

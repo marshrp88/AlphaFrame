@@ -24,11 +24,26 @@ import { PieChart, DollarSign, TrendingUp, ArrowRight, Plus, Trash2 } from 'luci
 /**
  * Budget setup step component
  */
-const Step3BudgetSetup = ({ onComplete, data, isLoading }) => {
+const Step3BudgetSetup = ({ onComplete, onSkip, data, isLoading }) => {
+  const [budgets, setBudgets] = useState([]);
+  const [error, setError] = useState(null);
   const [budgetCategories, setBudgetCategories] = useState([]);
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalBudget, setTotalBudget] = useState(0);
   const [newCategory, setNewCategory] = useState({ name: '', limit: '' });
+
+  // DEMO MODE: Inject mock budgets if no user
+  useEffect(() => {
+    const isDemo = !window.user || window.demoUser;
+    if (isDemo) {
+      setBudgets([
+        { id: 'cat1', name: 'Groceries', limit: 300 },
+        { id: 'cat2', name: 'Gas', limit: 100 },
+        { id: 'cat3', name: 'Rent', limit: 1200 }
+      ]);
+      setError(null);
+    }
+  }, []);
 
   // Initialize budget from transaction data
   useEffect(() => {
