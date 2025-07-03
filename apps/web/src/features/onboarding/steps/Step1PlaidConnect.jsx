@@ -72,6 +72,7 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
    * Initialize Plaid connection
    */
   const handleConnectBank = async () => {
+    console.log('🔧 handleConnectBank called - starting bank connection');
     setConnectionStatus('connecting');
     setError(null);
     setIsConnecting(true);
@@ -84,7 +85,59 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
         variant: "default"
       });
 
-      // Create link token using PlaidService
+      // DEMO MODE: Check if Plaid credentials are configured
+      const hasPlaidCredentials = plaidService.clientId && plaidService.secret;
+      console.log('🔧 Plaid credentials check:', { hasPlaidCredentials, clientId: plaidService.clientId ? 'present' : 'missing', secret: plaidService.secret ? 'present' : 'missing' });
+      
+      if (!hasPlaidCredentials) {
+        console.log('🔧 Demo mode: No Plaid credentials, simulating bank connection');
+        
+        // Simulate connection delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Create demo accounts
+        const demoAccounts = [
+          {
+            account_id: 'demo_checking_1',
+            name: 'Demo Checking Account',
+            type: 'depository',
+            subtype: 'checking',
+            mask: '1234',
+            balances: {
+              available: 5000.00,
+              current: 5000.00,
+              limit: null
+            }
+          },
+          {
+            account_id: 'demo_savings_1', 
+            name: 'Demo Savings Account',
+            type: 'depository',
+            subtype: 'savings',
+            mask: '5678',
+            balances: {
+              available: 15000.00,
+              current: 15000.00,
+              limit: null
+            }
+          }
+        ];
+        
+        console.log('🔧 Demo accounts created:', demoAccounts);
+        setAccounts(demoAccounts);
+        setConnectionStatus('connected');
+        
+        // Show success toast
+        toast({
+          title: "Demo Bank Connected!",
+          description: `Successfully connected ${demoAccounts.length} demo account(s).`,
+          variant: "default"
+        });
+        
+        return;
+      }
+
+      // Real Plaid connection (when credentials are available)
       const linkTokenResponse = await plaidService.createLinkToken(
         'user_' + Date.now() // Temporary user ID
       );
@@ -102,6 +155,7 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
       handler.open();
 
     } catch (error) {
+      console.error('🔧 Bank connection error:', error);
       setError('Failed to connect to your bank. Please try again.');
       setConnectionStatus('failed');
       
@@ -269,6 +323,17 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
           {/* Connection Status */}
           {connectionStatus === 'idle' && (
             <div className="connection-prompt">
+              {/* Test button to verify clicks work */}
+              <Button 
+                onClick={() => {
+                  console.log('🔧 Test button clicked!');
+                  alert('Test button works!');
+                }}
+                style={{ marginBottom: '10px' }}
+              >
+                Test Button (Click Me)
+              </Button>
+              
               <Button 
                 onClick={handleConnectBank}
                 disabled={isConnecting}
