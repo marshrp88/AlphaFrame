@@ -17,7 +17,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuthStore } from '../core/store/authStore';
 import OnboardingFlow from '../features/onboarding/OnboardingFlow';
 import PageLayout from '../components/PageLayout';
 import CompositeCard from '../components/ui/CompositeCard';
@@ -27,22 +27,39 @@ import { useToast } from '../components/ui/use-toast';
 import storageService from '../lib/services/StorageService';
 
 const OnboardingPage = () => {
-  const { isAuthenticated, user, isLoading } = useAuth0();
+  const { user, isAuthenticated, isLoading } = useAuthStore();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [onboardingState, setOnboardingState] = useState(null);
 
   // Check onboarding state on mount
   useEffect(() => {
-    if (!isLoading && isAuthenticated && user?.sub) {
+    // TEMPORARY DEMO MODE: If Firebase is not configured, allow demo access
+    const isDemoMode = !user && !isAuthenticated && !isLoading;
+    
+    if (isDemoMode) {
+      // Demo mode - show onboarding without authentication
+      console.log('🔧 Demo mode: Showing onboarding without authentication');
+      setOnboardingState({
+        userId: 'demo-user',
+        started: true,
+        currentStep: 1,
+        completed: false,
+        data: {},
+        isDemoMode: true
+      });
+      return;
+    }
+    
+    if (!isLoading && isAuthenticated && user?.id) {
       // Set user ID for storage isolation
-      storageService.setUserId(user.sub);
+      storageService.setUserId(user.id);
       
       // Get stored onboarding state using enhanced service
       const userOnboardingState = storageService.getOnboardingState();
       
       // Check if user has completed onboarding
-      if (userOnboardingState?.completed && userOnboardingState?.userId === user.sub) {
+      if (userOnboardingState?.completed && userOnboardingState?.userId === user.id) {
         // User has completed onboarding, redirect to dashboard
         toast({
           title: "Welcome Back!",
@@ -53,7 +70,7 @@ const OnboardingPage = () => {
       } else {
         // New user or incomplete onboarding - ALWAYS show onboarding
         setOnboardingState(userOnboardingState || {
-          userId: user.sub,
+          userId: user.id,
           started: true,
           currentStep: 1,
           completed: false,
@@ -69,7 +86,7 @@ const OnboardingPage = () => {
   // Handle onboarding completion
   const handleOnboardingComplete = (onboardingData) => {
     const completedState = {
-      userId: user?.sub,
+      userId: user?.id,
       started: true,
       currentStep: 4,
       completed: true,
@@ -116,8 +133,8 @@ const OnboardingPage = () => {
     );
   }
 
-  // Show login prompt if not authenticated
-  if (!isAuthenticated) {
+  // Show login prompt if not authenticated (but allow demo mode)
+  if (!isAuthenticated && !onboardingState?.isDemoMode) {
     return (
       <PageLayout title="Welcome to AlphaFrame" description="Get started with intelligent financial management">
         <CompositeCard>
