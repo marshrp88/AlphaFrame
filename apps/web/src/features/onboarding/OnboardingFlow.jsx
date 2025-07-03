@@ -292,14 +292,10 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
    */
   const handleOnboardingComplete = () => {
     const isDemo = !user;
-    if (isDemo) {
-      localStorage.setItem('alphaframe_onboarding_complete', 'true');
-      sessionStorage.setItem('demo_user', 'true');
-      navigate('/dashboard');
-      return;
-    }
-    // ✅ Insert your real user completion logic below this
-    completeOnboardingWithBackend(user);
+    localStorage.setItem('alphaframe_onboarding_complete', 'true');
+    if (isDemo) sessionStorage.setItem('demo_user', 'true');
+    if (onComplete) onComplete({ demo: isDemo });
+    navigate('/dashboard');
   };
 
   /**

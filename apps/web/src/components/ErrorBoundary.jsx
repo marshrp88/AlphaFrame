@@ -23,7 +23,7 @@ import './ErrorBoundary.css';
 import env from '../lib/env.js';
 import { useNavigate } from 'react-router-dom';
 
-class ErrorBoundary extends React.Component {
+export class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 

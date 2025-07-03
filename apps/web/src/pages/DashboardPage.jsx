@@ -15,12 +15,8 @@ const DashboardPage = () => {
 
   useEffect(() => {
     const isDemo = sessionStorage.getItem('demo_user') === 'true';
-    const onboardingComplete = localStorage.getItem('alphaframe_onboarding_complete') === 'true';
-
-    if (!user && !isDemo) {
-      navigate('/onboarding');
-      return;
-    }
+    const hasCompleted = localStorage.getItem('alphaframe_onboarding_complete');
+    if (!hasCompleted) navigate('/onboarding');
 
     if (isDemo) {
       setTransactions(mockTransactions);
