@@ -256,6 +256,7 @@ const Step4SetMode = ({ onComplete, data, isLoading }) => {
             onClick={handleComplete}
             disabled={isLoading}
             className="flex items-center mx-auto"
+            data-testid="onboarding-continue"
           >
             Complete Setup
             <ArrowRight className="w-4 h-4 ml-2" />

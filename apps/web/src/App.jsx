@@ -22,7 +22,6 @@ import SoftLaunchBanner from './components/ui/SoftLaunchBanner.jsx';
 import UserStateSnapshot from './components/ui/UserStateSnapshot.jsx';
 import { useAuthStore } from './core/store/authStore.js';
 import { useDataStore } from './core/store/dataStore.js';
-import { ErrorBoundary as NewErrorBoundary } from './components/ErrorBoundary';
 
 // Import design system components
 import NavBar from "./components/ui/NavBar.jsx";
@@ -338,11 +337,11 @@ const AppContent = () => {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             {/* Protected Routes with new page shells */}
-            <Route path="/dashboard" element={<NewErrorBoundary><DashboardPage /></NewErrorBoundary>} />
+            <Route path="/dashboard" element={<ErrorBoundary><DashboardPage /></ErrorBoundary>} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/rules" element={<RulesPage />} />
             <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/onboarding" element={<NewErrorBoundary><OnboardingPage /></NewErrorBoundary>} />
+            <Route path="/onboarding" element={<ErrorBoundary><OnboardingPage /></ErrorBoundary>} />
             {/* TODO [MVEP_PHASE_5]: Re-enable upgrade route when monetization is implemented */}
             {/* <Route path="/upgrade" element={<UpgradePage />} /> */}
             <Route path="/alphapro" element={<AlphaPro />} />

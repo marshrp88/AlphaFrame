@@ -326,6 +326,10 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
   // DEBUG PATCH: Force-enable pointer events and opacity
   console.log('🔧 [DEBUG] Step1PlaidConnect rendered - forcing pointer-events and opacity');
 
+  // Detect demo mode
+  const isDemo = sessionStorage.getItem('demo_user') === 'true';
+  if (isDemo) console.log('[DEMO] Step1PlaidConnect: Rendering Continue button');
+
   return (
     <div className="step-container" style={{ pointerEvents: 'auto', opacity: 1, border: '3px solid red', background: '#fff3' }}>
       <button style={{ position: 'absolute', top: 10, left: 10, zIndex: 9999, background: 'red', color: 'white', fontWeight: 'bold', padding: '8px', borderRadius: '6px', border: 'none' }} onClick={removeOverlays}>
@@ -469,6 +473,16 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
           )}
         </div>
       </Card>
+      {isDemo && (
+        <Button
+          data-testid="onboarding-continue"
+          onClick={() => onComplete && onComplete({ demo: true })}
+          className="continue-button"
+          style={{ marginTop: '2rem' }}
+        >
+          Continue
+        </Button>
+      )}
     </div>
   );
 };

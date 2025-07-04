@@ -22,8 +22,9 @@ import CompositeCard from './ui/CompositeCard';
 import './ErrorBoundary.css';
 import env from '../lib/env.js';
 import { useNavigate } from 'react-router-dom';
+import ResetDemoButton from './ui/ResetDemoButton';
 
-export class ErrorBoundary extends React.Component {
+export default class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
@@ -169,12 +170,11 @@ export class ErrorBoundary extends React.Component {
               </p>
             </div>
           </CompositeCard>
+          <ResetDemoButton />
         </div>
       );
     }
 
     return this.props.children;
   }
-}
-
-export default ErrorBoundary; 
+} 

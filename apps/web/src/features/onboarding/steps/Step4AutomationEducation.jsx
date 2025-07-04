@@ -101,8 +101,9 @@ const Step4AutomationEducation = ({ onComplete, onSkip, data, isLoading }) => {
     }
   };
 
-  // DEMO MODE: Always allow progression
-  const isDemo = !window.user || window.demoUser;
+  // Detect demo mode
+  const isDemo = sessionStorage.getItem('demo_user') === 'true';
+  if (isDemo) console.log('[DEMO] Step4AutomationEducation: Rendering Continue button');
 
   return (
     <div className="automation-education">
@@ -308,6 +309,17 @@ const Step4AutomationEducation = ({ onComplete, onSkip, data, isLoading }) => {
           </p>
         </motion.div>
       </motion.div>
+
+      {isDemo && (
+        <button
+          data-testid="onboarding-continue"
+          onClick={() => onComplete && onComplete({ demo: true })}
+          className="continue-button"
+          style={{ marginTop: '2rem' }}
+        >
+          Continue
+        </button>
+      )}
 
       <style>{`
         .automation-education {

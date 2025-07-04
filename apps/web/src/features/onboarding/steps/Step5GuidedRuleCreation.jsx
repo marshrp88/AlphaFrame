@@ -29,8 +29,9 @@ const CATEGORIES = [
 ];
 
 const Step5GuidedRuleCreation = ({ onComplete, onSkip, data, isLoading }) => {
-  // DEMO MODE: Always allow progression
-  const isDemo = !window.user || window.demoUser;
+  // Detect demo mode
+  const isDemo = sessionStorage.getItem('demo_user') === 'true';
+  if (isDemo) console.log('[DEMO] Step5GuidedRuleCreation: Rendering Finish button');
 
   // State for the rule creation steps
   const [step, setStep] = useState(1); // 1: pick category, 2: set threshold, 3: confirm
@@ -278,6 +279,16 @@ const Step5GuidedRuleCreation = ({ onComplete, onSkip, data, isLoading }) => {
           border-radius: 6px;
         }
       `}</style>
+      {isDemo && (
+        <button
+          data-testid="onboarding-continue"
+          onClick={() => onComplete && onComplete({ demo: true })}
+          className="continue-button"
+          style={{ marginTop: '2rem' }}
+        >
+          Finish
+        </button>
+      )}
     </div>
   );
 };

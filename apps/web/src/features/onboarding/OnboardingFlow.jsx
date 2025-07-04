@@ -412,7 +412,7 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
   };
 
   return (
-    <div style={{ pointerEvents: 'auto', opacity: 1, background: '#fff', minHeight: '100vh' }}>
+    <div style={{ pointerEvents: 'auto', opacity: 1, background: '#fff', minHeight: '100vh' }} data-testid="onboarding-container">
       {/* Debug reset button (dev only) */}
       <button 
         onClick={handleDebugReset}

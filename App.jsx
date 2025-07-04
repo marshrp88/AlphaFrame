@@ -1,4 +1,4 @@
-import { ErrorBoundary } from './components/ErrorBoundary';
+import ErrorBoundary from './components/ErrorBoundary';
 
 <ErrorBoundary>
   {/* Dashboard and Onboarding routes here */}

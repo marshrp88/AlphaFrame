@@ -158,6 +158,10 @@ const Step3BudgetSetup = ({ onComplete, onSkip, data, isLoading }) => {
   const remainingBudget = totalIncome - totalBudget;
   const isOverBudget = remainingBudget < 0;
 
+  // Detect demo mode
+  const isDemo = sessionStorage.getItem('demo_user') === 'true';
+  if (isDemo) console.log('[DEMO] Step3BudgetSetup: Rendering Continue button');
+
   return (
     <div className="space-y-6">
       <Card className="p-6">
@@ -325,6 +329,16 @@ const Step3BudgetSetup = ({ onComplete, onSkip, data, isLoading }) => {
           </Button>
         </div>
       </Card>
+      {isDemo && (
+        <button
+          data-testid="onboarding-continue"
+          onClick={() => onComplete && onComplete({ demo: true })}
+          className="continue-button"
+          style={{ marginTop: '2rem' }}
+        >
+          Continue
+        </button>
+      )}
     </div>
   );
 };

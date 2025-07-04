@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
+import DashboardReal from '../components/dashboard/DashboardReal';
+import DemoBanner from '../components/ui/DemoBanner';
+import ResetDemoButton from '../components/ui/ResetDemoButton';
+import { useAppStore } from '../store/useAppStore';
 
 const mockTransactions = [
   { id: 'demo1', description: 'Sample Coffee', amount: 4.50, date: '2025-06-01' },
@@ -12,6 +16,7 @@ const DashboardPage = () => {
   const navigate = useNavigate();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { isDemo } = useAppStore();
 
   useEffect(() => {
     const isDemo = sessionStorage.getItem('demo_user') === 'true';
@@ -31,13 +36,10 @@ const DashboardPage = () => {
   if (loading) return <div className="p-4">Loading dashboard...</div>;
 
   return (
-    <div className="dashboard-shell">
-      <h1>Dashboard</h1>
-      <ul>
-        {transactions.map(txn => (
-          <li key={txn.id}>{txn.date}: {txn.description} - ${txn.amount}</li>
-        ))}
-      </ul>
+    <div className="dashboard-container" style={{ position: 'relative', minHeight: '100vh', background: 'var(--color-bg)' }}>
+      {isDemo && <DemoBanner />}
+      {isDemo && <ResetDemoButton />}
+      <DashboardReal />
     </div>
   );
 };

@@ -171,6 +171,10 @@ const Step2ReviewTransactions = ({ onComplete, onSkip, data, isLoading }) => {
     });
   };
 
+  // Detect demo mode
+  const isDemo = sessionStorage.getItem('demo_user') === 'true';
+  if (isDemo) console.log('[DEMO] Step2ReviewTransactions: Rendering Continue button');
+
   if (loading) {
     return (
       <Card className="p-6">
@@ -364,6 +368,16 @@ const Step2ReviewTransactions = ({ onComplete, onSkip, data, isLoading }) => {
           </Button>
         </div>
       </Card>
+      {isDemo && (
+        <button
+          data-testid="onboarding-continue"
+          onClick={() => onComplete && onComplete({ demo: true })}
+          className="continue-button"
+          style={{ marginTop: '2rem' }}
+        >
+          Continue
+        </button>
+      )}
     </div>
   );
 };
