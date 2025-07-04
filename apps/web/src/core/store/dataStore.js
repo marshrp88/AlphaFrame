@@ -41,13 +41,53 @@ export const useDataStore = create((set, get) => ({
   error: null,
   lastSync: null,
   listeners: {}, // Store unsubscribe functions
+  triggeredRules: [], // NEW: List of triggered rule events
+  latestTriggeredRule: null, // NEW: Most recent triggered rule event
 
   // Actions
   initialize: async (userId) => {
     set({ isLoading: true, error: null });
     
     try {
-      // Initialize data service
+      // Check if we're in demo mode
+      const isDemo = typeof window !== 'undefined' && sessionStorage.getItem('demo_user') === 'true';
+      
+      if (isDemo) {
+        // Demo mode: Load from localStorage
+        console.log('🔍 [DataStore] Initializing in demo mode with localStorage');
+        
+        const rules = JSON.parse(localStorage.getItem('alphaframe_user_rules') || '[]');
+        const transactions = JSON.parse(localStorage.getItem('alphaframe_user_transactions') || '[]');
+        const budgets = JSON.parse(localStorage.getItem('alphaframe_user_budgets') || '[]');
+        const insights = JSON.parse(localStorage.getItem('alphaframe_user_insights') || '[]');
+        const triggeredRules = JSON.parse(localStorage.getItem('alphaframe_triggered_rules') || '[]');
+        
+        set({
+          rules,
+          transactions,
+          budgets,
+          insights,
+          userPreferences: null,
+          lastSync: new Date().toISOString(),
+          isLoading: false,
+          listeners: {},
+          triggeredRules,
+          latestTriggeredRule: triggeredRules.length > 0 ? triggeredRules[triggeredRules.length - 1] : null
+        });
+        
+        console.log(`🔍 [DataStore] Demo mode loaded: ${rules.length} rules, ${transactions.length} transactions, ${triggeredRules.length} triggered rules`);
+        
+        // Evaluate rules after loading
+        if (rules.length > 0 && transactions.length > 0) {
+          setTimeout(() => {
+            get().evaluateAndTriggerRules();
+          }, 100);
+        }
+        
+        return;
+      }
+      
+      // Production mode: Initialize data service
       await initializeDataService();
       
       // Unsubscribe previous listeners
@@ -81,21 +121,187 @@ export const useDataStore = create((set, get) => ({
     }
   },
 
+  // NEW: Evaluate all rules against all transactions and update triggeredRules
+  evaluateAndTriggerRules: async () => {
+    const { rules, transactions } = get();
+    console.log(`🔍 [DataStore] Evaluating ${rules.length} rules against ${transactions.length} transactions`);
+    
+    try {
+      const ruleEngine = (await import('../../lib/services/ruleEngine.js')).default;
+      let triggered = [];
+      
+      for (const transaction of transactions) {
+        for (const rule of rules) {
+          try {
+            let ruleForEngine;
+            if (rule.type === 'merchant') {
+              ruleForEngine = {
+                id: rule.id,
+                name: rule.name,
+                description: rule.description,
+                logicOperator: 'AND',
+                conditions: [{
+                  field: 'merchant_name',
+                  operator: 'contains',
+                  value: rule.merchant
+                }],
+                action: {
+                  type: 'notification',
+                  notification: {
+                    title: 'Rule Triggered',
+                    message: rule.actionValue || 'Merchant rule met',
+                    type: 'warning'
+                  }
+                },
+                enabled: rule.isActive
+              };
+            } else if (rule.type === 'date') {
+              ruleForEngine = {
+                id: rule.id,
+                name: rule.name,
+                description: rule.description,
+                logicOperator: 'AND',
+                conditions: [{
+                  field: 'date',
+                  operator: rule.dateOperator || 'isToday',
+                  value: null
+                }],
+                action: {
+                  type: 'notification',
+                  notification: {
+                    title: 'Rule Triggered',
+                    message: rule.actionValue || 'Date rule met',
+                    type: 'warning'
+                  }
+                },
+                enabled: rule.isActive
+              };
+            } else if (rule.type === 'compound' && Array.isArray(rule.compoundConditions)) {
+              ruleForEngine = {
+                id: rule.id,
+                name: rule.name,
+                description: rule.description,
+                logicOperator: rule.compoundConditions[1]?.logical || 'AND',
+                conditions: rule.compoundConditions.map(cond => ({
+                  field: cond.field,
+                  operator: cond.operator,
+                  value: cond.value,
+                  logicalOperator: cond.logical
+                })),
+                action: {
+                  type: 'notification',
+                  notification: {
+                    title: 'Rule Triggered',
+                    message: rule.actionValue || 'Compound rule met',
+                    type: 'warning'
+                  }
+                },
+                enabled: rule.isActive
+              };
+            } else {
+              // Default: amount/category
+              ruleForEngine = {
+                id: rule.id,
+                name: rule.name,
+                description: rule.description,
+                logicOperator: 'AND',
+                conditions: [{
+                  field: rule.type === 'transaction_amount' ? 'amount' : 'category',
+                  operator: rule.type === 'transaction_amount' ? '>=' : '===',
+                  value: rule.type === 'transaction_amount' ? parseFloat(rule.amount) : rule.category
+                }],
+                action: {
+                  type: 'notification',
+                  notification: {
+                    title: 'Rule Triggered',
+                    message: rule.actionValue || 'Rule condition met',
+                    type: 'warning'
+                  }
+                },
+                enabled: rule.isActive
+              };
+            }
+            
+            const result = await ruleEngine.evaluateRule(ruleForEngine, transaction);
+            
+            if (result && result.matched) {
+              triggered.push({
+                ruleId: rule.id,
+                ruleName: rule.name,
+                transactionId: transaction.id,
+                triggeredAt: new Date().toISOString(),
+                details: { ...result }
+              });
+              
+              console.log(`🔍 [DataStore] Rule "${rule.name}" triggered for transaction "${transaction.description}"`);
+            }
+          } catch (error) {
+            console.error(`🔍 [DataStore] Error evaluating rule ${rule.id}:`, error);
+          }
+        }
+      }
+      
+      set({
+        triggeredRules: triggered,
+        latestTriggeredRule: triggered.length > 0 ? triggered[triggered.length - 1] : null
+      });
+      
+      // Save triggered rules to localStorage for demo mode
+      if (typeof window !== 'undefined' && sessionStorage.getItem('demo_user') === 'true') {
+        localStorage.setItem('alphaframe_triggered_rules', JSON.stringify(triggered));
+      }
+      
+      console.log(`🔍 [DataStore] Rule evaluation complete: ${triggered.length} rules triggered`);
+    } catch (error) {
+      console.error('🔍 [DataStore] Error in evaluateAndTriggerRules:', error);
+    }
+  },
+
   // Rules management
   createRule: async (ruleData) => {
     set({ isLoading: true, error: null });
     
     try {
-      const newRule = await createDocument('rules', ruleData);
-      const { rules } = get();
+      // Check if we're in demo mode
+      const isDemo = typeof window !== 'undefined' && sessionStorage.getItem('demo_user') === 'true';
+      console.log('🔍 [DataStore] createRule - isDemo:', isDemo);
       
-      set({
-        rules: [newRule, ...rules],
-        isLoading: false
-      });
-      
-      return newRule;
+      if (isDemo) {
+        // Demo mode: Save to localStorage
+        const newRule = {
+          ...ruleData,
+          id: Date.now().toString(),
+          createdAt: new Date().toISOString()
+        };
+        
+        const existingRules = JSON.parse(localStorage.getItem('alphaframe_user_rules') || '[]');
+        const updatedRules = [newRule, ...existingRules];
+        localStorage.setItem('alphaframe_user_rules', JSON.stringify(updatedRules));
+        
+        set({
+          rules: updatedRules,
+          isLoading: false
+        });
+        
+        console.log(`🔍 [DataStore] Demo mode: Created rule "${newRule.name}"`);
+        return newRule;
+      } else {
+        // Production mode: Use data service
+        const newRule = await createDocument('rules', ruleData);
+        const { rules } = get();
+        
+        set({
+          rules: [newRule, ...rules],
+          isLoading: false
+        });
+        
+        // Evaluate rules after creation
+        await get().evaluateAndTriggerRules();
+        
+        return newRule;
+      }
     } catch (error) {
+      console.error('🔍 [DataStore] createRule error:', error);
       set({
         error: error.message,
         isLoading: false
@@ -119,6 +325,9 @@ export const useDataStore = create((set, get) => ({
         rules: updatedRules,
         isLoading: false
       });
+      
+      // Evaluate rules after update
+      await get().evaluateAndTriggerRules();
       
       return updatedRule;
     } catch (error) {
@@ -157,15 +366,45 @@ export const useDataStore = create((set, get) => ({
     set({ isLoading: true, error: null });
     
     try {
-      const newTransaction = await createDocument('transactions', transactionData);
-      const { transactions } = get();
+      const isDemo = typeof window !== 'undefined' && sessionStorage.getItem('demo_user') === 'true';
       
-      set({
-        transactions: [newTransaction, ...transactions],
-        isLoading: false
-      });
-      
-      return newTransaction;
+      if (isDemo) {
+        // Demo mode: Save to localStorage
+        const newTransaction = {
+          ...transactionData,
+          id: Date.now().toString(),
+          createdAt: new Date().toISOString()
+        };
+        
+        const existingTransactions = JSON.parse(localStorage.getItem('alphaframe_user_transactions') || '[]');
+        const updatedTransactions = [newTransaction, ...existingTransactions];
+        localStorage.setItem('alphaframe_user_transactions', JSON.stringify(updatedTransactions));
+        
+        set({
+          transactions: updatedTransactions,
+          isLoading: false
+        });
+        
+        // Trigger rule evaluation
+        await get().evaluateAndTriggerRules();
+        
+        console.log(`🔍 [DataStore] Demo mode: Created transaction "${newTransaction.description}"`);
+        return newTransaction;
+      } else {
+        // Production mode: Use data service
+        const newTransaction = await createDocument('transactions', transactionData);
+        const { transactions } = get();
+        
+        set({
+          transactions: [newTransaction, ...transactions],
+          isLoading: false
+        });
+        
+        // Evaluate rules after transaction creation
+        await get().evaluateAndTriggerRules();
+        
+        return newTransaction;
+      }
     } catch (error) {
       set({
         error: error.message,

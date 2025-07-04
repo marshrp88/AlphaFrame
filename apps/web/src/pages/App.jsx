@@ -13,7 +13,16 @@ export default function App() {
     <ErrorBoundary>
       <Router>
         <Routes>
-          <Route path="/" element={<OnboardingFlow />} />
+          <Route 
+            path="/" 
+            element={
+              onboardingComplete ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <OnboardingFlow />
+              )
+            } 
+          />
           <Route
             path="/dashboard"
             element={

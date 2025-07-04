@@ -20,8 +20,8 @@ import DemoModeBanner from './components/ui/DemoModeBanner';
 import FeedbackButton from './components/ui/FeedbackButton.jsx';
 import SoftLaunchBanner from './components/ui/SoftLaunchBanner.jsx';
 import UserStateSnapshot from './components/ui/UserStateSnapshot.jsx';
-import { useAuthStore } from './core/store/authStore.js';
-import { useDataStore } from './core/store/dataStore.js';
+import useAppStore from './store/useAppStore';
+import DemoModeService from './lib/services/DemoModeService';
 
 // Import design system components
 import NavBar from "./components/ui/NavBar.jsx";
@@ -226,7 +226,7 @@ const AuthComponent = () => {
 // Navigation component with performance optimizations
 const Navigation = () => {
   const location = useLocation();
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user } = useAppStore();
 
   const navigationItems = [
     { to: '/', label: 'Home' },
@@ -266,39 +266,24 @@ const Navigation = () => {
 
 // Move all logic that uses useNavigate into AppContent
 const AppContent = () => {
-  const { user, isAuthenticated, isLoading: authLoading, error: authError, initialize: initAuth } = useAuthStore();
-  const { isLoading: dataLoading, error: dataError, initialize: initData } = useDataStore();
+  const { 
+    user, 
+    isAuthenticated, 
+    isLoading, 
+    error, 
+    initializeApp,
+    isDemo 
+  } = useAppStore();
   const navigate = useNavigate();
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
 
-  // Initialize auth and data on mount
+  // Initialize app state on mount
   useEffect(() => {
-    const initializeApp = async () => {
-      try {
-        // Initialize authentication first
-        await initAuth();
-        
-        // If user is authenticated, initialize data
-        if (isAuthenticated && user) {
-          await initData(user.id);
-        }
-      } catch (error) {
-        console.error('App initialization failed:', error);
-      }
-    };
-    
     initializeApp();
-  }, [initAuth, initData, isAuthenticated, user]);
-
-  // Initialize data when user logs in
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      initData(user.id);
-    }
-  }, [isAuthenticated, user, initData]);
+  }, [initializeApp]);
 
   // Show loading state
-  if (authLoading || dataLoading) {
+  if (isLoading) {
     return (
       <div className="app-loading">
         <div className="loading-container">
@@ -311,12 +296,12 @@ const AppContent = () => {
   }
 
   // Show error state
-  if (authError || dataError) {
+  if (error) {
     return (
       <div className="app-error">
         <div className="error-container">
           <h2>Initialization Error</h2>
-          <p>{authError || dataError}</p>
+          <p>{error}</p>
           <StyledButton onClick={() => navigate(0)}>
             Retry
           </StyledButton>

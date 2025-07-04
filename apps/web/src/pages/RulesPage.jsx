@@ -28,12 +28,79 @@ const RulesPage = () => {
     createRule, 
     updateRule, 
     deleteRule,
-    getActiveRules 
+    getActiveRules,
+    initialize 
   } = useDataStore();
   
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedRule, setSelectedRule] = useState(null);
   const [filter, setFilter] = useState('all'); // all, active, inactive
+
+  const isDemo = typeof window !== 'undefined' && sessionStorage.getItem('demo_user') === 'true';
+
+  // Initialize dataStore and CTO-Level Diagnostic Logging
+  useEffect(() => {
+    console.log('🔍 [RulesPage] Component mounted at:', new Date().toISOString());
+    console.log('🔍 [RulesPage] Browser:', navigator.userAgent);
+    console.log('🔍 [RulesPage] Is demo mode:', isDemo);
+    console.log('🔍 [RulesPage] Is authenticated:', isAuthenticated);
+    console.log('🔍 [RulesPage] User:', user);
+    
+    // Initialize dataStore
+    const initDataStore = async () => {
+      try {
+        console.log('🔍 [RulesPage] Starting dataStore initialization...');
+        
+        // Add a small delay to ensure localStorage is available after page refresh
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        await initialize(user?.id);
+        console.log('🔍 [RulesPage] DataStore initialized successfully');
+        
+        // Check what was loaded
+        const { rules, transactions, triggeredRules } = useDataStore.getState();
+        console.log('🔍 [RulesPage] DataStore state after init:', {
+          rulesCount: rules.length,
+          transactionsCount: transactions.length,
+          triggeredRulesCount: triggeredRules.length
+        });
+      } catch (error) {
+        console.error('🔍 [RulesPage] Failed to initialize DataStore:', error);
+      }
+    };
+    
+    initDataStore();
+    
+    // Performance timing
+    const mountTime = performance.now();
+    console.log('🔍 [RulesPage] Mount performance time:', mountTime);
+    
+    // Check if button container is ready
+    setTimeout(() => {
+      const buttonContainer = document.querySelector('[data-testid="create-rule-btn"]');
+      if (buttonContainer) {
+        console.log('🔍 [RulesPage] Button found in DOM after mount');
+        const styles = window.getComputedStyle(buttonContainer);
+        console.log('🔍 [RulesPage] Button computed styles:', {
+          display: styles.display,
+          visibility: styles.visibility,
+          opacity: styles.opacity,
+          position: styles.position,
+          zIndex: styles.zIndex,
+          offsetParent: buttonContainer.offsetParent !== null
+        });
+      } else {
+        console.log('🔍 [RulesPage] Button NOT found in DOM after mount');
+      }
+    }, 100);
+  }, [initialize, user?.id]);
+
+  // Log button render state
+  useEffect(() => {
+    console.log('🔍 [RulesPage] Button render state - showCreateModal:', showCreateModal);
+    console.log('🔍 [RulesPage] Button render state - isDemo:', isDemo);
+    console.log('🔍 [RulesPage] Button render state - isAuthenticated:', isAuthenticated);
+  }, [showCreateModal, isDemo, isAuthenticated]);
 
   // Filter rules based on current filter
   const filteredRules = React.useMemo(() => {
@@ -49,7 +116,7 @@ const RulesPage = () => {
     try {
       const newRule = {
         ...ruleData,
-        userId: user.id,
+        userId: user?.id || 'demo-user',
         isActive: true,
         createdAt: new Date().toISOString()
       };
@@ -88,7 +155,7 @@ const RulesPage = () => {
     }
   };
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !isDemo) {
     return (
       <div className="rules-page">
         <div className="container mx-auto px-4 py-8">
@@ -126,6 +193,13 @@ const RulesPage = () => {
               variant="default" 
               onClick={() => setShowCreateModal(true)}
               className="flex items-center space-x-2"
+              data-testid="create-rule-btn"
+              style={{ 
+                display: 'block', 
+                visibility: 'visible', 
+                zIndex: 10,
+                position: 'relative'
+              }}
             >
               <span>➕</span>
               <span>Create Rule</span>

@@ -34,6 +34,17 @@ const OnboardingPage = () => {
 
   // Check onboarding state on mount
   useEffect(() => {
+    // Check if user is in demo mode and should bypass onboarding
+    const isDemoUser = sessionStorage.getItem('demo_user') === 'true';
+    const onboardingComplete = localStorage.getItem('alphaframe_onboarding_complete') === 'true';
+    
+    // If demo user and onboarding is complete (or demo mode bypass), go to dashboard
+    if (isDemoUser && (onboardingComplete || true)) { // Always bypass for demo users
+      console.log('🔧 Demo mode: Bypassing onboarding, redirecting to dashboard');
+      navigate('/dashboard', { replace: true });
+      return;
+    }
+    
     // TEMPORARY DEMO MODE: If Firebase is not configured, allow demo access
     const isDemoMode = !user && !isAuthenticated && !isLoading;
     

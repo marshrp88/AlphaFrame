@@ -209,10 +209,14 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
     try {
       console.log('🔧 OnboardingFlow: Checking onboarding status');
       
-      const onboardingComplete = localStorage.getItem('alphaframe_onboarding_complete');
+      // Use the same logic as useAppStore to check if user is onboarded
+      // This ensures demo users are properly recognized as onboarded
+      const onboardingComplete = 
+        localStorage.getItem('alphaframe_onboarding_complete') === 'true' ||
+        sessionStorage.getItem('demo_user') === 'true';
       console.log('🔧 OnboardingFlow: onboardingComplete =', onboardingComplete);
       
-      if (onboardingComplete === 'true' && !initialState) {
+      if (onboardingComplete && !initialState) {
         console.log('🔧 OnboardingFlow: User already onboarded, redirecting to dashboard');
         navigate('/dashboard');
       } else {

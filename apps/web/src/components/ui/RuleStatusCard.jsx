@@ -36,7 +36,13 @@ import {
 
 const RuleStatusCard = ({ 
   rule, 
-  executionResult, 
+  executionResult = { 
+    status: 'unknown', 
+    lastChecked: null,
+    matchedTransactions: [],
+    totalTransactions: 0,
+    percentage: 0
+  }, 
   onRuleAction,
   showDetails = false,
   isRealTime = false
@@ -192,6 +198,7 @@ const RuleStatusCard = ({
 
   return (
     <motion.div
+      data-testid={`rule-item-${rule.id}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}

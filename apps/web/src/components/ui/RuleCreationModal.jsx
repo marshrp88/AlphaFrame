@@ -7,7 +7,7 @@ import { useToast } from './use-toast.jsx';
 import ruleTemplateService from '../../lib/services/RuleTemplateService.js';
 import { trackRuleCreated } from '@/lib/analytics.js';
 
-const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
+const RuleCreationModal = ({ isOpen, onClose, onSubmit }) => {
   console.log('RuleCreationModal render - isOpen:', isOpen);
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -24,6 +24,9 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
     category: 'general',
     frequency: 'monthly'
   });
+  const [compoundConditions, setCompoundConditions] = useState([
+    { field: 'amount', operator: '>', value: '', logical: 'AND' }
+  ]);
 
   // Load templates on mount
   useEffect(() => {
@@ -54,12 +57,20 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
           createdAt: new Date().toISOString(),
           isActive: true
         };
+        // Add advanced fields for merchant, date, compound
+        if (ruleData.type === 'merchant') {
+          newRule.merchant = ruleData.merchant;
+        }
+        if (ruleData.type === 'date') {
+          newRule.dateOperator = ruleData.dateOperator;
+        }
+        if (ruleData.type === 'compound') {
+          newRule.compoundConditions = compoundConditions;
+        }
       }
 
-      // Save to localStorage
-      const existingRules = JSON.parse(localStorage.getItem('alphaframe_user_rules') || '[]');
-      existingRules.push(newRule);
-      localStorage.setItem('alphaframe_user_rules', JSON.stringify(existingRules));
+      // Note: Rule will be saved via the parent's onSubmit callback
+      // which uses the dataStore createRule function
 
       // Track rule creation
       trackRuleCreated({
@@ -76,7 +87,7 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
       });
 
       // Call parent callback
-      onRuleCreated(newRule);
+      onSubmit(newRule);
       onClose();
     } catch (error) {
       toast({
@@ -116,6 +127,19 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
     setCustomizations({});
   };
 
+  // Handler to update a compound condition
+  const handleCompoundChange = (idx, key, value) => {
+    setCompoundConditions(prev => prev.map((cond, i) => i === idx ? { ...cond, [key]: value } : cond));
+  };
+  // Handler to add a new condition
+  const addCompoundCondition = () => {
+    setCompoundConditions(prev => [...prev, { field: 'amount', operator: '>', value: '', logical: 'AND' }]);
+  };
+  // Handler to remove a condition
+  const removeCompoundCondition = (idx) => {
+    setCompoundConditions(prev => prev.filter((_, i) => i !== idx));
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -141,6 +165,7 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
           backdropFilter: 'blur(4px)'
         }}
         onClick={onClose}
+        data-testid="rule-creation-modal"
       >
         <motion.div
           key="modal-content"
@@ -153,7 +178,17 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
             stiffness: 300
           }}
           onClick={(e) => e.stopPropagation()}
-          style={{ width: '100%', maxWidth: '600px' }}
+          style={{ 
+            width: '100%', 
+            maxWidth: '600px',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            padding: '1rem',
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+          }}
         >
           <CompositeCard variant="elevated">
             <div style={{ padding: '2rem' }}>
@@ -289,6 +324,12 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                         variant="outline"
                         size="sm"
                         onClick={() => setShowCustomForm(true)}
+                        data-testid="create-custom-rule"
+                        style={{
+                          marginTop: '1rem',
+                          alignSelf: 'flex-start',
+                          scrollMarginTop: '8px',
+                        }}
                       >
                         Create Custom Rule
                       </StyledButton>
@@ -447,7 +488,7 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
 
                     {/* Custom Form Fields */}
                     <div>
-                      <label style={{ 
+                      <label htmlFor="rule-name-input" style={{ 
                         display: 'block',
                         fontSize: 'var(--font-size-sm)',
                         fontWeight: 'var(--font-weight-medium)',
@@ -457,6 +498,8 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                         Rule Name
                       </label>
                       <input
+                        id="rule-name-input"
+                        data-testid="rule-name-input"
                         type="text"
                         value={ruleData.name}
                         onChange={(e) => handleInputChange('name', e.target.value)}
@@ -487,6 +530,7 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                         Rule Type
                       </label>
                       <select
+                        data-testid="rule-condition-select"
                         value={ruleData.type}
                         onChange={(e) => handleInputChange('type', e.target.value)}
                         style={{
@@ -501,15 +545,19 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                           outline: 'none'
                         }}
                       >
+                        <option value="transaction_amount">Transaction Amount</option>
                         <option value="spending_limit">Spending Limit</option>
                         <option value="savings_goal">Savings Goal</option>
                         <option value="bill_reminder">Bill Reminder</option>
                         <option value="category_tracking">Category Tracking</option>
+                        <option value="merchant">Merchant</option>
+                        <option value="date">Date</option>
+                        <option value="compound">Compound</option>
                       </select>
                     </div>
 
                     <div>
-                      <label style={{ 
+                      <label htmlFor="rule-amount-input" style={{ 
                         display: 'block',
                         fontSize: 'var(--font-size-sm)',
                         fontWeight: 'var(--font-weight-medium)',
@@ -519,6 +567,8 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                         Amount
                       </label>
                       <input
+                        id="rule-amount-input"
+                        data-testid="rule-condition-value"
                         type="number"
                         value={ruleData.amount}
                         onChange={(e) => handleInputChange('amount', e.target.value)}
@@ -539,7 +589,70 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                     </div>
 
                     <div>
-                      <label style={{ 
+                      <label htmlFor="rule-action-input" style={{ 
+                        display: 'block',
+                        fontSize: 'var(--font-size-sm)',
+                        fontWeight: 'var(--font-weight-medium)',
+                        color: 'var(--color-text-primary)',
+                        marginBottom: '0.5rem'
+                      }}>
+                        Action
+                      </label>
+                      <select
+                        data-testid="rule-action-select"
+                        value={ruleData.action || 'send_notification'}
+                        onChange={(e) => handleInputChange('action', e.target.value)}
+                        style={{
+                          width: '100%',
+                          padding: '0.75rem',
+                          border: '1px solid var(--color-border-primary)',
+                          borderRadius: 'var(--radius-md)',
+                          fontSize: 'var(--font-size-base)',
+                          backgroundColor: 'var(--color-surface)',
+                          color: 'var(--color-text-primary)',
+                          transition: 'all 0.2s ease',
+                          outline: 'none'
+                        }}
+                      >
+                        <option value="send_notification">Send Notification</option>
+                        <option value="block_transaction">Block Transaction</option>
+                        <option value="log_event">Log Event</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label htmlFor="rule-action-value-input" style={{ 
+                        display: 'block',
+                        fontSize: 'var(--font-size-sm)',
+                        fontWeight: 'var(--font-weight-medium)',
+                        color: 'var(--color-text-primary)',
+                        marginBottom: '0.5rem'
+                      }}>
+                        Action Value
+                      </label>
+                      <input
+                        id="rule-action-value-input"
+                        data-testid="rule-action-value"
+                        type="text"
+                        value={ruleData.actionValue || ''}
+                        onChange={(e) => handleInputChange('actionValue', e.target.value)}
+                        placeholder="e.g., Large transaction detected"
+                        style={{
+                          width: '100%',
+                          padding: '0.75rem',
+                          border: '1px solid var(--color-border-primary)',
+                          borderRadius: 'var(--radius-md)',
+                          fontSize: 'var(--font-size-base)',
+                          backgroundColor: 'var(--color-surface)',
+                          color: 'var(--color-text-primary)',
+                          transition: 'all 0.2s ease',
+                          outline: 'none'
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="rule-description-input" style={{ 
                         display: 'block',
                         fontSize: 'var(--font-size-sm)',
                         fontWeight: 'var(--font-weight-medium)',
@@ -549,6 +662,8 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                         Description
                       </label>
                       <textarea
+                        id="rule-description-input"
+                        data-testid="rule-description-input"
                         value={ruleData.description}
                         onChange={(e) => handleInputChange('description', e.target.value)}
                         placeholder="Describe what this rule should monitor..."
@@ -567,6 +682,75 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                         }}
                       />
                     </div>
+
+                    {ruleData.type === 'merchant' && (
+                      <div>
+                        <label htmlFor="rule-merchant-input" style={{ display: 'block', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)', marginBottom: '0.5rem' }}>
+                          Merchant Name
+                        </label>
+                        <input
+                          id="rule-merchant-input"
+                          type="text"
+                          value={ruleData.merchant || ''}
+                          onChange={e => handleInputChange('merchant', e.target.value)}
+                          placeholder="e.g., Starbucks"
+                          required
+                          style={{ width: '100%', padding: '0.75rem', border: '1px solid var(--color-border-primary)', borderRadius: 'var(--radius-md)', fontSize: 'var(--font-size-base)', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', transition: 'all 0.2s ease', outline: 'none' }}
+                        />
+                      </div>
+                    )}
+                    {ruleData.type === 'date' && (
+                      <div>
+                        <label htmlFor="rule-date-operator" style={{ display: 'block', fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)', marginBottom: '0.5rem' }}>
+                          Date Condition
+                        </label>
+                        <select
+                          id="rule-date-operator"
+                          value={ruleData.dateOperator || 'isToday'}
+                          onChange={e => handleInputChange('dateOperator', e.target.value)}
+                          style={{ width: '100%', padding: '0.75rem', border: '1px solid var(--color-border-primary)', borderRadius: 'var(--radius-md)', fontSize: 'var(--font-size-base)', backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', transition: 'all 0.2s ease', outline: 'none' }}
+                        >
+                          <option value="isToday">Is Today</option>
+                          <option value="isThisWeek">Is This Week</option>
+                          <option value="isThisMonth">Is This Month</option>
+                        </select>
+                      </div>
+                    )}
+                    {ruleData.type === 'compound' && (
+                      <div style={{ border: '1px solid var(--color-border-primary)', borderRadius: 'var(--radius-md)', padding: '1rem', marginBottom: '1rem' }}>
+                        <label style={{ fontWeight: 'bold', marginBottom: '0.5rem', display: 'block' }}>Compound Conditions</label>
+                        {compoundConditions.map((cond, idx) => (
+                          <div key={idx} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem' }}>
+                            {idx > 0 && (
+                              <select value={cond.logical} onChange={e => handleCompoundChange(idx, 'logical', e.target.value)} style={{ width: 70 }}>
+                                <option value="AND">AND</option>
+                                <option value="OR">OR</option>
+                              </select>
+                            )}
+                            <select value={cond.field} onChange={e => handleCompoundChange(idx, 'field', e.target.value)} style={{ width: 120 }}>
+                              <option value="amount">Amount</option>
+                              <option value="category">Category</option>
+                              <option value="merchant">Merchant</option>
+                              <option value="date">Date</option>
+                            </select>
+                            <select value={cond.operator} onChange={e => handleCompoundChange(idx, 'operator', e.target.value)} style={{ width: 80 }}>
+                              <option value=">">&gt;</option>
+                              <option value="<">&lt;</option>
+                              <option value=">=">&gt;=</option>
+                              <option value="<=">&lt;=</option>
+                              <option value="===">===</option>
+                              <option value="!==">!==</option>
+                              <option value="contains">contains</option>
+                            </select>
+                            <input type="text" value={cond.value} onChange={e => handleCompoundChange(idx, 'value', e.target.value)} placeholder="Value" style={{ width: 100 }} />
+                            {compoundConditions.length > 1 && (
+                              <button type="button" onClick={() => removeCompoundCondition(idx)} style={{ color: 'red', border: 'none', background: 'none', fontSize: 18, cursor: 'pointer' }}>×</button>
+                            )}
+                          </div>
+                        ))}
+                        <StyledButton type="button" variant="outline" size="sm" onClick={addCompoundCondition} style={{ marginTop: '0.5rem' }}>+ Add Condition</StyledButton>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -587,6 +771,7 @@ const RuleCreationModal = ({ isOpen, onClose, onRuleCreated }) => {
                   </StyledButton>
                   <StyledButton
                     type="submit"
+                    data-testid="save-rule-btn"
                     disabled={isLoading || 
                       (showCustomForm && (!ruleData.name || !ruleData.amount)) ||
                       (showCustomization && selectedTemplate?.customizationOptions?.some(opt => opt.required && !customizations[opt.key]))
