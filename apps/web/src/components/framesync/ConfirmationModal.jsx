@@ -4,7 +4,7 @@
  * Uses shadcn/ui Dialog component
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -14,7 +14,7 @@ import {
   DialogFooter
 } from "@/shared/ui/dialog";
 import Button from "@/shared/ui/Button";
-import { AlertTriangle, Loader2 } from "lucide-react";
+import { AlertTriangle, Loader2, RefreshCw } from "lucide-react";
 import { runSimulation } from '@/lib/services/SimulationService';
 import { useFinancialStateStore } from '@/lib/store/financialStateStore';
 
@@ -70,6 +70,53 @@ const ConfirmationModal = ({ isOpen, action, onConfirm, onCancel }) => {
   const [isSimulating, setIsSimulating] = useState(false);
   const [simulationError, setSimulationError] = useState(null);
   const financialState = useFinancialStateStore();
+  const confirmButtonRef = useRef(null);
+  const cancelButtonRef = useRef(null);
+
+  // Auto-focus on confirm button when modal opens
+  useEffect(() => {
+    if (isOpen && confirmButtonRef.current) {
+      // Small delay to ensure modal is fully rendered
+      setTimeout(() => {
+        confirmButtonRef.current?.focus();
+      }, 100);
+    }
+  }, [isOpen]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (!isOpen) return;
+      
+      switch (event.key) {
+        case 'Escape':
+          event.preventDefault();
+          onCancel();
+          break;
+        case 'Enter':
+          if (event.target === confirmButtonRef.current) {
+            event.preventDefault();
+            onConfirm();
+          }
+          break;
+        case 'Tab':
+          // Ensure focus stays within modal
+          if (event.shiftKey && event.target === cancelButtonRef.current) {
+            event.preventDefault();
+            confirmButtonRef.current?.focus();
+          } else if (!event.shiftKey && event.target === confirmButtonRef.current) {
+            event.preventDefault();
+            cancelButtonRef.current?.focus();
+          }
+          break;
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isOpen, onConfirm, onCancel]);
 
   // Run simulation when action changes
   useEffect(() => {

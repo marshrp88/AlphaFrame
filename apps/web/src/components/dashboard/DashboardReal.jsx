@@ -5,6 +5,7 @@ import RuleStatusCard from '../ui/RuleStatusCard';
 import Button from '../ui/Button';
 import CompositeCard from '../ui/CompositeCard';
 import { useToast } from '../ui/use-toast';
+import './DashboardReal.css';
 
 export default function DashboardReal() {
   const [data, setData] = useState(null);
@@ -79,22 +80,51 @@ export default function DashboardReal() {
   const recentTriggers = triggeredRules.slice(0, 5);
 
   return (
-    <div className="dashboard-container" style={{ maxWidth: 1200, margin: '2rem auto', padding: '0 1rem' }}>
+    <div className="dashboard-container" style={{ 
+      maxWidth: 'var(--container-max-width)', 
+      margin: '0 auto', 
+      padding: 'var(--spacing-lg)',
+      minHeight: '100vh',
+      background: 'var(--color-bg)'
+    }}>
       {/* Header Section */}
-      <div className="dashboard-header" style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="dashboard-header" style={{ 
+        marginBottom: 'var(--spacing-xl)', 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        padding: 'var(--spacing-lg) 0',
+        borderBottom: '1px solid var(--color-border)'
+      }}>
         <div>
-          <h1 style={{ margin: 0, fontSize: '2rem', color: 'var(--color-text-primary)' }}>
+          <h1 style={{ 
+            margin: 0, 
+            fontSize: 'var(--text-3xl)', 
+            fontWeight: 'var(--font-weight-bold)',
+            color: 'var(--color-text-primary)',
+            lineHeight: 'var(--line-height-tight)'
+          }}>
             Financial Dashboard
           </h1>
-          <p style={{ margin: '0.5rem 0', color: 'var(--color-text-secondary)' }}>
-            Monitor your finances and automation rules
+          <p style={{ 
+            margin: 'var(--spacing-sm) 0 0 0', 
+            color: 'var(--color-text-secondary)',
+            fontSize: 'var(--text-lg)',
+            lineHeight: 'var(--line-height-normal)'
+          }}>
+            Monitor your finances and automation rules in real-time
           </p>
         </div>
         <Button 
           variant="default" 
-          size="md"
+          size="lg"
           onClick={() => window.location.href = '/rules'}
-          style={{ fontWeight: 'bold' }}
+          style={{ 
+            fontWeight: 'var(--font-weight-semibold)',
+            padding: 'var(--spacing-md) var(--spacing-lg)',
+            borderRadius: 'var(--radius-lg)',
+            boxShadow: 'var(--shadow-md)'
+          }}
         >
           ➕ Create Rule
         </Button>
@@ -103,84 +133,244 @@ export default function DashboardReal() {
       {/* Main Dashboard Grid */}
       <div className="dashboard-grid" style={{ 
         display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-        gap: '2rem', 
-        marginBottom: '2rem' 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', 
+        gap: 'var(--spacing-xl)', 
+        marginBottom: 'var(--spacing-xl)' 
       }}>
         {/* Net Cash Flow Card */}
-        <CompositeCard variant="elevated" className="cash-flow-card">
-          <h2 style={{ margin: 0, fontFamily: 'var(--font-family-base)', color: 'var(--color-text-primary)' }}>
+        <CompositeCard variant="elevated" className="cash-flow-card" style={{
+          padding: 'var(--spacing-xl)',
+          borderRadius: 'var(--radius-lg)',
+          boxShadow: 'var(--shadow-lg)',
+          border: '1px solid var(--color-border)'
+        }}>
+          <h2 style={{ 
+            margin: 0, 
+            fontFamily: 'var(--font-family-base)', 
+            color: 'var(--color-text-primary)',
+            fontSize: 'var(--text-xl)',
+            fontWeight: 'var(--font-weight-semibold)',
+            marginBottom: 'var(--spacing-md)'
+          }}>
             Net Cash Flow
           </h2>
-          <div style={{ fontSize: '2rem', color: 'var(--color-accent)', margin: '1rem 0', fontWeight: 'bold' }}>
+          <div style={{ 
+            fontSize: 'var(--text-4xl)', 
+            color: 'var(--color-accent)', 
+            margin: 'var(--spacing-lg) 0', 
+            fontWeight: 'var(--font-weight-bold)',
+            lineHeight: 'var(--line-height-tight)'
+          }}>
             ${data.net}
           </div>
-          <div style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>
+          <div style={{ 
+            fontSize: 'var(--text-sm)', 
+            color: 'var(--color-text-tertiary)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--spacing-xs)'
+          }}>
+            <span>🕒</span>
             Last updated: {data.lastUpdated}
           </div>
         </CompositeCard>
 
         {/* Rules Overview Card */}
-        <CompositeCard variant="elevated" className="rules-overview-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <h2 style={{ margin: 0, fontFamily: 'var(--font-family-base)', color: 'var(--color-text-primary)' }}>
+        <CompositeCard variant="elevated" className="rules-overview-card" style={{
+          padding: 'var(--spacing-xl)',
+          borderRadius: 'var(--radius-lg)',
+          boxShadow: 'var(--shadow-lg)',
+          border: '1px solid var(--color-border)'
+        }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            marginBottom: 'var(--spacing-lg)'
+          }}>
+            <h2 style={{ 
+              margin: 0, 
+              fontFamily: 'var(--font-family-base)', 
+              color: 'var(--color-text-primary)',
+              fontSize: 'var(--text-xl)',
+              fontWeight: 'var(--font-weight-semibold)'
+            }}>
               Automation Rules
             </h2>
-            {live && <span style={{ background: 'var(--color-success-100)', color: 'var(--color-success-700)', borderRadius: 8, padding: '0.2em 0.7em', fontSize: 12, marginLeft: 8 }}>LIVE</span>}
+            {live && (
+              <span style={{ 
+                background: 'var(--color-success-100)', 
+                color: 'var(--color-success-700)', 
+                borderRadius: 'var(--radius-full)', 
+                padding: 'var(--spacing-xs) var(--spacing-sm)', 
+                fontSize: 'var(--text-xs)', 
+                fontWeight: 'var(--font-weight-semibold)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
+              }}>
+                🔴 Live
+              </span>
+            )}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', margin: '1rem 0' }}>
-            <div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-success)' }}>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 'var(--spacing-lg)',
+            margin: 'var(--spacing-lg) 0' 
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ 
+                fontSize: 'var(--text-3xl)', 
+                fontWeight: 'var(--font-weight-bold)', 
+                color: 'var(--color-success)',
+                lineHeight: 'var(--line-height-tight)'
+              }}>
                 {activeRules.length}
               </div>
-              <div style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>Active Rules</div>
+              <div style={{ 
+                fontSize: 'var(--text-sm)', 
+                color: 'var(--color-text-secondary)',
+                marginTop: 'var(--spacing-xs)'
+              }}>
+                Active Rules
+              </div>
             </div>
-            <div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-warning)' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ 
+                fontSize: 'var(--text-3xl)', 
+                fontWeight: 'var(--font-weight-bold)', 
+                color: 'var(--color-warning)',
+                lineHeight: 'var(--line-height-tight)'
+              }}>
                 {inactiveRules.length}
               </div>
-              <div style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>Inactive Rules</div>
+              <div style={{ 
+                fontSize: 'var(--text-sm)', 
+                color: 'var(--color-text-secondary)',
+                marginTop: 'var(--spacing-xs)'
+              }}>
+                Inactive Rules
+              </div>
             </div>
-            <div>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-accent)' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ 
+                fontSize: 'var(--text-3xl)', 
+                fontWeight: 'var(--font-weight-bold)', 
+                color: 'var(--color-accent)',
+                lineHeight: 'var(--line-height-tight)'
+              }}>
                 {triggeredRules.length}
               </div>
-              <div style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>Total Triggers</div>
+              <div style={{ 
+                fontSize: 'var(--text-sm)', 
+                color: 'var(--color-text-secondary)',
+                marginTop: 'var(--spacing-xs)'
+              }}>
+                Total Triggers
+              </div>
             </div>
           </div>
           <Button 
             variant="outline" 
-            size="sm" 
+            size="md" 
             onClick={() => setShowAllRules(!showAllRules)}
-            style={{ marginTop: '1rem' }}
+            style={{ 
+              marginTop: 'var(--spacing-lg)',
+              width: '100%',
+              borderRadius: 'var(--radius-md)'
+            }}
           >
             {showAllRules ? 'Hide Rules' : 'View All Rules'}
           </Button>
         </CompositeCard>
 
         {/* Latest Triggered Rule Card */}
-        <CompositeCard variant="elevated" className="latest-trigger-card" data-testid="latest-triggered-rule">
-          <h2 style={{ margin: 0, fontFamily: 'var(--font-family-base)', color: 'var(--color-text-primary)' }}>
+        <CompositeCard variant="elevated" className="latest-trigger-card" data-testid="latest-triggered-rule" style={{
+          padding: 'var(--spacing-xl)',
+          borderRadius: 'var(--radius-lg)',
+          boxShadow: 'var(--shadow-lg)',
+          border: '1px solid var(--color-border)'
+        }}>
+          <h2 style={{ 
+            margin: 0, 
+            fontFamily: 'var(--font-family-base)', 
+            color: 'var(--color-text-primary)',
+            fontSize: 'var(--text-xl)',
+            fontWeight: 'var(--font-weight-semibold)',
+            marginBottom: 'var(--spacing-lg)'
+          }}>
             Latest Trigger
           </h2>
           {latestTriggeredRule ? (
-            <div style={{ margin: '1rem 0', background: 'var(--color-success-50)', borderRadius: 8, padding: 8, border: '2px solid var(--color-success-200)' }}>
-              <div style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '0.5rem', color: 'var(--color-success-800)' }}>
+            <div style={{ 
+              margin: 'var(--spacing-lg) 0', 
+              background: 'var(--color-success-50)', 
+              borderRadius: 'var(--radius-lg)', 
+              padding: 'var(--spacing-lg)', 
+              border: '2px solid var(--color-success-200)',
+              position: 'relative'
+            }}>
+              <div style={{ 
+                position: 'absolute',
+                top: 'var(--spacing-sm)',
+                right: 'var(--spacing-sm)',
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                background: 'var(--color-success)',
+                animation: 'pulse 2s infinite'
+              }}></div>
+              <div style={{ 
+                fontSize: 'var(--text-lg)', 
+                fontWeight: 'var(--font-weight-bold)', 
+                marginBottom: 'var(--spacing-sm)', 
+                color: 'var(--color-success-800)',
+                lineHeight: 'var(--line-height-tight)'
+              }}>
                 {latestTriggeredRule.ruleName}
               </div>
-              <div style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)', marginBottom: '0.5rem' }}>
+              <div style={{ 
+                fontSize: 'var(--text-sm)', 
+                color: 'var(--color-text-secondary)', 
+                marginBottom: 'var(--spacing-sm)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--spacing-xs)'
+              }}>
+                <span>💳</span>
                 Transaction: {latestTriggeredRule.transactionId}
               </div>
-              <div style={{ fontSize: '0.9rem', color: 'var(--color-success)' }}>
+              <div style={{ 
+                fontSize: 'var(--text-sm)', 
+                color: 'var(--color-success)',
+                fontWeight: 'var(--font-weight-medium)'
+              }}>
                 {new Date(latestTriggeredRule.triggeredAt).toLocaleString()}
               </div>
             </div>
           ) : (
-            <div style={{ fontSize: '1.1rem', margin: '1rem 0', color: 'var(--color-text-secondary)' }}>
+            <div style={{ 
+              fontSize: 'var(--text-lg)', 
+              margin: 'var(--spacing-lg) 0', 
+              color: 'var(--color-text-secondary)',
+              textAlign: 'center',
+              padding: 'var(--spacing-xl)',
+              background: 'var(--color-bg-secondary)',
+              borderRadius: 'var(--radius-lg)',
+              border: '1px dashed var(--color-border)'
+            }}>
               No rules triggered yet
             </div>
           )}
-          <div style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>
+          <div style={{ 
+            fontSize: 'var(--text-sm)', 
+            color: 'var(--color-text-tertiary)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--spacing-xs)',
+            marginTop: 'var(--spacing-lg)'
+          }}>
+            <span>🕒</span>
             Last updated: {data.lastUpdated}
           </div>
         </CompositeCard>

@@ -13,9 +13,12 @@
  * Conclusion: Fixed port prevents E2E test connection failures.
  */
 
-const { spawn } = require('child_process');
-const { exec } = require('child_process');
-const path = require('path');
+import { spawn, exec } from 'child_process';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PORT = 5173;
 const SERVER_URL = `http://localhost:${PORT}`;
