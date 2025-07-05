@@ -63,7 +63,7 @@ jest.mock('../../../src/features/pro/services/PortfolioAnalyzer.js', () => ({
   default: mockPortfolioAnalyzer
 }));
 
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('FeedbackUploader', () => {
   let feedbackUploader;

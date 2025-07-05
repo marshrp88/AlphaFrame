@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from '@jest/globals';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { PermissionEnforcer } from '@/lib/services/PermissionEnforcer';
 
 // Mock the authStore dependency

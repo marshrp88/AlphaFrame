@@ -1,28 +1,28 @@
-import { describe, it, expect, beforeEach, jest } from '@jest/globals';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 // Mock canExecuteAction to always allow
-jest.mock('@/lib/services/PermissionEnforcer', () => ({
-  canExecuteAction: jest.fn(() => Promise.resolve({ allowed: true }))
+vi.mock('@/lib/services/PermissionEnforcer', () => ({
+  canExecuteAction: vi.fn(() => Promise.resolve({ allowed: true }))
 }));
 
 // Mock useUIStore to provide showPasswordPrompt
-jest.mock('@/core/store/uiStore', () => ({
+vi.mock('@/core/store/uiStore', () => ({
   useUIStore: {
-    getState: jest.fn(() => ({
-      showPasswordPrompt: jest.fn(({ onConfirm }) => onConfirm('mock-password')),
+    getState: vi.fn(() => ({
+      showPasswordPrompt: vi.fn(({ onConfirm }) => onConfirm('mock-password')),
       isSandboxMode: false
     }))
   }
 }));
 
 // Mock SecureVault to prevent vault locked errors - CLUSTER 4 FIX: Correct import path
-jest.mock('@/core/services/SecureVault', () => ({
-  isUnlocked: jest.fn(() => true),
-  get: jest.fn(() => ({ token: 'mock-plaid-token' }))
+vi.mock('@/core/services/SecureVault', () => ({
+  isUnlocked: vi.fn(() => true),
+  get: vi.fn(() => ({ token: 'mock-plaid-token' }))
 }));
 
 // Mock global fetch for Plaid API calls with proper response
-globalThis.fetch = jest.fn(() => Promise.resolve({
+globalThis.fetch = vi.fn(() => Promise.resolve({
   json: () => Promise.resolve({ 
     transfer_id: 'mock-transfer-id',
     success: true 
@@ -40,7 +40,7 @@ describe('ExecutionController (unit)', () => {
   let ExecutionController;
 
   beforeEach(async () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     
     // Dynamic import with singleton override pattern
     const module = await import('../../../src/lib/services/ExecutionController');

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 // Helper to wait for Zustand persist to flush
 async function waitForPersistedValue(key, expected, timeout = 1000) {

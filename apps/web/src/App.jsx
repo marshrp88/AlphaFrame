@@ -39,6 +39,7 @@ import UpgradePage from './pages/UpgradePage';
 import About from './pages/About';
 import AlphaPro from './pages/AlphaPro';
 import TrustPage from './pages/TrustPage.jsx';
+import ProPlannerPage from './pages/pro/ProPlannerPage.jsx';
 
 // Lazy load existing pages for performance optimization
 const Profile = lazy(() => import('./pages/Profile.jsx'));
@@ -232,6 +233,7 @@ const Navigation = () => {
     { to: '/', label: 'Home' },
     { to: '/dashboard', label: 'Dashboard' },
     { to: '/rules', label: 'Rules' },
+    { to: '/pro-planner', label: 'Pro Planner' },
     { to: '/settings', label: 'Settings' },
     { to: '/about', label: 'About' },
     { to: '/profile', label: 'Profile' },
@@ -330,6 +332,7 @@ const AppContent = () => {
             {/* TODO [MVEP_PHASE_5]: Re-enable upgrade route when monetization is implemented */}
             {/* <Route path="/upgrade" element={<UpgradePage />} /> */}
             <Route path="/alphapro" element={<AlphaPro />} />
+            <Route path="/pro-planner" element={<ProPlannerPage />} />
             <Route path="/trust" element={<TrustPage />} />
             <Route path="/test" element={<TestMount />} />
             {/* 404 Route */}
