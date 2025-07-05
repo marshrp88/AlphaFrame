@@ -1,0 +1,3 @@
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+
+// ... existing code, replacing all jest.* with vi.* ... 

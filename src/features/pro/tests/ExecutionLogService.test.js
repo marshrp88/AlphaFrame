@@ -11,13 +11,13 @@
  * Conclusion: Ensures reliable logging infrastructure for AlphaPro
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 // Mock CryptoService functions
-jest.mock('../../core/services/CryptoService', () => ({
-  encrypt: jest.fn(),
-  decrypt: jest.fn(),
-  generateSalt: jest.fn()
+vi.mock('../../core/services/CryptoService', () => ({
+  encrypt: vi.fn(),
+  decrypt: vi.fn(),
+  generateSalt: vi.fn()
 }));
 
 // Import after mocking
@@ -26,25 +26,25 @@ import { encrypt, decrypt, generateSalt } from '../../core/services/CryptoServic
 
 // Mock IndexedDB
 const mockIndexedDB = {
-  open: jest.fn(),
-  deleteDatabase: jest.fn()
+  open: vi.fn(),
+  deleteDatabase: vi.fn()
 };
 
 // Mock localStorage
 const mockLocalStorage = {
-  getItem: jest.fn(),
-  setItem: jest.fn()
+  getItem: vi.fn(),
+  setItem: vi.fn()
 };
 
 // Mock sessionStorage
 const mockSessionStorage = {
-  getItem: jest.fn(),
-  setItem: jest.fn()
+  getItem: vi.fn(),
+  setItem: vi.fn()
 };
 
 // Mock crypto
 const mockCrypto = {
-  getRandomValues: jest.fn()
+  getRandomValues: vi.fn()
 };
 
 describe('ExecutionLogService', () => {
@@ -54,28 +54,28 @@ describe('ExecutionLogService', () => {
   let mockRequest;
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     
     // Mock store methods
     mockStore = {
-      add: jest.fn(),
-      getAll: jest.fn(),
-      delete: jest.fn(),
-      createIndex: jest.fn()
+      add: vi.fn(),
+      getAll: vi.fn(),
+      delete: vi.fn(),
+      createIndex: vi.fn()
     };
 
     // Mock transaction
     mockTransaction = {
-      objectStore: jest.fn(() => mockStore),
+      objectStore: vi.fn(() => mockStore),
       oncomplete: null,
       onerror: null
     };
 
     // Mock database
     mockDb = {
-      objectStoreNames: { contains: jest.fn() },
-      createObjectStore: jest.fn(() => mockStore),
-      transaction: jest.fn(() => mockTransaction)
+      objectStoreNames: { contains: vi.fn() },
+      createObjectStore: vi.fn(() => mockStore),
+      transaction: vi.fn(() => mockTransaction)
     };
 
     // Setup IndexedDB mock
@@ -119,12 +119,12 @@ describe('ExecutionLogService', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
-    jest.useRealTimers();
+    vi.clearAllMocks();
+    vi.useRealTimers();
     if (typeof globalThis.clearTimeout === 'function') {
       // Clear any timers if they exist
-      jest.runOnlyPendingTimers();
-      jest.clearAllTimers();
+      vi.runOnlyPendingTimers();
+      vi.clearAllTimers();
     }
   });
 
@@ -338,7 +338,7 @@ describe('ExecutionLogService', () => {
     });
 
     it('should log rule triggered events', async () => {
-      const logSpy = jest.spyOn(executionLogService, 'log');
+      const logSpy = vi.spyOn(executionLogService, 'log');
       
       await executionLogService.logRuleTriggered('rule-1', 'buy', { amount: 100 });
       
@@ -355,7 +355,7 @@ describe('ExecutionLogService', () => {
     });
 
     it('should log simulation runs', async () => {
-      const logSpy = jest.spyOn(executionLogService, 'log');
+      const logSpy = vi.spyOn(executionLogService, 'log');
       
       await executionLogService.logSimulationRun('sim-1', 150, { scenarios: 3 });
       
@@ -373,7 +373,7 @@ describe('ExecutionLogService', () => {
     });
 
     it('should log budget forecasts', async () => {
-      const logSpy = jest.spyOn(executionLogService, 'log');
+      const logSpy = vi.spyOn(executionLogService, 'log');
       
       await executionLogService.logBudgetForecast('forecast-1', 200);
       
@@ -390,7 +390,7 @@ describe('ExecutionLogService', () => {
     });
 
     it('should log portfolio analysis', async () => {
-      const logSpy = jest.spyOn(executionLogService, 'log');
+      const logSpy = vi.spyOn(executionLogService, 'log');
       
       await executionLogService.logPortfolioAnalysis('portfolio-1', 300);
       
@@ -407,7 +407,7 @@ describe('ExecutionLogService', () => {
     });
 
     it('should log errors', async () => {
-      const logSpy = jest.spyOn(executionLogService, 'log');
+      const logSpy = vi.spyOn(executionLogService, 'log');
       const error = new Error('Test error');
       
       await executionLogService.logError(error, 'TestComponent', 'testAction');
