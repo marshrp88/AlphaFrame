@@ -17,7 +17,7 @@
  * and provide the foundation for Galileo integration.
  */
 
-import { describe, it, expect, beforeEach } from '@jest/globals';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 // Mock rule execution results for testing
 const mockRuleResult = {

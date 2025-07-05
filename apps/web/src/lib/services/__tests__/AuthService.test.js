@@ -6,7 +6,7 @@
  * Approach: Uses proper localStorage mocking that works with Jest setup
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from '@jest/globals';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // Mock config
 jest.mock('../../config', () => ({

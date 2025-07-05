@@ -19,7 +19,7 @@
  * seamlessly with the logging system.
  */
 
-import { describe, it, expect, beforeEach, vi, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 
 // Test mock without importing the actual service
 describe('ExecutionLogService Mock Test', () => {

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from '@jest/globals';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { RuleEngine } from '../ruleEngine';
 
 describe('ruleEngine', () => {

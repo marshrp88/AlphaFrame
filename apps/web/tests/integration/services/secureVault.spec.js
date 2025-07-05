@@ -1,15 +1,15 @@
-import { describe, it, expect, beforeEach, vi } from '@jest/globals';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { unlock, set, get, lock, isUnlocked } from '../../../src/core/services/SecureVault';
 
 // Mock localStorage
 const localStorageMock = (() => {
   let store = {};
   return {
-    getItem: jest.fn(key => store[key]),
-    setItem: jest.fn((key, value) => {
+    getItem: vi.fn(key => store[key]),
+    setItem: vi.fn((key, value) => {
       store[key] = value;
     }),
-    clear: jest.fn(() => {
+    clear: vi.fn(() => {
       store = {};
     })
   };
@@ -20,22 +20,22 @@ Object.defineProperty(window, 'localStorage', {
 });
 
 // Mock crypto service
-jest.mock('../../../src/core/services/CryptoService', () => ({
-  deriveKey: jest.fn(() => 'derived-key'),
-  encrypt: jest.fn(data => `encrypted-${data}`),
-  decrypt: jest.fn(data => {
+vi.mock('../../../src/core/services/CryptoService', () => ({
+  deriveKey: vi.fn(() => 'derived-key'),
+  encrypt: vi.fn(data => `encrypted-${data}`),
+  decrypt: vi.fn(data => {
     if (data === 'encrypted-{"test":"value"}') {
       return '{"test":"value"}';
     }
     throw new Error('Decryption failed');
   }),
-  generateSalt: jest.fn(() => 'test-salt')
+  generateSalt: vi.fn(() => 'test-salt')
 }));
 
 describe('SecureVault', () => {
   beforeEach(() => {
     localStorage.clear();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('unlock', () => {

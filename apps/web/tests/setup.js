@@ -7,15 +7,15 @@ import { Crypto } from '@peculiar/webcrypto';
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation((query) => ({
+  value: vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(), // deprecated but required for React compatibility
-    removeListener: jest.fn(), // deprecated but required for React compatibility
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
   })),
 });
 
@@ -42,18 +42,18 @@ configure({
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
 // Mock React 18 concurrent features
-global.ResizeObserver = jest.fn().mockImplementation(() => ({
-  observe: jest.fn(),
-  unobserve: jest.fn(),
-  disconnect: jest.fn(),
+global.ResizeObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
 }));
 
 // Mock requestIdleCallback for React 18
-global.requestIdleCallback = jest.fn((callback) => {
+global.requestIdleCallback = vi.fn((callback) => {
   return setTimeout(() => callback({ didTimeout: false }), 0);
 });
 
-global.cancelIdleCallback = jest.fn((id) => {
+global.cancelIdleCallback = vi.fn((id) => {
   clearTimeout(id);
 });
 
@@ -61,10 +61,10 @@ global.cancelIdleCallback = jest.fn((id) => {
 
 // Mock localStorage
 const localStorageMock = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
 };
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
@@ -73,10 +73,10 @@ Object.defineProperty(window, 'localStorage', {
 
 // Mock sessionStorage
 const sessionStorageMock = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
 };
 Object.defineProperty(window, 'sessionStorage', {
   value: sessionStorageMock,
@@ -84,15 +84,15 @@ Object.defineProperty(window, 'sessionStorage', {
 });
 
 // Mock IntersectionObserver
-global.IntersectionObserver = jest.fn().mockImplementation(() => ({
-  observe: jest.fn(),
-  unobserve: jest.fn(),
-  disconnect: jest.fn(),
+global.IntersectionObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
 }));
 
 // Mock requestAnimationFrame
-global.requestAnimationFrame = jest.fn(cb => setTimeout(cb, 0));
-global.cancelAnimationFrame = jest.fn();
+global.requestAnimationFrame = vi.fn(cb => setTimeout(cb, 0));
+global.cancelAnimationFrame = vi.fn();
 
 // --- React 18 / Vitest Test Environment Setup ---
 
@@ -104,7 +104,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 // This unmounts React trees that were mounted with render to prevent memory leaks.
 afterEach(() => {
   cleanup();
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 // 3. Setup global test utilities.

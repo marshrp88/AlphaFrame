@@ -6,64 +6,68 @@
  * works correctly with proper error handling and privacy controls.
  *
  * Fixes Applied:
- * - Proper afterEach cleanup with jest.restoreAllMocks()
+ * - Proper afterEach cleanup with vi.clearAllMocks()
  * - Added proper mock isolation
  * - Comments added for clarity
  */
 
 // Mock dependencies with proper manual mocks that match the actual imports
 const mockCryptoService = {
-  encrypt: jest.fn(),
-  decrypt: jest.fn()
+  encrypt: vi.fn(),
+  decrypt: vi.fn()
 };
 
 const mockExecutionLogService = {
-  getLogs: jest.fn(),
-  log: jest.fn(),
-  logError: jest.fn().mockImplementation(() => Promise.resolve()),
-  queryLogs: jest.fn(),
-  getSessionLogs: jest.fn(),
-  getComponentLogs: jest.fn(),
-  getPerformanceLogs: jest.fn(),
-  clearOldLogs: jest.fn(),
-  exportLogs: jest.fn(),
-  decryptPayload: jest.fn()
+  getLogs: vi.fn(),
+  log: vi.fn(),
+  logError: vi.fn().mockImplementation(() => Promise.resolve()),
+  queryLogs: vi.fn(),
+  getSessionLogs: vi.fn(),
+  getComponentLogs: vi.fn(),
+  getPerformanceLogs: vi.fn(),
+  clearOldLogs: vi.fn(),
+  exportLogs: vi.fn(),
+  decryptPayload: vi.fn()
 };
 
 const mockBudgetService = {
-  getBudgetSummary: jest.fn()
+  getBudgetSummary: vi.fn()
 };
 
 const mockCashFlowService = {
-  getCashFlowSummary: jest.fn()
+  getCashFlowSummary: vi.fn()
 };
 
 const mockPortfolioAnalyzer = {
-  analyzePortfolio: jest.fn()
+  analyzePortfolio: vi.fn()
 };
 
-jest.mock('../../../src/core/services/CryptoService.js', () => ({
+vi.mock('../../../src/core/services/CryptoService.js', () => ({
+  __esModule: true,
   default: mockCryptoService
 }));
 
-jest.mock('../../../src/core/services/ExecutionLogService.js', () => ({
-  default: mockExecutionLogService,
-  executionLogService: mockExecutionLogService
+vi.mock('../../../src/core/services/ExecutionLogService.js', () => ({
+  __esModule: true,
+  default: mockExecutionLogService
 }));
 
-jest.mock('../../../src/features/pro/services/BudgetService.js', () => ({
+vi.mock('../../../src/features/pro/services/BudgetService.js', () => ({
+  __esModule: true,
   default: mockBudgetService
 }));
 
-jest.mock('../../../src/features/pro/services/CashFlowService.js', () => ({
+vi.mock('../../../src/features/pro/services/CashFlowService.js', () => ({
+  __esModule: true,
   default: mockCashFlowService
 }));
 
-jest.mock('../../../src/features/pro/services/PortfolioAnalyzer.js', () => ({
+vi.mock('../../../src/features/pro/services/PortfolioAnalyzer.js', () => ({
+  __esModule: true,
   default: mockPortfolioAnalyzer
 }));
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('FeedbackUploader', () => {
   let feedbackUploader;
@@ -78,29 +82,29 @@ describe('FeedbackUploader', () => {
     budgetService = (await import('../../../src/features/pro/services/BudgetService.js')).default;
     cashFlowService = (await import('../../../src/features/pro/services/CashFlowService.js')).default;
     // Direct override of singleton methods
-    executionLogService.logError = jest.fn().mockResolvedValue(true);
-    executionLogService.log = jest.fn().mockResolvedValue({ id: 'mock-log-id' });
-    executionLogService.getLogs = jest.fn().mockResolvedValue([
+    executionLogService.logError = vi.fn().mockResolvedValue(true);
+    executionLogService.log = vi.fn().mockResolvedValue({ id: 'mock-log-id' });
+    executionLogService.getLogs = vi.fn().mockResolvedValue([
       { type: 'test.log', timestamp: new Date().toISOString(), payload: { test: 'data' } }
     ]);
-    budgetService.getBudgetSummary = jest.fn().mockReturnValue({
+    budgetService.getBudgetSummary = vi.fn().mockReturnValue({
       totalBudget: 5000,
       categories: 5,
       monthlyIncome: 6000
     });
-    cashFlowService.getCashFlowSummary = jest.fn().mockReturnValue({
+    cashFlowService.getCashFlowSummary = vi.fn().mockReturnValue({
       netCashFlow: 1000,
       income: 6000,
       expenses: 5000
     });
     feedbackUploader = new FeedbackUploader();
     
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 
     // Mock localStorage
     Object.defineProperty(window, 'localStorage', {
       value: {
-        getItem: jest.fn((key) => {
+        getItem: vi.fn((key) => {
           const defaults = {
             dashboardMode: 'PLANNER',
             theme: 'light',
@@ -110,9 +114,9 @@ describe('FeedbackUploader', () => {
           };
           return defaults[key] || null;
         }),
-        setItem: jest.fn(),
-        removeItem: jest.fn(),
-        clear: jest.fn()
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+        clear: vi.fn()
       },
       writable: true
     });
@@ -120,28 +124,28 @@ describe('FeedbackUploader', () => {
     // Mock navigator.clipboard
     Object.defineProperty(navigator, 'clipboard', {
       value: {
-        writeText: jest.fn()
+        writeText: vi.fn()
       },
       writable: true
     });
 
     // Mock URL.createObjectURL and URL.revokeObjectURL
-    global.URL.createObjectURL = jest.fn();
-    global.URL.revokeObjectURL = jest.fn();
+    global.URL.createObjectURL = vi.fn();
+    global.URL.revokeObjectURL = vi.fn();
 
     // Mock document methods
-    document.createElement = jest.fn(() => ({
+    document.createElement = vi.fn(() => ({
       href: '',
       download: '',
-      click: jest.fn()
+      click: vi.fn()
     }));
-    document.body.appendChild = jest.fn();
-    document.body.removeChild = jest.fn();
+    document.body.appendChild = vi.fn();
+    document.body.removeChild = vi.fn();
 
     // Import and mock cryptoService singleton
     const cryptoService = (await import('../../../src/core/services/CryptoService.js')).default;
-    cryptoService.encrypt = jest.fn().mockResolvedValue('encrypted-data');
-    cryptoService.decrypt = jest.fn().mockResolvedValue('mock-decrypted');
+    cryptoService.encrypt = vi.fn().mockResolvedValue('encrypted-data');
+    cryptoService.decrypt = vi.fn().mockResolvedValue('mock-decrypted');
     
     // Additional mock patches for complete alignment
     mockPortfolioAnalyzer.analyzePortfolio.mockResolvedValue({
@@ -163,7 +167,7 @@ describe('FeedbackUploader', () => {
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('Snapshot Generation', () => {
@@ -221,7 +225,7 @@ describe('FeedbackUploader', () => {
       
       // Override cryptoService to simulate encryption failure
       const cryptoService = (await import('../../../src/core/services/CryptoService.js')).default;
-      cryptoService.encrypt = jest.fn().mockRejectedValue(new Error('Encryption failed'));
+      cryptoService.encrypt = vi.fn().mockRejectedValue(new Error('Encryption failed'));
 
       const snapshot = await feedbackUploader.generateSnapshot(options);
 
@@ -360,8 +364,8 @@ describe('FeedbackUploader', () => {
 
     it('should handle missing financial data', async () => {
       // Override singletons for this specific test
-      budgetService.getBudgetSummary = jest.fn().mockReturnValue({});
-      cashFlowService.getCashFlowSummary = jest.fn().mockReturnValue({});
+      budgetService.getBudgetSummary = vi.fn().mockReturnValue({});
+      cashFlowService.getCashFlowSummary = vi.fn().mockReturnValue({});
 
       const summary = await feedbackUploader.generateFinancialSummary();
 
@@ -372,7 +376,7 @@ describe('FeedbackUploader', () => {
 
     it('should handle service errors gracefully', async () => {
       // Override singletons for this specific test
-      budgetService.getBudgetSummary = jest.fn().mockImplementation(() => {
+      budgetService.getBudgetSummary = vi.fn().mockImplementation(() => {
         throw new Error('Service error');
       });
 

@@ -16,7 +16,7 @@ const mockStorage = (() => {
 Object.defineProperty(window, 'localStorage', { value: mockStorage });
 Object.defineProperty(global, 'localStorage', { value: mockStorage });
 
-import { describe, it, expect, beforeEach, afterEach, vi } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('Financial State Store', () => {
   beforeEach(async () => {

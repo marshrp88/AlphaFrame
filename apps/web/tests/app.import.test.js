@@ -1,5 +1,5 @@
 // Test that all imports work correctly
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 
 // Mock config.js to avoid import.meta.env issues
 jest.mock('@/lib/config.js', () => ({

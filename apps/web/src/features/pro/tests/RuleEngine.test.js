@@ -26,7 +26,7 @@
  * - PHASE 2 FIXES: Updated to match actual return structures from service methods
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from '@jest/globals';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // Import RuleEngine directly without mocking ExecutionLogService
 import { RuleEngine } from '../../../lib/services/ruleEngine.js';

@@ -37,7 +37,7 @@ testFiles.forEach(filePath => {
     if (content.includes("from 'vitest'") || content.includes('from "vitest"')) {
       content = content.replace(
         /import\s+\{([^}]+)\}\s+from\s+['"]vitest['"];?/g,
-        'import {$1} from \'@jest/globals\';'
+        'import {$1} from \'vitest\';'
       );
       fileChanged = true;
     }

@@ -3,7 +3,7 @@
  * Tests Core Web Vitals monitoring functionality
  */
 
-import { describe, it, expect, beforeEach } from '@jest/globals';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('WebVitalsMonitor', () => {
   beforeEach(() => {

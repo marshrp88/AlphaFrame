@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from '@jest/globals';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import ruleEngine from '../ruleEngine';
 
 // CLUSTER 2 FIX: Proper transaction data with required fields

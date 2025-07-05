@@ -13,17 +13,17 @@ const mockTransaction = {
 
 describe('ruleEngine (unit)', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     // Inject a test-safe logger mock into the singleton
     ruleEngine.logger = {
-      log: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn()
+      log: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn()
     };
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('should evaluate simple greater-than rule', async () => {

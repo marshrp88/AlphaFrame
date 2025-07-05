@@ -3,7 +3,7 @@
  * Tests WCAG 2.1 AA compliance for AlphaFrame
  */
 
-import { describe, it, expect, beforeEach } from '@jest/globals';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 

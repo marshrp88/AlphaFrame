@@ -17,7 +17,7 @@
  * analyzes portfolios, calculates metrics, and generates actionable insights.
  */
 
-import { describe, it, expect, beforeEach, vi, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 
 // Mock the module at the top level
 jest.mock('../../../core/services/ExecutionLogService.js');

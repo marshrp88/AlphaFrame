@@ -116,7 +116,7 @@ jest.mock('../../../src/lib/store/logStore', () => ({
 }));
 
 // ✅ Now import after all mocks are defined
-import { describe, it, expect, beforeEach, vi, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { ExecutionController } from '@/lib/services/ExecutionController';
 
 describe('Confirmation Modal Integration', () => {

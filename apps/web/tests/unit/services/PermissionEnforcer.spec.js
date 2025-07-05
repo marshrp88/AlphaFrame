@@ -1,22 +1,20 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { PermissionEnforcer } from '@/lib/services/PermissionEnforcer';
 
 // Mock the authStore dependency
-jest.mock('@/lib/services/authStore', () => ({
-  useAuthStore: jest.fn(() => ({
+vi.mock('@/lib/services/authStore', () => ({
+  useAuthStore: vi.fn(() => ({
     getState: () => ({
-      user: {
-        permissions: ['read:financial_data', 'write:financial_data']
-      },
-      isAuthenticated: true
-    })
-  }))
+      user: { id: 'test-user', role: 'admin' },
+      isAuthenticated: true,
+    }),
+  })),
 }));
 
 // Mock user and action objects for static method tests
 describe('PermissionEnforcer (unit)', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should allow actions for users with correct permissions', async () => {
@@ -40,6 +38,10 @@ describe('PermissionEnforcer (unit)', () => {
   it('should handle undefined user or action', async () => {
     const result = await PermissionEnforcer.canExecuteAction(undefined);
     expect(result.allowed).toBeDefined();
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 });
 

@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach, vi } from '@jest/globals';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-jest.mock('@/lib/services/ExecutionController', () => {
-  const mockExecuteAction = jest.fn();
+vi.mock('@/lib/services/ExecutionController', () => {
+  const mockExecuteAction = vi.fn();
   return {
     default: {
       executeAction: mockExecuteAction
@@ -11,7 +11,7 @@ jest.mock('@/lib/services/ExecutionController', () => {
 
 describe('FrameSync Integration', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should execute simple action successfully', async () => {

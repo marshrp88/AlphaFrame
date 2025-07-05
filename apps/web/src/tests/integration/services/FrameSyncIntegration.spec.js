@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from '@jest/globals';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 // Define mocks at the top level to avoid hoisting issues
 const mockExecuteAction = jest.fn();

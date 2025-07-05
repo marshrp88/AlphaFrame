@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, jest } from '@jest/globals';
+import { describe, it, expect, beforeEach, jest } from 'vitest';
 
 // Mock tweetnacl and tweetnacl-util before importing the service
 jest.mock('tweetnacl', () => {

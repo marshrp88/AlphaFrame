@@ -12,7 +12,7 @@
  * Conclusion: Ensures ReportCenter provides correct, actionable, and auditable reports.
  */
 
-import { describe, it, expect, beforeEach, vi, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 
 // Mock the module at the top level
 jest.mock('../../../core/services/ExecutionLogService.js');

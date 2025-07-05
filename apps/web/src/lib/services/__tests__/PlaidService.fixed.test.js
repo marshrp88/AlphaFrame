@@ -12,7 +12,7 @@
  * - FEEDBACKUPLOADER PATTERN: Applied dynamic import + singleton override pattern
  */
 
-import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, jest } from 'vitest';
 
 // Mock Plaid API at module level before any imports
 jest.mock('plaid', () => ({

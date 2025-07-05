@@ -1,7 +1,7 @@
 // CLUSTER 1 FIX: Add test-local SyncEngine mock BEFORE imports to prevent hanging
-jest.mock('../../../src/lib/services/syncEngine', () => ({
-  initializePlaid: jest.fn(() => Promise.resolve({ clientId: 'test_client' })),
-  syncTransactions: jest.fn((accountId) => {
+vi.mock('../../../src/lib/services/syncEngine', () => ({
+  initializePlaid: vi.fn(() => Promise.resolve({ clientId: 'test_client' })),
+  syncTransactions: vi.fn((accountId) => {
     // CLUSTER 2 FIX: Mock should reject for invalid account IDs
     if (accountId === 'invalid_id') {
       return Promise.reject(new Error('Invalid account ID'));
@@ -10,11 +10,11 @@ jest.mock('../../../src/lib/services/syncEngine', () => ({
       { id: 'txn_1', amount: 100, date: '2024-01-01' }
     ]);
   }),
-  syncBalances: jest.fn(() => Promise.resolve({ current: 1000, available: 950 })),
-  handleWebhook: jest.fn(() => Promise.resolve({ success: true }))
+  syncBalances: vi.fn(() => Promise.resolve({ current: 1000, available: 950 })),
+  handleWebhook: vi.fn(() => Promise.resolve({ success: true }))
 }));
 
-import { describe, it, expect, beforeEach, afterEach, vi } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { initializePlaid, syncTransactions, syncBalances, handleWebhook } from '../../../src/lib/services/syncEngine';
 
 describe('SyncEngine Integration', () => {
@@ -27,11 +27,11 @@ describe('SyncEngine Integration', () => {
   const mockAccountId = 'test_account_id';
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('should initialize Plaid client with correct config', async () => {
