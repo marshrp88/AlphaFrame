@@ -18,6 +18,7 @@
 import React, { useState } from 'react';
 import TaxSimulator from './TaxSimulator';
 import DebtSimulator from './DebtSimulator';
+import RetirementSimulator from './RetirementSimulator';
 import './ProPlannerPage.css';
 
 const TABS = [
@@ -55,20 +56,7 @@ export default function ProPlannerPage() {
       <div className="tab-content">
         {activeTab === 'tax' && <TaxSimulator />}
         {activeTab === 'debt' && <DebtSimulator />}
-        {activeTab === 'retirement' && (
-          <div className="retirement-simulator">
-            <div className="simulator-header">
-              <h2>Retirement Planning Simulator</h2>
-              <p>Advanced retirement forecasting with Monte Carlo simulations</p>
-            </div>
-            <div className="simulator-content">
-              <div className="input-section">
-                <h3>Coming Soon</h3>
-                <p>Retirement planning tools are being developed for Sprint 3 of Galileo V2.2</p>
-              </div>
-            </div>
-          </div>
-        )}
+        {activeTab === 'retirement' && <RetirementSimulator />}
       </div>
     </div>
   );
