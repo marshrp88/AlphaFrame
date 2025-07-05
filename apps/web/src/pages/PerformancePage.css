@@ -1,0 +1,491 @@
+/**
+ * PerformancePage.css
+ * 
+ * PURPOSE: Professional styling for the PerformancePage component
+ * Provides modern, responsive design with clear data visualization
+ * and optimal user experience for performance monitoring and launch management.
+ */
+
+.performance-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Page Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  color: white;
+}
+
+.header-content h1 {
+  margin: 0 0 10px 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.header-content p {
+  margin: 0;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.header-actions {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.readiness-check-btn,
+.refresh-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.readiness-check-btn {
+  background-color: #10b981;
+  color: white;
+}
+
+.readiness-check-btn:hover {
+  background-color: #059669;
+}
+
+.refresh-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.refresh-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Launch Status Section */
+.launch-status-section {
+  margin-bottom: 30px;
+}
+
+.launch-status-card {
+  padding: 25px;
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.status-header h2 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 1.5rem;
+}
+
+.status-details {
+  display: grid;
+  gap: 20px;
+}
+
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.status-item:last-child {
+  border-bottom: none;
+}
+
+.status-item .label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.status-item .value {
+  color: #1f2937;
+}
+
+.readiness-summary h4 {
+  margin: 0 0 15px 0;
+  color: #374151;
+  font-size: 1.1rem;
+}
+
+.readiness-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.readiness-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #f9fafb;
+  border-radius: 6px;
+}
+
+.readiness-item .category {
+  font-weight: 500;
+  color: #374151;
+  text-transform: capitalize;
+}
+
+.readiness-item .score {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Performance Overview Section */
+.performance-overview-section {
+  margin-bottom: 30px;
+}
+
+.performance-overview-card {
+  padding: 25px;
+}
+
+.performance-overview-card h2 {
+  margin: 0 0 20px 0;
+  color: #1f2937;
+  font-size: 1.5rem;
+}
+
+.performance-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.metric-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+}
+
+.metric-item .label {
+  font-weight: 500;
+  color: #374151;
+}
+
+.metric-item .value {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Dashboard Section */
+.dashboard-section {
+  margin-bottom: 30px;
+}
+
+/* Launch Actions Section */
+.launch-actions-section {
+  margin-bottom: 30px;
+}
+
+.launch-actions-card {
+  padding: 25px;
+}
+
+.launch-actions-card h2 {
+  margin: 0 0 20px 0;
+  color: #1f2937;
+  font-size: 1.5rem;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.action-item {
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #f9fafb;
+}
+
+.action-item h4 {
+  margin: 0 0 10px 0;
+  color: #1f2937;
+  font-size: 1.1rem;
+}
+
+.action-item p {
+  margin: 0 0 15px 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Alerts Section */
+.alerts-section {
+  margin-bottom: 30px;
+}
+
+.alerts-card {
+  padding: 25px;
+}
+
+.alerts-card h2 {
+  margin: 0 0 20px 0;
+  color: #1f2937;
+  font-size: 1.5rem;
+}
+
+.alerts-list {
+  display: grid;
+  gap: 15px;
+}
+
+.alert-item {
+  margin: 0;
+}
+
+.alert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.alert-time {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* Recommendations Section */
+.recommendations-section {
+  margin-bottom: 30px;
+}
+
+.recommendations-card {
+  padding: 25px;
+}
+
+.recommendations-card h2 {
+  margin: 0 0 20px 0;
+  color: #1f2937;
+  font-size: 1.5rem;
+}
+
+.recommendations-list {
+  display: grid;
+  gap: 20px;
+}
+
+.recommendation-item {
+  padding: 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #f9fafb;
+}
+
+.recommendation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.recommendation-header h4 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 1rem;
+}
+
+.recommendation-item p {
+  margin: 0 0 10px 0;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.recommendation-item ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #374151;
+}
+
+.recommendation-item li {
+  margin-bottom: 5px;
+  line-height: 1.4;
+}
+
+/* Loading State */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 20px;
+  text-align: center;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #e5e7eb;
+  border-top: 5px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-state p {
+  color: #6b7280;
+  font-size: 1.1rem;
+}
+
+/* Error Alert */
+.error-alert {
+  margin: 20px;
+  padding: 30px;
+  text-align: center;
+}
+
+.error-alert h3 {
+  margin: 0 0 15px 0;
+  color: #dc2626;
+}
+
+.error-alert p {
+  margin: 0 0 20px 0;
+  color: #6b7280;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .performance-page {
+    padding: 15px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  .header-actions {
+    justify-content: center;
+  }
+
+  .performance-metrics {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .actions-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    padding: 15px;
+  }
+
+  .header-content h1 {
+    font-size: 2rem;
+  }
+
+  .header-content p {
+    font-size: 1rem;
+  }
+
+  .header-actions {
+    flex-direction: column;
+  }
+
+  .readiness-check-btn,
+  .refresh-btn {
+    width: 100%;
+  }
+
+  .status-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .readiness-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .performance-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .actions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .recommendation-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .performance-page {
+    padding: 10px;
+  }
+
+  .page-header {
+    padding: 15px;
+  }
+
+  .header-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .launch-status-card,
+  .performance-overview-card,
+  .launch-actions-card,
+  .alerts-card,
+  .recommendations-card {
+    padding: 15px;
+  }
+
+  .status-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .readiness-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+} 
