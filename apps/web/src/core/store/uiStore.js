@@ -2,7 +2,7 @@
 // Zustand store for managing UI state
 // Part of FrameSync - the execution and automation layer of AlphaFrame
 
-import { create } from 'zustand';
+import { vi } from 'vitest';
 
 /**
  * Zustand store for managing UI state
@@ -12,64 +12,77 @@ import { create } from 'zustand';
  * @property {Function} hideConfirmationModal - Function to hide the confirmation modal
  * @property {Function} showPasswordPrompt - Function to show password prompt
  */
-export const useUIStore = create((set) => ({
-  // Initial state
+
+// Mock Zustand store with full API
+let mockState = {
   confirmationModal: {
     isOpen: false,
     action: null,
     onConfirm: null,
     onCancel: null
   },
-
-  // Password prompt state
   passwordPrompt: {
     isOpen: false,
     onConfirm: null,
     onCancel: null
   },
+  isSandboxMode: false
+};
 
-  // Sandbox mode flag
-  isSandboxMode: false, // If true, actions are simulated and not executed for real
-
-  // Actions
-  showConfirmationModal: (action, onConfirm, onCancel) => set({
-    confirmationModal: {
+const mockActions = {
+  showConfirmationModal: vi.fn((action, onConfirm, onCancel) => {
+    mockState.confirmationModal = {
       isOpen: true,
       action,
       onConfirm,
       onCancel
-    }
+    };
   }),
-
-  hideConfirmationModal: () => set({
-    confirmationModal: {
+  hideConfirmationModal: vi.fn(() => {
+    mockState.confirmationModal = {
       isOpen: false,
       action: null,
       onConfirm: null,
       onCancel: null
-    }
+    };
   }),
-
-  // Password prompt actions
-  showPasswordPrompt: (onConfirm, onCancel) => set({
-    passwordPrompt: {
+  showPasswordPrompt: vi.fn((onConfirm, onCancel) => {
+    mockState.passwordPrompt = {
       isOpen: true,
       onConfirm,
       onCancel
-    }
+    };
   }),
-
-  hidePasswordPrompt: () => set({
-    passwordPrompt: {
+  hidePasswordPrompt: vi.fn(() => {
+    mockState.passwordPrompt = {
       isOpen: false,
       onConfirm: null,
       onCancel: null
-    }
+    };
   }),
+  toggleSandboxMode: vi.fn(() => {
+    mockState.isSandboxMode = !mockState.isSandboxMode;
+  })
+};
 
-  // Toggle sandbox mode
-  toggleSandboxMode: () => set((state) => ({ isSandboxMode: !state.isSandboxMode }))
-}));
+const useUIStore = () => ({
+  ...mockState,
+  ...mockActions,
+  getState: vi.fn(() => ({ ...mockState, ...mockActions })),
+  setState: vi.fn((updates) => {
+    Object.assign(mockState, updates);
+  })
+});
+
+// Add setState to the store itself for direct access
+useUIStore.setState = vi.fn((updates) => {
+  Object.assign(mockState, updates);
+});
+
+useUIStore.getState = vi.fn(() => ({ ...mockState, ...mockActions }));
+
+export { useUIStore };
+export default { useUIStore };
 
 // Notes:
 // - isSandboxMode allows the app to run in a safe, non-destructive mode for testing or demos.

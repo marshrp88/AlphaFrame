@@ -4,7 +4,7 @@
 // 10th grade level comments included
 
 import React from 'react';
-import { cn } from '@/lib/utils.js';
+import { cn } from '@/lib/utils';
 import './select.css';
 
 /**

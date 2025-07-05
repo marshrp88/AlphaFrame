@@ -3,10 +3,10 @@
  */
 
 const secureVault = {
-  get: jest.fn(() => 'mock-token'),
-  set: jest.fn(),
-  remove: jest.fn(),
-  clear: jest.fn()
+  get: vi.fn(() => 'mock-token'),
+  set: vi.fn(),
+  remove: vi.fn(),
+  clear: vi.fn()
 };
 
 export default secureVault; 

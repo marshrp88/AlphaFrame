@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // Mock config
-jest.mock('../../config', () => ({
+vi.mock('../../config', () => ({
   default: {
     plaid: {
       clientId: 'test-client-id',
@@ -12,23 +12,23 @@ jest.mock('../../config', () => ({
 }));
 
 // Mock Plaid API at module level before any imports
-jest.mock('plaid', () => ({
-  Configuration: jest.fn(),
-  PlaidApi: jest.fn().mockImplementation(() => ({
-    linkTokenCreate: jest.fn().mockResolvedValue({
+vi.mock('plaid', () => ({
+  Configuration: vi.fn(),
+  PlaidApi: vi.fn().mockImplementation(() => ({
+    linkTokenCreate: vi.fn().mockResolvedValue({
       data: {
         link_token: 'test-link-token',
         expiration: '2024-12-31',
         request_id: 'test-request-id'
       }
     }),
-    itemPublicTokenExchange: jest.fn().mockResolvedValue({
+    itemPublicTokenExchange: vi.fn().mockResolvedValue({
       data: {
         access_token: 'test-access-token',
         item_id: 'test-item-id'
       }
     }),
-    accountsBalanceGet: jest.fn().mockResolvedValue({
+    accountsBalanceGet: vi.fn().mockResolvedValue({
       data: {
         accounts: [
           {
@@ -38,7 +38,7 @@ jest.mock('plaid', () => ({
         ]
       }
     }),
-    transactionsGet: jest.fn().mockResolvedValue({
+    transactionsGet: vi.fn().mockResolvedValue({
       data: {
         transactions: [],
         total_transactions: 0,
@@ -51,7 +51,7 @@ jest.mock('plaid', () => ({
   }
 }));
 
-jest.mock("@/lib/env", () => ({
+vi.mock("@/lib/env", () => ({
   env: {
     VITE_PLAID_CLIENT_ID: "test-client-id",
     VITE_PLAID_SECRET: "test-secret",
@@ -65,29 +65,29 @@ describe('PlaidService', () => {
 
   beforeEach(async () => {
     // Reset modules
-    jest.resetModules();
-    jest.clearAllMocks();
+    vi.resetModules();
+    vi.clearAllMocks();
 
     // Create a completely new localStorage mock
     const mockLocalStorage = {
       store: {
         'plaid_access_token': 'test-plaid-token'
       },
-      getItem: jest.fn(function(key) {
+      getItem: vi.fn(function(key) {
         console.log('MOCK localStorage.getItem called with:', key);
         const value = this.store[key] || null;
         console.log('MOCK localStorage.getItem returning:', value);
         return value;
       }),
-      setItem: jest.fn(function(key, value) {
+      setItem: vi.fn(function(key, value) {
         console.log('MOCK localStorage.setItem called with:', key, value);
         this.store[key] = value.toString();
       }),
-      removeItem: jest.fn(function(key) {
+      removeItem: vi.fn(function(key) {
         console.log('MOCK localStorage.removeItem called with:', key);
         delete this.store[key];
       }),
-      clear: jest.fn(function() {
+      clear: vi.fn(function() {
         console.log('MOCK localStorage.clear called');
         this.store = {};
       })
@@ -118,7 +118,7 @@ describe('PlaidService', () => {
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
     plaidService.accessToken = originalAccessToken;
   });
 

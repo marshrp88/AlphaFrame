@@ -17,21 +17,22 @@ import React from 'react';
 import { cn } from '@/lib/utils.js';
 import './Input.css';
 
-const Input = ({ 
+const Input = ({
   type = 'text',
   placeholder,
   value,
   onChange,
-  className = '', 
-  ...props 
+  className = '',
+  ...props
 }) => {
   return (
-    <input 
+    <input
       type={type}
       placeholder={placeholder}
       value={value}
       onChange={onChange}
       className={cn('input', className)}
+      data-testid="input"
       {...props}
     />
   );

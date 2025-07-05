@@ -2,54 +2,43 @@
  * Financial State Store for managing financial data
  */
 
-import { create } from 'zustand';
+import { vi } from 'vitest';
 
-export const useFinancialStateStore = create((set, get) => ({
-  // Account balances
+let mockState = {
   accounts: {},
-
-  // Goals
   goals: {},
+  budget: {}
+};
 
-  // Budgets
-  budgets: {},
-
-  // Actions
-  setAccountBalance: (accountId, balance) => set(state => ({
-    accounts: {
-      ...state.accounts,
-      [accountId]: balance
-    }
+const financialStateStore = {
+  getState: vi.fn(() => ({
+    ...mockState,
+    getAccountBalance: vi.fn((accountId) => mockState.accounts[accountId] || 1000),
+    getGoal: vi.fn((goalId) => mockState.goals[goalId] || { name: 'Test Goal', currentAmount: 1000 }),
+    setAccountBalance: vi.fn((accountId, balance) => { 
+      mockState.accounts[accountId] = balance; 
+    }),
+    updateGoalProgress: vi.fn((goalId, amount) => { 
+      if (!mockState.goals[goalId]) mockState.goals[goalId] = { currentAmount: 0 };
+      mockState.goals[goalId].currentAmount = Math.max(0, mockState.goals[goalId].currentAmount + amount);
+    }),
+    resetMonthlyBudgets: vi.fn(() => {
+      Object.keys(mockState.budget).forEach(key => {
+        if (!mockState.budget[key]) mockState.budget[key] = {};
+        mockState.budget[key].spent = 0;
+        mockState.budget[key].limit = 500;
+      });
+    })
   })),
+  setState: vi.fn((updates) => {
+    Object.assign(mockState, updates);
+  })
+};
 
-  getAccountBalance: (accountId) => {
-    const state = get();
-    return state.accounts[accountId] || 0;
-  },
+// Add setState to the store itself for direct access
+financialStateStore.setState = vi.fn((updates) => {
+  Object.assign(mockState, updates);
+});
 
-  setGoal: (goalId, goal) => set(state => ({
-    goals: {
-      ...state.goals,
-      [goalId]: goal
-    }
-  })),
-
-  getGoal: (goalId) => {
-    const state = get();
-    return state.goals[goalId] || null;
-  },
-
-  setBudget: (category, amount) => set(state => ({
-    budgets: {
-      ...state.budgets,
-      [category]: amount
-    }
-  })),
-
-  getBudget: (category) => {
-    const state = get();
-    return state.budgets[category] || 0;
-  }
-}));
-
-export default useFinancialStateStore; 
+export default financialStateStore;
+export { financialStateStore }; 

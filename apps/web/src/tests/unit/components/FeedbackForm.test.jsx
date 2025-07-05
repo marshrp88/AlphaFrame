@@ -1,13 +1,13 @@
 // Jest mock for FeedbackUploader must be declared BEFORE importing the component
-jest.mock('../../../lib/services/FeedbackUploader.js', () => ({
+vi.mock('../../../lib/services/FeedbackUploader.js', () => ({
   __esModule: true,
   default: {
-    generateSnapshot: jest.fn(() => {
+    generateSnapshot: vi.fn(() => {
       // Log to confirm mock is used
       console.log('[MOCK CALLED] generateSnapshot');
       return Promise.resolve({ snapshot: 'mockSnapshot' });
     }),
-    exportSnapshot: jest.fn(() => {
+    exportSnapshot: vi.fn(() => {
       console.log('[MOCK CALLED] exportSnapshot');
       return Promise.resolve({ success: true, format: 'file' });
     })
@@ -17,6 +17,7 @@ jest.mock('../../../lib/services/FeedbackUploader.js', () => ({
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import FeedbackForm from '../../../components/FeedbackForm.jsx';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 describe('FeedbackForm Unit', () => {
   it('renders the form and calls generateSnapshot on submit', async () => {

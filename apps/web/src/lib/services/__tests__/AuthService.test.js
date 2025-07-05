@@ -9,7 +9,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // Mock config
-jest.mock('../../config', () => ({
+vi.mock('../../config', () => ({
   config: {
     auth0: {
       domain: 'test.auth0.com',
@@ -25,9 +25,9 @@ jest.mock('../../config', () => ({
 }));
 
 // Mock ExecutionLogService
-jest.mock('../../../core/services/ExecutionLogService.js', () => ({
-  log: jest.fn(),
-  logError: jest.fn()
+vi.mock('../../../core/services/ExecutionLogService.js', () => ({
+  log: vi.fn(),
+  logError: vi.fn()
 }));
 
 describe('AuthService', () => {
@@ -39,8 +39,8 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     // Reset everything
-    jest.resetModules();
-    jest.clearAllMocks();
+    vi.resetModules();
+    vi.clearAllMocks();
 
     // Create a completely new localStorage mock
     const mockLocalStorage = {
@@ -56,21 +56,21 @@ describe('AuthService', () => {
         'alphaframe_refresh_token': 'mock-refresh-token',
         'alphaframe_session_expiry': (Date.now() + 3600000).toString()
       },
-      getItem: jest.fn(function(key) {
+      getItem: vi.fn(function(key) {
         console.log('MOCK localStorage.getItem called with:', key);
         const value = this.store[key] || null;
         console.log('MOCK localStorage.getItem returning:', value);
         return value;
       }),
-      setItem: jest.fn(function(key, value) {
+      setItem: vi.fn(function(key, value) {
         console.log('MOCK localStorage.setItem called with:', key, value);
         this.store[key] = value.toString();
       }),
-      removeItem: jest.fn(function(key) {
+      removeItem: vi.fn(function(key) {
         console.log('MOCK localStorage.removeItem called with:', key);
         delete this.store[key];
       }),
-      clear: jest.fn(function() {
+      clear: vi.fn(function() {
         console.log('MOCK localStorage.clear called');
         this.store = {};
       })
@@ -96,7 +96,7 @@ describe('AuthService', () => {
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   describe('Service Import', () => {

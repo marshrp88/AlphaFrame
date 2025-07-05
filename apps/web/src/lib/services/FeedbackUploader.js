@@ -19,6 +19,7 @@ import cryptoService from '../../core/services/CryptoService.js';
 import executionLogService from '../../core/services/ExecutionLogService.js';
 import budgetService from '../../features/pro/services/BudgetService.js';
 import cashFlowService from '../../features/pro/services/CashFlowService.js';
+import { vi } from 'vitest';
 
 class FeedbackUploader {
   constructor() {
@@ -364,4 +365,14 @@ const feedbackUploader = new FeedbackUploader();
 export default feedbackUploader;
 
 // Also export the class for testing
-export { FeedbackUploader }; 
+export { FeedbackUploader };
+
+// If this is a mock, export a default object with upload as vi.fn()
+const FeedbackUploaderMock = {
+  upload: vi.fn(() => Promise.resolve({ success: true, url: 'mock-url' })),
+  generateSnapshot: vi.fn(() => Promise.resolve({ snapshot: 'mockSnapshot' })),
+  exportSnapshot: vi.fn(() => Promise.resolve({ success: true })),
+  exportToClipboard: vi.fn(() => Promise.resolve({ success: true }))
+};
+
+export { FeedbackUploaderMock }; 

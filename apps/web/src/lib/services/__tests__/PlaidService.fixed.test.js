@@ -15,23 +15,23 @@
 import { describe, it, expect, beforeEach, afterEach, jest } from 'vitest';
 
 // Mock Plaid API at module level before any imports
-jest.mock('plaid', () => ({
-  Configuration: jest.fn(),
-  PlaidApi: jest.fn().mockImplementation(() => ({
-    linkTokenCreate: jest.fn().mockResolvedValue({
+vi.mock('plaid', () => ({
+  Configuration: vi.fn(),
+  PlaidApi: vi.fn().mockImplementation(() => ({
+    linkTokenCreate: vi.fn().mockResolvedValue({
       data: {
         link_token: 'test-link-token',
         expiration: '2024-12-31',
         request_id: 'test-request-id'
       }
     }),
-    itemPublicTokenExchange: jest.fn().mockResolvedValue({
+    itemPublicTokenExchange: vi.fn().mockResolvedValue({
       data: {
         access_token: 'test-access-token',
         item_id: 'test-item-id'
       }
     }),
-    accountsBalanceGet: jest.fn().mockResolvedValue({
+    accountsBalanceGet: vi.fn().mockResolvedValue({
       data: {
         accounts: [
           {
@@ -41,7 +41,7 @@ jest.mock('plaid', () => ({
         ]
       }
     }),
-    transactionsGet: jest.fn().mockResolvedValue({
+    transactionsGet: vi.fn().mockResolvedValue({
       data: {
         transactions: [{ transaction_id: 'test_transaction', amount: 100 }],
         total_transactions: 1,
@@ -54,7 +54,7 @@ jest.mock('plaid', () => ({
   }
 }));
 
-jest.mock("@/lib/env", () => ({
+vi.mock("@/lib/env", () => ({
   env: {
     VITE_PLAID_CLIENT_ID: "test-client-id",
     VITE_PLAID_SECRET: "test-secret",
@@ -63,9 +63,9 @@ jest.mock("@/lib/env", () => ({
 }));
 
 // Mock CryptoService
-jest.mock('../../../core/services/CryptoService.js', () => ({
-  encrypt: jest.fn().mockResolvedValue('encrypted_token'),
-  decrypt: jest.fn().mockResolvedValue('decrypted_token')
+vi.mock('../../../core/services/CryptoService.js', () => ({
+  encrypt: vi.fn().mockResolvedValue('encrypted_token'),
+  decrypt: vi.fn().mockResolvedValue('decrypted_token')
 }));
 
 // Import PlaidService at module level to fix scope issues
@@ -77,7 +77,7 @@ describe('PlaidService - Fixed', () => {
   let mockCryptoService;
 
   beforeEach(async () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     
     // Set environment variables BEFORE importing PlaidService
     process.env.VITE_PLAID_CLIENT_ID = 'test_client_id';
@@ -87,25 +87,25 @@ describe('PlaidService - Fixed', () => {
     // Set up Plaid client mock for each test
     if (!global.testUtils) global.testUtils = {};
     global.testUtils.mockPlaidClient = {
-      linkTokenCreate: jest.fn().mockResolvedValue({
+      linkTokenCreate: vi.fn().mockResolvedValue({
         data: {
           link_token: 'test_link_token_12345',
           expiration: '2024-12-31T23:59:59Z',
           request_id: 'test_request_id'
         }
       }),
-      itemPublicTokenExchange: jest.fn().mockResolvedValue({
+      itemPublicTokenExchange: vi.fn().mockResolvedValue({
         data: {
           access_token: 'test-access-token',
           item_id: 'test-item-id'
         }
       }),
-      accountsBalanceGet: jest.fn().mockResolvedValue({
+      accountsBalanceGet: vi.fn().mockResolvedValue({
         data: {
           accounts: [{ account_id: 'test_account', balances: { available: 1000 } }]
         }
       }),
-      transactionsGet: jest.fn().mockResolvedValue({
+      transactionsGet: vi.fn().mockResolvedValue({
         data: { 
           transactions: [{ transaction_id: 'test_transaction', amount: 100 }],
           total_transactions: 1,
@@ -118,10 +118,10 @@ describe('PlaidService - Fixed', () => {
     const createStorageMock = () => {
       let store = {};
       return {
-        getItem: jest.fn((key) => store[key] || null),
-        setItem: jest.fn((key, value) => { store[key] = value; }),
-        removeItem: jest.fn((key) => { delete store[key]; }),
-        clear: jest.fn(() => { store = {}; })
+        getItem: vi.fn((key) => store[key] || null),
+        setItem: vi.fn((key, value) => { store[key] = value; }),
+        removeItem: vi.fn((key) => { delete store[key]; }),
+        clear: vi.fn(() => { store = {}; })
       };
     };
     mockStorage = createStorageMock();
@@ -135,8 +135,8 @@ describe('PlaidService - Fixed', () => {
     // Override CryptoService singleton
     const cryptoModule = await import('../../../core/services/CryptoService.js');
     mockCryptoService = {
-      encrypt: jest.fn().mockResolvedValue('encrypted_token'),
-      decrypt: jest.fn().mockResolvedValue('decrypted_token')
+      encrypt: vi.fn().mockResolvedValue('encrypted_token'),
+      decrypt: vi.fn().mockResolvedValue('decrypted_token')
     };
     
     // Override the module exports
@@ -157,7 +157,7 @@ describe('PlaidService - Fixed', () => {
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   describe('Initialization', () => {

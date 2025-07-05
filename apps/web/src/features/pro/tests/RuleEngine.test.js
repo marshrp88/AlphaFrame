@@ -19,7 +19,7 @@
  * seamlessly with the logging system.
  * 
  * Fixes Applied:
- * - Proper afterEach cleanup with jest.restoreAllMocks()
+ * - Proper afterEach cleanup with vi.restoreAllMocks()
  * - Removed console.log statements for cleaner output
  * - Added proper mock isolation
  * - Comments added for clarity
@@ -38,21 +38,21 @@ describe('RuleEngine', () => {
   beforeEach(() => {
     // Create a simple mock logger
     loggerMock = {
-      log: jest.fn().mockResolvedValue(undefined),
-      logRuleTriggered: jest.fn().mockResolvedValue(undefined),
-      logError: jest.fn().mockResolvedValue(undefined),
-      queryLogs: jest.fn().mockResolvedValue([]),
-      getSessionLogs: jest.fn().mockResolvedValue([]),
-      clearOldLogs: jest.fn().mockResolvedValue(0)
+      log: vi.fn().mockResolvedValue(undefined),
+      logRuleTriggered: vi.fn().mockResolvedValue(undefined),
+      logError: vi.fn().mockResolvedValue(undefined),
+      queryLogs: vi.fn().mockResolvedValue([]),
+      getSessionLogs: vi.fn().mockResolvedValue([]),
+      clearOldLogs: vi.fn().mockResolvedValue(0)
     };
     
     // Create RuleEngine with injected mock logger
     ruleEngine = new RuleEngine(loggerMock);
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   // Simple executeRule test with known-good inputs

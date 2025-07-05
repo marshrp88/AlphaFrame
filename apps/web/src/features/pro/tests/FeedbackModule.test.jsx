@@ -1,4 +1,4 @@
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect  } from 'vitest';
 
 describe('FeedbackModule', () => {
   it('should be implemented', () => {

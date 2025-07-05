@@ -1,0 +1,360 @@
+import '@testing-library/jest-dom';
+import { cleanup, configure } from '@testing-library/react';
+import { Crypto } from '@peculiar/webcrypto';
+
+// --- CRITICAL: Jest window.matchMedia Mock (Research-Recommended) ---
+// This follows the research-recommended pattern for React 18 + Jest + jsdom compatibility
+
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+});
+
+// --- REACT 18 TEST ENVIRONMENT CONFIGURATION ---
+// This is CRITICAL for preventing React 18 rendering lifecycle issues
+
+// Configure React Testing Library for React 18
+configure({
+  // Increase timeout for async operations
+  asyncUtilTimeout: 15000,
+  
+  // Better error messages for element queries
+  getElementError: (message, container) => {
+    const error = new Error(message);
+    error.name = 'TestingLibraryElementError';
+    return error;
+  },
+  
+  // Disable automatic cleanup to prevent race conditions
+  testIdAttribute: 'data-testid',
+});
+
+// Set React 18 specific environment flags
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+
+// Mock React 18 concurrent features
+global.ResizeObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
+}));
+
+// Mock requestIdleCallback for React 18
+global.requestIdleCallback = vi.fn((callback) => {
+  return setTimeout(() => callback({ didTimeout: false }), 0);
+});
+
+global.cancelIdleCallback = vi.fn((id) => {
+  clearTimeout(id);
+});
+
+// --- Comprehensive Browser API Mocks ---
+
+// Mock localStorage
+const localStorageMock = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+};
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock,
+  writable: true,
+});
+
+// Mock sessionStorage
+const sessionStorageMock = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+};
+Object.defineProperty(window, 'sessionStorage', {
+  value: sessionStorageMock,
+  writable: true,
+});
+
+// Mock IntersectionObserver
+global.IntersectionObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
+}));
+
+// Mock requestAnimationFrame
+global.requestAnimationFrame = vi.fn(cb => setTimeout(cb, 0));
+global.cancelAnimationFrame = vi.fn();
+
+// --- Store Mock Configuration ---
+
+// Mock useAppStore
+vi.mock('@/core/store/useAppStore', () => {
+  let mockState = {
+    counter: 0,
+    accounts: [],
+    goals: [],
+    isLoading: false,
+    error: null,
+    dataSchemaVersion: 1
+  };
+
+  const mockActions = {
+    increment: vi.fn(() => {
+      mockState.counter += 1;
+    }),
+    reset: vi.fn(() => {
+      mockState.counter = 0;
+    }),
+    setAccounts: vi.fn((accounts) => {
+      mockState.accounts = accounts;
+    }),
+    addAccount: vi.fn((account) => {
+      mockState.accounts.push(account);
+    }),
+    updateAccount: vi.fn((id, updates) => {
+      const index = mockState.accounts.findIndex(acc => acc.id === id);
+      if (index !== -1) {
+        mockState.accounts[index] = { ...mockState.accounts[index], ...updates };
+      }
+    }),
+    removeAccount: vi.fn((id) => {
+      mockState.accounts = mockState.accounts.filter(acc => acc.id !== id);
+    }),
+    setLoading: vi.fn((loading) => {
+      mockState.isLoading = loading;
+    }),
+    setError: vi.fn((error) => {
+      mockState.error = error;
+    }),
+    clearError: vi.fn(() => {
+      mockState.error = null;
+    })
+  };
+
+  const useAppStore = () => ({
+    ...mockState,
+    ...mockActions,
+    getState: vi.fn(() => ({ ...mockState, ...mockActions })),
+    setState: vi.fn((updates) => {
+      Object.assign(mockState, updates);
+    })
+  });
+
+  useAppStore.setState = vi.fn((updates) => {
+    Object.assign(mockState, updates);
+  });
+
+  useAppStore.getState = vi.fn(() => ({ ...mockState, ...mockActions }));
+
+  return { useAppStore, default: { useAppStore } };
+});
+
+// Mock useUIStore
+vi.mock('@/core/store/uiStore', () => {
+  let mockState = {
+    confirmationModal: {
+      isOpen: false,
+      action: null,
+      onConfirm: null,
+      onCancel: null
+    },
+    passwordPrompt: {
+      isOpen: false,
+      onConfirm: null,
+      onCancel: null
+    },
+    isSandboxMode: false
+  };
+
+  const mockActions = {
+    showConfirmationModal: vi.fn((action, onConfirm, onCancel) => {
+      mockState.confirmationModal = {
+        isOpen: true,
+        action,
+        onConfirm,
+        onCancel
+      };
+    }),
+    hideConfirmationModal: vi.fn(() => {
+      mockState.confirmationModal = {
+        isOpen: false,
+        action: null,
+        onConfirm: null,
+        onCancel: null
+      };
+    }),
+    showPasswordPrompt: vi.fn((onConfirm, onCancel) => {
+      mockState.passwordPrompt = {
+        isOpen: true,
+        onConfirm,
+        onCancel
+      };
+    }),
+    hidePasswordPrompt: vi.fn(() => {
+      mockState.passwordPrompt = {
+        isOpen: false,
+        onConfirm: null,
+        onCancel: null
+      };
+    }),
+    toggleSandboxMode: vi.fn(() => {
+      mockState.isSandboxMode = !mockState.isSandboxMode;
+    })
+  };
+
+  const useUIStore = () => ({
+    ...mockState,
+    ...mockActions,
+    getState: vi.fn(() => ({ ...mockState, ...mockActions })),
+    setState: vi.fn((updates) => {
+      Object.assign(mockState, updates);
+    })
+  });
+
+  useUIStore.setState = vi.fn((updates) => {
+    Object.assign(mockState, updates);
+  });
+
+// Mock AuthService with all required methods
+vi.mock('@/lib/services/AuthService', () => {
+  const AuthService = {
+    initializeAuth: vi.fn().mockResolvedValue(true),
+    getAccessToken: vi.fn().mockReturnValue('mock-token'),
+    getCurrentUser: vi.fn().mockReturnValue({
+      id: 1,
+      name: 'Test User',
+      email: 'test@example.com',
+      sub: 'auth0|123',
+      'https://alphaframe.com/roles': 'BASIC'
+    }),
+    isAuthenticated: vi.fn().mockReturnValue(true),
+    getUserPermissions: vi.fn().mockReturnValue(['read:financial_data']),
+    hasPermission: vi.fn().mockReturnValue(true),
+    clearSession: vi.fn().mockResolvedValue(true),
+    login: vi.fn().mockResolvedValue(true),
+    logout: vi.fn().mockResolvedValue(true)
+  };
+  return { default: AuthService, AuthService };
+});
+
+// Mock PlaidService with all required methods
+vi.mock('@/lib/services/PlaidService', () => {
+  const PlaidService = {
+    isConfigured: true,
+    clearAccessToken: vi.fn(),
+    setAccessToken: vi.fn(),
+    getAccessToken: vi.fn().mockReturnValue('mock-plaid-token'),
+    createLinkToken: vi.fn().mockResolvedValue({
+      link_token: 'test-link-token',
+      expiration: '2024-12-31',
+      request_id: 'test-request-id'
+    }),
+    exchangePublicToken: vi.fn().mockResolvedValue({
+      access_token: 'test-access-token',
+      item_id: 'test-item-id'
+    }),
+    getAccountBalances: vi.fn().mockResolvedValue([
+      {
+        account_id: 'test-account',
+        balances: { available: 1000, current: 1000 }
+      }
+    ]),
+    getTransactions: vi.fn().mockResolvedValue([
+      {
+        transaction_id: 'test-transaction',
+        amount: 100,
+        date: '2024-01-01',
+        merchant_name: 'Test Merchant'
+      }
+    ])
+  };
+  return { default: PlaidService, PlaidService };
+});
+
+// Mock CryptoService with all required methods
+vi.mock('@/core/services/CryptoService', () => {
+  const CryptoService = {
+    encrypt: vi.fn().mockResolvedValue('encrypted-data'),
+    decrypt: vi.fn().mockResolvedValue('decrypted-data'),
+    generateKey: vi.fn().mockResolvedValue('mock-key'),
+    generateSalt: vi.fn().mockResolvedValue('mock-salt'),
+    deriveKey: vi.fn().mockResolvedValue('derived-key'),
+    hash: vi.fn().mockReturnValue('mock-hash'),
+    validateEncryption: vi.fn().mockReturnValue(true),
+    validateRetirementResult: vi.fn().mockReturnValue(true)
+  };
+  return { default: CryptoService, CryptoService };
+});
+
+// Mock FeedbackUploader with all required methods
+vi.mock('@/lib/services/FeedbackUploader', () => {
+  const FeedbackUploader = {
+    generateSnapshot: vi.fn().mockResolvedValue({ snapshot: 'mockSnapshot' }),
+    exportSnapshot: vi.fn().mockResolvedValue({ success: true }),
+    exportToClipboard: vi.fn().mockResolvedValue({ success: true }),
+    upload: vi.fn().mockResolvedValue({ success: true, url: 'mock-url' }),
+    sanitizeData: vi.fn().mockReturnValue({ sanitized: true }),
+    generateFinancialSummary: vi.fn().mockReturnValue({ summary: 'mock-summary' }),
+    collectUIPreferences: vi.fn().mockReturnValue({ theme: 'dark' }),
+    collectPerformanceMetrics: vi.fn().mockReturnValue({ loadTime: 1000 }),
+    validateSnapshot: vi.fn().mockReturnValue({ valid: true }),
+    calculateStatistics: vi.fn().mockReturnValue({ count: 10 })
+  };
+  return { default: FeedbackUploader, FeedbackUploader };
+});
+
+// Mock Input component
+vi.mock('@/shared/ui/Input', () => ({
+  default: vi.fn().mockImplementation(({ id, type = 'text', placeholder, value, onChange, onBlur, className = '', ...props }) => {
+    return {
+      type: 'input',
+      props: {
+        id,
+        type,
+        placeholder,
+        value,
+        onChange,
+        onBlur,
+        className: `input ${className}`,
+        'data-testid': id || 'input',
+        ...props
+      }
+    };
+  })
+}));
+
+// --- React 18 / Vitest Test Environment Setup ---
+
+// 1. Set the React 18 "act" environment flag.
+// This tells React it's running in a test environment and prevents "act" warnings.
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+
+// 2. Automatically run cleanup after each test.
+// This unmounts React trees that were mounted with render to prevent memory leaks.
+afterEach(() => {
+  cleanup();
+  vi.clearAllMocks();
+});
+
+// 3. Setup global test utilities.
+beforeEach(() => {
+  localStorageMock.getItem.mockReturnValue(null);
+  localStorageMock.setItem.mockClear();
+  localStorageMock.removeItem.mockClear();
+  localStorageMock.clear.mockClear();
+});
+
+// 4. Polyfill the Web Crypto API for happy-dom.
+// The happy-dom environment used by Vitest does not include a native crypto implementation.
+if (typeof window.crypto === 'undefined') {
+  window.crypto = new Crypto();
+} 

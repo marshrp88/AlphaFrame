@@ -3,26 +3,26 @@
  * Tests Core Web Vitals monitoring functionality
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 describe('WebVitalsMonitor', () => {
   beforeEach(() => {
     // Mock PerformanceObserver
-    global.PerformanceObserver = jest.fn().mockImplementation((callback) => ({
-      observe: jest.fn(),
-      disconnect: jest.fn(),
+    vi.mock(global, 'PerformanceObserver', () => ({
+      observe: vi.fn(),
+      disconnect: vi.fn(),
     }));
 
     // Mock performance API
-    global.performance = {
-      getEntriesByType: jest.fn().mockReturnValue([{
+    vi.mock(global, 'performance', {
+      getEntriesByType: vi.fn().mockReturnValue([{
         responseStart: 100,
         requestStart: 50,
       }]),
-      mark: jest.fn(),
-      measure: jest.fn(),
-      getEntriesByName: jest.fn().mockReturnValue([]),
-    };
+      mark: vi.fn(),
+      measure: vi.fn(),
+      getEntriesByName: vi.fn().mockReturnValue([]),
+    });
   });
 
   describe('Performance Budgets', () => {

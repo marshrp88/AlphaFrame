@@ -1,3 +1,4 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 /**
  * ExecutionLogService - Simplified Tests
  * 
@@ -9,9 +10,9 @@
 import executionLogService from '../../../core/services/ExecutionLogService.js';
 
 // Mock CryptoService
-jest.mock('../../../core/services/CryptoService.js', () => ({
-  encrypt: jest.fn().mockResolvedValue('encrypted-data'),
-  decrypt: jest.fn().mockResolvedValue(JSON.stringify({ test: 'data' }))
+vi.mock('../../../core/services/CryptoService.js', () => ({
+  encrypt: vi.fn().mockResolvedValue('encrypted-data'),
+  decrypt: vi.fn().mockResolvedValue(JSON.stringify({ test: 'data' }))
 }));
 
 import CryptoService from '../../../core/services/CryptoService.js';
@@ -30,7 +31,7 @@ describe('ExecutionLogService - Simplified Tests', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     // Restore original logs
     executionLogService.logs = [...originalLogs];
   });

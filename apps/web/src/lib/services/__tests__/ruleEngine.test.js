@@ -7,21 +7,21 @@ describe('ruleEngine', () => {
   beforeEach(() => {
     // Create a mock logger for the RuleEngine
     const mockLogger = {
-      log: jest.fn().mockResolvedValue(undefined),
-      logRuleTriggered: jest.fn().mockResolvedValue(undefined),
-      logError: jest.fn().mockResolvedValue(undefined),
-      queryLogs: jest.fn().mockResolvedValue([]),
-      getSessionLogs: jest.fn().mockResolvedValue([]),
-      clearOldLogs: jest.fn().mockResolvedValue(0)
+      log: vi.fn().mockResolvedValue(undefined),
+      logRuleTriggered: vi.fn().mockResolvedValue(undefined),
+      logError: vi.fn().mockResolvedValue(undefined),
+      queryLogs: vi.fn().mockResolvedValue([]),
+      getSessionLogs: vi.fn().mockResolvedValue([]),
+      clearOldLogs: vi.fn().mockResolvedValue(0)
     };
     
     // Create RuleEngine instance with mock logger
     ruleEngine = new RuleEngine(mockLogger);
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   describe('evaluateRule', () => {

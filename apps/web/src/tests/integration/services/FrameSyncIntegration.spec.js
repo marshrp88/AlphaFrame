@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // Define mocks at the top level to avoid hoisting issues
-const mockExecuteAction = jest.fn();
+const mockExecuteAction = vi.fn();
 
-jest.mock('@/lib/services/ExecutionController', () => ({
+vi.mock('@/lib/services/ExecutionController', () => ({
   default: {
     executeAction: mockExecuteAction
   }

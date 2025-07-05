@@ -58,7 +58,6 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: ['./src/setupTests.js'],
     css: false,
     // Fix for React 18 createRoot issues
     environmentOptions: {

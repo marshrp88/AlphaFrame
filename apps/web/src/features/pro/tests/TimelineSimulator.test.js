@@ -26,8 +26,8 @@ describe('ExecutionLogService Mock Test', () => {
   it('should mock ExecutionLogService correctly', () => {
     // Mock the service directly
     const mockExecutionLogService = {
-      log: jest.fn().mockResolvedValue({ id: 'test-log-id' }),
-      logError: jest.fn().mockResolvedValue({ id: 'test-error-id' })
+      log: vi.fn().mockResolvedValue({ id: 'test-log-id' }),
+      logError: vi.fn().mockResolvedValue({ id: 'test-error-id' })
     };
     
     expect(mockExecutionLogService).toBeDefined();
@@ -39,37 +39,37 @@ describe('ExecutionLogService Mock Test', () => {
 });
 
 // Mock the module at the top level
-jest.mock('../../../core/services/ExecutionLogService.js');
+vi.mock('../../../core/services/ExecutionLogService.js');
 
 // Import after mocks are set up
 import { TimelineSimulator, EVENT_TYPES } from '../services/TimelineSimulator.js';
 import executionLogService from '../../../core/services/ExecutionLogService.js';
 
 // Set up the mock implementation after import
-const mockLog = jest.fn().mockResolvedValue({ id: 'test-log-id' });
-const mockLogError = jest.fn().mockResolvedValue({ id: 'test-error-id' });
+const mockLog = vi.fn().mockResolvedValue({ id: 'test-log-id' });
+const mockLogError = vi.fn().mockResolvedValue({ id: 'test-error-id' });
 
 // Mock the default export
 executionLogService.log = mockLog;
 executionLogService.logError = mockLogError;
-executionLogService.logPortfolioAnalysis = jest.fn().mockResolvedValue({ id: 'test-portfolio-log-id' });
-executionLogService.logSimulationRun = jest.fn().mockResolvedValue({ id: 'test-simulation-log-id' });
-executionLogService.logBudgetForecast = jest.fn().mockResolvedValue({ id: 'test-budget-log-id' });
-executionLogService.logRuleTriggered = jest.fn().mockResolvedValue({ id: 'test-rule-log-id' });
-executionLogService.queryLogs = jest.fn().mockResolvedValue([]);
-executionLogService.getSessionLogs = jest.fn().mockResolvedValue([]);
-executionLogService.getComponentLogs = jest.fn().mockResolvedValue([]);
-executionLogService.getPerformanceLogs = jest.fn().mockResolvedValue([]);
-executionLogService.clearOldLogs = jest.fn().mockResolvedValue(0);
-executionLogService.exportLogs = jest.fn().mockResolvedValue({ logs: [] });
-executionLogService.decryptPayload = jest.fn().mockResolvedValue({});
-executionLogService.generateId = jest.fn(() => 'test-id');
-executionLogService.generateSessionId = jest.fn(() => 'test-session');
-executionLogService.getUserId = jest.fn(() => 'test-user');
-executionLogService.initDatabase = jest.fn().mockResolvedValue();
-executionLogService.initEncryption = jest.fn().mockResolvedValue();
-executionLogService.encryptPayload = jest.fn().mockResolvedValue('encrypted-data');
-executionLogService.storeLog = jest.fn().mockResolvedValue();
+executionLogService.logPortfolioAnalysis = vi.fn().mockResolvedValue({ id: 'test-portfolio-log-id' });
+executionLogService.logSimulationRun = vi.fn().mockResolvedValue({ id: 'test-simulation-log-id' });
+executionLogService.logBudgetForecast = vi.fn().mockResolvedValue({ id: 'test-budget-log-id' });
+executionLogService.logRuleTriggered = vi.fn().mockResolvedValue({ id: 'test-rule-log-id' });
+executionLogService.queryLogs = vi.fn().mockResolvedValue([]);
+executionLogService.getSessionLogs = vi.fn().mockResolvedValue([]);
+executionLogService.getComponentLogs = vi.fn().mockResolvedValue([]);
+executionLogService.getPerformanceLogs = vi.fn().mockResolvedValue([]);
+executionLogService.clearOldLogs = vi.fn().mockResolvedValue(0);
+executionLogService.exportLogs = vi.fn().mockResolvedValue({ logs: [] });
+executionLogService.decryptPayload = vi.fn().mockResolvedValue({});
+executionLogService.generateId = vi.fn(() => 'test-id');
+executionLogService.generateSessionId = vi.fn(() => 'test-session');
+executionLogService.getUserId = vi.fn(() => 'test-user');
+executionLogService.initDatabase = vi.fn().mockResolvedValue();
+executionLogService.initEncryption = vi.fn().mockResolvedValue();
+executionLogService.encryptPayload = vi.fn().mockResolvedValue('encrypted-data');
+executionLogService.storeLog = vi.fn().mockResolvedValue();
 
 describe('TimelineSimulator', () => {
   let timelineSimulator;
@@ -78,7 +78,7 @@ describe('TimelineSimulator', () => {
     timelineSimulator = new TimelineSimulator();
     
     // Reset all mocks before each test
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     
     // Re-setup the mock functions with default resolved values
     executionLogService.log.mockResolvedValue({ id: 'test-log-id' });
@@ -104,7 +104,7 @@ describe('TimelineSimulator', () => {
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   // Debug test to check mock structure

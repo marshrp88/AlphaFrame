@@ -1,3 +1,4 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 /**
  * RuleExecutionEngine.test.js - Phase 1 Validation Tests
  * 
@@ -109,7 +110,7 @@ describe('RuleExecutionEngine - Phase 1 Validation', () => {
     });
 
     it('should support event listener registration', () => {
-      const listener = jest.fn();
+      const listener = vi.fn();
       engine.onEvent(listener);
       
       expect(engine.listeners).toContain(listener);
