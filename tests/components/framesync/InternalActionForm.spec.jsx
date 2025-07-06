@@ -1,9 +1,9 @@
 // DIAGNOSTIC HEADER FOR TRIAGE
 console.log('TEST START: InternalActionForm');
-jest.setTimeout(30000); // 30s timeout for triage
+vi.setTimeout(30000); // 30s timeout for triage
 
 // --- ALL MOCKS MUST BE LOADED BEFORE COMPONENT IMPORTS ---
-jest.mock('@/lib/config.js', () => ({
+vi.mock('@/lib/config.js', () => ({
   config: {
     env: 'test',
     apiUrl: 'http://localhost:3000/api',
@@ -16,25 +16,25 @@ jest.mock('@/lib/config.js', () => ({
     logging: { level: 'info', debugMode: false },
     security: { encryptionKey: 'test-encryption-key', jwtSecret: 'test-jwt-secret' }
   },
-  validateConfig: jest.fn(() => ({ isValid: true, errors: [], warnings: [] })),
-  initializeConfig: jest.fn(() => ({ isValid: true, errors: [], warnings: [] })),
-  getFeatureFlag: jest.fn(() => false),
-  isDevelopment: jest.fn(() => true),
-  isProduction: jest.fn(() => false),
-  isStaging: jest.fn(() => false),
-  getSecureConfig: jest.fn(() => ({ env: 'test' }))
+  validateConfig: vi.fn(() => ({ isValid: true, errors: [], warnings: [] })),
+  initializeConfig: vi.fn(() => ({ isValid: true, errors: [], warnings: [] })),
+  getFeatureFlag: vi.fn(() => false),
+  isDevelopment: vi.fn(() => true),
+  isProduction: vi.fn(() => false),
+  isStaging: vi.fn(() => false),
+  getSecureConfig: vi.fn(() => ({ env: 'test' }))
 }));
 
-jest.mock('@/lib/services/ExecutionController', () => ({
-  executeAction: jest.fn(),
+vi.mock('@/lib/services/ExecutionController', () => ({
+  executeAction: vi.fn(),
 }));
 
-jest.mock('@/lib/services/PermissionEnforcer', () => ({
-  checkPermission: jest.fn(() => Promise.resolve(true)),
+vi.mock('@/lib/services/PermissionEnforcer', () => ({
+  checkPermission: vi.fn(() => Promise.resolve(true)),
 }));
 
-jest.mock('@/components/ui/use-toast', () => ({
-  useToast: () => ({ toast: jest.fn() }),
+vi.mock('@/components/ui/use-toast', () => ({
+  useToast: () => ({ toast: vi.fn() }),
 }));
 
 import React from 'react';

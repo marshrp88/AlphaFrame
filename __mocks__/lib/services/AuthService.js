@@ -1,0 +1,22 @@
+import { vi } from 'vitest';
+
+const AuthService = {
+  initializeAuth: vi.fn().mockResolvedValue(true),
+  getAccessToken: vi.fn().mockReturnValue('mock-token'),
+  getCurrentUser: vi.fn().mockReturnValue({
+    id: 1,
+    name: 'Test User',
+    email: 'test@example.com',
+    sub: 'auth0|123',
+    'https://alphaframe.com/roles': 'BASIC'
+  }),
+  isAuthenticated: vi.fn().mockReturnValue(true),
+  getUserPermissions: vi.fn().mockReturnValue(['read:financial_data']),
+  hasPermission: vi.fn().mockReturnValue(true),
+  clearSession: vi.fn().mockResolvedValue(true),
+  login: vi.fn().mockResolvedValue(true),
+  logout: vi.fn().mockResolvedValue(true)
+};
+
+export default AuthService;
+export { AuthService }; 
