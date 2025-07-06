@@ -21,7 +21,10 @@ import PerformanceDashboard from '../components/PerformanceDashboard.jsx';
 import PerformanceMonitor from '../lib/services/PerformanceMonitor.js';
 import BundleAnalyzer from '../lib/services/BundleAnalyzer.js';
 import LaunchPreparationService from '../lib/services/LaunchPreparationService.js';
-import { Card, Button, Alert, Badge } from '../shared/ui/index.js';
+import { Card } from '../shared/ui/Card.jsx';
+import { Button } from '../shared/ui/Button.jsx';
+import { Alert } from '../shared/ui/Alert.jsx';
+import { Badge } from '../shared/ui/badge.jsx';
 import './PerformancePage.css';
 
 const PerformancePage = () => {

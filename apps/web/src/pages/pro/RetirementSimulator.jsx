@@ -20,7 +20,13 @@ import React, { useState, useEffect } from 'react';
 import RetirementService from '../../lib/services/RetirementService.js';
 import MonteCarloRunner from '../../lib/services/MonteCarloRunner.js';
 import ExplainabilityEngine from '../../lib/services/ExplainabilityEngine.js';
-import { Card, Button, Input, Select, ProgressBar, Alert, Spinner } from '../../shared/ui/index.js';
+import Card from '../../shared/ui/Card.jsx';
+import Button from '../../shared/ui/Button.jsx';
+import Input from '../../shared/ui/Input.jsx';
+import Select from '../../shared/ui/Select.jsx';
+import ProgressBar from '../../shared/ui/ProgressBar.jsx';
+import Alert from '../../shared/ui/Alert.jsx';
+import Spinner from '../../shared/ui/Spinner.jsx';
 import './ProPlannerPage.css';
 
 const RetirementSimulator = () => {
