@@ -41,6 +41,7 @@ import About from './pages/About';
 import AlphaPro from './pages/AlphaPro';
 import TrustPage from './pages/TrustPage.jsx';
 import ProPlannerPage from './pages/pro/ProPlannerPage.jsx';
+import LandingPage from './pages/LandingPage.jsx';
 
 // Lazy load existing pages for performance optimization
 const Profile = lazy(() => import('./pages/Profile.jsx'));
@@ -231,7 +232,8 @@ const Navigation = () => {
   const { isAuthenticated, user } = useAppStore();
 
   const navigationItems = [
-    { to: '/', label: 'Home' },
+    { to: '/', label: 'Landing' },
+    { to: '/home', label: 'Home' },
     { to: '/dashboard', label: 'Dashboard' },
     { to: '/rules', label: 'Rules' },
     { to: '/pro-planner', label: 'Pro Planner' },
@@ -322,7 +324,8 @@ const AppContent = () => {
         <Suspense fallback={<PageLoader />}>
           <Routes>
             {/* Public Routes */}
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/about" element={<About />} />
             {/* Protected Routes with new page shells */}
             <Route path="/dashboard" element={<ErrorBoundary><DashboardPage /></ErrorBoundary>} />

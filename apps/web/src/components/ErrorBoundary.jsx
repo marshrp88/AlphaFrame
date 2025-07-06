@@ -16,13 +16,14 @@
  */
 
 import React from 'react';
-import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react';
+import { AlertTriangle, RefreshCw, Home, Bug, Shield, HelpCircle } from 'lucide-react';
 import StyledButton from './ui/StyledButton';
 import CompositeCard from './ui/CompositeCard';
 import './ErrorBoundary.css';
 import env from '../lib/env.js';
 import { useNavigate } from 'react-router-dom';
 import ResetDemoButton from './ui/ResetDemoButton';
+import errorHandlingService from '../lib/services/ErrorHandlingService.js';
 
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -53,8 +54,12 @@ export default class ErrorBoundary extends React.Component {
       errorInfo
     });
 
-    // In a production app, you would send error reports to your error reporting service
-    // Example: logErrorToService(error, errorInfo, this.state.errorId);
+    // Use the error handling service to process the error
+    errorHandlingService.handleError(error, {
+      type: 'react_error_boundary',
+      componentStack: errorInfo.componentStack,
+      errorId: this.state.errorId
+    });
   }
 
   handleRetry = () => {

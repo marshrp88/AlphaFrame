@@ -156,6 +156,21 @@ const useAppStore = create(
       shouldBypassOnboarding: () => {
         const state = get();
         return state.isDemo || state.onboardingComplete;
+      },
+
+      // User management actions
+      updateUser: (userData) => {
+        set({ user: userData });
+      },
+
+      logout: () => {
+        set({ 
+          isAuthenticated: false, 
+          user: null,
+          isDemo: false,
+          demoData: { transactions: [], rules: [], triggeredRules: [] }
+        });
+        localStorage.removeItem('alphaframe_onboarding_complete');
       }
     }),
     {
