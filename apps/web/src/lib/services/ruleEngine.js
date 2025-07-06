@@ -186,6 +186,7 @@ class RuleEngine {
       const result = {
         matched: conditionsMet,
         ruleId: rule.id,
+        ruleName: rule.name,
         transactionId: transaction.id,
         timestamp: new Date(),
         conditions: rule.conditions,
@@ -288,6 +289,7 @@ class RuleEngine {
    * @returns {Promise<Object>} Execution result
    */
   async executeRule(rule, transaction) {
+    const startTime = Date.now();
     try {
       // Check trigger frequency limits
       const triggerKey = `${rule.id}_${transaction.id}`;
@@ -305,10 +307,22 @@ class RuleEngine {
       }
 
       // Execute the action
-      const result = await this.executeAction(rule.action, transaction);
+      const actionResult = await this.executeAction(rule.action, transaction);
       
       // Update trigger history
       this.triggerHistory.set(triggerKey, now);
+      
+      // Create the expected result structure
+      const result = {
+        ruleId: rule.id,
+        ruleName: rule.name,
+        actionType: rule.action.type,
+        payload: rule.action.payload || rule.action.parameters,
+        transactionId: transaction.id,
+        timestamp: new Date().toISOString(),
+        executionTime: Date.now() - startTime,
+        success: actionResult.success
+      };
       
       this.logger.log(rule.id, 'execute', {
         success: true,
@@ -438,7 +452,7 @@ class RuleEngine {
         };
       }
 
-      return { valid: true };
+      return { valid: true, errors: [] };
     } catch (error) {
       await this.logger.log('rule.validation.failed', 'validateRule', {
         success: false,

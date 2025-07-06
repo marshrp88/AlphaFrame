@@ -1,4 +1,15 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+
+// Mock ExecutionLogService before importing ruleEngine
+vi.mock('../../../src/core/services/ExecutionLogService.js', () => ({
+  default: {
+    log: vi.fn(),
+    logExecution: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn()
+  }
+}));
+
 import {
   evaluateRule,
   executeRule,
@@ -32,12 +43,7 @@ const invalidRule = { id: 'rule_2' }; // Missing conditions/action
 describe('RuleEngine Integration', () => {
   beforeEach(() => {
     // Reset any state if needed
-    // Inject a test-safe logger mock into the singleton
-    ruleEngine.logger = {
-      log: vi.fn(),
-      warn: vi.fn(),
-      error: vi.fn()
-    };
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
