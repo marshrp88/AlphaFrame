@@ -246,16 +246,5 @@ export function validateActionPayload(action, payload) {
   return true; // Placeholder return
 }
 
-export const requestPermission = vi.fn((user, action) => true);
-export const canExecuteAction = vi.fn((user, action) => true);
-export const hasRole = vi.fn((user, role) => true);
-export const getUserRoles = vi.fn((user) => ['user']);
-
-export default {
-  requestPermission,
-  canExecuteAction,
-  hasRole,
-  getUserRoles
-};
-
-// No default export; all needed functions are exported above. 
+// Export default for compatibility
+export default PermissionEnforcer; 

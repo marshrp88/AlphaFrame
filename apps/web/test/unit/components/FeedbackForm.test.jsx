@@ -333,7 +333,8 @@ describe('FeedbackForm', () => {
       fireEvent.click(exportButton);
       
       // Check that exportSnapshot was called
-      expect(require('../../../src/lib/services/FeedbackUploader.js').default.exportSnapshot).toHaveBeenCalled();
+      const { default: FeedbackUploader } = await import('../../../src/lib/services/FeedbackUploader.js');
+      expect(FeedbackUploader.exportSnapshot).toHaveBeenCalled();
     });
 
     it('should export snapshot to clipboard', async () => {
@@ -352,7 +353,8 @@ describe('FeedbackForm', () => {
       expect(clipboardButtons.length).toBeGreaterThan(0);
       fireEvent.click(clipboardButtons[0]);
       // Check that exportSnapshot was called with 'clipboard' as the format
-      expect(require('../../../src/lib/services/FeedbackUploader.js').default.exportSnapshot).toHaveBeenCalledWith(expect.anything(), 'clipboard');
+      const { default: FeedbackUploader } = await import('../../../src/lib/services/FeedbackUploader.js');
+      expect(FeedbackUploader.exportSnapshot).toHaveBeenCalledWith(expect.anything(), 'clipboard');
     });
 
     it('should reset form after snapshot generation', async () => {

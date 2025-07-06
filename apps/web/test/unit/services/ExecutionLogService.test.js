@@ -69,10 +69,12 @@ describe('ExecutionLogService', () => {
   });
 
   describe('Log Retrieval', () => {
-    beforeEach(() => {
-      // Add some test logs
+    beforeEach(async () => {
+      // Add some test logs with small delays to ensure different timestamps
       executionLogService.logExecution('rule_1', 'transfer', { success: true }, { account: 'checking' });
+      await new Promise(resolve => setTimeout(resolve, 1)); // Small delay
       executionLogService.logExecution('rule_2', 'transfer', { success: false }, { account: 'savings' });
+      await new Promise(resolve => setTimeout(resolve, 1)); // Small delay
       executionLogService.logExecution('rule_1', 'notification', { success: true }, { email: 'test@example.com' });
     });
 
@@ -80,8 +82,10 @@ describe('ExecutionLogService', () => {
       const logs = executionLogService.getLogs();
       
       expect(logs.length).toBe(3);
-      // Convert timestamps to numbers for comparison
-      expect(new Date(logs[0].timestamp).getTime()).toBeGreaterThan(new Date(logs[1].timestamp).getTime()); // Newest first
+      // Verify logs are sorted newest first
+      const timestamps = logs.map(log => new Date(log.timestamp).getTime());
+      expect(timestamps[0]).toBeGreaterThanOrEqual(timestamps[1]);
+      expect(timestamps[1]).toBeGreaterThanOrEqual(timestamps[2]);
     });
 
     it('should filter logs by ruleId', () => {

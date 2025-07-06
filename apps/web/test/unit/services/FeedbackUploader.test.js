@@ -77,7 +77,7 @@ describe('FeedbackUploader', () => {
 
   beforeEach(async () => {
     // Import after mocks are set up
-    ({ FeedbackUploader } = await import('../../../src/lib/services/FeedbackUploader.js'));
+    const { FeedbackUploader } = await import('../../../src/lib/services/FeedbackUploader.js');
     executionLogService = (await import('../../../src/core/services/ExecutionLogService.js')).default;
     budgetService = (await import('../../../src/features/pro/services/BudgetService.js')).default;
     cashFlowService = (await import('../../../src/features/pro/services/CashFlowService.js')).default;
