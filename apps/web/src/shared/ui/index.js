@@ -15,4 +15,8 @@ export { default as Table } from './table';
 export { default as Textarea } from './textarea';
 export { default as Tooltip } from './tooltip';
 export { default as useToast } from './use-toast';
+export { default as Progress } from './Progress';
+export { default as ProgressBar } from './ProgressBar';
+export { default as Alert } from './Alert';
+export { default as Spinner } from './Spinner';
 // Add other components as needed 
