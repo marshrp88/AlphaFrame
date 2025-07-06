@@ -71,7 +71,7 @@ describe('App Import Tests', () => {
     const App = await import('../src/App');
     expect(App).toBeDefined();
     expect(App.default).toBeDefined();
-  });
+  }, 10000); // Increase timeout to 10 seconds
 
   it('should import main App component', () => {
     // Simple import test

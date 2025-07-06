@@ -1,6 +1,6 @@
 // DIAGNOSTIC HEADER FOR TRIAGE
 console.log('TEST START: InternalActionForm');
-vi.setTimeout(30000); // 30s timeout for triage
+// Note: vi.setTimeout is not available in Vitest, using test timeout instead
 
 // --- ALL MOCKS MUST BE LOADED BEFORE COMPONENT IMPORTS ---
 vi.mock('@/lib/config.js', () => ({

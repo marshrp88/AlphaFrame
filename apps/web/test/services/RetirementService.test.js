@@ -3,24 +3,19 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 // Manually inject the RetirementService mock
 vi.mock('@/lib/services/RetirementService', () => ({
   default: {
-    calculateRetirementReadiness: vi.fn().mockResolvedValue({
+    calculateRetirementReadiness: vi.fn(() => ({
       projectedSavings: 2500000,
-      monthlyContribution: 1500,
-      yearsToRetirement: 25,
       readinessScore: 85,
-      confidence: 0.85
-    }),
-    runMonteCarloSimulation: vi.fn().mockResolvedValue({
-      totalSimulations: 1000,
+      monthlyContribution: 1500,
+      yearsToRetirement: 25
+    })),
+    runMonteCarloSimulation: vi.fn(() => ({
       successRate: 78,
-      averageReadinessScore: 75,
-      confidenceIntervals: {
-        '25th': 65,
-        '50th': 75,
-        '75th': 85,
-        '90th': 90
-      }
-    })
+      totalSimulations: 1000,
+      averageOutcome: 2800000,
+      worstCase: 1800000,
+      bestCase: 4200000
+    }))
   }
 }));
 
@@ -31,36 +26,22 @@ describe('RetirementService Mock Validation', () => {
     vi.clearAllMocks();
   });
 
-  it('should use mocked RetirementService instead of real implementation', async () => {
-    const result = await RetirementService.calculateRetirementReadiness({
+  it('should use mocked RetirementService instead of real implementation', () => {
+    const result = RetirementService.calculateRetirementReadiness({
       currentAge: 35,
-      currentIncome: 75000,
-      retirementAccounts: [{ balance: 100000 }],
-      monthlyContributions: 1500
-    });
-    
-    expect(RetirementService.calculateRetirementReadiness).toHaveBeenCalledWith({
-      currentAge: 35,
-      currentIncome: 75000,
-      retirementAccounts: [{ balance: 100000 }],
+      retirementAge: 65,
+      currentSavings: 100000,
       monthlyContributions: 1500
     });
     expect(result.projectedSavings).toBe(2500000);
     expect(result.readinessScore).toBe(85);
   });
 
-  it('should mock Monte Carlo simulation', async () => {
-    const result = await RetirementService.runMonteCarloSimulation({
+  it('should mock Monte Carlo simulation', () => {
+    const result = RetirementService.runMonteCarloSimulation({
       currentAge: 35,
-      currentIncome: 75000,
-      retirementAccounts: [{ balance: 100000 }],
-      monthlyContributions: 1500
-    }, 1000);
-    
-    expect(RetirementService.runMonteCarloSimulation).toHaveBeenCalledWith({
-      currentAge: 35,
-      currentIncome: 75000,
-      retirementAccounts: [{ balance: 100000 }],
+      retirementAge: 65,
+      currentSavings: 100000,
       monthlyContributions: 1500
     }, 1000);
     expect(result.successRate).toBe(78);

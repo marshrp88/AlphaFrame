@@ -1,3 +1,18 @@
+// Mock window.matchMedia for JSDOM compatibility (must be first)
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(), // deprecated
+    removeListener: vi.fn(), // deprecated
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+});
+
 // STEP 2: Mock config.js EARLY, before all imports
 vi.mock('@/lib/config.js', () => ({
   __esModule: true,
@@ -94,12 +109,29 @@ vi.mock('@/lib/config.js', () => ({
   getSecureConfig: vi.fn(() => ({ env: 'test' }))
 }));
 
+// Mock the auth store
+vi.mock('@/core/store/authStore', () => ({
+  useAuthStore: () => ({
+    user: { id: 1, email: 'test@example.com' },
+    isAuthenticated: true,
+    isLoading: false,
+    error: null,
+    login: vi.fn(),
+    logout: vi.fn(),
+    register: vi.fn()
+  })
+}));
+
 // STEP 1: Convert all component mocks to React-compatible functions
-vi.mock('@/components/ui/PerformanceMonitor', () => () => null);
+vi.mock('@/components/ui/PerformanceMonitor', () => ({
+  default: () => null
+}));
 
 vi.mock('@/components/PrivateRoute', () => ({ children }) => <div data-testid="private-route">{children}</div>);
 
-vi.mock('@/components/ErrorBoundary', () => ({ children }) => <div data-testid="error-boundary">{children}</div>);
+vi.mock('@/components/ErrorBoundary', () => ({
+  default: ({ children }) => <div data-testid="error-boundary">{children}</div>
+}));
 
 vi.mock('@/components/LoginButton', () => () => <button data-testid="login-button">Mock:LoginButton</button>);
 
@@ -107,16 +139,26 @@ vi.mock('@/components/dashboard/LiveFinancialDashboard', () => () => <div data-t
 
 vi.mock('@/components/dashboard/Dashboard2', () => () => <div data-testid="dashboard2">Mock:Dashboard2</div>);
 
-vi.mock('@/features/onboarding/OnboardingFlow', () => () => <div data-testid="onboarding-flow">Mock:OnboardingFlow</div>);
+vi.mock('@/features/onboarding/OnboardingFlow', () => ({
+  default: () => <div data-testid="onboarding-flow">Mock:OnboardingFlow</div>
+}));
 
 // Mock other components that might cause issues
-vi.mock('@/components/ui/DarkModeToggle', () => () => <div data-testid="dark-mode-toggle">Mock:DarkModeToggle</div>);
+vi.mock('@/components/ui/DarkModeToggle', () => ({
+  default: () => <div data-testid="dark-mode-toggle">Mock:DarkModeToggle</div>
+}));
 
-vi.mock('@/components/ui/NavBar', () => () => <nav data-testid="navbar">Mock:NavBar</nav>);
+vi.mock('@/components/ui/NavBar', () => ({
+  default: () => <nav data-testid="navbar">Mock:NavBar</nav>
+}));
 
-vi.mock('@/components/ui/StyledButton', () => ({ children, ...props }) => <button data-testid="styled-button" {...props}>{children}</button>);
+vi.mock('@/components/ui/StyledButton', () => ({
+  default: ({ children, ...props }) => <button data-testid="styled-button" {...props}>{children}</button>
+}));
 
-vi.mock('@/components/ui/CompositeCard', () => ({ children, ...props }) => <div data-testid="composite-card" {...props}>{children}</div>);
+vi.mock('@/components/ui/CompositeCard', () => ({
+  default: ({ children, ...props }) => <div data-testid="composite-card" {...props}>{children}</div>
+}));
 
 // Simplified Auth0 mock
 vi.mock('@auth0/auth0-react', () => ({
@@ -137,20 +179,59 @@ vi.mock('@/components/ui/use-toast', () => ({
 }));
 
 // Mock lazy-loaded pages
-vi.mock('@/pages/Profile', () => () => <div data-testid="profile-page">Mock:Profile</div>);
-vi.mock('@/pages/Home', () => () => <div data-testid="home-page">Mock:Home</div>);
-vi.mock('@/pages/About', () => () => <div data-testid="about-page">Mock:About</div>);
-vi.mock('@/pages/AlphaPro', () => () => <div data-testid="alphapro-page">Mock:AlphaPro</div>);
-vi.mock('@/pages/RulesPage', () => () => <div data-testid="rules-page">Mock:RulesPage</div>);
-vi.mock('@/pages/TestMount', () => () => <div data-testid="testmount-page">Mock:TestMount</div>);
+vi.mock('@/pages/Profile', () => ({
+  default: () => <div data-testid="profile-page">Mock:Profile</div>
+}));
+vi.mock('@/pages/Home', () => ({
+  default: () => <div data-testid="home-page">Mock:Home</div>
+}));
+vi.mock('@/pages/About', () => ({
+  default: () => <div data-testid="about-page">Mock:About</div>
+}));
+vi.mock('@/pages/AlphaPro', () => ({
+  default: () => <div data-testid="alphapro-page">Mock:AlphaPro</div>
+}));
+vi.mock('@/pages/RulesPage', () => ({
+  default: () => <div data-testid="rules-page">Mock:RulesPage</div>
+}));
+vi.mock('@/pages/TestMount', () => ({
+  default: () => <div data-testid="testmount-page">Mock:TestMount</div>
+}));
+vi.mock('@/pages/ProPlanner', () => ({
+  default: () => <div data-testid="proplanner-page">Mock:ProPlanner</div>
+}));
+vi.mock('@/pages/ProDashboard', () => ({
+  default: () => <div data-testid="prodashboard-page">Mock:ProDashboard</div>
+}));
+vi.mock('@/pages/ProAnalytics', () => ({
+  default: () => <div data-testid="proanalytics-page">Mock:ProAnalytics</div>
+}));
+vi.mock('@/pages/ProSettings', () => ({
+  default: () => <div data-testid="prosettings-page">Mock:ProSettings</div>
+}));
 
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import { describe, it, expect, afterEach  } from 'vitest';
+import { describe, it, expect, afterEach, beforeAll, beforeEach } from 'vitest';
 
 import App from '../src/App';
 
 describe('App Integration Tests', () => {
+  beforeEach(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockImplementation(query => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(), // deprecated
+        removeListener: vi.fn(), // deprecated
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
+  });
 
   afterEach(() => {
     vi.restoreAllMocks();

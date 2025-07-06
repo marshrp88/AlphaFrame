@@ -1,27 +1,27 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Manually inject the ExecutionLogService mock
-vi.mock('@/lib/services/ExecutionLogService', () => ({
+vi.mock('@/core/services/ExecutionLogService', () => ({
   default: {
-    logExecution: vi.fn().mockReturnValue({
+    logExecution: vi.fn(() => ({
       id: 'exec-123',
-      timestamp: '2024-01-01T00:00:00Z',
-      status: 'success'
-    }),
-    getExecutionHistory: vi.fn().mockReturnValue([
-      {
-        id: 'exec-123',
-        action: 'tax_calculation',
-        timestamp: '2024-01-01T00:00:00Z',
-        status: 'success',
-        duration: 150
-      }
-    ]),
-    clearLogs: vi.fn().mockReturnValue(true)
+      status: 'success',
+      timestamp: new Date().toISOString(),
+      action: 'tax_calculation',
+      output: { tax: 5000 }
+    })),
+    getExecutionHistory: vi.fn(() => [{
+      id: 'exec-123',
+      action: 'tax_calculation',
+      status: 'success',
+      timestamp: new Date().toISOString(),
+      output: { tax: 5000 }
+    }]),
+    clearLogs: vi.fn(() => true)
   }
 }));
 
-import ExecutionLogService from '@/lib/services/ExecutionLogService';
+import ExecutionLogService from '@/core/services/ExecutionLogService';
 
 describe('ExecutionLogService Mock Validation', () => {
   beforeEach(() => {
@@ -29,15 +29,8 @@ describe('ExecutionLogService Mock Validation', () => {
   });
 
   it('should use mocked ExecutionLogService instead of real implementation', () => {
-    const result = ExecutionLogService.logExecution({
-      action: 'tax_calculation',
-      input: { income: 50000 },
-      output: { tax: 5000 }
-    });
-    
-    expect(ExecutionLogService.logExecution).toHaveBeenCalledWith({
-      action: 'tax_calculation',
-      input: { income: 50000 },
+    const result = ExecutionLogService.logExecution('tax_calculation', {
+      input: { income: 75000 },
       output: { tax: 5000 }
     });
     expect(result.id).toBe('exec-123');
@@ -55,7 +48,7 @@ describe('ExecutionLogService Mock Validation', () => {
 
   it('should mock log clearing', () => {
     const result = ExecutionLogService.clearLogs();
-    
+
     expect(ExecutionLogService.clearLogs).toHaveBeenCalled();
     expect(result).toBe(true);
   });

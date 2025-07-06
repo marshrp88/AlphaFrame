@@ -22,6 +22,7 @@ import SoftLaunchBanner from './components/ui/SoftLaunchBanner.jsx';
 import UserStateSnapshot from './components/ui/UserStateSnapshot.jsx';
 import useAppStore from './store/useAppStore';
 import DemoModeService from './lib/services/DemoModeService';
+import { useAuthStore } from '@/core/store/authStore';
 
 // Import design system components
 import NavBar from "./components/ui/NavBar.jsx";

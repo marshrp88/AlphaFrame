@@ -70,10 +70,6 @@ describe('Financial State Store', () => {
   afterEach(() => {
     vi.clearAllMocks();
     vi.useRealTimers();
-    if (typeof globalThis.clearTimeout === 'function') {
-      vi.runOnlyPendingTimers();
-      vi.clearAllTimers();
-    }
     localStorageMock.clear();
     sessionStorageMock.clear();
   });
@@ -82,6 +78,13 @@ describe('Financial State Store', () => {
     it('should set and get account balance', async () => {
       const accountId = 'acc_123';
       const balance = 1000;
+      
+      // First, add the account to the store
+      useFinancialStateStore.getState().setAccounts([
+        { id: accountId, name: 'Test Account', balance: 0 }
+      ]);
+      
+      // Then set the balance
       useFinancialStateStore.getState().setAccountBalance(accountId, balance);
       expect(useFinancialStateStore.getState().getAccountBalance(accountId)).toBe(balance);
     });
@@ -124,7 +127,11 @@ describe('Financial State Store', () => {
         limit: 500,
         spent: 100
       };
-      useFinancialStateStore.getState().setBudget(categoryId, budget);
+      
+      // First, set the budget
+      useFinancialStateStore.getState().setBudget({ [categoryId]: budget });
+      
+      // Then record spending
       useFinancialStateStore.getState().recordSpending(categoryId, 50);
       const updatedBudget = useFinancialStateStore.getState().budget[categoryId];
       expect(updatedBudget.spent).toBe(150);
@@ -136,7 +143,11 @@ describe('Financial State Store', () => {
         limit: 500,
         spent: 300
       };
-      useFinancialStateStore.getState().setBudget(categoryId, budget);
+      
+      // First, set the budget
+      useFinancialStateStore.getState().setBudget({ [categoryId]: budget });
+      
+      // Then reset
       useFinancialStateStore.getState().resetMonthlyBudgets();
       const resetBudget = useFinancialStateStore.getState().budget[categoryId];
       expect(resetBudget.spent).toBe(0);
@@ -150,17 +161,24 @@ describe('Financial State Store', () => {
       const categoryId = 'cat_123';
       
       // Test basic operations work
+      useFinancialStateStore.getState().setAccounts([
+        { id: accountId, name: 'Test Account', balance: 0 }
+      ]);
       useFinancialStateStore.getState().setAccountBalance(accountId, 1000);
+      
       useFinancialStateStore.getState().setGoal(goalId, {
         name: 'Test Goal',
         targetAmount: 5000,
         currentAmount: 1000,
         deadline: '2024-12-31'
       });
-      useFinancialStateStore.getState().setBudget(categoryId, {
-        name: 'Test Budget',
-        limit: 500,
-        spent: 100
+      
+      useFinancialStateStore.getState().setBudget({
+        [categoryId]: {
+          name: 'Test Budget',
+          limit: 500,
+          spent: 100
+        }
       });
       
       // Verify operations worked

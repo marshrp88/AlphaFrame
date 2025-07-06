@@ -70,6 +70,24 @@ vi.mock('@/components/ui/use-toast', () => ({
   useToast: () => ({ toast: vi.fn() }),
 }));
 
+// Mock useAppStore to provide accounts data
+vi.mock('@/core/store/useAppStore', () => ({
+  useAppStore: vi.fn((selector) => {
+    const mockState = {
+      accounts: [
+        { id: 'acc_1', name: 'Checking Account', balance: 5000 },
+        { id: 'acc_2', name: 'Savings Account', balance: 10000 },
+        { id: 'acc_3', name: 'Credit Card', balance: -500 }
+      ],
+      user: { id: 1, email: 'test@example.com' },
+      isAuthenticated: true,
+      isLoading: false,
+      error: null
+    };
+    return selector ? selector(mockState) : mockState;
+  })
+}));
+
 describe('PlaidActionForm', () => {
   it('sanity: should run this test and not hang', () => {
     expect(true).toBe(true);

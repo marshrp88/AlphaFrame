@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DebtService } from '../../lib/services/DebtService';
+import { DebtService } from '../../core/services/DebtService';
 import { ExplainabilityEngine } from '../../lib/services/ExplainabilityEngine';
 import './ProPlannerPage.css';
 

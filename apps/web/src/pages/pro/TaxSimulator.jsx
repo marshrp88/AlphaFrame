@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TaxService } from '../../lib/services/TaxService';
+import { TaxService } from '../../core/services/TaxService';
 import { ExplainabilityEngine } from '../../lib/services/ExplainabilityEngine';
 import './ProPlannerPage.css';
 

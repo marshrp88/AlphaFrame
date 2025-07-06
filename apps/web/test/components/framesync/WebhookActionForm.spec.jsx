@@ -6,6 +6,40 @@ global.fetch = vi.fn(() => Promise.resolve({
 
 import { describe, it, expect, vi, beforeEach, afterEach  } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+
+// Mock the Input component
+vi.mock('@/shared/ui/Input', () => ({
+  default: ({ id, type, value, onChange, placeholder, ...props }) => (
+    <input
+      id={id}
+      type={type}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      {...props}
+    />
+  )
+}));
+
+// Mock the textarea component with importOriginal approach
+vi.mock('@/shared/ui/textarea', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    default: ({ id, value, onChange, placeholder, rows, className, ...props }) => (
+      <textarea
+        id={id}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        rows={rows}
+        className={className}
+        {...props}
+      />
+    )
+  };
+});
+
 import WebhookActionForm from '../../../src/components/framesync/WebhookActionForm';
 console.log('DEBUG: WebhookActionForm import =', WebhookActionForm);
 
@@ -16,10 +50,6 @@ vi.mock('@/components/ui/use-toast', () => ({
   })
 }));
 
-vi.mock('@/shared/ui/Input', () => ({
-  __esModule: true,
-  Input: (props) => <input {...props} />
-}));
 vi.mock('@/shared/ui/Label', () => ({
   __esModule: true,
   default: ({ children, htmlFor, ...props }) => (
@@ -27,8 +57,17 @@ vi.mock('@/shared/ui/Label', () => ({
   )
 }));
 vi.mock('@/shared/ui/textarea', () => ({
-  __esModule: true,
-  Textarea: (props) => <textarea {...props} />
+  default: ({ id, value, onChange, placeholder, rows, className, ...props }) => (
+    <textarea
+      id={id}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      rows={rows}
+      className={className}
+      {...props}
+    />
+  )
 }));
 
 describe('WebhookActionForm', () => {

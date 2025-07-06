@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { PermissionEnforcer } from '../../../src/lib/services/PermissionEnforcer';
 import { useAuthStore } from '../../../src/core/store/authStore';
 import { useUIStore } from '../../../src/core/store/uiStore';
@@ -10,12 +10,22 @@ vi.mock('../../../src/core/services/SecureVault', () => ({
 
 // Mock the auth store
 vi.mock('../../../src/core/store/authStore', () => ({
-  getState: vi.fn()
+  useAuthStore: {
+    getState: vi.fn(() => ({
+      isAuthenticated: true,
+      user: { id: 1, email: 'test@example.com' },
+      permissions: ['read:financial_data', 'write:financial_data']
+    }))
+  }
 }));
 
 // Mock the UI store
 vi.mock('../../../src/core/store/uiStore', () => ({
-  getState: vi.fn()
+  useUIStore: {
+    getState: vi.fn(() => ({
+      showPasswordPrompt: vi.fn(({ onConfirm }) => onConfirm('test-password'))
+    }))
+  }
 }));
 
 describe('PermissionEnforcer', () => {

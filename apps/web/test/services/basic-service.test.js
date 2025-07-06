@@ -1,7 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Manually inject the AuthService mock
-vi.mock('@/lib/services/AuthService');
+vi.mock('@/lib/services/AuthService', () => ({
+  default: {
+    isAuthenticated: vi.fn(() => true),
+    getCurrentUser: vi.fn(() => ({
+      id: 1,
+      name: 'Test User',
+      email: 'test@example.com'
+    })),
+    login: vi.fn(() => Promise.resolve(true)),
+    logout: vi.fn(() => Promise.resolve(true))
+  }
+}));
 
 import AuthService from '@/lib/services/AuthService';
 
