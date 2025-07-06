@@ -22,15 +22,30 @@ import OnboardingFlow from '../features/onboarding/OnboardingFlow';
 import PageLayout from '../components/PageLayout';
 import CompositeCard from '../components/ui/CompositeCard';
 import StyledButton from '../components/ui/StyledButton';
-import { CheckCircle, ArrowRight } from 'lucide-react';
+import { CheckCircle, ArrowRight, RefreshCw, AlertTriangle } from 'lucide-react';
 import { useToast } from '../components/ui/use-toast';
 import storageService from '../lib/services/StorageService';
 
 const OnboardingPage = () => {
-  const { user, isAuthenticated, isLoading } = useAuthStore();
+  const { user, isAuthenticated, isLoading, error } = useAuthStore();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [onboardingState, setOnboardingState] = useState(null);
+  const [timedOut, setTimedOut] = useState(false);
+
+  // Timeout fallback for loading state
+  useEffect(() => {
+    if (isLoading) {
+      const timeoutId = setTimeout(() => {
+        console.warn('⚠️ OnboardingPage: Loading timeout exceeded (10 seconds)');
+        setTimedOut(true);
+      }, 10000);
+      
+      return () => clearTimeout(timeoutId);
+    } else {
+      setTimedOut(false);
+    }
+  }, [isLoading]);
 
   // Check onboarding state on mount
   useEffect(() => {
@@ -105,6 +120,50 @@ const OnboardingPage = () => {
     // ✅ Insert your real user completion logic below this
     completeOnboardingWithBackend(user);
   };
+
+  const handleRetrySetup = () => {
+    console.log('🔄 Retrying AlphaFrame setup...');
+    setTimedOut(false);
+    window.location.reload();
+  };
+
+  // Show timeout error state
+  if (isLoading && timedOut) {
+    return (
+      <PageLayout title="Setup Issue" description="We're having trouble setting up AlphaFrame">
+        <CompositeCard>
+          <div style={{ textAlign: 'center', padding: '3rem' }}>
+            <AlertTriangle size={48} style={{ color: 'var(--color-warning-600)', marginBottom: '1rem' }} />
+            <h2>We're having trouble setting up AlphaFrame</h2>
+            <p style={{ marginBottom: '2rem', color: 'var(--color-text-secondary)' }}>
+              The setup process is taking longer than expected. This might be due to a network issue or temporary service problem.
+            </p>
+            {error && (
+              <div style={{ 
+                background: 'var(--color-error-50)', 
+                border: '1px solid var(--color-error-200)', 
+                borderRadius: '8px', 
+                padding: '1rem', 
+                marginBottom: '2rem',
+                textAlign: 'left'
+              }}>
+                <strong>Error details:</strong> {error}
+              </div>
+            )}
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+              <StyledButton onClick={handleRetrySetup} variant="primary">
+                <RefreshCw size={16} />
+                Retry Setup
+              </StyledButton>
+              <StyledButton onClick={() => navigate('/')} variant="secondary">
+                Go Back Home
+              </StyledButton>
+            </div>
+          </div>
+        </CompositeCard>
+      </PageLayout>
+    );
+  }
 
   // Show loading state
   if (isLoading) {

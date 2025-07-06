@@ -11,3 +11,5 @@ export function useToast() {
   return { toast };
 }
 // Use this for showing notifications in the app. 
+
+export default useToast; 

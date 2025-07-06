@@ -64,4 +64,5 @@ const RadioItem = ({
   );
 };
 
-export { RadioGroup, RadioItem }; 
+export { RadioGroup, RadioItem };
+export default RadioGroup; 

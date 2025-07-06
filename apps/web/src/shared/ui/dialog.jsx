@@ -51,4 +51,6 @@ export const DialogFooter = ({ children, className = '', ...props }) => {
       {children}
     </div>
   );
-}; 
+};
+
+export default Dialog; 

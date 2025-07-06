@@ -214,7 +214,11 @@ const LandingPage = () => {
               const IconComponent = feature.icon;
               return (
                 <div key={index} className="feature-card">
-                  <CompositeCard>
+                  <CompositeCard 
+                    interactive
+                    onClick={handleGetStarted}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <div className="feature-icon" style={{ color: feature.color }}>
                       <IconComponent size={32} />
                     </div>

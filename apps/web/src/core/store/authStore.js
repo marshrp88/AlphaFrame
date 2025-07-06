@@ -39,12 +39,28 @@ export const useAuthStore = create((set, get) => ({
   initialize: async () => {
     set({ isLoading: true, error: null });
     
+    // Timeout fallback to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      const current = get();
+      if (current.isLoading) {
+        console.warn('⚠️ Auth init timeout fallback triggered - forcing loading to false');
+        set({ 
+          isLoading: false, 
+          isAuthenticated: false,
+          error: 'Authentication initialization timed out. Please refresh the page.'
+        });
+      }
+    }, 10000);
+    
     try {
       const success = await initializeAuth();
       
       const user = getCurrentUser();
       const authenticated = checkAuth();
       const permissions = getUserPermissions();
+      
+      // Clear timeout since we succeeded
+      clearTimeout(timeoutId);
       
       set({
         user,
@@ -55,9 +71,14 @@ export const useAuthStore = create((set, get) => ({
       
       return success;
     } catch (error) {
+      // Clear timeout since we failed
+      clearTimeout(timeoutId);
+      
+      console.error('❌ Auth initialization failed:', error);
       set({
         error: error.message,
-        isLoading: false
+        isLoading: false,
+        isAuthenticated: false
       });
       return false;
     }

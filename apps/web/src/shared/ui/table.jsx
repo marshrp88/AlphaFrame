@@ -47,4 +47,6 @@ export const TableHeader = ({ children, className = '', ...props }) => {
       {children}
     </th>
   );
-}; 
+};
+
+export default Table; 
