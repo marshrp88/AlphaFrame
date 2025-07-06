@@ -16,7 +16,7 @@
  * and make informed decisions based on statistical probability analysis.
  */
 
-import { ExecutionLogService } from './ExecutionLogService.js';
+import { ExecutionLogService } from '../../core/services/ExecutionLogService.js';
 
 class MonteCarloRunner {
   constructor() {

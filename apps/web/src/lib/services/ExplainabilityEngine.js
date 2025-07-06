@@ -17,7 +17,7 @@
  * insights and make informed decisions with confidence.
  */
 
-import { ExecutionLogService } from './ExecutionLogService.js';
+import { ExecutionLogService } from '../../core/services/ExecutionLogService.js';
 
 class ExplainabilityEngine {
   constructor() {
@@ -505,4 +505,5 @@ class ExplainabilityEngine {
   }
 }
 
-export default ExplainabilityEngine; 
+export default ExplainabilityEngine;
+export { ExplainabilityEngine }; 

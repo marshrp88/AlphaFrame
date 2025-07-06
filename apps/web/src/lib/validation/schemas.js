@@ -54,6 +54,18 @@ export const TransactionSchema = z.object({
   description: z.string().optional(),
 });
 
+// InsightFeedSchema: Defines the structure of insight feed data
+export const InsightFeedSchema = z.object({
+  id: z.string(),
+  type: z.enum(['retirement', 'tax', 'debt', 'investment', 'general']),
+  title: z.string(),
+  description: z.string(),
+  data: z.record(z.any()),
+  timestamp: z.string(),
+  priority: z.enum(['low', 'medium', 'high', 'critical']).default('medium'),
+  actionable: z.boolean().default(true)
+});
+
 // Notes:
 // - These schemas are used to validate data at runtime.
 // - They help catch errors early and enforce strict contracts between modules.

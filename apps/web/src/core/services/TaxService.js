@@ -289,4 +289,5 @@ class TaxService {
   }
 }
 
-export default TaxService; 
+export default TaxService;
+export { TaxService }; 

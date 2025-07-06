@@ -47,3 +47,4 @@ export const config = {
 
 // Export default for backward compatibility
 export default config;
+export { getFeatureFlag };

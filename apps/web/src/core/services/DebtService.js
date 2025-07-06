@@ -352,4 +352,5 @@ class DebtService {
   }
 }
 
-export default DebtService; 
+export default DebtService;
+export { DebtService }; 

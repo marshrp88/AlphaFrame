@@ -17,7 +17,7 @@
  */
 
 import { InsightFeedSchema } from '../validation/schemas.js';
-import { ExecutionLogService } from './ExecutionLogService.js';
+import { ExecutionLogService } from '../../core/services/ExecutionLogService.js';
 
 class RetirementService {
   constructor() {

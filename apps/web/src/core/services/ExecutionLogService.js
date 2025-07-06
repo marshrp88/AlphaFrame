@@ -89,4 +89,5 @@ class ExecutionLogService {
 
 // Export singleton instance
 const executionLogService = new ExecutionLogService();
-export default executionLogService; 
+export default executionLogService;
+export { ExecutionLogService }; 
