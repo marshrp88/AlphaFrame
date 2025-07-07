@@ -200,14 +200,11 @@ const OnboardingPage = () => {
     );
   }
 
-  // Show onboarding flow for new users
-  if (onboardingState && !onboardingState.completed) {
+  // Always show onboarding flow in demo/dev mode
+  if (!isAuthenticated || onboardingState?.isDemoMode) {
     return (
-      <PageLayout title="Welcome to AlphaFrame" description="Let's set up your account in just a few steps">
-        <OnboardingFlow 
-          onComplete={handleOnboardingComplete}
-          initialState={onboardingState}
-        />
+      <PageLayout title="Onboarding" description="Let's get you set up!">
+        <OnboardingFlow onComplete={handleOnboardingComplete} initialState={onboardingState} />
       </PageLayout>
     );
   }

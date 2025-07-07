@@ -33,21 +33,20 @@ import {
   Eye,
   Sparkles
 } from 'lucide-react';
+import { Modal } from '../components/ui/Modal.jsx';
 import './LandingPage.css';
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [showDemoModal, setShowDemoModal] = useState(false);
 
   const handleGetStarted = () => {
     navigate('/onboarding');
   };
 
-  const handleWatchDemo = () => {
-    setIsVideoPlaying(true);
-    // In a real implementation, this would open a video modal
-    setTimeout(() => setIsVideoPlaying(false), 3000);
-  };
+  const handleWatchDemo = () => setShowDemoModal(true);
+  const handleCloseDemoModal = () => setShowDemoModal(false);
 
   const features = [
     {
@@ -302,6 +301,17 @@ const LandingPage = () => {
           </CompositeCard>
         </div>
       </section>
+
+      <Modal isOpen={showDemoModal} onClose={handleCloseDemoModal} title="AlphaFrame Demo" aria-label="Demo Video Modal">
+        <div style={{ padding: 24, textAlign: 'center' }}>
+          <h2>AlphaFrame Demo</h2>
+          <video width="100%" controls autoPlay>
+            <source src="/demo-video.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <StyledButton onClick={handleCloseDemoModal} style={{ marginTop: 16 }}>Close</StyledButton>
+        </div>
+      </Modal>
     </div>
   );
 };

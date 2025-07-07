@@ -17,6 +17,11 @@
 
 import executionLogService from '../../core/services/ExecutionLogService.js';
 
+// Patch: Ensure executionLogService.log is always a function (no-op fallback)
+if (!executionLogService || typeof executionLogService.log !== 'function') {
+  executionLogService.log = () => {};
+}
+
 /**
  * Error types and their user-friendly messages
  */
