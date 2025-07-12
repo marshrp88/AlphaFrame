@@ -1,532 +1,530 @@
 /**
- * ErrorHandlingService.js - AlphaFrame Customer-Ready Error Handling
+ * Error Handling Service - Centralized Error Management for AlphaFrame
  * 
- * Purpose: Comprehensive error handling system that provides graceful degradation,
- * user-friendly error messages, and robust recovery mechanisms.
+ * Purpose: Provide comprehensive error handling, monitoring, and recovery
+ * across the entire application with Sentry integration for production debugging.
  * 
- * Procedure:
- * 1. Global error boundary management
- * 2. Service-level error handling with retry logic
- * 3. User-friendly error messages and recovery options
- * 4. Error logging and analytics
- * 5. Graceful degradation for all error conditions
+ * Features:
+ * - Sentry error tracking and monitoring
+ * - User-friendly error messages
+ * - Error categorization and severity levels
+ * - Automatic error recovery strategies
+ * - Performance monitoring integration
  * 
- * Conclusion: Ensures AlphaFrame never breaks or confuses users,
- * providing a resilient and trustworthy experience.
+ * Conclusion: Centralized error handling ensures consistent user experience
+ * and provides valuable debugging information for production issues.
  */
 
-import executionLogService from '../../core/services/ExecutionLogService.js';
+import * as Sentry from '@sentry/react';
 
-// Patch: Ensure executionLogService.log is always a function (no-op fallback)
-if (!executionLogService || typeof executionLogService.log !== 'function') {
-  executionLogService.log = () => {};
-}
-
-/**
- * Error types and their user-friendly messages
- */
-const ERROR_TYPES = {
-  NETWORK_ERROR: {
-    code: 'NETWORK_ERROR',
-    userMessage: 'Connection issue detected. Please check your internet connection and try again.',
-    recoveryAction: 'retry',
-    severity: 'medium'
-  },
-  AUTHENTICATION_ERROR: {
-    code: 'AUTHENTICATION_ERROR',
-    userMessage: 'Your session has expired. Please log in again to continue.',
-    recoveryAction: 'redirect',
-    redirectTo: '/login',
-    severity: 'high'
-  },
-  VALIDATION_ERROR: {
-    code: 'VALIDATION_ERROR',
-    userMessage: 'Please check your input and try again.',
-    recoveryAction: 'fix_input',
-    severity: 'low'
-  },
-  PERMISSION_ERROR: {
-    code: 'PERMISSION_ERROR',
-    userMessage: 'You don\'t have permission to perform this action.',
-    recoveryAction: 'none',
-    severity: 'medium'
-  },
-  RATE_LIMIT_ERROR: {
-    code: 'RATE_LIMIT_ERROR',
-    userMessage: 'Too many requests. Please wait a moment and try again.',
-    recoveryAction: 'wait',
-    waitTime: 5000,
-    severity: 'low'
-  },
-  SERVICE_UNAVAILABLE: {
-    code: 'SERVICE_UNAVAILABLE',
-    userMessage: 'This service is temporarily unavailable. Please try again later.',
-    recoveryAction: 'retry',
-    severity: 'medium'
-  },
-  DATA_ERROR: {
-    code: 'DATA_ERROR',
-    userMessage: 'There was an issue with your data. Please refresh the page.',
-    recoveryAction: 'refresh',
-    severity: 'medium'
-  },
-  UNKNOWN_ERROR: {
-    code: 'UNKNOWN_ERROR',
-    userMessage: 'Something unexpected happened. Please try again or contact support.',
-    recoveryAction: 'retry',
-    severity: 'high'
-  }
+// Error categories for better organization and handling
+export const ERROR_CATEGORIES = {
+  AUTH: 'authentication',
+  ONBOARDING: 'onboarding',
+  PL AID: 'plaid',
+  NETWORK: 'network',
+  VALIDATION: 'validation',
+  STORAGE: 'storage',
+  PERFORMANCE: 'performance',
+  UNKNOWN: 'unknown',
 };
 
-/**
- * Retry configuration for different error types
- */
-const RETRY_CONFIG = {
-  NETWORK_ERROR: {
-    maxRetries: 3,
-    baseDelay: 1000,
-    maxDelay: 10000,
-    backoffMultiplier: 2
-  },
-  SERVICE_UNAVAILABLE: {
-    maxRetries: 2,
-    baseDelay: 2000,
-    maxDelay: 15000,
-    backoffMultiplier: 2
-  },
-  RATE_LIMIT_ERROR: {
-    maxRetries: 1,
-    baseDelay: 5000,
-    maxDelay: 10000,
-    backoffMultiplier: 1
-  }
+// Error severity levels
+export const ERROR_SEVERITY = {
+  LOW: 'low',
+  MEDIUM: 'medium',
+  HIGH: 'high',
+  CRITICAL: 'critical',
 };
 
-/**
- * Error handling service class
- */
+// User-friendly error messages
+const USER_ERROR_MESSAGES = {
+  [ERROR_CATEGORIES.AUTH]: {
+    login_failed: 'Unable to sign in. Please check your credentials and try again.',
+    registration_failed: 'Unable to create account. Please try again or contact support.',
+    session_expired: 'Your session has expired. Please sign in again.',
+    permission_denied: 'You don\'t have permission to access this feature.',
+  },
+  [ERROR_CATEGORIES.ONBOARDING]: {
+    step_failed: 'Unable to complete this step. Please try again.',
+    data_validation: 'Please check your information and try again.',
+    timeout: 'This step is taking longer than expected. Please try again.',
+    incomplete: 'Please complete all required fields before continuing.',
+  },
+  [ERROR_CATEGORIES.PLAID]: {
+    connection_failed: 'Unable to connect to your bank. Please try again.',
+    institution_error: 'Your bank is temporarily unavailable. Please try again later.',
+    account_error: 'Unable to access your accounts. Please verify your credentials.',
+    sync_failed: 'Unable to sync your transactions. Please try again.',
+  },
+  [ERROR_CATEGORIES.NETWORK]: {
+    connection_lost: 'Connection lost. Please check your internet and try again.',
+    timeout: 'Request timed out. Please try again.',
+    server_error: 'Server is temporarily unavailable. Please try again later.',
+    offline: 'You appear to be offline. Please check your connection.',
+  },
+  [ERROR_CATEGORIES.VALIDATION]: {
+    invalid_input: 'Please check your input and try again.',
+    required_field: 'This field is required.',
+    format_error: 'Please use the correct format.',
+    length_error: 'Input is too long or too short.',
+  },
+  [ERROR_CATEGORIES.STORAGE]: {
+    save_failed: 'Unable to save your data. Please try again.',
+    load_failed: 'Unable to load your data. Please refresh the page.',
+    quota_exceeded: 'Storage limit reached. Please clear some data.',
+    corrupted: 'Data appears to be corrupted. Please refresh the page.',
+  },
+  [ERROR_CATEGORIES.PERFORMANCE]: {
+    slow_loading: 'Loading is taking longer than expected.',
+    memory_error: 'Application is running slowly. Please refresh the page.',
+    render_error: 'Unable to display this content. Please try again.',
+  },
+  [ERROR_CATEGORIES.UNKNOWN]: {
+    default: 'Something went wrong. Please try again or contact support.',
+  },
+};
+
 class ErrorHandlingService {
   constructor() {
-    this.errorCount = 0;
-    this.lastErrorTime = 0;
-    this.errorHistory = [];
     this.isInitialized = false;
+    this.errorCount = 0;
+    this.recoveryStrategies = new Map();
+    this.setupRecoveryStrategies();
   }
 
   /**
    * Initialize the error handling service
+   * @param {Object} config - Configuration options
    */
-  async initialize() {
-    if (this.isInitialized) return;
+  initialize(config = {}) {
+    if (this.isInitialized) {
+      console.warn('ErrorHandlingService already initialized');
+      return;
+    }
 
     try {
+      // Initialize Sentry if DSN is provided
+      if (config.sentryDsn) {
+        Sentry.init({
+          dsn: config.sentryDsn,
+          environment: config.environment || 'development',
+          release: config.release || '1.0.0',
+          tracesSampleRate: config.tracesSampleRate || 0.1,
+          integrations: [
+            new Sentry.BrowserTracing(),
+          ],
+          beforeSend: (event) => {
+            // Filter out certain errors or add context
+            return this.beforeSend(event);
+          },
+        });
+        console.log('🔧 ErrorHandlingService: Sentry initialized');
+      }
+
       // Set up global error handlers
-      this.setupGlobalErrorHandlers();
-      
-      // Set up unhandled promise rejection handler
-      this.setupPromiseRejectionHandler();
-      
-      // Set up network error monitoring
-      this.setupNetworkErrorMonitoring();
+      this.setupGlobalHandlers();
       
       this.isInitialized = true;
-      
-      await executionLogService.log('error_handling.initialized', {
-        timestamp: new Date().toISOString()
-      });
-      
+      console.log('🔧 ErrorHandlingService: Initialized successfully');
     } catch (error) {
-      console.error('Failed to initialize error handling service:', error);
+      console.error('❌ ErrorHandlingService: Initialization failed:', error);
     }
+  }
+
+  /**
+   * Handle an error with categorization and user-friendly messaging
+   * @param {Error} error - The error object
+   * @param {Object} context - Additional context
+   */
+  handleError(error, context = {}) {
+    this.errorCount++;
+    
+    const errorInfo = this.categorizeError(error, context);
+    const userMessage = this.getUserMessage(errorInfo);
+    
+    // Log error for debugging
+    console.error('❌ ErrorHandlingService:', {
+      error: error.message,
+      category: errorInfo.category,
+      severity: errorInfo.severity,
+      context: errorInfo.context,
+      userMessage,
+    });
+
+    // Send to Sentry if initialized
+    if (this.isInitialized && Sentry) {
+      Sentry.captureException(error, {
+        tags: {
+          category: errorInfo.category,
+          severity: errorInfo.severity,
+          component: context.component || 'unknown',
+        },
+        extra: {
+          context: errorInfo.context,
+          userMessage,
+          errorCount: this.errorCount,
+        },
+      });
+    }
+
+    // Execute recovery strategy if available
+    this.executeRecoveryStrategy(errorInfo);
+
+    return {
+      error: errorInfo,
+      userMessage,
+      shouldRetry: this.shouldRetry(errorInfo),
+      recoveryAction: this.getRecoveryAction(errorInfo),
+    };
+  }
+
+  /**
+   * Categorize an error based on its type and context
+   * @param {Error} error - The error object
+   * @param {Object} context - Additional context
+   */
+  categorizeError(error, context = {}) {
+    const message = error.message.toLowerCase();
+    const stack = error.stack || '';
+    
+    // Determine category based on error message and context
+    let category = ERROR_CATEGORIES.UNKNOWN;
+    let severity = ERROR_SEVERITY.MEDIUM;
+    let errorCode = 'default';
+
+    // Auth errors
+    if (message.includes('auth') || message.includes('login') || message.includes('password')) {
+      category = ERROR_CATEGORIES.AUTH;
+      if (message.includes('expired') || message.includes('invalid')) {
+        errorCode = 'session_expired';
+        severity = ERROR_SEVERITY.MEDIUM;
+      } else {
+        errorCode = 'login_failed';
+        severity = ERROR_SEVERITY.HIGH;
+      }
+    }
+    
+    // Onboarding errors
+    else if (message.includes('onboarding') || message.includes('step') || context.component === 'onboarding') {
+      category = ERROR_CATEGORIES.ONBOARDING;
+      if (message.includes('timeout')) {
+        errorCode = 'timeout';
+        severity = ERROR_SEVERITY.MEDIUM;
+      } else if (message.includes('validation')) {
+        errorCode = 'data_validation';
+        severity = ERROR_SEVERITY.LOW;
+      } else {
+        errorCode = 'step_failed';
+        severity = ERROR_SEVERITY.HIGH;
+      }
+    }
+    
+    // Plaid errors
+    else if (message.includes('plaid') || message.includes('bank') || message.includes('institution')) {
+      category = ERROR_CATEGORIES.PLAID;
+      if (message.includes('connection')) {
+        errorCode = 'connection_failed';
+        severity = ERROR_SEVERITY.HIGH;
+      } else if (message.includes('institution')) {
+        errorCode = 'institution_error';
+        severity = ERROR_SEVERITY.MEDIUM;
+      } else {
+        errorCode = 'account_error';
+        severity = ERROR_SEVERITY.HIGH;
+      }
+    }
+    
+    // Network errors
+    else if (message.includes('network') || message.includes('fetch') || message.includes('timeout')) {
+      category = ERROR_CATEGORIES.NETWORK;
+      if (message.includes('timeout')) {
+        errorCode = 'timeout';
+        severity = ERROR_SEVERITY.MEDIUM;
+      } else if (message.includes('offline')) {
+        errorCode = 'offline';
+        severity = ERROR_SEVERITY.HIGH;
+      } else {
+        errorCode = 'connection_lost';
+        severity = ERROR_SEVERITY.HIGH;
+      }
+    }
+    
+    // Validation errors
+    else if (message.includes('validation') || message.includes('invalid') || message.includes('required')) {
+      category = ERROR_CATEGORIES.VALIDATION;
+      if (message.includes('required')) {
+        errorCode = 'required_field';
+        severity = ERROR_SEVERITY.LOW;
+      } else if (message.includes('format')) {
+        errorCode = 'format_error';
+        severity = ERROR_SEVERITY.LOW;
+      } else {
+        errorCode = 'invalid_input';
+        severity = ERROR_SEVERITY.LOW;
+      }
+    }
+    
+    // Storage errors
+    else if (message.includes('storage') || message.includes('localstorage') || message.includes('save')) {
+      category = ERROR_CATEGORIES.STORAGE;
+      if (message.includes('quota')) {
+        errorCode = 'quota_exceeded';
+        severity = ERROR_SEVERITY.HIGH;
+      } else if (message.includes('corrupt')) {
+        errorCode = 'corrupted';
+        severity = ERROR_SEVERITY.HIGH;
+      } else {
+        errorCode = 'save_failed';
+        severity = ERROR_SEVERITY.MEDIUM;
+      }
+    }
+    
+    // Performance errors
+    else if (message.includes('performance') || message.includes('memory') || message.includes('slow')) {
+      category = ERROR_CATEGORIES.PERFORMANCE;
+      if (message.includes('memory')) {
+        errorCode = 'memory_error';
+        severity = ERROR_SEVERITY.HIGH;
+      } else if (message.includes('render')) {
+        errorCode = 'render_error';
+        severity = ERROR_SEVERITY.MEDIUM;
+      } else {
+        errorCode = 'slow_loading';
+        severity = ERROR_SEVERITY.MEDIUM;
+      }
+    }
+
+    // Critical errors (always high severity)
+    if (message.includes('critical') || message.includes('fatal')) {
+      severity = ERROR_SEVERITY.CRITICAL;
+    }
+
+    return {
+      category,
+      severity,
+      errorCode,
+      context: {
+        ...context,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        url: window.location.href,
+      },
+    };
+  }
+
+  /**
+   * Get user-friendly error message
+   * @param {Object} errorInfo - Categorized error information
+   */
+  getUserMessage(errorInfo) {
+    const { category, errorCode } = errorInfo;
+    const categoryMessages = USER_ERROR_MESSAGES[category];
+    
+    if (categoryMessages && categoryMessages[errorCode]) {
+      return categoryMessages[errorCode];
+    }
+    
+    return categoryMessages?.default || USER_ERROR_MESSAGES[ERROR_CATEGORIES.UNKNOWN].default;
   }
 
   /**
    * Set up global error handlers
    */
-  setupGlobalErrorHandlers() {
-    // Handle JavaScript errors
-    window.addEventListener('error', (event) => {
-      this.handleError(event.error || new Error(event.message), {
-        type: 'javascript_error',
-        filename: event.filename,
-        lineno: event.lineno,
-        colno: event.colno
-      });
-    });
-
+  setupGlobalHandlers() {
     // Handle unhandled promise rejections
     window.addEventListener('unhandledrejection', (event) => {
-      this.handleError(event.reason, {
-        type: 'unhandled_promise_rejection'
+      this.handleError(new Error(event.reason), {
+        type: 'unhandled_promise_rejection',
+        component: 'global',
       });
-    });
-  }
-
-  /**
-   * Set up promise rejection handler
-   */
-  setupPromiseRejectionHandler() {
-    window.addEventListener('unhandledrejection', (event) => {
       event.preventDefault();
-      this.handleError(event.reason, {
-        type: 'promise_rejection',
-        handled: true
+    });
+
+    // Handle global errors
+    window.addEventListener('error', (event) => {
+      this.handleError(event.error || new Error(event.message), {
+        type: 'global_error',
+        component: 'global',
+        filename: event.filename,
+        lineno: event.lineno,
+        colno: event.colno,
       });
     });
   }
 
   /**
-   * Set up network error monitoring
+   * Set up recovery strategies for different error types
    */
-  setupNetworkErrorMonitoring() {
-    // Monitor fetch requests
-    const originalFetch = window.fetch;
-    window.fetch = async (...args) => {
+  setupRecoveryStrategies() {
+    // Auth recovery strategies
+    this.recoveryStrategies.set(ERROR_CATEGORIES.AUTH, {
+      session_expired: () => {
+        // Redirect to login
+        window.location.href = '/login';
+      },
+      login_failed: () => {
+        // Clear form and show retry message
+        return { action: 'retry', delay: 2000 };
+      },
+    });
+
+    // Network recovery strategies
+    this.recoveryStrategies.set(ERROR_CATEGORIES.NETWORK, {
+      connection_lost: () => {
+        // Retry with exponential backoff
+        return { action: 'retry', delay: 1000, maxRetries: 3 };
+      },
+      timeout: () => {
+        // Retry with longer timeout
+        return { action: 'retry', delay: 3000 };
+      },
+    });
+
+    // Storage recovery strategies
+    this.recoveryStrategies.set(ERROR_CATEGORIES.STORAGE, {
+      quota_exceeded: () => {
+        // Clear old data and retry
+        return { action: 'clear_storage', then: 'retry' };
+      },
+      corrupted: () => {
+        // Clear all data and restart
+        return { action: 'clear_all', then: 'restart' };
+      },
+    });
+  }
+
+  /**
+   * Execute recovery strategy for an error
+   * @param {Object} errorInfo - Categorized error information
+   */
+  executeRecoveryStrategy(errorInfo) {
+    const { category, errorCode } = errorInfo;
+    const strategies = this.recoveryStrategies.get(category);
+    
+    if (strategies && strategies[errorCode]) {
       try {
-        const response = await originalFetch(...args);
-        
-        if (!response.ok) {
-          const error = new Error(`HTTP ${response.status}: ${response.statusText}`);
-          error.status = response.status;
-          this.handleError(error, {
-            type: 'fetch_error',
-            url: args[0],
-            status: response.status
-          });
-        }
-        
-        return response;
+        const result = strategies[errorCode]();
+        console.log('🔧 ErrorHandlingService: Executed recovery strategy:', result);
+        return result;
       } catch (error) {
-        this.handleError(error, {
-          type: 'fetch_error',
-          url: args[0]
-        });
-        throw error;
+        console.error('❌ ErrorHandlingService: Recovery strategy failed:', error);
       }
-    };
+    }
+    
+    return null;
   }
 
   /**
-   * Handle an error with appropriate recovery actions
+   * Determine if an error should be retried
+   * @param {Object} errorInfo - Categorized error information
    */
-  async handleError(error, context = {}) {
-    try {
-      // Increment error count
-      this.errorCount++;
-      this.lastErrorTime = Date.now();
-      
-      // Determine error type
-      const errorType = this.categorizeError(error, context);
-      const errorConfig = ERROR_TYPES[errorType] || ERROR_TYPES.UNKNOWN_ERROR;
-      
-      // Log error for debugging
-      await this.logError(error, errorConfig, context);
-      
-      // Add to error history
-      this.addToErrorHistory(error, errorConfig, context);
-      
-      // Check if we should show user-facing error
-      if (this.shouldShowUserError(errorConfig)) {
-        await this.showUserError(errorConfig, context);
-      }
-      
-      // Execute recovery action
-      await this.executeRecoveryAction(errorConfig, context);
-      
-    } catch (handlingError) {
-      console.error('Error in error handler:', handlingError);
-    }
-  }
-
-  /**
-   * Categorize error based on type and context
-   */
-  categorizeError(error, context) {
-    // Network errors
-    if (error.name === 'TypeError' && error.message.includes('fetch')) {
-      return 'NETWORK_ERROR';
-    }
+  shouldRetry(errorInfo) {
+    const { category, severity } = errorInfo;
     
-    if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
-      return 'NETWORK_ERROR';
-    }
-    
-    // Authentication errors
-    if (error.status === 401 || error.message.includes('unauthorized')) {
-      return 'AUTHENTICATION_ERROR';
-    }
-    
-    // Permission errors
-    if (error.status === 403 || error.message.includes('forbidden')) {
-      return 'PERMISSION_ERROR';
-    }
-    
-    // Rate limit errors
-    if (error.status === 429 || error.message.includes('rate limit')) {
-      return 'RATE_LIMIT_ERROR';
-    }
-    
-    // Service unavailable
-    if (error.status === 503 || error.message.includes('service unavailable')) {
-      return 'SERVICE_UNAVAILABLE';
-    }
-    
-    // Validation errors
-    if (error.status === 400 || error.message.includes('validation')) {
-      return 'VALIDATION_ERROR';
-    }
-    
-    // Data errors
-    if (error.message.includes('data') || error.message.includes('parsing')) {
-      return 'DATA_ERROR';
-    }
-    
-    return 'UNKNOWN_ERROR';
-  }
-
-  /**
-   * Log error for debugging and analytics
-   */
-  async logError(error, errorConfig, context) {
-    const errorLog = {
-      error: {
-        message: error.message,
-        stack: error.stack,
-        name: error.name
-      },
-      config: errorConfig,
-      context: {
-        ...context,
-        timestamp: new Date().toISOString(),
-        userAgent: navigator.userAgent,
-        url: window.location.href
-      },
-      errorCount: this.errorCount,
-      timeSinceLastError: this.lastErrorTime - (this.errorHistory[this.errorHistory.length - 1]?.timestamp || 0)
-    };
-    
-    await executionLogService.logError('error.handled', error, errorLog);
-  }
-
-  /**
-   * Add error to history for pattern detection
-   */
-  addToErrorHistory(error, errorConfig, context) {
-    const errorEntry = {
-      error: error.message,
-      type: errorConfig.code,
-      severity: errorConfig.severity,
-      timestamp: Date.now(),
-      context
-    };
-    
-    this.errorHistory.push(errorEntry);
-    
-    // Keep only last 100 errors
-    if (this.errorHistory.length > 100) {
-      this.errorHistory = this.errorHistory.slice(-100);
-    }
-  }
-
-  /**
-   * Determine if we should show user-facing error
-   */
-  shouldShowUserError(errorConfig) {
-    // Don't show low severity errors to users
-    if (errorConfig.severity === 'low') {
+    // Don't retry critical errors
+    if (severity === ERROR_SEVERITY.CRITICAL) {
       return false;
     }
     
-    // Don't show too many errors in a short time
-    const recentErrors = this.errorHistory.filter(
-      error => Date.now() - error.timestamp < 60000
-    );
-    
-    if (recentErrors.length > 5) {
+    // Don't retry validation errors
+    if (category === ERROR_CATEGORIES.VALIDATION) {
       return false;
     }
     
-    return true;
+    // Retry network and storage errors
+    return [ERROR_CATEGORIES.NETWORK, ERROR_CATEGORIES.STORAGE].includes(category);
   }
 
   /**
-   * Show user-friendly error message
+   * Get recovery action for an error
+   * @param {Object} errorInfo - Categorized error information
    */
-  async showUserError(errorConfig, context) {
-    // Create toast notification
-    const toast = {
-      title: 'Something went wrong',
-      description: errorConfig.userMessage,
-      variant: 'destructive',
-      action: errorConfig.recoveryAction === 'retry' ? {
-        label: 'Try Again',
-        onClick: () => this.executeRecoveryAction(errorConfig, context)
-      } : undefined
-    };
+  getRecoveryAction(errorInfo) {
+    const { category, severity } = errorInfo;
     
-    // Dispatch custom event for toast system
-    window.dispatchEvent(new CustomEvent('show-toast', { detail: toast }));
-  }
-
-  /**
-   * Execute recovery action based on error type
-   */
-  async executeRecoveryAction(errorConfig, context) {
-    switch (errorConfig.recoveryAction) {
-      case 'retry':
-        return this.retryOperation(context);
-        
-      case 'redirect':
-        return this.redirectToPage(errorConfig.redirectTo);
-        
-      case 'refresh':
-        return this.refreshPage();
-        
-      case 'wait':
-        return this.waitAndRetry(errorConfig.waitTime, context);
-        
-      case 'fix_input':
-        return this.highlightInputErrors(context);
-        
-      case 'none':
-      default:
-        return;
-    }
-  }
-
-  /**
-   * Retry operation with exponential backoff
-   */
-  async retryOperation(context, attempt = 1) {
-    const retryConfig = RETRY_CONFIG[context.errorType] || RETRY_CONFIG.NETWORK_ERROR;
-    
-    if (attempt > retryConfig.maxRetries) {
-      throw new Error('Max retries exceeded');
+    if (severity === ERROR_SEVERITY.CRITICAL) {
+      return 'contact_support';
     }
     
-    const delay = Math.min(
-      retryConfig.baseDelay * Math.pow(retryConfig.backoffMultiplier, attempt - 1),
-      retryConfig.maxDelay
-    );
-    
-    await new Promise(resolve => setTimeout(resolve, delay));
-    
-    // Re-execute the original operation
-    if (context.retryFunction) {
-      return context.retryFunction();
+    if (category === ERROR_CATEGORIES.AUTH) {
+      return 'redirect_to_login';
     }
+    
+    if (category === ERROR_CATEGORIES.VALIDATION) {
+      return 'show_validation_errors';
+    }
+    
+    return 'show_error_message';
   }
 
   /**
-   * Redirect to specified page
+   * Before send callback for Sentry
+   * @param {Object} event - Sentry event
    */
-  redirectToPage(path) {
-    window.location.href = path;
-  }
-
-  /**
-   * Refresh the current page
-   */
-  refreshPage() {
-    window.location.reload();
-  }
-
-  /**
-   * Wait and retry operation
-   */
-  async waitAndRetry(waitTime, context) {
-    await new Promise(resolve => setTimeout(resolve, waitTime));
-    return this.retryOperation(context);
-  }
-
-  /**
-   * Highlight input errors in forms
-   */
-  highlightInputErrors(context) {
-    if (context.fieldName) {
-      const field = document.querySelector(`[name="${context.fieldName}"]`);
-      if (field) {
-        field.classList.add('error');
-        field.focus();
+  beforeSend(event) {
+    // Filter out certain errors
+    if (event.exception) {
+      const exception = event.exception.values[0];
+      const message = exception.value.toLowerCase();
+      
+      // Don't send validation errors to Sentry
+      if (message.includes('validation') || message.includes('required')) {
+        return null;
       }
     }
+    
+    return event;
   }
 
   /**
-   * Wrap async operations with error handling
+   * Set user context for Sentry
+   * @param {Object} user - User information
    */
-  async withErrorHandling(operation, context = {}) {
-    try {
-      return await operation();
-    } catch (error) {
-      await this.handleError(error, {
-        ...context,
-        retryFunction: () => this.withErrorHandling(operation, context)
+  setUserContext(user) {
+    if (this.isInitialized && Sentry) {
+      Sentry.setUser({
+        id: user.id,
+        email: user.email,
+        name: user.name,
       });
-      throw error;
     }
   }
 
   /**
-   * Create a retry wrapper for operations
+   * Add breadcrumb for debugging
+   * @param {string} message - Breadcrumb message
+   * @param {Object} data - Additional data
    */
-  createRetryWrapper(operation, retryConfig = RETRY_CONFIG.NETWORK_ERROR) {
-    return async (...args) => {
-      let lastError;
-      
-      for (let attempt = 1; attempt <= retryConfig.maxRetries; attempt++) {
-        try {
-          return await operation(...args);
-        } catch (error) {
-          lastError = error;
-          
-          if (attempt < retryConfig.maxRetries) {
-            const delay = Math.min(
-              retryConfig.baseDelay * Math.pow(retryConfig.backoffMultiplier, attempt - 1),
-              retryConfig.maxDelay
-            );
-            
-            await new Promise(resolve => setTimeout(resolve, delay));
-          }
-        }
-      }
-      
-      throw lastError;
-    };
+  addBreadcrumb(message, data = {}) {
+    if (this.isInitialized && Sentry) {
+      Sentry.addBreadcrumb({
+        message,
+        data,
+        level: 'info',
+      });
+    }
   }
 
   /**
    * Get error statistics
    */
   getErrorStats() {
-    const now = Date.now();
-    const oneHourAgo = now - 60 * 60 * 1000;
-    const oneDayAgo = now - 24 * 60 * 60 * 1000;
-    
-    const recentErrors = this.errorHistory.filter(error => error.timestamp > oneHourAgo);
-    const dailyErrors = this.errorHistory.filter(error => error.timestamp > oneDayAgo);
-    
     return {
       totalErrors: this.errorCount,
-      recentErrors: recentErrors.length,
-      dailyErrors: dailyErrors.length,
-      errorHistory: this.errorHistory.slice(-10) // Last 10 errors
+      isInitialized: this.isInitialized,
     };
   }
 
   /**
-   * Clear error history
+   * Clear error count (useful for testing)
    */
-  clearErrorHistory() {
-    this.errorHistory = [];
+  clearErrorCount() {
     this.errorCount = 0;
   }
 }
 
 // Create singleton instance
 const errorHandlingService = new ErrorHandlingService();
-
-// Initialize on module load
-errorHandlingService.initialize();
 
 export default errorHandlingService; 
