@@ -30,6 +30,7 @@ import StyledButton from "./components/ui/StyledButton.jsx";
 import CompositeCard from "./components/ui/CompositeCard.jsx";
 import DarkModeToggle from "./components/ui/DarkModeToggle.jsx";
 import PerformanceMonitor from "./components/ui/PerformanceMonitor.jsx";
+import { useRouteGuard } from '@/core/routing/useRouteGuard.js';
 
 // Import new page shells for Phase 1
 import DashboardPage from './pages/DashboardPage.jsx';
@@ -286,6 +287,9 @@ const AppContent = () => {
   useEffect(() => {
     initializeApp();
   }, [initializeApp]);
+
+  // Apply central route guard on location changes
+  useRouteGuard();
 
   // Show loading state
   if (isLoading) {
