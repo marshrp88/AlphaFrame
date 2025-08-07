@@ -1,3 +1,53 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - showcase/phase-x-demo-ready
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'pnpm'
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+        working-directory: ./apps/web
+
+      # Unit tests (Vitest). Placeholder; enable when tests are wired
+      - name: Run unit tests
+        run: pnpm test -- --run --reporter=dot
+        working-directory: ./apps/web
+        continue-on-error: true # switch to false after step 8
+
+      # Playwright E2E (placeholder)
+      - name: Install Playwright Browsers
+        run: pnpm dlx playwright install --with-deps
+        working-directory: ./apps/web
+        continue-on-error: true
+
+      - name: Run e2e tests
+        run: pnpm test:e2e || echo "E2E placeholder"
+        working-directory: ./apps/web
+        continue-on-error: true
+
+      - name: Summary
+        run: echo "CI skeleton executed. Enable strict failure after tests exist."
+
 name: AlphaFrame CI/CD Pipeline
 
 on:
