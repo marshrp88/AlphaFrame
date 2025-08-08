@@ -64,6 +64,9 @@ jobs:
     - name: Build application
       run: pnpm build
 
+    - name: Check bundle budget
+      run: node scripts/check-bundle-size.js
+
     - name: Install Playwright Browsers
       run: pnpm dlx playwright install --with-deps
 

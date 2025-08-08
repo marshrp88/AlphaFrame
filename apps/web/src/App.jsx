@@ -30,13 +30,13 @@ import StyledButton from "./components/ui/StyledButton.jsx";
 import CompositeCard from "./components/ui/CompositeCard.jsx";
 import DarkModeToggle from "./components/ui/DarkModeToggle.jsx";
 import PerformanceMonitor from "./components/ui/PerformanceMonitor.jsx";
-import { useRouteGuard } from '@/core/routing/useRouteGuard.js';
+import HelpPanel from "./components/ui/HelpPanel.jsx";
 
 // Import new page shells for Phase 1
-import DashboardPage from './pages/DashboardPage.jsx';
-import SettingsPage from './pages/SettingsPage.jsx';
-import OnboardingPage from './pages/OnboardingPage.jsx';
-import NotFoundPage from './pages/NotFoundPage.jsx';
+const DashboardPage = lazy(() => import('./pages/DashboardPage.jsx'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage.jsx'));
+const OnboardingPage = lazy(() => import('./pages/OnboardingPage.jsx'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage.jsx'));
 import UpgradePage from './pages/UpgradePage';
 import About from './pages/About';
 import AlphaPro from './pages/AlphaPro';
@@ -288,9 +288,6 @@ const AppContent = () => {
     initializeApp();
   }, [initializeApp]);
 
-  // Apply central route guard on location changes
-  useRouteGuard();
-
   // Show loading state
   if (isLoading) {
     return (
@@ -354,6 +351,7 @@ const AppContent = () => {
       <UserStateSnapshot onFeedbackClick={() => setFeedbackModalOpen(true)} />
       {/* Development Performance Monitor */}
       <PerformanceMonitor />
+      <HelpPanel />
     </div>
   );
 };
