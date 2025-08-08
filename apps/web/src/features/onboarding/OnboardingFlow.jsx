@@ -37,6 +37,8 @@ import { useFinancialStateStore } from '../../core/store/financialStateStore.js'
 import { useToast } from '../../components/ui/use-toast.jsx';
 import { trackOnboardStarted, trackOnboardCompleted } from '@/lib/analytics.js';
 import './OnboardingFlow.css';
+import { useOnboardingStore } from '../../store/modular/onboardingStore.js';
+import DemoModeService from '../../lib/services/DemoModeService.js';
 
 /**
  * Onboarding steps configuration - Enhanced for Phase 4
@@ -141,6 +143,7 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
   const { user, updateUserProfile } = useAuthStore();
   const { initializeFinancialState } = useFinancialStateStore();
   const { toast, automationToast } = useToast();
+  const { fsmState, fsmStart, fsmRetry } = useOnboardingStore();
   
   // DEV/DEMO HOTFIX: Always show onboarding step 1, bypass auth and blockers
   const [currentStep, setCurrentStep] = useState(1); // Always start at step 1
@@ -192,6 +195,28 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
       }
     };
   }, [isLoading]);
+
+  // Start FSM on mount if idle
+  useEffect(() => {
+    if (fsmState === 'idle') {
+      try { fsmStart(); } catch (_) {}
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Surface FSM transitions
+  useEffect(() => {
+    if (fsmState === 'timeout') {
+      setHasError(true);
+      setErrorMessage('Setup is taking too long. You can retry or use Demo.');
+      toast({ title: 'Setup Timeout', description: 'We will not keep you waiting. Retry or use Demo.', variant: 'destructive' });
+    } else if (fsmState === 'error') {
+      setHasError(true);
+      setErrorMessage('We hit a setup error. You can retry or use Demo.');
+      toast({ title: 'Setup Error', description: 'Retry or continue in Demo mode.', variant: 'destructive' });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fsmState]);
 
   // Debug reset button handler
   const handleDebugReset = () => {
@@ -417,6 +442,33 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
 
   return (
     <div style={{ pointerEvents: 'auto', opacity: 1, background: '#fff', minHeight: '100vh' }} data-testid="onboarding-container">
+      {(fsmState === 'timeout' || fsmState === 'error') && (
+        <div style={{
+          position: 'sticky', top: 0, zIndex: 1000, padding: '12px 16px',
+          background: '#fff3f3', borderBottom: '1px solid #fca5a5', display: 'flex', gap: 8,
+          alignItems: 'center', justifyContent: 'center'
+        }}>
+          <span style={{ color: '#b91c1c', fontWeight: 600 }}>
+            {fsmState === 'timeout' ? 'Setup timeout' : 'Setup error'}
+          </span>
+          <StyledButton variant="secondary" size="sm" onClick={() => { setHasError(false); fsmRetry(); }}>
+            Retry
+          </StyledButton>
+          <StyledButton
+            variant="primary"
+            size="sm"
+            onClick={() => {
+              DemoModeService.enable();
+              localStorage.setItem('alphaframe_onboarding_complete', 'true');
+              sessionStorage.setItem('demo_user', 'true');
+              if (onComplete) onComplete({ demo: true });
+              navigate('/dashboard');
+            }}
+          >
+            Use Demo
+          </StyledButton>
+        </div>
+      )}
       {/* Debug reset button (dev only) */}
       <button 
         onClick={handleDebugReset}
