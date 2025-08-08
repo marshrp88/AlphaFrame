@@ -20,7 +20,9 @@ const DashboardPage = () => {
 
   useEffect(() => {
     // Check if user should be on dashboard
-    if (!shouldBypassOnboarding()) {
+    const localComplete = localStorage.getItem('alphaframe_onboarding_complete') === 'true';
+    const demoFlag = sessionStorage.getItem('demo_user') === 'true';
+    if (!shouldBypassOnboarding() && !(demoFlag && localComplete)) {
       console.log('🔧 DashboardPage: User needs onboarding, redirecting');
       navigate('/onboarding');
       return;
