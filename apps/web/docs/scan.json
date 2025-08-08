@@ -1,0 +1,1004 @@
+{
+  "routes": [
+    {
+      "path": "/",
+      "file": "src/App.jsx"
+    },
+    {
+      "path": "/home",
+      "file": "src/App.jsx"
+    },
+    {
+      "path": "/about",
+      "file": "src/App.jsx"
+    },
+    {
+      "path": "/dashboard",
+      "file": "src/App.jsx"
+    },
+    {
+      "path": "/profile",
+      "file": "src/App.jsx"
+    },
+    {
+      "path": "/rules",
+      "file": "src/App.jsx"
+    },
+    {
+      "path": "/settings",
+      "file": "src/App.jsx"
+    },
+    {
+      "path": "/onboarding",
+      "file": "src/App.jsx"
+    },
+    {
+      "path": "/alphapro",
+      "file": "src/App.jsx"
+    },
+    {
+      "path": "/pro-planner",
+      "file": "src/App.jsx"
+    },
+    {
+      "path": "/trust",
+      "file": "src/App.jsx"
+    },
+    {
+      "path": "/test",
+      "file": "src/App.jsx"
+    },
+    {
+      "path": "*",
+      "file": "src/App.jsx"
+    },
+    {
+      "path": "/",
+      "file": "src/pages/App.jsx"
+    },
+    {
+      "path": "/dashboard",
+      "file": "src/pages/App.jsx"
+    },
+    {
+      "path": "*",
+      "file": "src/pages/App.jsx"
+    }
+  ],
+  "stores": [
+    {
+      "file": "src/lib/store/uiStore.js",
+      "stateKeys": [
+        "confirmationModal",
+        "passwordPrompt",
+        "isSandboxMode"
+      ],
+      "actions": [
+        "showConfirmationModal",
+        "hideConfirmationModal",
+        "showPasswordPrompt",
+        "hidePasswordPrompt",
+        "toggleSandboxMode"
+      ]
+    },
+    {
+      "file": "src/core/store/authStore.js",
+      "stateKeys": [
+        "user",
+        "isAuthenticated",
+        "isLoading",
+        "error",
+        "permissions"
+      ],
+      "actions": [
+        "initialize",
+        "register",
+        "login",
+        "logout",
+        "updateProfile",
+        "checkAuth",
+        "clearError",
+        "hasPermission",
+        "isAdmin",
+        "isPremium"
+      ]
+    },
+    {
+      "file": "src/core/store/dashboardModeStore.js",
+      "stateKeys": [
+        "currentMode",
+        "viewPreferences"
+      ],
+      "actions": [
+        "setMode",
+        "toggleViewPreference",
+        "isProMode",
+        "isDetailedView"
+      ]
+    },
+    {
+      "file": "src/core/store/dataStore.js",
+      "stateKeys": [
+        "rules",
+        "transactions",
+        "budgets",
+        "insights",
+        "userPreferences",
+        "isLoading",
+        "error",
+        "lastSync",
+        "listeners",
+        "triggeredRules",
+        "latestTriggeredRule"
+      ],
+      "actions": [
+        "initialize",
+        "evaluateAndTriggerRules",
+        "createRule",
+        "updateRule",
+        "deleteRule",
+        "createTransaction",
+        "updateTransaction",
+        "deleteTransaction",
+        "createBudget",
+        "updateBudget",
+        "deleteBudget",
+        "createInsight",
+        "updateInsight",
+        "deleteInsight",
+        "updateUserPreferences",
+        "exportData",
+        "importData",
+        "queryRules",
+        "queryTransactions",
+        "queryBudgets",
+        "clearError",
+        "refreshData",
+        "getActiveRules",
+        "getTransactionsByCategory",
+        "getTotalSpending",
+        "getBudgetUtilization"
+      ]
+    },
+    {
+      "file": "src/core/store/financialStateStore.js",
+      "stateKeys": [
+        "accounts",
+        "transactions",
+        "balance",
+        "budget",
+        "goals",
+        "isLoading",
+        "isSyncing"
+      ],
+      "actions": [
+        "setAccounts",
+        "setTransactions",
+        "setBalance",
+        "setBudget",
+        "setLoading",
+        "setSyncing",
+        "setAccountBalance",
+        "getAccountBalance",
+        "setGoal",
+        "getGoal",
+        "updateGoalProgress",
+        "recordSpending",
+        "resetMonthlyBudgets",
+        "getTotalBalance",
+        "getRecentTransactions"
+      ]
+    }
+  ],
+  "services": [
+    {
+      "file": "src/tests/unit/services/AuthService.test.js",
+      "exports": [],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/tests/unit/services/FeedbackUploader.test.js",
+      "exports": [],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/tests/unit/services/PlaidService.test.js",
+      "exports": [],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/tests/unit/services/ruleEngine.spec.js",
+      "exports": [],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/tests/integration/services/ConfirmationModal.spec.js",
+      "exports": [],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/tests/integration/services/crypto.spec.js",
+      "exports": [],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/tests/integration/services/ExecutionController.spec.js",
+      "exports": [],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/tests/integration/services/ExecutionController.test.js",
+      "exports": [],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/tests/integration/services/FrameSyncIntegration.spec.js",
+      "exports": [],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/tests/integration/services/ruleEngine.spec.js",
+      "exports": [],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/tests/integration/services/TriggerDispatcher.spec.js",
+      "exports": [],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/lib/services/AccessibilityService.js",
+      "exports": [
+        "AccessibilityService",
+        "default"
+      ],
+      "imports": [
+        "./ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/AuthService.js",
+      "exports": [
+        "initializeAuth",
+        "register",
+        "login",
+        "logout",
+        "getCurrentUser",
+        "isAuthenticated",
+        "getUserPermissions",
+        "hasPermission",
+        "getUserRole",
+        "hasRole",
+        "updateUserProfile",
+        "sendPasswordReset",
+        "validateSession",
+        "clearSession"
+      ],
+      "imports": [
+        "firebase/auth",
+        "firebase/firestore",
+        "../firebase/init.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/authStore.js",
+      "exports": [
+        "useAuthStore",
+        "default"
+      ],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/lib/services/BundleAnalyzer.js",
+      "exports": [
+        "BundleAnalyzer",
+        "default"
+      ],
+      "imports": [
+        "./ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/DataService.js",
+      "exports": [
+        "initializeDataService",
+        "createDocument",
+        "getDocument",
+        "getDocuments",
+        "updateDocument",
+        "deleteDocument",
+        "queryDocuments",
+        "getUserPreferences",
+        "updateUserPreferences",
+        "exportUserData",
+        "importUserData",
+        "subscribeToCollection",
+        "getDemoTransactions"
+      ],
+      "imports": [
+        "firebase/firestore",
+        "../firebase/init.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/DemoModeService.js",
+      "exports": [
+        "DemoModeService",
+        "default"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/lib/services/ErrorHandlingService.js",
+      "exports": [
+        "ERROR_CATEGORIES",
+        "ERROR_SEVERITY",
+        "ErrorHandlingService",
+        "default"
+      ],
+      "imports": [
+        "@sentry/react"
+      ]
+    },
+    {
+      "file": "src/lib/services/ExecutionController.js",
+      "exports": [
+        "ExecutionController",
+        "default"
+      ],
+      "imports": [
+        "../../core/store/financialStateStore",
+        "../../core/store/uiStore",
+        "../../core/services/SecureVault",
+        "./PermissionEnforcer",
+        "../../core/store/logStore",
+        "../validation/schemas",
+        "./WebhookService.js",
+        "./NotificationService.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/ExecutionLogService.js",
+      "exports": [
+        "ExecutionLogService",
+        "default"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/lib/services/ExplainabilityEngine.js",
+      "exports": [
+        "ExplainabilityEngine",
+        "default"
+      ],
+      "imports": [
+        "../../core/services/ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/FeatureGate.js",
+      "exports": [
+        "FeatureGate",
+        "featureGate"
+      ],
+      "imports": [
+        "../../core/services/ExecutionLogService.js",
+        "../config.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/FeedbackUploader.js",
+      "exports": [
+        "FeedbackUploader",
+        "default",
+        "FeedbackUploaderMock"
+      ],
+      "imports": [
+        "../../core/services/CryptoService.js",
+        "../../core/services/ExecutionLogService.js",
+        "../../features/pro/services/BudgetService.js",
+        "../../features/pro/services/CashFlowService.js",
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/lib/services/LaunchPreparationService.js",
+      "exports": [
+        "LaunchPreparationService",
+        "default"
+      ],
+      "imports": [
+        "./ExecutionLogService.js",
+        "./PerformanceMonitor.js",
+        "./BundleAnalyzer.js",
+        "./AccessibilityService.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/MonteCarloRunner.js",
+      "exports": [
+        "MonteCarloRunner",
+        "default"
+      ],
+      "imports": [
+        "../../core/services/ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/NotificationService.js",
+      "exports": [
+        "NotificationService",
+        "default"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/lib/services/PerformanceMonitor.js",
+      "exports": [
+        "PerformanceMonitor",
+        "default"
+      ],
+      "imports": [
+        "./ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/PermissionEnforcer.js",
+      "exports": [
+        "PermissionEnforcer",
+        "canExecuteAction",
+        "requestPermission",
+        "isActionHighRisk",
+        "hasActionPermission",
+        "validateActionPayload",
+        "default"
+      ],
+      "imports": [
+        "../../core/store/authStore",
+        "../../core/store/uiStore",
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/lib/services/Phase9RuleIntegration.js",
+      "exports": [
+        "Phase9RuleIntegration",
+        "default"
+      ],
+      "imports": [
+        "./RuleExecutionEngine.js",
+        "./PlaidService.js",
+        "../../core/services/ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/PlaidService.js",
+      "exports": [
+        "PlaidService",
+        "default"
+      ],
+      "imports": [
+        "./syncEngine.js",
+        "../config.js",
+        "../../core/services/ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/RealTimeSyncService.js",
+      "exports": [
+        "RealTimeSyncService",
+        "realTimeSyncService",
+        "default"
+      ],
+      "imports": [
+        "../../core/services/ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/RecommendationEngine.js",
+      "exports": [
+        "RecommendationEngine"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/lib/services/RetirementService.js",
+      "exports": [
+        "RetirementService",
+        "default"
+      ],
+      "imports": [
+        "../validation/schemas.js",
+        "../../core/services/ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/ruleEngine.js",
+      "exports": [
+        "RuleEngine",
+        "default",
+        "evaluateRule",
+        "executeRule",
+        "simulateRule",
+        "validateRule",
+        "getMatchingRules"
+      ],
+      "imports": [
+        "zod",
+        "../config.js",
+        "../../core/services/ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/RuleEngineExecutor.js",
+      "exports": [
+        "evaluateRule",
+        "evaluateAllRules",
+        "getRuleExecutionSummary",
+        "default"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/lib/services/RuleExecutionEngine.js",
+      "exports": [
+        "RuleExecutionEngine",
+        "default",
+        "logRuleTrigger"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/lib/services/RuleTemplateService.js",
+      "exports": [
+        "RuleTemplateService",
+        "default"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/lib/services/SchemaManager.js",
+      "exports": [
+        "SchemaManager",
+        "schemaManager"
+      ],
+      "imports": [
+        "../../core/services/ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/secureVault.js",
+      "exports": [
+        "default"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/lib/services/simulation.js",
+      "exports": [
+        "validateParams",
+        "runDebtVsInvestment",
+        "generateScenario",
+        "calculateOptimalStrategy",
+        "projectFutureState"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/lib/services/SimulationService.js",
+      "exports": [
+        "SimulationService",
+        "default"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/lib/services/StorageService.js",
+      "exports": [
+        "StorageService",
+        "default",
+        "STORAGE_KEYS",
+        "VALIDATION_SCHEMAS"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/lib/services/syncEngine.js",
+      "exports": [
+        "initializePlaid",
+        "createLinkToken",
+        "exchangePublicToken",
+        "getTransactions",
+        "syncTransactions",
+        "syncBalances",
+        "getAccounts",
+        "handleWebhook",
+        "revokeAccessToken"
+      ],
+      "imports": [
+        "plaid",
+        "../../core/services/ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/TriggerDispatcher.js",
+      "exports": [
+        "TriggerDispatcher",
+        "default",
+        "dispatchAction",
+        "listenForEvents",
+        "queueAction",
+        "getActionQueue",
+        "clearActionQueue"
+      ],
+      "imports": [
+        "./ExecutionController",
+        "zustand",
+        "../../core/store/logStore"
+      ]
+    },
+    {
+      "file": "src/lib/services/WebhookService.js",
+      "exports": [
+        "executeWebhook",
+        "handlePlaidWebhook",
+        "verifyWebhookSignature",
+        "getWebhookStats"
+      ],
+      "imports": [
+        "zod",
+        "../config.js",
+        "../env.js",
+        "../../core/services/ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/__tests__/AuthService.test.js",
+      "exports": [],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/lib/services/__tests__/Phase2Validation.test.js",
+      "exports": [],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/lib/services/__tests__/PlaidService.fixed.test.js",
+      "exports": [],
+      "imports": [
+        "vitest",
+        "../PlaidService.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/__tests__/PlaidService.test.js",
+      "exports": [],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/lib/services/__tests__/RetirementService.test.js",
+      "exports": [],
+      "imports": [
+        "vitest",
+        "../RetirementService.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/__tests__/ruleEngine.spec.js",
+      "exports": [],
+      "imports": [
+        "vitest",
+        "../ruleEngine"
+      ]
+    },
+    {
+      "file": "src/lib/services/__tests__/ruleEngine.test.js",
+      "exports": [],
+      "imports": [
+        "vitest",
+        "../ruleEngine"
+      ]
+    },
+    {
+      "file": "src/lib/services/__tests__/RuleExecutionEngine.test.js",
+      "exports": [],
+      "imports": [
+        "vitest",
+        "../RuleExecutionEngine.js"
+      ]
+    },
+    {
+      "file": "src/lib/services/__mocks__/AuthService.js",
+      "exports": [
+        "default",
+        "AuthService"
+      ],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/lib/services/__mocks__/FeedbackUploader.js",
+      "exports": [
+        "default",
+        "FeedbackUploader"
+      ],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/lib/services/__mocks__/financialStateStore.js",
+      "exports": [
+        "default",
+        "financialStateStore"
+      ],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/lib/services/__mocks__/PlaidService.js",
+      "exports": [
+        "default",
+        "PlaidService"
+      ],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/lib/services/__mocks__/RetirementService.js",
+      "exports": [
+        "RetirementService",
+        "default"
+      ],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/lib/services/__mocks__/RuleEngine.js",
+      "exports": [
+        "default",
+        "RuleEngine"
+      ],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/lib/services/__mocks__/TaxService.js",
+      "exports": [
+        "default",
+        "TaxService"
+      ],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/features/pro/services/BudgetService.js",
+      "exports": [
+        "BudgetService",
+        "default"
+      ],
+      "imports": [
+        "../../../core/services/ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/features/pro/services/CashFlowService.js",
+      "exports": [
+        "CashFlowService",
+        "default"
+      ],
+      "imports": [
+        "../../../core/services/ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/features/pro/services/NarrativeService.js",
+      "exports": [
+        "NarrativeService",
+        "default"
+      ],
+      "imports": [
+        "../../../core/services/ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/features/pro/services/PortfolioAnalyzer.js",
+      "exports": [
+        "PortfolioAnalyzer",
+        "default"
+      ],
+      "imports": [
+        "../../../core/services/ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/features/pro/services/ReportCenter.js",
+      "exports": [
+        "ReportCenter",
+        "default"
+      ],
+      "imports": [
+        "../../../core/services/ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/features/pro/services/TimelineSimulator.js",
+      "exports": [
+        "TimelineSimulator",
+        "default",
+        "EVENT_TYPES"
+      ],
+      "imports": [
+        "../../../core/services/ExecutionLogService.js"
+      ]
+    },
+    {
+      "file": "src/core/services/CryptoService.js",
+      "exports": [
+        "deriveKey",
+        "encrypt",
+        "decrypt",
+        "generateSalt",
+        "encryptData",
+        "decryptData",
+        "encryptDataAlias",
+        "decryptDataAlias",
+        "default"
+      ],
+      "imports": [
+        "tweetnacl",
+        "tweetnacl-util"
+      ]
+    },
+    {
+      "file": "src/core/services/DebtService.js",
+      "exports": [
+        "DebtService",
+        "default"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/core/services/ExecutionLogService.js",
+      "exports": [
+        "ExecutionLogService",
+        "default"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/core/services/ExplainabilityEngine.js",
+      "exports": [
+        "ExplainabilityEngine",
+        "default"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/core/services/InsightFeedSchema.js",
+      "exports": [
+        "InsightFeedSchema",
+        "default"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/core/services/MonteCarloRunner.js",
+      "exports": [
+        "MonteCarloRunner",
+        "default"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/core/services/RetirementService.js",
+      "exports": [
+        "RetirementService",
+        "default"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/core/services/SecureVault.js",
+      "exports": [
+        "unlock",
+        "set",
+        "get",
+        "lock",
+        "isUnlocked"
+      ],
+      "imports": [
+        "./CryptoService"
+      ]
+    },
+    {
+      "file": "src/core/services/TaxService.js",
+      "exports": [
+        "TaxService",
+        "default"
+      ],
+      "imports": []
+    },
+    {
+      "file": "src/core/services/__tests__/GalileoServices.test.js",
+      "exports": [],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/core/services/__tests__/TaxService.test.js",
+      "exports": [],
+      "imports": [
+        "vitest",
+        "../TaxService.js"
+      ]
+    },
+    {
+      "file": "src/core/services/__mocks__/CryptoService.js",
+      "exports": [
+        "default",
+        "CryptoService"
+      ],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/core/services/__mocks__/ExecutionLogService.js",
+      "exports": [
+        "default",
+        "mockService"
+      ],
+      "imports": [
+        "vitest"
+      ]
+    },
+    {
+      "file": "src/core/services/__mocks__/TaxService.js",
+      "exports": [
+        "TaxService",
+        "default"
+      ],
+      "imports": [
+        "vitest"
+      ]
+    }
+  ]
+}
