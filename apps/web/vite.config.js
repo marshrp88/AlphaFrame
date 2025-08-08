@@ -55,6 +55,8 @@ export default defineConfig({
             if (id.includes('react-router')) return 'router';
             if (id.includes('framer-motion')) return 'motion';
             if (id.includes('date-fns') || id.includes('zod')) return 'utils';
+            if (id.includes('firebase')) return 'firebase';
+            if (id.includes('plaid') || id.includes('react-plaid-link')) return 'plaid';
             if (id.includes('react')) return 'react-vendor';
             return 'vendor';
           }

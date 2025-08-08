@@ -4,49 +4,55 @@
 
 [36mvite v5.4.19 [32mbuilding for production...[36m[39m
 transforming...
-[32m✓[39m 2423 modules transformed.
+[32m✓[39m 2429 modules transformed.
 rendering chunks...
 computing gzip size...
-[2mdist/[22m[32mindex.html                              [39m[1m[2m    0.79 kB[22m[1m[22m[2m │ gzip:   0.38 kB[22m
-[2mdist/[22m[35massets/DashboardPage-DwqN-fGX.css       [39m[1m[2m    1.83 kB[22m[1m[22m[2m │ gzip:   0.65 kB[22m
-[2mdist/[22m[35massets/Card-DNIg1PgA.css                [39m[1m[2m    7.26 kB[22m[1m[22m[2m │ gzip:   1.53 kB[22m
-[2mdist/[22m[35massets/Select-DgXusmIS.css              [39m[1m[2m    8.07 kB[22m[1m[22m[2m │ gzip:   1.64 kB[22m
-[2mdist/[22m[35massets/StatusBadge-lSwuEel3.css         [39m[1m[2m   10.20 kB[22m[1m[22m[2m │ gzip:   2.39 kB[22m
-[2mdist/[22m[35massets/ProPlannerPage-B23kIAyc.css      [39m[1m[2m   12.86 kB[22m[1m[22m[2m │ gzip:   2.93 kB[22m
-[2mdist/[22m[35massets/PageLayout-Bc-gzk7z.css          [39m[1m[2m   13.02 kB[22m[1m[22m[2m │ gzip:   2.99 kB[22m
-[2mdist/[22m[35massets/About-C9ihRrUF.css               [39m[1m[2m   16.29 kB[22m[1m[22m[2m │ gzip:   3.58 kB[22m
-[2mdist/[22m[35massets/Home-CWbOEC5i.css                [39m[1m[2m   16.92 kB[22m[1m[22m[2m │ gzip:   3.70 kB[22m
-[2mdist/[22m[35massets/OnboardingPage-BS2sMlo_.css      [39m[1m[2m   19.22 kB[22m[1m[22m[2m │ gzip:   3.94 kB[22m
-[2mdist/[22m[35massets/SettingsPage-b7f4v2L4.css        [39m[1m[2m   20.30 kB[22m[1m[22m[2m │ gzip:   3.84 kB[22m
-[2mdist/[22m[35massets/Profile-YSzGN3Jp.css             [39m[1m[2m   21.62 kB[22m[1m[22m[2m │ gzip:   4.34 kB[22m
-[2mdist/[22m[35massets/LandingPage-ztaBaZUO.css         [39m[1m[2m   23.84 kB[22m[1m[22m[2m │ gzip:   4.90 kB[22m
-[2mdist/[22m[35massets/index-DtUuZGnj.css               [39m[1m[2m   32.09 kB[22m[1m[22m[2m │ gzip:   6.10 kB[22m
-[2mdist/[22m[36massets/TestMount-vfto7Cgf.js            [39m[1m[2m    0.34 kB[22m[1m[22m[2m │ gzip:   0.28 kB[22m
-[2mdist/[22m[36massets/StatusBadge-BnnIwA99.js          [39m[1m[2m    0.40 kB[22m[1m[22m[2m │ gzip:   0.26 kB[22m
-[2mdist/[22m[36massets/NotFoundPage-B30DBdoP.js         [39m[1m[2m    0.52 kB[22m[1m[22m[2m │ gzip:   0.32 kB[22m
-[2mdist/[22m[36massets/ExecutionLogService-B6w1RRLA.js  [39m[1m[2m    0.84 kB[22m[1m[22m[2m │ gzip:   0.46 kB[22m
-[2mdist/[22m[36massets/Card-DFzat4fB.js                 [39m[1m[2m    0.85 kB[22m[1m[22m[2m │ gzip:   0.37 kB[22m
-[2mdist/[22m[36massets/Select-DGkXP5mm.js               [39m[1m[2m    0.90 kB[22m[1m[22m[2m │ gzip:   0.44 kB[22m
-[2mdist/[22m[36massets/PageLayout-GAO2ZgeM.js           [39m[1m[2m    1.33 kB[22m[1m[22m[2m │ gzip:   0.76 kB[22m
-[2mdist/[22m[36massets/financialStateStore-D-ABi94L.js  [39m[1m[2m    1.39 kB[22m[1m[22m[2m │ gzip:   0.62 kB[22m
-[2mdist/[22m[36massets/UpgradePage-CX9rFp33.js          [39m[1m[2m    2.06 kB[22m[1m[22m[2m │ gzip:   0.98 kB[22m
-[2mdist/[22m[36massets/Home-DasCExEI.js                 [39m[1m[2m    6.39 kB[22m[1m[22m[2m │ gzip:   1.82 kB[22m
-[2mdist/[22m[36massets/About-6v6PTsXN.js                [39m[1m[2m    7.21 kB[22m[1m[22m[2m │ gzip:   1.74 kB[22m
-[2mdist/[22m[36massets/LandingPage-CTqRQaTd.js          [39m[1m[2m    9.24 kB[22m[1m[22m[2m │ gzip:   3.10 kB[22m
-[2mdist/[22m[36massets/Profile-ycA7Obqy.js              [39m[1m[2m    9.41 kB[22m[1m[22m[2m │ gzip:   2.54 kB[22m
-[2mdist/[22m[36massets/TrustPage-Fb1173h8.js            [39m[1m[2m    9.62 kB[22m[1m[22m[2m │ gzip:   2.74 kB[22m
-[2mdist/[22m[36massets/ruleEngine-B7jgJY_A.js           [39m[1m[2m    9.86 kB[22m[1m[22m[2m │ gzip:   2.97 kB[22m
-[2mdist/[22m[36massets/AlphaPro-CMMz14y9.js             [39m[1m[2m   11.22 kB[22m[1m[22m[2m │ gzip:   3.76 kB[22m
-[2mdist/[22m[36massets/DashboardPage-DeF3UNgX.js        [39m[1m[2m   12.79 kB[22m[1m[22m[2m │ gzip:   3.39 kB[22m
-[2mdist/[22m[36massets/router-3gNRTbou.js               [39m[1m[2m   13.07 kB[22m[1m[22m[2m │ gzip:   4.81 kB[22m
-[2mdist/[22m[36massets/SettingsPage-BeLYL7BY.js         [39m[1m[2m   21.50 kB[22m[1m[22m[2m │ gzip:   4.27 kB[22m
-[2mdist/[22m[36massets/RuleStatusCard-Cgot7tsu.js       [39m[1m[2m   25.66 kB[22m[1m[22m[2m │ gzip:   6.43 kB[22m
-[2mdist/[22m[36massets/RulesPage-smGe9PjC.js            [39m[1m[2m   30.81 kB[22m[1m[22m[2m │ gzip:   7.70 kB[22m
-[2mdist/[22m[36massets/utils-CwsAfOa1.js                [39m[1m[2m   54.24 kB[22m[1m[22m[2m │ gzip:  12.36 kB[22m
-[2mdist/[22m[36massets/ProPlannerPage-BHJIxDEx.js       [39m[1m[2m   62.34 kB[22m[1m[22m[2m │ gzip:  15.67 kB[22m
-[2mdist/[22m[36massets/OnboardingPage-6m1Nd0wz.js       [39m[1m[2m   72.26 kB[22m[1m[22m[2m │ gzip:  18.48 kB[22m
-[2mdist/[22m[36massets/motion-DNt5Sqsh.js               [39m[1m[2m   78.08 kB[22m[1m[22m[2m │ gzip:  25.41 kB[22m
-[2mdist/[22m[36massets/index-VvIlE5li.js                [39m[1m[2m   89.67 kB[22m[1m[22m[2m │ gzip:  22.56 kB[22m
-[2mdist/[22m[36massets/react-vendor-C59bQz6J.js         [39m[1m[2m  189.32 kB[22m[1m[22m[2m │ gzip:  59.95 kB[22m
-[2mdist/[22m[36massets/vendor-BV4ntTZ6.js               [39m[1m[33m1,233.91 kB[39m[22m[2m │ gzip: 284.96 kB[22m
-[32m✓ built in 6.25s[39m
+[2mdist/[22m[32mindex.html                              [39m[1m[2m  1.02 kB[22m[1m[22m[2m │ gzip:   0.42 kB[22m
+[2mdist/[22m[35massets/DashboardPage-DwqN-fGX.css       [39m[1m[2m  1.83 kB[22m[1m[22m[2m │ gzip:   0.65 kB[22m
+[2mdist/[22m[35massets/Card-DNIg1PgA.css                [39m[1m[2m  7.26 kB[22m[1m[22m[2m │ gzip:   1.53 kB[22m
+[2mdist/[22m[35massets/Select-DgXusmIS.css              [39m[1m[2m  8.07 kB[22m[1m[22m[2m │ gzip:   1.64 kB[22m
+[2mdist/[22m[35massets/StatusBadge-lSwuEel3.css         [39m[1m[2m 10.20 kB[22m[1m[22m[2m │ gzip:   2.39 kB[22m
+[2mdist/[22m[35massets/ProPlannerPage-B23kIAyc.css      [39m[1m[2m 12.86 kB[22m[1m[22m[2m │ gzip:   2.93 kB[22m
+[2mdist/[22m[35massets/PageLayout-Bc-gzk7z.css          [39m[1m[2m 13.02 kB[22m[1m[22m[2m │ gzip:   2.99 kB[22m
+[2mdist/[22m[35massets/About-C9ihRrUF.css               [39m[1m[2m 16.29 kB[22m[1m[22m[2m │ gzip:   3.58 kB[22m
+[2mdist/[22m[35massets/Home-CWbOEC5i.css                [39m[1m[2m 16.92 kB[22m[1m[22m[2m │ gzip:   3.70 kB[22m
+[2mdist/[22m[35massets/OnboardingPage-BS2sMlo_.css      [39m[1m[2m 19.22 kB[22m[1m[22m[2m │ gzip:   3.94 kB[22m
+[2mdist/[22m[35massets/SettingsPage-b7f4v2L4.css        [39m[1m[2m 20.30 kB[22m[1m[22m[2m │ gzip:   3.84 kB[22m
+[2mdist/[22m[35massets/Profile-YSzGN3Jp.css             [39m[1m[2m 21.62 kB[22m[1m[22m[2m │ gzip:   4.34 kB[22m
+[2mdist/[22m[35massets/LandingPage-ztaBaZUO.css         [39m[1m[2m 23.84 kB[22m[1m[22m[2m │ gzip:   4.90 kB[22m
+[2mdist/[22m[35massets/index-DtUuZGnj.css               [39m[1m[2m 32.09 kB[22m[1m[22m[2m │ gzip:   6.10 kB[22m
+[2mdist/[22m[36massets/TestMount-CoHZkfKZ.js            [39m[1m[2m  0.37 kB[22m[1m[22m[2m │ gzip:   0.29 kB[22m
+[2mdist/[22m[36massets/StatusBadge-2KBGq2yQ.js          [39m[1m[2m  0.40 kB[22m[1m[22m[2m │ gzip:   0.26 kB[22m
+[2mdist/[22m[36massets/Accessibility-B0ujjB7c.js        [39m[1m[2m  0.51 kB[22m[1m[22m[2m │ gzip:   0.36 kB[22m
+[2mdist/[22m[36massets/Terms-BGpBLb2t.js                [39m[1m[2m  0.53 kB[22m[1m[22m[2m │ gzip:   0.37 kB[22m
+[2mdist/[22m[36massets/Privacy-BjE_JSMt.js              [39m[1m[2m  0.54 kB[22m[1m[22m[2m │ gzip:   0.38 kB[22m
+[2mdist/[22m[36massets/Cookies-RCGdUWpR.js              [39m[1m[2m  0.54 kB[22m[1m[22m[2m │ gzip:   0.38 kB[22m
+[2mdist/[22m[36massets/NotFoundPage-XnfA5SRX.js         [39m[1m[2m  0.60 kB[22m[1m[22m[2m │ gzip:   0.36 kB[22m
+[2mdist/[22m[36massets/ExecutionLogService-B6w1RRLA.js  [39m[1m[2m  0.84 kB[22m[1m[22m[2m │ gzip:   0.46 kB[22m
+[2mdist/[22m[36massets/Card-CXzyzr6z.js                 [39m[1m[2m  0.85 kB[22m[1m[22m[2m │ gzip:   0.37 kB[22m
+[2mdist/[22m[36massets/Select-DUvyj0iY.js               [39m[1m[2m  0.90 kB[22m[1m[22m[2m │ gzip:   0.44 kB[22m
+[2mdist/[22m[36massets/PageLayout-h32roM4-.js           [39m[1m[2m  1.33 kB[22m[1m[22m[2m │ gzip:   0.76 kB[22m
+[2mdist/[22m[36massets/financialStateStore-PO_Tan5r.js  [39m[1m[2m  1.39 kB[22m[1m[22m[2m │ gzip:   0.62 kB[22m
+[2mdist/[22m[36massets/UpgradePage-BBo8K1pa.js          [39m[1m[2m  2.15 kB[22m[1m[22m[2m │ gzip:   1.02 kB[22m
+[2mdist/[22m[36massets/Home-cq7D-9sb.js                 [39m[1m[2m  6.49 kB[22m[1m[22m[2m │ gzip:   1.86 kB[22m
+[2mdist/[22m[36massets/About-C4A-ErNm.js                [39m[1m[2m  7.29 kB[22m[1m[22m[2m │ gzip:   1.78 kB[22m
+[2mdist/[22m[36massets/LandingPage-CjJp_ktv.js          [39m[1m[2m  9.33 kB[22m[1m[22m[2m │ gzip:   3.14 kB[22m
+[2mdist/[22m[36massets/Profile-DHtELhTL.js              [39m[1m[2m  9.50 kB[22m[1m[22m[2m │ gzip:   2.59 kB[22m
+[2mdist/[22m[36massets/TrustPage-C7MyeAc4.js            [39m[1m[2m  9.71 kB[22m[1m[22m[2m │ gzip:   2.78 kB[22m
+[2mdist/[22m[36massets/ruleEngine-DDa2zHKP.js           [39m[1m[2m  9.92 kB[22m[1m[22m[2m │ gzip:   3.00 kB[22m
+[2mdist/[22m[36massets/AlphaPro-fxfD4mSt.js             [39m[1m[2m 11.25 kB[22m[1m[22m[2m │ gzip:   3.77 kB[22m
+[2mdist/[22m[36massets/DashboardPage-DgvkKZoi.js        [39m[1m[2m 13.01 kB[22m[1m[22m[2m │ gzip:   3.48 kB[22m
+[2mdist/[22m[36massets/router-DJq9AKXI.js               [39m[1m[2m 13.07 kB[22m[1m[22m[2m │ gzip:   4.81 kB[22m
+[2mdist/[22m[36massets/SettingsPage-BQ8uRO5p.js         [39m[1m[2m 21.58 kB[22m[1m[22m[2m │ gzip:   4.32 kB[22m
+[2mdist/[22m[36massets/RuleStatusCard-Dq4PsXmJ.js       [39m[1m[2m 25.74 kB[22m[1m[22m[2m │ gzip:   6.46 kB[22m
+[2mdist/[22m[36massets/RulesPage-E0m3mxdU.js            [39m[1m[2m 30.90 kB[22m[1m[22m[2m │ gzip:   7.75 kB[22m
+[2mdist/[22m[36massets/utils-CwsAfOa1.js                [39m[1m[2m 54.24 kB[22m[1m[22m[2m │ gzip:  12.36 kB[22m
+[2mdist/[22m[36massets/ProPlannerPage-B4iFEvUx.js       [39m[1m[2m 62.37 kB[22m[1m[22m[2m │ gzip:  15.69 kB[22m
+[2mdist/[22m[36massets/OnboardingPage-D33hRoO3.js       [39m[1m[2m 67.58 kB[22m[1m[22m[2m │ gzip:  17.08 kB[22m
+[2mdist/[22m[36massets/motion-DjXE8Pg6.js               [39m[1m[2m 78.08 kB[22m[1m[22m[2m │ gzip:  25.40 kB[22m
+[2mdist/[22m[36massets/index-se4QIvCj.js                [39m[1m[2m 97.50 kB[22m[1m[22m[2m │ gzip:  24.91 kB[22m
+[2mdist/[22m[36massets/react-vendor-D4XeMeW8.js         [39m[1m[2m189.13 kB[22m[1m[22m[2m │ gzip:  59.90 kB[22m
+[2mdist/[22m[36massets/plaid-xKteTtTf.js                [39m[1m[2m342.13 kB[22m[1m[22m[2m │ gzip:  31.75 kB[22m
+[2mdist/[22m[36massets/vendor-BvoKRITr.js               [39m[1m[2m415.75 kB[22m[1m[22m[2m │ gzip: 140.42 kB[22m
+[2mdist/[22m[36massets/firebase-Dmdtgdto.js             [39m[1m[2m475.47 kB[22m[1m[22m[2m │ gzip: 112.27 kB[22m
+[32m✓ built in 6.62s[39m
