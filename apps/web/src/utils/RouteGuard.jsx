@@ -19,6 +19,26 @@ import useAppStore from '../store/useAppStore';
 import DemoModeService from '../lib/services/DemoModeService';
 import { useOnboardingStore } from '../store/modular/onboardingStore';
 
+// Pure decision helper exported for unit tests
+export const evaluateRouteDecision = ({ isAuthenticated, isDemo, onboardingDone, path }) => {
+  const PUBLIC = new Set(['/', '/home', '/about', '/onboarding']);
+  if (!isAuthenticated && !isDemo) {
+    if (path === '/dashboard') return '/';
+    return PUBLIC.has(path) ? path : '/';
+  }
+  if (isDemo) {
+    if (!onboardingDone) return path === '/dashboard' ? '/onboarding' : path;
+    if (path === '/onboarding') return '/dashboard';
+    return path;
+  }
+  if (isAuthenticated) {
+    if (!onboardingDone) return path === '/dashboard' ? '/onboarding' : path;
+    if (path === '/onboarding') return '/dashboard';
+    return path;
+  }
+  return path;
+};
+
 const RouteGuard = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -55,32 +75,16 @@ const RouteGuard = ({ children }) => {
       shouldBypass: shouldBypassOnboarding()
     });
 
-    // Demo users always bypass onboarding and go to dashboard
-    if (isDemoMode) {
-      if (currentPath === '/' || currentPath === '/onboarding') {
-        console.log('🔧 RouteGuard: Demo user redirecting to dashboard');
-        navigate('/dashboard', { replace: true });
-        return;
-      }
-    }
-
     const onboardingDone = shouldBypassOnboarding() || fsmState === 'done';
-
-    // Non-demo users: check onboarding completion
-    if (!onboardingDone) {
-      // User needs onboarding
-      if (currentPath !== '/onboarding') {
-        console.log('🔧 RouteGuard: User needs onboarding, redirecting');
-        navigate('/onboarding', { replace: true });
-        return;
-      }
-    } else {
-      // User has completed onboarding
-      if (currentPath === '/onboarding') {
-        console.log('🔧 RouteGuard: User completed onboarding, redirecting to dashboard');
-        navigate('/dashboard', { replace: true });
-        return;
-      }
+    const dest = evaluateRouteDecision({
+      isAuthenticated,
+      isDemo: isDemoMode || isDemo,
+      onboardingDone,
+      path: currentPath,
+    });
+    if (dest !== currentPath) {
+      navigate(dest, { replace: true });
+      return;
     }
 
     // Allow access to the requested route
