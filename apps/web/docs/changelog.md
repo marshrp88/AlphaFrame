@@ -5,3 +5,4 @@
 - Hardened demo routing invariants: require FSM==='done' for demo users before allowing `/dashboard` in `src/utils/RouteGuard.jsx`.
 - Improved persistence logic in `src/store/useAppStore.js` to respect persisted flags and legacy `localStorage`.
 - Verified E2E stoplight flows across Chromium/Firefox/WebKit; logs in `docs/tests/playwright-summary.txt`.
+- Removed UI barrel export of `ComponentShowcase` from `src/components/ui/index.js` to break dependency cycle reported in `docs/dep-cycles.md`.
