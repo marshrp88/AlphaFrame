@@ -28,7 +28,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'pnpm dev',
+    // Build then serve static dist for reliable startup
+    command: 'npm run build && npx --yes serve -s dist -l 5175',
     url: 'http://localhost:5175',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,

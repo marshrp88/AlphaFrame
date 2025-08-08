@@ -1,0 +1,54 @@
+/* Design Tokens (10th grade explanation)
+   Purpose: One place for colors, spacing, radii, and typography so the app looks consistent. */
+
+:root {
+  /* Colors */
+  --color-bg: #ffffff;
+  --color-text: #111827;
+  --color-muted: #6b7280;
+  --color-primary-600: #2563eb;
+  --color-success-600: #16a34a;
+  --color-warning-600: #d97706;
+  --color-error-600: #dc2626;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* Typography */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans,
+    Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+}
+
+/* Utility classes */
+.card {
+  background: var(--color-bg);
+  border: 1px solid #e5e7eb;
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
+.btn-primary {
+  background: var(--color-primary-600);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-4);
+}
+
+.text-muted { color: var(--color-muted); }
+
+
