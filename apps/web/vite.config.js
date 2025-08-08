@@ -50,23 +50,14 @@ export default defineConfig({
     sourcemap: enableBundleReport ? true : false,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: [
-            'react',
-            'react-dom',
-            'zustand',
-            'framer-motion'
-          ],
-          ui: [
-            '@radix-ui/react-icons',
-            '@radix-ui/react-slot',
-            'react-hot-toast'
-          ],
-          utils: [
-            'date-fns',
-            'zod',
-            'react-router-dom'
-          ]
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react-router')) return 'router';
+            if (id.includes('framer-motion')) return 'motion';
+            if (id.includes('date-fns') || id.includes('zod')) return 'utils';
+            if (id.includes('react')) return 'react-vendor';
+            return 'vendor';
+          }
         }
       }
     },
