@@ -17,6 +17,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useAppStore from '../store/useAppStore';
 import DemoModeService from '../lib/services/DemoModeService';
+import { useOnboardingStore } from '../store/modular/onboardingStore';
 
 const RouteGuard = ({ children }) => {
   const navigate = useNavigate();
@@ -31,6 +32,9 @@ const RouteGuard = ({ children }) => {
     initializeApp,
     shouldBypassOnboarding
   } = useAppStore();
+
+  // Read FSM completion as an additional signal
+  const { fsmState } = useOnboardingStore();
 
   useEffect(() => {
     // Initialize app state on mount
@@ -60,8 +64,10 @@ const RouteGuard = ({ children }) => {
       }
     }
 
+    const onboardingDone = shouldBypassOnboarding() || fsmState === 'done';
+
     // Non-demo users: check onboarding completion
-    if (!shouldBypassOnboarding()) {
+    if (!onboardingDone) {
       // User needs onboarding
       if (currentPath !== '/onboarding') {
         console.log('🔧 RouteGuard: User needs onboarding, redirecting');
@@ -79,7 +85,7 @@ const RouteGuard = ({ children }) => {
 
     // Allow access to the requested route
     console.log('🔧 RouteGuard: Allowing access to', currentPath);
-  }, [isInitialized, location.pathname, isDemo, onboardingComplete, shouldBypassOnboarding, navigate]);
+  }, [isInitialized, location.pathname, isDemo, onboardingComplete, shouldBypassOnboarding, fsmState, navigate]);
 
   // Show loading while initializing
   if (!isInitialized) {

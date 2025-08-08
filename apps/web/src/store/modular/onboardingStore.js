@@ -18,6 +18,29 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { z } from 'zod';
 
+// Minimal embedded FSM to avoid boolean soup and freezes
+const FSM_STATES = Object.freeze({
+  IDLE: 'idle',
+  INIT: 'init',
+  COLLECTING: 'collecting',
+  SYNCING: 'syncing',
+  DONE: 'done',
+  ERROR: 'error',
+  TIMEOUT: 'timeout',
+});
+
+const FSM_EVENTS = Object.freeze({
+  START: 'START',
+  COLLECT_OK: 'COLLECT_OK',
+  SYNC_OK: 'SYNC_OK',
+  FAIL: 'FAIL',
+  RETRY: 'RETRY',
+  TIMEOUT: 'TIMEOUT',
+});
+
+let onboardingTimeoutId = null;
+const FSM_TIMEOUT_MS = 10_000; // 10 seconds safety timeout
+
 // Validation schemas for onboarding data
 const UserDataSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -64,6 +87,9 @@ export const useOnboardingStore = create(
       currentStep: 1,
       totalSteps: 6,
       isCompleted: false,
+      // FSM state (single source of truth for flow)
+      fsmState: FSM_STATES.IDLE,
+      lastEvent: null,
       
       // Onboarding data
       userData: {},
@@ -77,6 +103,28 @@ export const useOnboardingStore = create(
       stepErrors: {},
       
       // Actions
+      // Internal: change FSM state and manage timeout
+      _changeState: (nextState, event = null) => {
+        try {
+          clearTimeout(onboardingTimeoutId);
+        } catch (_) {}
+        set({ fsmState: nextState, lastEvent: event });
+        if (nextState === FSM_STATES.INIT || nextState === FSM_STATES.COLLECTING) {
+          onboardingTimeoutId = setTimeout(() => {
+            const current = get().fsmState;
+            if (current === FSM_STATES.INIT || current === FSM_STATES.COLLECTING) {
+              set({ fsmState: FSM_STATES.TIMEOUT, lastEvent: FSM_EVENTS.TIMEOUT });
+            }
+          }, FSM_TIMEOUT_MS);
+        }
+      },
+
+      // Public FSM actions used by UI
+      fsmStart: () => get()._changeState(FSM_STATES.INIT, FSM_EVENTS.START),
+      fsmCollectOk: () => get()._changeState(FSM_STATES.COLLECTING, FSM_EVENTS.COLLECT_OK),
+      fsmSyncOk: () => get()._changeState(FSM_STATES.SYNCING, FSM_EVENTS.SYNC_OK),
+      fsmFail: () => get()._changeState(FSM_STATES.ERROR, FSM_EVENTS.FAIL),
+      fsmRetry: () => get()._changeState(FSM_STATES.INIT, FSM_EVENTS.RETRY),
       startOnboarding: () => {
         set({
           isOnboarding: true,
@@ -85,6 +133,7 @@ export const useOnboardingStore = create(
           validationErrors: {},
           stepErrors: {},
         });
+        get()._changeState(FSM_STATES.INIT, FSM_EVENTS.START);
       },
       
       setCurrentStep: (step) => {
@@ -241,6 +290,7 @@ export const useOnboardingStore = create(
           isCompleted: true,
           currentStep: get().totalSteps,
         });
+        get()._changeState(FSM_STATES.DONE, FSM_EVENTS.SYNC_OK);
         
         // Store completion in localStorage for persistence
         localStorage.setItem('alphaframe_onboarding_complete', 'true');
@@ -263,6 +313,8 @@ export const useOnboardingStore = create(
           isOnboarding: false,
           currentStep: 1,
           isCompleted: false,
+          fsmState: FSM_STATES.IDLE,
+          lastEvent: null,
           userData: {},
           bankData: {},
           budget: {},

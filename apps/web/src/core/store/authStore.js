@@ -83,6 +83,31 @@ export const useAuthStore = create((set, get) => ({
       return false;
     }
   },
+
+  /**
+   * Enter Demo Mode (no real auth)
+   * Purpose: Provide an unbreakable fallback path for onboarding and demos.
+   */
+  enterDemo: () => {
+    try {
+      const demoUser = { id: 'demo', email: 'demo@local', name: 'Demo User' };
+      sessionStorage.setItem('demo_user', 'true');
+      // We intentionally do not call backend here
+      set({ user: demoUser, isAuthenticated: true, isLoading: false, error: null });
+      return true;
+    } catch (e) {
+      set({ error: e?.message || 'Failed to enter demo mode' });
+      return false;
+    }
+  },
+
+  /**
+   * Exit Demo Mode
+   */
+  exitDemo: () => {
+    sessionStorage.removeItem('demo_user');
+    set({ user: null, isAuthenticated: false });
+  },
   
   register: async (userData) => {
     set({ isLoading: true, error: null });
