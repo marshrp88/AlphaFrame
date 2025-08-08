@@ -1,3 +1,5 @@
+@import url('../styles/tokens.css');
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -13,8 +15,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Design tokens for consistent UI */
-@import url('../styles/tokens.css');
+/* Design tokens are imported first to satisfy CSS ordering rules */
 
 a {
   font-weight: 500;
