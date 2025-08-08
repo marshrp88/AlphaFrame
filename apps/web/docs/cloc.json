@@ -1,0 +1,1444 @@
+{
+  "summary": {
+    "files": 359,
+    "lines": 80825
+  },
+  "files": [
+    {
+      "file": "src/App.css",
+      "loc": 441
+    },
+    {
+      "file": "src/App.jsx",
+      "loc": 370
+    },
+    {
+      "file": "src/__tests__/__mocks__/PermissionEnforcer.js",
+      "loc": 6
+    },
+    {
+      "file": "src/__tests__/onboarding.fsm.test.js",
+      "loc": 29
+    },
+    {
+      "file": "src/__tests__/routeGuard.decision.test.js",
+      "loc": 30
+    },
+    {
+      "file": "src/__tests__/smoke.test.js",
+      "loc": 8
+    },
+    {
+      "file": "src/assets/react.svg",
+      "loc": 1
+    },
+    {
+      "file": "src/components/AllocationAdvisor.jsx",
+      "loc": 336
+    },
+    {
+      "file": "src/components/Button.jsx",
+      "loc": 4
+    },
+    {
+      "file": "src/components/DashboardPicker.jsx",
+      "loc": 98
+    },
+    {
+      "file": "src/components/ErrorBoundary.css",
+      "loc": 355
+    },
+    {
+      "file": "src/components/ErrorBoundary.jsx",
+      "loc": 185
+    },
+    {
+      "file": "src/components/FeedbackForm.jsx",
+      "loc": 441
+    },
+    {
+      "file": "src/components/LoginButton.jsx",
+      "loc": 145
+    },
+    {
+      "file": "src/components/NotFound.jsx",
+      "loc": 11
+    },
+    {
+      "file": "src/components/PageLayout.css",
+      "loc": 263
+    },
+    {
+      "file": "src/components/PageLayout.jsx",
+      "loc": 127
+    },
+    {
+      "file": "src/components/PerformanceDashboard.css",
+      "loc": 547
+    },
+    {
+      "file": "src/components/PerformanceDashboard.jsx",
+      "loc": 470
+    },
+    {
+      "file": "src/components/PlaidLink.jsx",
+      "loc": 225
+    },
+    {
+      "file": "src/components/PrivateRoute.jsx",
+      "loc": 174
+    },
+    {
+      "file": "src/components/dashboard/Dashboard2.css",
+      "loc": 484
+    },
+    {
+      "file": "src/components/dashboard/Dashboard2.jsx",
+      "loc": 350
+    },
+    {
+      "file": "src/components/dashboard/DashboardConfig.js",
+      "loc": 202
+    },
+    {
+      "file": "src/components/dashboard/DashboardReal.css",
+      "loc": 155
+    },
+    {
+      "file": "src/components/dashboard/DashboardReal.jsx",
+      "loc": 485
+    },
+    {
+      "file": "src/components/dashboard/LiveFinancialDashboard.css",
+      "loc": 398
+    },
+    {
+      "file": "src/components/dashboard/LiveFinancialDashboard.jsx",
+      "loc": 346
+    },
+    {
+      "file": "src/components/dashboard/MainDashboard.css",
+      "loc": 246
+    },
+    {
+      "file": "src/components/dashboard/MainDashboard.jsx",
+      "loc": 243
+    },
+    {
+      "file": "src/components/dashboard/Phase9InsightsDashboard.css",
+      "loc": 451
+    },
+    {
+      "file": "src/components/dashboard/Phase9InsightsDashboard.jsx",
+      "loc": 412
+    },
+    {
+      "file": "src/components/dashboard/README.md",
+      "loc": 69
+    },
+    {
+      "file": "src/components/dashboard/WhatsNext.css",
+      "loc": 316
+    },
+    {
+      "file": "src/components/dashboard/WhatsNext.jsx",
+      "loc": 207
+    },
+    {
+      "file": "src/components/dashboard/sections/ActionQueue.jsx",
+      "loc": 83
+    },
+    {
+      "file": "src/components/dashboard/sections/Cashflow.css",
+      "loc": 412
+    },
+    {
+      "file": "src/components/dashboard/sections/Cashflow.jsx",
+      "loc": 232
+    },
+    {
+      "file": "src/components/dashboard/sections/NetWorthTrajectory.jsx",
+      "loc": 57
+    },
+    {
+      "file": "src/components/dashboard/sections/RecentChanges.jsx",
+      "loc": 74
+    },
+    {
+      "file": "src/components/dashboard/sections/SimulationInsights.jsx",
+      "loc": 224
+    },
+    {
+      "file": "src/components/framesync/ActionLogView.jsx",
+      "loc": 113
+    },
+    {
+      "file": "src/components/framesync/ActionSelector.jsx",
+      "loc": 100
+    },
+    {
+      "file": "src/components/framesync/ConfirmationModal.jsx",
+      "loc": 219
+    },
+    {
+      "file": "src/components/framesync/InternalActionForm.jsx",
+      "loc": 135
+    },
+    {
+      "file": "src/components/framesync/PlaidActionForm.css",
+      "loc": 271
+    },
+    {
+      "file": "src/components/framesync/PlaidActionForm.jsx",
+      "loc": 194
+    },
+    {
+      "file": "src/components/framesync/README.md",
+      "loc": 64
+    },
+    {
+      "file": "src/components/framesync/RuleBinderRoot.jsx",
+      "loc": 304
+    },
+    {
+      "file": "src/components/framesync/Safeguards.jsx",
+      "loc": 146
+    },
+    {
+      "file": "src/components/framesync/SimulationPreview.jsx",
+      "loc": 108
+    },
+    {
+      "file": "src/components/framesync/WebhookActionForm.jsx",
+      "loc": 173
+    },
+    {
+      "file": "src/components/onboarding/OnboardingSteps.jsx",
+      "loc": 60
+    },
+    {
+      "file": "src/components/ui/AnimatedButton.jsx",
+      "loc": 116
+    },
+    {
+      "file": "src/components/ui/AnimatedToast.css",
+      "loc": 237
+    },
+    {
+      "file": "src/components/ui/AnimatedToast.jsx",
+      "loc": 100
+    },
+    {
+      "file": "src/components/ui/Button.jsx",
+      "loc": 64
+    },
+    {
+      "file": "src/components/ui/Card.css",
+      "loc": 57
+    },
+    {
+      "file": "src/components/ui/Card.jsx",
+      "loc": 98
+    },
+    {
+      "file": "src/components/ui/Card.stories.jsx",
+      "loc": 18
+    },
+    {
+      "file": "src/components/ui/Checkbox.css",
+      "loc": 313
+    },
+    {
+      "file": "src/components/ui/Checkbox.jsx",
+      "loc": 172
+    },
+    {
+      "file": "src/components/ui/ComponentShowcase.css",
+      "loc": 281
+    },
+    {
+      "file": "src/components/ui/ComponentShowcase.jsx",
+      "loc": 330
+    },
+    {
+      "file": "src/components/ui/CompositeCard.css",
+      "loc": 395
+    },
+    {
+      "file": "src/components/ui/CompositeCard.jsx",
+      "loc": 186
+    },
+    {
+      "file": "src/components/ui/DarkModeToggle.css",
+      "loc": 174
+    },
+    {
+      "file": "src/components/ui/DarkModeToggle.jsx",
+      "loc": 107
+    },
+    {
+      "file": "src/components/ui/DemoBanner.jsx",
+      "loc": 7
+    },
+    {
+      "file": "src/components/ui/DemoModeBanner.jsx",
+      "loc": 197
+    },
+    {
+      "file": "src/components/ui/Dropdown.css",
+      "loc": 408
+    },
+    {
+      "file": "src/components/ui/Dropdown.jsx",
+      "loc": 391
+    },
+    {
+      "file": "src/components/ui/DynamicInsightCard.jsx",
+      "loc": 596
+    },
+    {
+      "file": "src/components/ui/EnhancedInsightCard.jsx",
+      "loc": 857
+    },
+    {
+      "file": "src/components/ui/FeedbackButton.jsx",
+      "loc": 301
+    },
+    {
+      "file": "src/components/ui/HelpPanel.jsx",
+      "loc": 20
+    },
+    {
+      "file": "src/components/ui/Input.jsx",
+      "loc": 7
+    },
+    {
+      "file": "src/components/ui/InputField.css",
+      "loc": 265
+    },
+    {
+      "file": "src/components/ui/InputField.jsx",
+      "loc": 77
+    },
+    {
+      "file": "src/components/ui/InputField.stories.jsx",
+      "loc": 22
+    },
+    {
+      "file": "src/components/ui/InsightCard.jsx",
+      "loc": 481
+    },
+    {
+      "file": "src/components/ui/Label.jsx",
+      "loc": 40
+    },
+    {
+      "file": "src/components/ui/MobileForm.css",
+      "loc": 532
+    },
+    {
+      "file": "src/components/ui/MobileForm.jsx",
+      "loc": 340
+    },
+    {
+      "file": "src/components/ui/MobileNavigation.css",
+      "loc": 429
+    },
+    {
+      "file": "src/components/ui/MobileNavigation.jsx",
+      "loc": 214
+    },
+    {
+      "file": "src/components/ui/Modal.css",
+      "loc": 250
+    },
+    {
+      "file": "src/components/ui/Modal.jsx",
+      "loc": 216
+    },
+    {
+      "file": "src/components/ui/ModalDialog.jsx",
+      "loc": 74
+    },
+    {
+      "file": "src/components/ui/NavBar.css",
+      "loc": 80
+    },
+    {
+      "file": "src/components/ui/NavBar.jsx",
+      "loc": 40
+    },
+    {
+      "file": "src/components/ui/NavBar.stories.jsx",
+      "loc": 18
+    },
+    {
+      "file": "src/components/ui/PerformanceMonitor.css",
+      "loc": 306
+    },
+    {
+      "file": "src/components/ui/PerformanceMonitor.jsx",
+      "loc": 183
+    },
+    {
+      "file": "src/components/ui/PrimaryButton.css",
+      "loc": 234
+    },
+    {
+      "file": "src/components/ui/PrimaryButton.jsx",
+      "loc": 142
+    },
+    {
+      "file": "src/components/ui/ProBadge.jsx",
+      "loc": 221
+    },
+    {
+      "file": "src/components/ui/ResetDemoButton.jsx",
+      "loc": 15
+    },
+    {
+      "file": "src/components/ui/RuleCreationModal.jsx",
+      "loc": 810
+    },
+    {
+      "file": "src/components/ui/RuleStatusCard.jsx",
+      "loc": 631
+    },
+    {
+      "file": "src/components/ui/Select.css",
+      "loc": 411
+    },
+    {
+      "file": "src/components/ui/SkeletonLoader.css",
+      "loc": 147
+    },
+    {
+      "file": "src/components/ui/SkeletonLoader.jsx",
+      "loc": 294
+    },
+    {
+      "file": "src/components/ui/SoftLaunchBanner.jsx",
+      "loc": 97
+    },
+    {
+      "file": "src/components/ui/StatusBadge.css",
+      "loc": 47
+    },
+    {
+      "file": "src/components/ui/StatusBadge.jsx",
+      "loc": 31
+    },
+    {
+      "file": "src/components/ui/StatusBadge.stories.jsx",
+      "loc": 22
+    },
+    {
+      "file": "src/components/ui/StyledButton.css",
+      "loc": 142
+    },
+    {
+      "file": "src/components/ui/StyledButton.jsx",
+      "loc": 290
+    },
+    {
+      "file": "src/components/ui/StyledButton.stories.jsx",
+      "loc": 22
+    },
+    {
+      "file": "src/components/ui/Tabs.css",
+      "loc": 409
+    },
+    {
+      "file": "src/components/ui/Tabs.jsx",
+      "loc": 236
+    },
+    {
+      "file": "src/components/ui/ToastAlert.jsx",
+      "loc": 76
+    },
+    {
+      "file": "src/components/ui/TouchGestureHandler.css",
+      "loc": 400
+    },
+    {
+      "file": "src/components/ui/TouchGestureHandler.jsx",
+      "loc": 365
+    },
+    {
+      "file": "src/components/ui/UserStateSnapshot.jsx",
+      "loc": 164
+    },
+    {
+      "file": "src/components/ui/badge.jsx",
+      "loc": 9
+    },
+    {
+      "file": "src/components/ui/index.js",
+      "loc": 133
+    },
+    {
+      "file": "src/components/ui/switch.jsx",
+      "loc": 14
+    },
+    {
+      "file": "src/components/ui/textarea.jsx",
+      "loc": 13
+    },
+    {
+      "file": "src/components/ui/tooltip.jsx",
+      "loc": 64
+    },
+    {
+      "file": "src/components/ui/use-toast.js",
+      "loc": 26
+    },
+    {
+      "file": "src/components/ui/use-toast.jsx",
+      "loc": 399
+    },
+    {
+      "file": "src/core/hooks/useUserContext.js",
+      "loc": 33
+    },
+    {
+      "file": "src/core/services/CryptoService.js",
+      "loc": 141
+    },
+    {
+      "file": "src/core/services/DebtService.js",
+      "loc": 356
+    },
+    {
+      "file": "src/core/services/ExecutionLogService.js",
+      "loc": 93
+    },
+    {
+      "file": "src/core/services/ExplainabilityEngine.js",
+      "loc": 411
+    },
+    {
+      "file": "src/core/services/InsightFeedSchema.js",
+      "loc": 84
+    },
+    {
+      "file": "src/core/services/MonteCarloRunner.js",
+      "loc": 345
+    },
+    {
+      "file": "src/core/services/RetirementService.js",
+      "loc": 303
+    },
+    {
+      "file": "src/core/services/SecureVault.js",
+      "loc": 103
+    },
+    {
+      "file": "src/core/services/TaxService.js",
+      "loc": 293
+    },
+    {
+      "file": "src/core/services/__mocks__/CryptoService.js",
+      "loc": 13
+    },
+    {
+      "file": "src/core/services/__mocks__/ExecutionLogService.js",
+      "loc": 39
+    },
+    {
+      "file": "src/core/services/__mocks__/TaxService.js",
+      "loc": 75
+    },
+    {
+      "file": "src/core/services/__tests__/GalileoServices.test.js",
+      "loc": 217
+    },
+    {
+      "file": "src/core/services/__tests__/TaxService.test.js",
+      "loc": 19
+    },
+    {
+      "file": "src/core/store/authStore.js",
+      "loc": 231
+    },
+    {
+      "file": "src/core/store/dashboardModeStore.js",
+      "loc": 31
+    },
+    {
+      "file": "src/core/store/dataStore.js",
+      "loc": 782
+    },
+    {
+      "file": "src/core/store/financialStateStore.js",
+      "loc": 131
+    },
+    {
+      "file": "src/core/store/logStore.js",
+      "loc": 139
+    },
+    {
+      "file": "src/core/store/plaidStore.js",
+      "loc": 250
+    },
+    {
+      "file": "src/core/store/uiStore.js",
+      "loc": 91
+    },
+    {
+      "file": "src/core/store/useAppStore.js",
+      "loc": 73
+    },
+    {
+      "file": "src/features/onboarding/OnboardingFlow.css",
+      "loc": 356
+    },
+    {
+      "file": "src/features/onboarding/OnboardingFlow.jsx",
+      "loc": 500
+    },
+    {
+      "file": "src/features/onboarding/README.md",
+      "loc": 85
+    },
+    {
+      "file": "src/features/onboarding/steps/Step1PlaidConnect.jsx",
+      "loc": 501
+    },
+    {
+      "file": "src/features/onboarding/steps/Step2ReviewTransactions.jsx",
+      "loc": 385
+    },
+    {
+      "file": "src/features/onboarding/steps/Step3BudgetSetup.jsx",
+      "loc": 346
+    },
+    {
+      "file": "src/features/onboarding/steps/Step4AutomationEducation.jsx",
+      "loc": 539
+    },
+    {
+      "file": "src/features/onboarding/steps/Step5GuidedRuleCreation.jsx",
+      "loc": 296
+    },
+    {
+      "file": "src/features/onboarding/steps/Step6SetMode.jsx",
+      "loc": 274
+    },
+    {
+      "file": "src/features/pro/components/DashboardModeManager.jsx",
+      "loc": 173
+    },
+    {
+      "file": "src/features/pro/components/FeedbackModule.jsx",
+      "loc": 189
+    },
+    {
+      "file": "src/features/pro/components/README.md",
+      "loc": 167
+    },
+    {
+      "file": "src/features/pro/components/budget.jsx",
+      "loc": 45
+    },
+    {
+      "file": "src/features/pro/components/optimizer.jsx",
+      "loc": 46
+    },
+    {
+      "file": "src/features/pro/components/reports.jsx",
+      "loc": 28
+    },
+    {
+      "file": "src/features/pro/components/reports/reports.jsx",
+      "loc": 29
+    },
+    {
+      "file": "src/features/pro/services/BudgetService.js",
+      "loc": 470
+    },
+    {
+      "file": "src/features/pro/services/CashFlowService.js",
+      "loc": 506
+    },
+    {
+      "file": "src/features/pro/services/NarrativeService.js",
+      "loc": 427
+    },
+    {
+      "file": "src/features/pro/services/PortfolioAnalyzer.js",
+      "loc": 375
+    },
+    {
+      "file": "src/features/pro/services/ReportCenter.js",
+      "loc": 91
+    },
+    {
+      "file": "src/features/pro/services/TimelineSimulator.js",
+      "loc": 514
+    },
+    {
+      "file": "src/features/pro/tests/BudgetService.test.js",
+      "loc": 589
+    },
+    {
+      "file": "src/features/pro/tests/CashFlowService.test.js",
+      "loc": 830
+    },
+    {
+      "file": "src/features/pro/tests/DashboardModeManager.test.jsx",
+      "loc": 7
+    },
+    {
+      "file": "src/features/pro/tests/ExecutionLogService.simple.test.js",
+      "loc": 188
+    },
+    {
+      "file": "src/features/pro/tests/ExecutionLogService.test.js",
+      "loc": 7
+    },
+    {
+      "file": "src/features/pro/tests/FeedbackModule.test.jsx",
+      "loc": 7
+    },
+    {
+      "file": "src/features/pro/tests/NarrativeService.test.js",
+      "loc": 509
+    },
+    {
+      "file": "src/features/pro/tests/PortfolioAnalyzer.test.js",
+      "loc": 586
+    },
+    {
+      "file": "src/features/pro/tests/ReportCenter.test.js",
+      "loc": 141
+    },
+    {
+      "file": "src/features/pro/tests/RuleEngine.test.js",
+      "loc": 264
+    },
+    {
+      "file": "src/features/pro/tests/TimelineSimulator.test.js",
+      "loc": 596
+    },
+    {
+      "file": "src/features/pro/tests/minimalRender.test.jsx",
+      "loc": 7
+    },
+    {
+      "file": "src/features/status/SyncStatusWidget.jsx",
+      "loc": 325
+    },
+    {
+      "file": "src/features/validation/FeedbackCollectionSystem.js",
+      "loc": 675
+    },
+    {
+      "file": "src/features/validation/UserTestingScenarios.js",
+      "loc": 660
+    },
+    {
+      "file": "src/features/validation/UserValidationProtocol.js",
+      "loc": 466
+    },
+    {
+      "file": "src/index.css",
+      "loc": 71
+    },
+    {
+      "file": "src/lib/__mocks__/config.js",
+      "loc": 78
+    },
+    {
+      "file": "src/lib/analytics.js",
+      "loc": 219
+    },
+    {
+      "file": "src/lib/animations/animationPresets.js",
+      "loc": 358
+    },
+    {
+      "file": "src/lib/auth.js",
+      "loc": 17
+    },
+    {
+      "file": "src/lib/config.js",
+      "loc": 51
+    },
+    {
+      "file": "src/lib/demo-data.js",
+      "loc": 7
+    },
+    {
+      "file": "src/lib/demo-data/index.js",
+      "loc": 156
+    },
+    {
+      "file": "src/lib/env.js",
+      "loc": 75
+    },
+    {
+      "file": "src/lib/firebase/config.js",
+      "loc": 42
+    },
+    {
+      "file": "src/lib/firebase/init.js",
+      "loc": 42
+    },
+    {
+      "file": "src/lib/log.js",
+      "loc": 25
+    },
+    {
+      "file": "src/lib/mock/transactions.js",
+      "loc": 215
+    },
+    {
+      "file": "src/lib/mocks/serviceMocks.js",
+      "loc": 352
+    },
+    {
+      "file": "src/lib/performance/PerformanceMonitor.jsx",
+      "loc": 439
+    },
+    {
+      "file": "src/lib/performance/WebVitalsMonitor.js",
+      "loc": 323
+    },
+    {
+      "file": "src/lib/services/AccessibilityService.js",
+      "loc": 703
+    },
+    {
+      "file": "src/lib/services/AuthService.js",
+      "loc": 418
+    },
+    {
+      "file": "src/lib/services/BundleAnalyzer.js",
+      "loc": 394
+    },
+    {
+      "file": "src/lib/services/DataService.js",
+      "loc": 550
+    },
+    {
+      "file": "src/lib/services/DemoModeService.js",
+      "loc": 79
+    },
+    {
+      "file": "src/lib/services/ErrorHandlingService.js",
+      "loc": 530
+    },
+    {
+      "file": "src/lib/services/ExecutionController.js",
+      "loc": 315
+    },
+    {
+      "file": "src/lib/services/ExecutionLogService.js",
+      "loc": 57
+    },
+    {
+      "file": "src/lib/services/ExplainabilityEngine.js",
+      "loc": 509
+    },
+    {
+      "file": "src/lib/services/FeatureGate.js",
+      "loc": 495
+    },
+    {
+      "file": "src/lib/services/FeedbackUploader.js",
+      "loc": 378
+    },
+    {
+      "file": "src/lib/services/LaunchPreparationService.js",
+      "loc": 630
+    },
+    {
+      "file": "src/lib/services/MonteCarloRunner.js",
+      "loc": 620
+    },
+    {
+      "file": "src/lib/services/NotificationService.js",
+      "loc": 471
+    },
+    {
+      "file": "src/lib/services/PerformanceMonitor.js",
+      "loc": 440
+    },
+    {
+      "file": "src/lib/services/PermissionEnforcer.js",
+      "loc": 251
+    },
+    {
+      "file": "src/lib/services/Phase9RuleIntegration.js",
+      "loc": 416
+    },
+    {
+      "file": "src/lib/services/PlaidService.js",
+      "loc": 405
+    },
+    {
+      "file": "src/lib/services/RealTimeSyncService.js",
+      "loc": 377
+    },
+    {
+      "file": "src/lib/services/RecommendationEngine.js",
+      "loc": 589
+    },
+    {
+      "file": "src/lib/services/RetirementService.js",
+      "loc": 500
+    },
+    {
+      "file": "src/lib/services/RuleEngineExecutor.js",
+      "loc": 242
+    },
+    {
+      "file": "src/lib/services/RuleExecutionEngine.js",
+      "loc": 299
+    },
+    {
+      "file": "src/lib/services/RuleTemplateService.js",
+      "loc": 535
+    },
+    {
+      "file": "src/lib/services/SchemaManager.js",
+      "loc": 500
+    },
+    {
+      "file": "src/lib/services/SimulationService.js",
+      "loc": 88
+    },
+    {
+      "file": "src/lib/services/StorageService.js",
+      "loc": 286
+    },
+    {
+      "file": "src/lib/services/TriggerDispatcher.js",
+      "loc": 141
+    },
+    {
+      "file": "src/lib/services/WebhookService.js",
+      "loc": 533
+    },
+    {
+      "file": "src/lib/services/__mocks__/AuthService.js",
+      "loc": 34
+    },
+    {
+      "file": "src/lib/services/__mocks__/FeedbackUploader.js",
+      "loc": 24
+    },
+    {
+      "file": "src/lib/services/__mocks__/PlaidService.js",
+      "loc": 41
+    },
+    {
+      "file": "src/lib/services/__mocks__/RetirementService.js",
+      "loc": 67
+    },
+    {
+      "file": "src/lib/services/__mocks__/RuleEngine.js",
+      "loc": 40
+    },
+    {
+      "file": "src/lib/services/__mocks__/TaxService.js",
+      "loc": 26
+    },
+    {
+      "file": "src/lib/services/__mocks__/financialStateStore.js",
+      "loc": 31
+    },
+    {
+      "file": "src/lib/services/__tests__/AuthService.test.js",
+      "loc": 190
+    },
+    {
+      "file": "src/lib/services/__tests__/Phase2Validation.test.js",
+      "loc": 274
+    },
+    {
+      "file": "src/lib/services/__tests__/PlaidService.fixed.test.js",
+      "loc": 401
+    },
+    {
+      "file": "src/lib/services/__tests__/PlaidService.test.js",
+      "loc": 166
+    },
+    {
+      "file": "src/lib/services/__tests__/RetirementService.test.js",
+      "loc": 471
+    },
+    {
+      "file": "src/lib/services/__tests__/RuleExecutionEngine.test.js",
+      "loc": 379
+    },
+    {
+      "file": "src/lib/services/__tests__/ruleEngine.spec.js",
+      "loc": 199
+    },
+    {
+      "file": "src/lib/services/__tests__/ruleEngine.test.js",
+      "loc": 225
+    },
+    {
+      "file": "src/lib/services/authStore.js",
+      "loc": 17
+    },
+    {
+      "file": "src/lib/services/ruleEngine.js",
+      "loc": 689
+    },
+    {
+      "file": "src/lib/services/secureVault.js",
+      "loc": 12
+    },
+    {
+      "file": "src/lib/services/simulation.js",
+      "loc": 120
+    },
+    {
+      "file": "src/lib/services/syncEngine.js",
+      "loc": 442
+    },
+    {
+      "file": "src/lib/store/financialStateStore.js",
+      "loc": 44
+    },
+    {
+      "file": "src/lib/store/logStore.js",
+      "loc": 128
+    },
+    {
+      "file": "src/lib/store/uiStore.js",
+      "loc": 69
+    },
+    {
+      "file": "src/lib/utils.js",
+      "loc": 89
+    },
+    {
+      "file": "src/lib/validation/schemas.js",
+      "loc": 74
+    },
+    {
+      "file": "src/machines/onboardingMachine.js",
+      "loc": 405
+    },
+    {
+      "file": "src/main.jsx",
+      "loc": 27
+    },
+    {
+      "file": "src/pages/About.css",
+      "loc": 496
+    },
+    {
+      "file": "src/pages/About.jsx",
+      "loc": 254
+    },
+    {
+      "file": "src/pages/AlphaPro.jsx",
+      "loc": 36
+    },
+    {
+      "file": "src/pages/App.jsx",
+      "loc": 39
+    },
+    {
+      "file": "src/pages/Dashboard2Test.jsx",
+      "loc": 195
+    },
+    {
+      "file": "src/pages/DashboardPage.jsx",
+      "loc": 45
+    },
+    {
+      "file": "src/pages/DashboardTest.jsx",
+      "loc": 186
+    },
+    {
+      "file": "src/pages/DesignSystem.css",
+      "loc": 325
+    },
+    {
+      "file": "src/pages/DesignSystem.jsx",
+      "loc": 249
+    },
+    {
+      "file": "src/pages/DesignSystemTest.jsx",
+      "loc": 32
+    },
+    {
+      "file": "src/pages/Home.css",
+      "loc": 502
+    },
+    {
+      "file": "src/pages/Home.jsx",
+      "loc": 283
+    },
+    {
+      "file": "src/pages/LandingPage.css",
+      "loc": 690
+    },
+    {
+      "file": "src/pages/LandingPage.jsx",
+      "loc": 319
+    },
+    {
+      "file": "src/pages/NotFoundPage.jsx",
+      "loc": 15
+    },
+    {
+      "file": "src/pages/OnboardingFlow.jsx",
+      "loc": 20
+    },
+    {
+      "file": "src/pages/OnboardingPage.jsx",
+      "loc": 232
+    },
+    {
+      "file": "src/pages/PerformancePage.css",
+      "loc": 491
+    },
+    {
+      "file": "src/pages/PerformancePage.jsx",
+      "loc": 387
+    },
+    {
+      "file": "src/pages/Profile.css",
+      "loc": 553
+    },
+    {
+      "file": "src/pages/Profile.jsx",
+      "loc": 437
+    },
+    {
+      "file": "src/pages/README.md",
+      "loc": 106
+    },
+    {
+      "file": "src/pages/RulesPage.css",
+      "loc": 443
+    },
+    {
+      "file": "src/pages/RulesPage.jsx",
+      "loc": 327
+    },
+    {
+      "file": "src/pages/RulesPage.test.jsx",
+      "loc": 7
+    },
+    {
+      "file": "src/pages/SettingsPage.css",
+      "loc": 690
+    },
+    {
+      "file": "src/pages/SettingsPage.jsx",
+      "loc": 1066
+    },
+    {
+      "file": "src/pages/TestMount.jsx",
+      "loc": 19
+    },
+    {
+      "file": "src/pages/TrustPage.jsx",
+      "loc": 411
+    },
+    {
+      "file": "src/pages/UpgradePage.jsx",
+      "loc": 108
+    },
+    {
+      "file": "src/pages/pro/DebtSimulator.jsx",
+      "loc": 402
+    },
+    {
+      "file": "src/pages/pro/ProPlannerPage.css",
+      "loc": 777
+    },
+    {
+      "file": "src/pages/pro/ProPlannerPage.jsx",
+      "loc": 63
+    },
+    {
+      "file": "src/pages/pro/RetirementSimulator.jsx",
+      "loc": 472
+    },
+    {
+      "file": "src/pages/pro/TaxSimulator.jsx",
+      "loc": 294
+    },
+    {
+      "file": "src/setupTests.js",
+      "loc": 396
+    },
+    {
+      "file": "src/setupTests.ts",
+      "loc": 1
+    },
+    {
+      "file": "src/shared/components/ErrorBoundaryFallback.jsx",
+      "loc": 154
+    },
+    {
+      "file": "src/shared/ui/Alert.css",
+      "loc": 88
+    },
+    {
+      "file": "src/shared/ui/Alert.jsx",
+      "loc": 29
+    },
+    {
+      "file": "src/shared/ui/Button.css",
+      "loc": 270
+    },
+    {
+      "file": "src/shared/ui/Button.jsx",
+      "loc": 54
+    },
+    {
+      "file": "src/shared/ui/Card.css",
+      "loc": 229
+    },
+    {
+      "file": "src/shared/ui/Card.jsx",
+      "loc": 73
+    },
+    {
+      "file": "src/shared/ui/Input.css",
+      "loc": 252
+    },
+    {
+      "file": "src/shared/ui/Input.jsx",
+      "loc": 42
+    },
+    {
+      "file": "src/shared/ui/Label.jsx",
+      "loc": 49
+    },
+    {
+      "file": "src/shared/ui/Progress.jsx",
+      "loc": 59
+    },
+    {
+      "file": "src/shared/ui/ProgressBar.css",
+      "loc": 114
+    },
+    {
+      "file": "src/shared/ui/ProgressBar.jsx",
+      "loc": 49
+    },
+    {
+      "file": "src/shared/ui/Select.jsx",
+      "loc": 94
+    },
+    {
+      "file": "src/shared/ui/Spinner.css",
+      "loc": 103
+    },
+    {
+      "file": "src/shared/ui/Spinner.jsx",
+      "loc": 35
+    },
+    {
+      "file": "src/shared/ui/__mocks__/Input.jsx",
+      "loc": 32
+    },
+    {
+      "file": "src/shared/ui/badge.jsx",
+      "loc": 32
+    },
+    {
+      "file": "src/shared/ui/design-tokens.css",
+      "loc": 371
+    },
+    {
+      "file": "src/shared/ui/dialog.css",
+      "loc": 206
+    },
+    {
+      "file": "src/shared/ui/dialog.jsx",
+      "loc": 57
+    },
+    {
+      "file": "src/shared/ui/label.css",
+      "loc": 149
+    },
+    {
+      "file": "src/shared/ui/progress.css",
+      "loc": 223
+    },
+    {
+      "file": "src/shared/ui/radio-group.css",
+      "loc": 201
+    },
+    {
+      "file": "src/shared/ui/radio-group.jsx",
+      "loc": 69
+    },
+    {
+      "file": "src/shared/ui/select.css",
+      "loc": 185
+    },
+    {
+      "file": "src/shared/ui/switch.css",
+      "loc": 171
+    },
+    {
+      "file": "src/shared/ui/switch.jsx",
+      "loc": 54
+    },
+    {
+      "file": "src/shared/ui/table.css",
+      "loc": 209
+    },
+    {
+      "file": "src/shared/ui/table.jsx",
+      "loc": 52
+    },
+    {
+      "file": "src/shared/ui/textarea.css",
+      "loc": 209
+    },
+    {
+      "file": "src/shared/ui/textarea.jsx",
+      "loc": 51
+    },
+    {
+      "file": "src/shared/ui/tooltip.css",
+      "loc": 210
+    },
+    {
+      "file": "src/shared/ui/tooltip.jsx",
+      "loc": 34
+    },
+    {
+      "file": "src/shared/ui/use-toast.jsx",
+      "loc": 16
+    },
+    {
+      "file": "src/store/modular/appStore.js",
+      "loc": 180
+    },
+    {
+      "file": "src/store/modular/onboardingStore.js",
+      "loc": 385
+    },
+    {
+      "file": "src/store/useAppStore.js",
+      "loc": 187
+    },
+    {
+      "file": "src/styles/design-system.css",
+      "loc": 598
+    },
+    {
+      "file": "src/styles/design-tokens.css",
+      "loc": 413
+    },
+    {
+      "file": "src/styles/tokens.css",
+      "loc": 446
+    },
+    {
+      "file": "src/test-plaid-validation.js",
+      "loc": 1
+    },
+    {
+      "file": "src/test-simplified-validation.js",
+      "loc": 1
+    },
+    {
+      "file": "src/test-smoke.js",
+      "loc": 98
+    },
+    {
+      "file": "src/test-utils.jsx",
+      "loc": 344
+    },
+    {
+      "file": "src/tests/accessibility/a11y-validation.test.js",
+      "loc": 248
+    },
+    {
+      "file": "src/tests/components/framesync/InternalActionForm.spec.jsx",
+      "loc": 10
+    },
+    {
+      "file": "src/tests/components/framesync/PlaidActionForm.spec.jsx",
+      "loc": 10
+    },
+    {
+      "file": "src/tests/integration/services/ConfirmationModal.spec.js",
+      "loc": 7
+    },
+    {
+      "file": "src/tests/integration/services/ExecutionController.spec.js",
+      "loc": 7
+    },
+    {
+      "file": "src/tests/integration/services/ExecutionController.test.js",
+      "loc": 7
+    },
+    {
+      "file": "src/tests/integration/services/FrameSyncIntegration.spec.js",
+      "loc": 40
+    },
+    {
+      "file": "src/tests/integration/services/TriggerDispatcher.spec.js",
+      "loc": 7
+    },
+    {
+      "file": "src/tests/integration/services/crypto.spec.js",
+      "loc": 7
+    },
+    {
+      "file": "src/tests/integration/services/ruleEngine.spec.js",
+      "loc": 7
+    },
+    {
+      "file": "src/tests/performance/WebVitalsMonitor.test.js",
+      "loc": 116
+    },
+    {
+      "file": "src/tests/store/useAppStore.spec.js",
+      "loc": 7
+    },
+    {
+      "file": "src/tests/unit/components/FeedbackForm.test.jsx",
+      "loc": 53
+    },
+    {
+      "file": "src/tests/unit/services/AuthService.test.js",
+      "loc": 7
+    },
+    {
+      "file": "src/tests/unit/services/FeedbackUploader.test.js",
+      "loc": 7
+    },
+    {
+      "file": "src/tests/unit/services/PlaidService.test.js",
+      "loc": 7
+    },
+    {
+      "file": "src/tests/unit/services/ruleEngine.spec.js",
+      "loc": 7
+    },
+    {
+      "file": "src/tests/utils.jsx",
+      "loc": 1
+    },
+    {
+      "file": "src/tests/utils/testSetup.js",
+      "loc": 1
+    },
+    {
+      "file": "src/types/index.js",
+      "loc": 98
+    },
+    {
+      "file": "src/utils/RouteGuard.jsx",
+      "loc": 106
+    }
+  ]
+}
