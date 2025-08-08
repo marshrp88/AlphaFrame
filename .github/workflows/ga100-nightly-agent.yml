@@ -1,0 +1,142 @@
+name: GA100 Nightly Agent
+
+on:
+  schedule:
+    - cron: '0 5 * * *'      # 1:00 AM US/Eastern nightly (05:00 UTC)
+  workflow_dispatch:          # lets you run it manually from the Actions tab
+
+# Prevent overlapping runs
+concurrency:
+  group: ga100-nightly
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  # Model to use; change later if you want to try a different one
+  MODEL: gpt-5
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+
+    steps:
+      # 1) Checkout repo with your token so we can create branches
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }}
+
+      # 2) Setup Node + pnpm (works with your repo)
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      # 3) Install deps only when a lockfile exists (keeps first run stable)
+      - name: Install dependencies
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm install --frozen-lockfile
+          elif [ -f package-lock.json ]; then
+            npm ci
+          else
+            echo "No lockfile; skipping install."
+          fi
+
+      # 4) Install Playwright browsers only if config exists
+      - name: Install Playwright browsers
+        if: ${{ hashFiles('**/playwright.config.*') != '' }}
+        run: npx playwright install --with-deps
+
+      # 5) Select tonight's GA100 task (skip gracefully if scripts/backlog not added yet)
+      - name: Select GA100 task(s)
+        id: select
+        run: |
+          if [ -f scripts/ga100/select_tasks.mjs ]; then
+            node scripts/ga100/select_tasks.mjs > /tmp/ga100_tasks.json
+            echo "selected=true" >> $GITHUB_OUTPUT
+          else
+            echo "No selector script found; skipping agent steps this run."
+            echo "selected=false" >> $GITHUB_OUTPUT
+          fi
+
+      # 6) Plan & Patch using GPT (only if a task was selected)
+      - name: Plan & Patch
+        id: planpatch
+        if: steps.select.outputs.selected == 'true'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          MODEL: ${{ env.MODEL }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: node scripts/ga100/plan_and_patch.mjs /tmp/ga100_tasks.json
+
+      # 7) Unit tests (run only if a test script exists)
+      - name: Unit tests
+        run: |
+          if npm run | grep -q " test"; then
+            pnpm test --reporter=verbose || npm test --if-present
+          else
+            echo "No unit test script; skipping."
+          fi
+
+      # 8) E2E tests (run only if e2e script exists)
+      - name: E2E (static build + serve)
+        run: |
+          if npm run | grep -q "e2e:ci"; then
+            pnpm e2e:ci || npm run e2e:ci --if-present
+          else
+            echo "No e2e:ci script; skipping."
+          fi
+
+      # 9) Build with bundle report (non-fatal during bootstrap)
+      - name: Build (bundle report)
+        run: |
+          if [ -f apps/web/vite.config.js ] || [ -f vite.config.js ]; then
+            BUNDLE_REPORT=1 pnpm build || echo "Build failed (non-fatal for bootstrap)."
+          else
+            echo "No Vite config; skipping build."
+          fi
+
+      # 10) Create PR and print digest (only if agent created a branch/commit)
+      - name: Create PR + Digest
+        if: steps.select.outputs.selected == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: node scripts/ga100/post_digest.mjs --open-pr || echo "No digest available."
+
+      # 11) Optional email step (enable after you add EMAIL_USER + EMAIL_PASSWORD secrets)
+      # - name: Send Email Summary
+      #   if: always()
+      #   uses: dawidd6/action-send-mail@v6
+      #   with:
+      #     server_address: smtp.gmail.com
+      #     server_port: 587
+      #     secure: true
+      #     username: ${{ secrets.EMAIL_USER }}
+      #     password: ${{ secrets.EMAIL_PASSWORD }}
+      #     to: "marshallrp2020@gmail.com"
+      #     from: "AlphaFrame Agent <${{ secrets.EMAIL_USER }}>"
+      #     subject: "Nightly GA100 report: ${{ github.repository }} #${{ github.run_number }}"
+      #     body: ${{ steps.planpatch.outputs.summary || 'No summary available. Check workflow logs.' }}
+
+      # 12) Upload artifacts if anything failed (helps debugging)
+      - name: Upload artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ga100-nightly-artifacts
+          path: |
+            playwright-report/
+            test-results/
+            apps/web/docs/bundle/report.html
