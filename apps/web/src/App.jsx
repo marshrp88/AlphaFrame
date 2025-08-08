@@ -37,12 +37,12 @@ const DashboardPage = lazy(() => import('./pages/DashboardPage.jsx'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage.jsx'));
 const OnboardingPage = lazy(() => import('./pages/OnboardingPage.jsx'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage.jsx'));
-import UpgradePage from './pages/UpgradePage';
-import About from './pages/About';
-import AlphaPro from './pages/AlphaPro';
-import TrustPage from './pages/TrustPage.jsx';
-import ProPlannerPage from './pages/pro/ProPlannerPage.jsx';
-import LandingPage from './pages/LandingPage.jsx';
+const UpgradePage = lazy(() => import('./pages/UpgradePage'));
+const About = lazy(() => import('./pages/About'));
+const AlphaPro = lazy(() => import('./pages/AlphaPro'));
+const TrustPage = lazy(() => import('./pages/TrustPage.jsx'));
+const ProPlannerPage = lazy(() => import('./pages/pro/ProPlannerPage.jsx'));
+const LandingPage = lazy(() => import('./pages/LandingPage.jsx'));
 
 // Lazy load existing pages for performance optimization
 const Profile = lazy(() => import('./pages/Profile.jsx'));

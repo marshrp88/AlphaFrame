@@ -8,3 +8,4 @@
 - Removed UI barrel export of `ComponentShowcase` from `src/components/ui/index.js` to break dependency cycle reported in `docs/dep-cycles.md`.
 - Added `src/components/ui/OnboardingStatusBanner.jsx` and refactored `features/onboarding/OnboardingFlow.jsx` to use it for consistent, accessible error/timeout UX.
 - Mobile/responsive tweaks: ensured tap targets (min-height 44px), removed highlight flash, and kept tokens import at top of `src/index.css`.
+- Performance: Lazy-loaded additional routes in `src/App.jsx`; regenerated bundle treemap (`docs/bundle/report.html`). Main entry now ~912KB (gzip ~248KB). Further slimming queued.
