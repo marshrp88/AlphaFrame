@@ -20,6 +20,8 @@ import Card from '../../../shared/ui/Card.jsx';
 import { Shield, CreditCard, ArrowRight, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import PlaidService from '../../../lib/services/PlaidService.js';
 import { config } from '../../../lib/config.js';
+import DemoModeService from '../../../lib/services/DemoModeService.js';
+import { useOnboardingStore } from '../../../store/modular/onboardingStore.js';
 import { useToast } from '../../../components/ui/use-toast.jsx';
 
 /**
@@ -32,6 +34,7 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
   const [error, setError] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const [plaidService] = useState(() => new PlaidService());
+  const { fsmStart, fsmCollectOk, fsmFail } = useOnboardingStore();
   const { toast } = useToast();
 
   // Check for existing connection data
@@ -72,8 +75,11 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
    * Initialize Plaid connection
    */
   const handleConnectBank = async () => {
+    fsmStart();
     // If in demo mode (no user), immediately complete step with demo data
-    if (!window.demoUser && (!window.user || window.user === null)) {
+    if (DemoModeService.isDemo() || (!window.user && !plaidService.clientId)) {
+      DemoModeService.enable();
+      fsmCollectOk();
       onComplete({
         connected: true,
         account: { id: 'demo', name: 'Demo Checking Account', type: 'depository', subtype: 'checking' },
@@ -170,6 +176,7 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
       console.error('🔧 Bank connection error:', error);
       setError('Failed to connect to your bank. Please try again.');
       setConnectionStatus('failed');
+      fsmFail();
       
       // Show error toast
       toast({
@@ -463,11 +470,15 @@ const Step1PlaidConnect = ({ onComplete, onSkip, data, isLoading }) => {
                 Try Again
               </Button>
               <Button 
-                onClick={handleSkip}
+                onClick={() => {
+                  DemoModeService.enable();
+                  fsmCollectOk();
+                  onComplete({ demo: true, connected: true });
+                }}
                 variant="outline"
                 className="skip-button"
               >
-                Skip for Now
+                Use Demo Instead
               </Button>
             </div>
           )}
