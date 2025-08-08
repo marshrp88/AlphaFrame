@@ -1,10 +1,26 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vitejs.dev/config/
+const enableBundleReport = process.env.BUNDLE_REPORT === '1' || process.env.BUNDLE_REPORT === 'true'
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    ...(enableBundleReport
+      ? [
+          visualizer({
+            filename: 'docs/bundle/report.html',
+            template: 'treemap',
+            gzipSize: true,
+            brotliSize: true,
+            emitFile: true,
+          }),
+        ]
+      : []),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -31,6 +47,7 @@ export default defineConfig({
     ],
   },
   build: {
+    sourcemap: enableBundleReport ? true : false,
     rollupOptions: {
       output: {
         manualChunks: {
