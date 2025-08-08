@@ -9,3 +9,4 @@
 - Added `src/components/ui/OnboardingStatusBanner.jsx` and refactored `features/onboarding/OnboardingFlow.jsx` to use it for consistent, accessible error/timeout UX.
 - Mobile/responsive tweaks: ensured tap targets (min-height 44px), removed highlight flash, and kept tokens import at top of `src/index.css`.
 - Performance: Lazy-loaded additional routes in `src/App.jsx`; refined manualChunks in `vite.config.js`. New sizes: entry ~90KB (gzip ~22.6KB), react-vendor ~189KB (gzip ~60KB), motion ~78KB (gzip ~25KB), vendor ~1.23MB (gzip ~285KB). Further vendor splitting queued.
+- Security/ops: Added `public/_headers` with CSP/HSTS/etc. to enable secure static hosting headers.
