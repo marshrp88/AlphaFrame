@@ -66,7 +66,7 @@ const RouteGuard = ({ children }) => {
     if (!isInitialized) return;
 
     const currentPath = location.pathname;
-    const isDemoMode = DemoModeService.isDemo();
+    const isDemoMode = DemoModeService.isDemo() || isDemo;
     
     console.log('🔧 RouteGuard:', {
       currentPath,
@@ -75,10 +75,11 @@ const RouteGuard = ({ children }) => {
       shouldBypass: shouldBypassOnboarding()
     });
 
-    const onboardingDone = shouldBypassOnboarding() || fsmState === 'done';
+    // Strict gating: if demo, require FSM === 'done'; otherwise allow app-level bypass
+    const onboardingDone = isDemoMode ? (fsmState === 'done') : (shouldBypassOnboarding() || fsmState === 'done');
     const dest = evaluateRouteDecision({
       isAuthenticated,
-      isDemo: isDemoMode || isDemo,
+      isDemo: isDemoMode,
       onboardingDone,
       path: currentPath,
     });
