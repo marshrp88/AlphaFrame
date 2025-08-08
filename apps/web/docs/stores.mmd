@@ -1,0 +1,21 @@
+graph LR
+  subgraph "lib/store/uiStore.js"
+    state["state: confirmationModal, passwordPrompt, isSandboxMode"]
+    actions["actions: showConfirmationModal, hideConfirmationModal, showPasswordPrompt, hidePasswordPrompt, toggleSandboxMode"]
+  end
+  subgraph "core/store/authStore.js"
+    state["state: user, isAuthenticated, isLoading, error, permissions"]
+    actions["actions: initialize, register, login, logout, updateProfile, checkAuth, clearError, hasPermission, isAdmin, isPremium"]
+  end
+  subgraph "core/store/dashboardModeStore.js"
+    state["state: currentMode, viewPreferences"]
+    actions["actions: setMode, toggleViewPreference, isProMode, isDetailedView"]
+  end
+  subgraph "core/store/dataStore.js"
+    state["state: rules, transactions, budgets, insights, userPreferences, isLoading, error, lastSync, listeners, triggeredRules, latestTriggeredRule"]
+    actions["actions: initialize, evaluateAndTriggerRules, createRule, updateRule, deleteRule, createTransaction, updateTransaction, deleteTransaction, createBudget, updateBudget, deleteBudget, createInsight, updateInsight, deleteInsight, updateUserPreferences, exportData, importData, queryRules, queryTransactions, queryBudgets"]
+  end
+  subgraph "core/store/financialStateStore.js"
+    state["state: accounts, transactions, balance, budget, goals, isLoading, isSyncing"]
+    actions["actions: setAccounts, setTransactions, setBalance, setBudget, setLoading, setSyncing, setAccountBalance, getAccountBalance, setGoal, getGoal, updateGoalProgress, recordSpending, resetMonthlyBudgets, getTotalBalance, getRecentTransactions"]
+  end
