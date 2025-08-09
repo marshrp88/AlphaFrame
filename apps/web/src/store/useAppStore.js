@@ -48,7 +48,7 @@ const useAppStore = create(
       // Actions
       initializeApp: () => {
         const isDemo = DemoModeService.isDemo();
-
+        
         if (isDemo) {
           // Initialize demo mode
           DemoModeService.completeOnboarding();
@@ -67,10 +67,8 @@ const useAppStore = create(
           });
           console.log('🔧 useAppStore: Demo mode initialized');
         } else {
-          // Check persisted store flag first; fallback to localStorage for legacy
-          const persisted = get().onboardingComplete;
-          const localFlag = localStorage.getItem('alphaframe_onboarding_complete') === 'true';
-          const onboardingComplete = persisted || localFlag;
+          // Check onboarding status from localStorage
+          const onboardingComplete = localStorage.getItem('alphaframe_onboarding_complete') === 'true';
           set({ onboardingComplete });
         }
       },

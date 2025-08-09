@@ -62,23 +62,11 @@ const RouteGuard = ({ children }) => {
     setIsInitialized(true);
   }, [initializeApp]);
 
-  // Early fast-path redirect for demo E2E: if flags indicate completed demo onboarding, jump to dashboard
-  useEffect(() => {
-    const currentPath = location.pathname;
-    if (currentPath === '/onboarding') {
-      const demoFlag = sessionStorage.getItem('demo_user') === 'true';
-      const localComplete = localStorage.getItem('alphaframe_onboarding_complete') === 'true';
-      if (demoFlag && localComplete) {
-        navigate('/dashboard', { replace: true });
-      }
-    }
-  }, [location.pathname, navigate]);
-
   useEffect(() => {
     if (!isInitialized) return;
 
     const currentPath = location.pathname;
-    const isDemoMode = DemoModeService.isDemo() || isDemo;
+    const isDemoMode = DemoModeService.isDemo();
     
     console.log('🔧 RouteGuard:', {
       currentPath,
@@ -87,20 +75,10 @@ const RouteGuard = ({ children }) => {
       shouldBypass: shouldBypassOnboarding()
     });
 
-    // Fast path for test/demo: if demo mode and onboarding flag already set, go straight to dashboard
-    const localComplete = localStorage.getItem('alphaframe_onboarding_complete') === 'true';
-    if (isDemoMode && localComplete && currentPath === '/onboarding') {
-      navigate('/dashboard', { replace: true });
-      return;
-    }
-
-    // Strict gating: if demo, require FSM === 'done';
-    // Test-mode allowance: when running E2E (VITE_APP_ENV==='test') and local flag set, allow bypass
-    const testBypass = import.meta.env?.VITE_APP_ENV === 'test' && localComplete;
-    const onboardingDone = isDemoMode ? (fsmState === 'done' || testBypass) : (shouldBypassOnboarding() || fsmState === 'done');
+    const onboardingDone = shouldBypassOnboarding() || fsmState === 'done';
     const dest = evaluateRouteDecision({
       isAuthenticated,
-      isDemo: isDemoMode,
+      isDemo: isDemoMode || isDemo,
       onboardingDone,
       path: currentPath,
     });

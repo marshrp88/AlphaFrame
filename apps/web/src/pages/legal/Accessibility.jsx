@@ -2,11 +2,10 @@ import React from 'react';
 
 export default function Accessibility() {
   return (
-    <div style={{ maxWidth: 800, margin: '24px auto', padding: '0 16px' }}>
+    <main role="main" aria-label="Accessibility Statement" style={{ padding: '1rem' }}>
       <h1>Accessibility Statement</h1>
-      <p style={{ color: '#6b7280' }}>We aim to meet WCAG 2.1 AA. If you encounter accessibility barriers, contact support@alphaframe.app.</p>
-      <p>This statement will be expanded with full details before GA.</p>
-    </div>
+      <p>We are committed to WCAG 2.1 AA. Contact support for accessibility issues.</p>
+    </main>
   );
 }
 

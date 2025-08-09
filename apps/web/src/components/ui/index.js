@@ -57,7 +57,7 @@ export { default as TouchGestureHandler } from './TouchGestureHandler.jsx';
 // Utility Components
 export { default as DarkModeToggle } from './DarkModeToggle.jsx';
 export { default as PerformanceMonitor } from './PerformanceMonitor.jsx';
-// Note: Do NOT re-export ComponentShowcase here to avoid index <-> showcase cycle
+export { default as ComponentShowcase } from './ComponentShowcase.jsx';
 
 // Design Tokens (for reference)
 export const designTokens = {

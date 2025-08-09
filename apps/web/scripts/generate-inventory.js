@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
-  generate-inventory.js
+  generate-inventory.cjs (CommonJS version)
   Purpose: Scan the app's `src/` folder and produce three artifacts under `docs/`:
     - docs/repo-files.txt: all files under src, one per line (relative paths)
     - docs/cloc.json: simple JSON with per-file and totals line counts (no external tools)
@@ -9,9 +9,9 @@
   This script uses only Node.js and the file system. It does not modify application code.
   Comments explain the logic in simple terms.
 */
-
-const fs = require('fs');
-const path = require('path');
+// NOTE: This .js file is kept as a stub to instruct users to run the .cjs variant when the project uses ESM.
+console.error('This project uses ESM ("type": "module"). Please run: node scripts/generate-inventory.cjs');
+process.exit(1);
 
 // Helper: read a file safely; return empty string if any error
 function safeReadFileSync(filePath) {

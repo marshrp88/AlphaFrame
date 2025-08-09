@@ -1,40 +1,48 @@
 import React from 'react';
+import StyledButton from './StyledButton.jsx';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 
-export default function OnboardingStatusBanner({ state, onRetry, onUseDemo }) {
-  const isTimeout = state === 'timeout';
-  const isError = state === 'error';
-  if (!isTimeout && !isError) return null;
-
-  return (
-    <div
-      role="alert"
-      aria-live="assertive"
-      className="onboarding-status-banner"
-      style={{
-        position: 'sticky', top: 0, zIndex: 1000, padding: '12px 16px',
-        background: '#fff3f3', borderBottom: '1px solid #fca5a5', display: 'flex',
-        gap: 8, alignItems: 'center', justifyContent: 'center'
-      }}
+const OnboardingStatusBanner = ({ message, onRetry, onUseDemo }) => (
+  <div
+    role="alert"
+    aria-live="assertive"
+    className="onboarding-status-banner"
+    style={{
+      textAlign: 'center',
+      padding: '12px 16px',
+      backgroundColor: 'var(--color-error-50)',
+      borderBottom: '1px solid var(--color-error-200)',
+      display: 'flex',
+      gap: '8px',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+    }}
+  >
+    <AlertTriangle size={20} color="var(--color-error-600)" aria-hidden />
+    <span style={{ color: 'var(--color-error-700)', fontWeight: 600 }}>
+      {message}
+    </span>
+    <StyledButton
+      variant="secondary"
+      size="sm"
+      onClick={onRetry}
+      ariaLabel="Retry setup"
     >
-      <span style={{ color: '#b91c1c', fontWeight: 600 }}>
-        {isTimeout ? 'Setup timeout' : 'Setup error'}
-      </span>
-      <button
-        aria-label="Retry onboarding"
-        onClick={onRetry}
-        style={{ padding: '6px 10px', borderRadius: 6 }}
-      >
-        Retry
-      </button>
-      <button
-        aria-label="Use demo mode"
-        onClick={onUseDemo}
-        style={{ padding: '6px 10px', borderRadius: 6 }}
-      >
-        Use Demo
-      </button>
-    </div>
-  );
-}
+      <RefreshCw size={16} aria-hidden />
+      Retry
+    </StyledButton>
+    <StyledButton
+      variant="primary"
+      size="sm"
+      onClick={onUseDemo}
+      ariaLabel="Use demo mode instead"
+    >
+      Use Demo
+    </StyledButton>
+  </div>
+);
+
+export default OnboardingStatusBanner;
 
 

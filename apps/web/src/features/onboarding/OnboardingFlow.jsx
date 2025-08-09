@@ -37,7 +37,6 @@ import { useFinancialStateStore } from '../../core/store/financialStateStore.js'
 import { useToast } from '../../components/ui/use-toast.jsx';
 import { trackOnboardStarted, trackOnboardCompleted } from '@/lib/analytics.js';
 import './OnboardingFlow.css';
-import OnboardingStatusBanner from '../../components/ui/OnboardingStatusBanner.jsx';
 import { useOnboardingStore } from '../../store/modular/onboardingStore.js';
 import DemoModeService from '../../lib/services/DemoModeService.js';
 
@@ -443,17 +442,33 @@ export const OnboardingFlow = ({ onComplete, initialState }) => {
 
   return (
     <div style={{ pointerEvents: 'auto', opacity: 1, background: '#fff', minHeight: '100vh' }} data-testid="onboarding-container">
-      <OnboardingStatusBanner
-        state={fsmState}
-        onRetry={() => { setHasError(false); fsmRetry(); }}
-        onUseDemo={() => {
-          DemoModeService.enable();
-          localStorage.setItem('alphaframe_onboarding_complete', 'true');
-          sessionStorage.setItem('demo_user', 'true');
-          if (onComplete) onComplete({ demo: true });
-          navigate('/dashboard');
-        }}
-      />
+      {(fsmState === 'timeout' || fsmState === 'error') && (
+        <div style={{
+          position: 'sticky', top: 0, zIndex: 1000, padding: '12px 16px',
+          background: '#fff3f3', borderBottom: '1px solid #fca5a5', display: 'flex', gap: 8,
+          alignItems: 'center', justifyContent: 'center'
+        }}>
+          <span style={{ color: '#b91c1c', fontWeight: 600 }}>
+            {fsmState === 'timeout' ? 'Setup timeout' : 'Setup error'}
+          </span>
+          <StyledButton variant="secondary" size="sm" onClick={() => { setHasError(false); fsmRetry(); }}>
+            Retry
+          </StyledButton>
+          <StyledButton
+            variant="primary"
+            size="sm"
+            onClick={() => {
+              DemoModeService.enable();
+              localStorage.setItem('alphaframe_onboarding_complete', 'true');
+              sessionStorage.setItem('demo_user', 'true');
+              if (onComplete) onComplete({ demo: true });
+              navigate('/dashboard');
+            }}
+          >
+            Use Demo
+          </StyledButton>
+        </div>
+      )}
       {/* Debug reset button (dev only) */}
       <button 
         onClick={handleDebugReset}

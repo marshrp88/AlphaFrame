@@ -1,14 +1,14 @@
 
 Running 9 tests using 6 workers
 
-  ✓  3 [chromium] › e2e\stoplight-flows.spec.js:28:3 › Stoplight Green Paths › Plaid failure → Offer Retry or Demo → Choose Demo → Dashboard (1.2s)
-  ✓  2 [chromium] › e2e\stoplight-flows.spec.js:16:3 › Stoplight Green Paths › Auth new user → Onboarding complete → Dashboard (simulated) (1.4s)
-  ✓  1 [chromium] › e2e\stoplight-flows.spec.js:5:3 › Stoplight Green Paths › Unauth → Demo → Onboarding complete → Dashboard (1.4s)
-  ✓  7 [webkit] › e2e\stoplight-flows.spec.js:5:3 › Stoplight Green Paths › Unauth → Demo → Onboarding complete → Dashboard (3.8s)
-  ✓  8 [webkit] › e2e\stoplight-flows.spec.js:16:3 › Stoplight Green Paths › Auth new user → Onboarding complete → Dashboard (simulated) (3.9s)
-  ✓  9 [webkit] › e2e\stoplight-flows.spec.js:28:3 › Stoplight Green Paths › Plaid failure → Offer Retry or Demo → Choose Demo → Dashboard (4.0s)
-  ✓  4 [firefox] › e2e\stoplight-flows.spec.js:28:3 › Stoplight Green Paths › Plaid failure → Offer Retry or Demo → Choose Demo → Dashboard (6.5s)
-  ✓  5 [firefox] › e2e\stoplight-flows.spec.js:5:3 › Stoplight Green Paths › Unauth → Demo → Onboarding complete → Dashboard (6.9s)
-  ✓  6 [firefox] › e2e\stoplight-flows.spec.js:16:3 › Stoplight Green Paths › Auth new user → Onboarding complete → Dashboard (simulated) (6.7s)
+  ✓  1 [chromium] › e2e\stoplight-flows.spec.js:17:3 › Stoplight Green Paths › Auth new user → Onboarding complete → Dashboard (simulated) (1.5s)
+  ✓  2 [chromium] › e2e\stoplight-flows.spec.js:5:3 › Stoplight Green Paths › Unauth → Demo → Onboarding complete → Dashboard (1.5s)
+  ✓  6 [chromium] › e2e\stoplight-flows.spec.js:30:3 › Stoplight Green Paths › Plaid failure → Offer Retry or Demo → Choose Demo → Dashboard (1.4s)
+  ✓  3 [firefox] › e2e\stoplight-flows.spec.js:5:3 › Stoplight Green Paths › Unauth → Demo → Onboarding complete → Dashboard (4.6s)
+  ✓  5 [firefox] › e2e\stoplight-flows.spec.js:30:3 › Stoplight Green Paths › Plaid failure → Offer Retry or Demo → Choose Demo → Dashboard (5.4s)
+  ✓  8 [webkit] › e2e\stoplight-flows.spec.js:30:3 › Stoplight Green Paths › Plaid failure → Offer Retry or Demo → Choose Demo → Dashboard (2.6s)
+  ✓  7 [webkit] › e2e\stoplight-flows.spec.js:5:3 › Stoplight Green Paths › Unauth → Demo → Onboarding complete → Dashboard (2.6s)
+  ✓  9 [webkit] › e2e\stoplight-flows.spec.js:17:3 › Stoplight Green Paths › Auth new user → Onboarding complete → Dashboard (simulated) (2.6s)
+  ✓  4 [firefox] › e2e\stoplight-flows.spec.js:17:3 › Stoplight Green Paths › Auth new user → Onboarding complete → Dashboard (simulated) (5.3s)
 
-  9 passed (24.7s)
+  9 passed (22.1s)

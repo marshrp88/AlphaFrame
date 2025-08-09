@@ -1,43 +1,10 @@
 
 [1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/marsh/Desktop/AlphaFrame/apps/web[39m
 
- [32m✓[39m test/unit/services/ExecutionController.test.js[2m > [22msanity check[32m 6[2mms[22m[39m
- [32m✓[39m test/integration/services/crypto.spec.js[2m > [22mCryptoService Integration[2m > [22mshould derive consistent keys from same password and salt[32m 144[2mms[22m[39m
- [32m✓[39m test/integration/services/crypto.spec.js[2m > [22mCryptoService Integration[2m > [22mshould encrypt and decrypt data correctly[32m 2[2mms[22m[39m
- [32m✓[39m test/integration/services/crypto.spec.js[2m > [22mCryptoService Integration[2m > [22mshould fail decryption with wrong key[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/crypto.spec.js[2m > [22mCryptoService Integration[2m > [22mshould generate unique salts[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/financialStateStore.spec.js[2m > [22mFinancial State Store[2m > [22mAccount Management[2m > [22mshould set and get account balance[32m 135[2mms[22m[39m
- [32m✓[39m test/integration/services/financialStateStore.spec.js[2m > [22mFinancial State Store[2m > [22mAccount Management[2m > [22mshould return 0 for non-existent account[32m 5[2mms[22m[39m
- [32m✓[39m test/integration/services/financialStateStore.spec.js[2m > [22mFinancial State Store[2m > [22mGoal Management[2m > [22mshould set and get goal[32m 4[2mms[22m[39m
- [32m✓[39m test/integration/services/financialStateStore.spec.js[2m > [22mFinancial State Store[2m > [22mGoal Management[2m > [22mshould return null for non-existent goal[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/financialStateStore.spec.js[2m > [22mFinancial State Store[2m > [22mGoal Management[2m > [22mshould update goal progress[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/financialStateStore.spec.js[2m > [22mFinancial State Store[2m > [22mGoal Management[2m > [22mshould not allow negative goal progress[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/financialStateStore.spec.js[2m > [22mFinancial State Store[2m > [22mBudget Management[2m > [22mshould set and track budget spending[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/financialStateStore.spec.js[2m > [22mFinancial State Store[2m > [22mBudget Management[2m > [22mshould reset monthly budgets[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/financialStateStore.spec.js[2m > [22mFinancial State Store[2m > [22mStore Persistence[2m > [22mshould persist accounts, goals, and budgets[32m 4[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mSnapshot Generation[2m > [22mshould generate snapshot with all data types[32m 193[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mSnapshot Generation[2m > [22mshould generate snapshot with selected data types only[32m 50[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mSnapshot Generation[2m > [22mshould handle encryption failure gracefully[32m 7[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mSnapshot Generation[2m > [22mshould handle missing required fields[32m 28[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mExport Functionality[2m > [22mshould export snapshot as file[32m 16[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mExport Functionality[2m > [22mshould export snapshot to clipboard[32m 23[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mExport Functionality[2m > [22mshould handle export errors[32m 17[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mData Sanitization[2m > [22mshould sanitize logs to remove sensitive information[32m 11[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mData Sanitization[2m > [22mshould sanitize payload with various sensitive field names[32m 5[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mData Sanitization[2m > [22mshould handle null or undefined payloads[32m 8[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mFinancial Summary Generation[2m > [22mshould generate financial summary without personal details[32m 31[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mFinancial Summary Generation[2m > [22mshould handle missing financial data[32m 16[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mFinancial Summary Generation[2m > [22mshould handle service errors gracefully[32m 5[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mUI Preferences Collection[2m > [22mshould collect UI preferences from localStorage[32m 6[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mUI Preferences Collection[2m > [22mshould handle localStorage errors[32m 12[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mPerformance Metrics Collection[2m > [22mshould collect basic performance metrics[32m 5[2mms[22m[39m
-[90mstdout[2m | test/integration/services/ExecutionController.spec.js[2m > [22m[2mExecutionController[2m > [22m[2mshould execute internal actions
+[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[90mstdout[2m | test/integration/services/ExecutionController.spec.js[2m > [22m[2mExecutionController[2m > [22m[2mshould execute internal actions
 [22m[39m[MOCK showPasswordPrompt] called, confirming...
 
- [32m✓[39m test/unit/services/ExecutionController.test.js[2m > [22mExecutionController (unit)[2m > [22mshould execute a PLAID_TRANSFER action and return success[33m 515[2mms[22m[39m
- [32m✓[39m test/unit/services/ExecutionController.test.js[2m > [22mExecutionController (unit)[2m > [22mshould throw for unknown action type[32m 4[2mms[22m[39m
- [32m✓[39m test/unit/services/ExecutionController.test.js[2m > [22mExecutionController (unit)[2m > [22mshould throw for invalid action payload[32m 2[2mms[22m[39m
-[90mstdout[2m | test/integration/services/ExecutionController.spec.js[2m > [22m[2mExecutionController[2m > [22m[2mshould execute Plaid transfer actions
+[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[90mstdout[2m | test/integration/services/ExecutionController.spec.js[2m > [22m[2mExecutionController[2m > [22m[2mshould execute Plaid transfer actions
 [22m[39m[MOCK showPasswordPrompt] called, confirming...
 
 [90mstdout[2m | test/integration/services/ExecutionController.spec.js[2m > [22m[2mExecutionController[2m > [22m[2mshould handle Plaid transfer authorization failure
@@ -52,142 +19,54 @@
 [90mstdout[2m | test/integration/services/ExecutionController.spec.js[2m > [22m[2mExecutionController[2m > [22m[2mshould handle network errors during Plaid transfer
 [22m[39m[MOCK showPasswordPrompt] called, confirming...
 
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mPerformance Metrics Collection[2m > [22mshould handle missing performance APIs[32m 12[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mSnapshot Validation[2m > [22mshould validate correct snapshot data[32m 4[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mSnapshot Validation[2m > [22mshould reject invalid snapshot data[32m 13[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mSnapshot Statistics[2m > [22mshould calculate snapshot statistics correctly[32m 6[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mSnapshot Statistics[2m > [22mshould handle statistics calculation errors[32m 11[2mms[22m[39m
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mError Handling[2m > [22mshould handle snapshot generation errors[32m 52[2mms[22m[39m
 [90mstdout[2m | test/integration/services/ExecutionController.spec.js[2m > [22m[2mExecutionController[2m > [22m[2mshould require confirmation for high-risk actions
 [22m[39m[MOCK showPasswordPrompt] called, confirming...
 
 [90mstdout[2m | test/integration/services/ExecutionController.spec.js[2m > [22m[2mExecutionController[2m > [22m[2mshould call adjustGoal when ADJUST_GOAL is dispatched
 [22m[39m[MOCK showPasswordPrompt] called, confirming...
 
- [32m✓[39m test/unit/services/FeedbackUploader.test.js[2m > [22mFeedbackUploader[2m > [22mError Handling[2m > [22mshould handle export errors[32m 24[2mms[22m[39m
- [32m✓[39m test/integration/services/ExecutionController.spec.js[2m > [22mExecutionController[2m > [22mshould execute internal actions[33m 518[2mms[22m[39m
- [32m✓[39m test/integration/services/ExecutionController.spec.js[2m > [22mExecutionController[2m > [22mshould execute communication actions[32m 6[2mms[22m[39m
- [32m✓[39m test/integration/services/ExecutionController.spec.js[2m > [22mExecutionController[2m > [22mshould execute Plaid transfer actions[32m 9[2mms[22m[39m
- [32m✓[39m test/integration/services/ExecutionController.spec.js[2m > [22mExecutionController[2m > [22mshould handle Plaid transfer authorization failure[32m 5[2mms[22m[39m
- [32m✓[39m test/integration/services/ExecutionController.spec.js[2m > [22mExecutionController[2m > [22mshould handle Plaid transfer creation failure[32m 3[2mms[22m[39m
- [32m✓[39m test/integration/services/ExecutionController.spec.js[2m > [22mExecutionController[2m > [22mshould handle missing Plaid token[32m 7[2mms[22m[39m
- [32m✓[39m test/integration/services/ExecutionController.spec.js[2m > [22mExecutionController[2m > [22mshould handle network errors during Plaid transfer[32m 3[2mms[22m[39m
- [32m✓[39m test/integration/services/ExecutionController.spec.js[2m > [22mExecutionController[2m > [22mshould validate action payloads[32m 3[2mms[22m[39m
- [32m✓[39m test/integration/services/ExecutionController.spec.js[2m > [22mExecutionController[2m > [22mshould handle unhandled action types[32m 2[2mms[22m[39m
- [32m✓[39m test/integration/services/ExecutionController.spec.js[2m > [22mExecutionController[2m > [22mshould require confirmation for high-risk actions[32m 5[2mms[22m[39m
- [32m✓[39m test/integration/services/ExecutionController.spec.js[2m > [22mExecutionController[2m > [22mshould call adjustGoal when ADJUST_GOAL is dispatched[32m 6[2mms[22m[39m
- [32m✓[39m test/integration/services/ExecutionController.spec.js[2m > [22mExecutionController - Diagnostics[2m > [22mshould be implemented[32m 0[2mms[22m[39m
-[90mstdout[2m | test/components/framesync/WebhookActionForm.spec.jsx
+[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[90mstdout[2m | test/components/framesync/WebhookActionForm.spec.jsx
 [22m[39mDEBUG: WebhookActionForm import = [36m[Function: WebhookActionForm][39m
 
- [32m✓[39m test/components/framesync/WebhookActionForm.spec.jsx[2m > [22mWebhookActionForm[2m > [22mrenders URL input with correct attributes[32m 134[2mms[22m[39m
- [32m✓[39m test/components/framesync/WebhookActionForm.spec.jsx[2m > [22mWebhookActionForm[2m > [22mrenders method selector with correct options[32m 49[2mms[22m[39m
- [32m✓[39m test/components/framesync/WebhookActionForm.spec.jsx[2m > [22mWebhookActionForm[2m > [22mrenders JSON payload textarea with correct attributes[32m 25[2mms[22m[39m
- [32m✓[39m test/components/framesync/WebhookActionForm.spec.jsx[2m > [22mWebhookActionForm[2m > [22mvalidates URL input[32m 103[2mms[22m[39m
- [32m✓[39m test/components/framesync/WebhookActionForm.spec.jsx[2m > [22mWebhookActionForm[2m > [22mvalidates JSON payload[32m 72[2mms[22m[39m
- [32m✓[39m test/components/framesync/WebhookActionForm.spec.jsx[2m > [22mWebhookActionForm[2m > [22mformats valid JSON payload[32m 27[2mms[22m[39m
- [32m✓[39m test/components/framesync/WebhookActionForm.spec.jsx[2m > [22mWebhookActionForm[2m > [22mcalls onChange with correct payload when form is valid[32m 52[2mms[22m[39m
- [32m✓[39m test/components/framesync/WebhookActionForm.spec.jsx[2m > [22mWebhookActionForm[2m > [22mhandles initial payload correctly[32m 30[2mms[22m[39m
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mComponent Rendering[2m > [22mshould render the feedback form with header[32m 201[2mms[22m[39m
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mComponent Rendering[2m > [22mshould render feedback categories[32m 76[2mms[22m[39m
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mComponent Rendering[2m > [22mshould render data inclusion options[32m 59[2mms[22m[39m
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mComponent Rendering[2m > [22mshould render submit and reset buttons[32m 43[2mms[22m[39m
- [32m✓[39m test/unit/components/DashboardPicker.test.jsx[2m > [22mDashboardPicker[2m > [22mRendering[2m > [22mshould render all three dashboard modes[32m 133[2mms[22m[39m
- [32m✓[39m test/unit/components/DashboardPicker.test.jsx[2m > [22mDashboardPicker[2m > [22mRendering[2m > [22mshould highlight the selected mode[32m 31[2mms[22m[39m
- [32m✓[39m test/unit/components/DashboardPicker.test.jsx[2m > [22mDashboardPicker[2m > [22mRendering[2m > [22mshould show mode descriptions[32m 30[2mms[22m[39m
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mCategory Selection[2m > [22mshould allow selecting a feedback category[32m 63[2mms[22m[39m
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mCategory Selection[2m > [22mshould allow changing selected category[32m 50[2mms[22m[39m
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mData Inclusion Options[2m > [22mshould have default data inclusion settings[32m 36[2mms[22m[39m
- [32m✓[39m test/unit/components/DashboardPicker.test.jsx[2m > [22mDashboardPicker[2m > [22mRendering[2m > [22mshould show feature tags for each mode[32m 78[2mms[22m[39m
- [32m✓[39m test/unit/components/DashboardPicker.test.jsx[2m > [22mDashboardPicker[2m > [22mMode Selection[2m > [22mshould call onModeChange when a mode card is clicked[32m 37[2mms[22m[39m
- [32m✓[39m test/unit/components/DashboardPicker.test.jsx[2m > [22mDashboardPicker[2m > [22mMode Selection[2m > [22mshould call onModeChange when minimalist mode is clicked[32m 20[2mms[22m[39m
- [32m✓[39m test/unit/components/DashboardPicker.test.jsx[2m > [22mDashboardPicker[2m > [22mMode Selection[2m > [22mshould not call onModeChange when selected mode is clicked again[32m 19[2mms[22m[39m
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mData Inclusion Options[2m > [22mshould allow toggling data inclusion options[32m 49[2mms[22m[39m
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mData Inclusion Options[2m > [22mshould calculate total size based on selected options[32m 49[2mms[22m[39m
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mForm Validation[2m > [22mshould require category selection[32m 52[2mms[22m[39m
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mForm Validation[2m > [22mshould require feedback text[32m 47[2mms[22m[39m
- [32m✓[39m test/unit/components/DashboardPicker.test.jsx[2m > [22mDashboardPicker[2m > [22mVisual States[2m > [22mshould show different visual states for selected vs unselected modes[32m 22[2mms[22m[39m
- [32m✓[39m test/unit/components/DashboardPicker.test.jsx[2m > [22mDashboardPicker[2m > [22mVisual States[2m > [22mshould show hover effects on unselected cards[32m 18[2mms[22m[39m
- [32m✓[39m test/unit/components/DashboardPicker.test.jsx[2m > [22mDashboardPicker[2m > [22mAccessibility[2m > [22mshould have clickable cards with proper styling[32m 18[2mms[22m[39m
- [32m✓[39m test/unit/components/DashboardPicker.test.jsx[2m > [22mDashboardPicker[2m > [22mAccessibility[2m > [22mshould handle keyboard navigation[32m 19[2mms[22m[39m
- [32m✓[39m test/unit/components/DashboardPicker.test.jsx[2m > [22mDashboardPicker[2m > [22mError Handling[2m > [22mshould handle missing onModeChange prop gracefully[32m 20[2mms[22m[39m
- [32m✓[39m test/unit/components/DashboardPicker.test.jsx[2m > [22mDashboardPicker[2m > [22mError Handling[2m > [22mshould handle invalid selectedMode gracefully[32m 17[2mms[22m[39m
-[90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mSnapshot Generation[2m > [22m[2mshould generate snapshot when form is submitted
+[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mSnapshot Generation[2m > [22m[2mshould generate snapshot when form is submitted
 [22m[39m[MOCK CALLED] generateSnapshot
 
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mForm Validation[2m > [22mshould enable submit button when both category and feedback are provided[32m 51[2mms[22m[39m
-[90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mSnapshot Generation[2m > [22m[2mshould show snapshot generated view after successful generation
+[33m[39m[32m·[39m[90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mSnapshot Generation[2m > [22m[2mshould show snapshot generated view after successful generation
 [22m[39m[MOCK CALLED] generateSnapshot
 
-[90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mSnapshot Generation[2m > [22m[2mshould handle snapshot generation errors
-[22m[39m[MOCK CALLED] generateSnapshot
-
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mSnapshot Generation[2m > [22mshould generate snapshot when form is submitted[32m 154[2mms[22m[39m
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mSnapshot Generation[2m > [22mshould show snapshot generated view after successful generation[32m 84[2mms[22m[39m
-[90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mExport Functionality[2m > [22m[2mshould export snapshot as file
+[33m[39m[32m·[39m[90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mSnapshot Generation[2m > [22m[2mshould handle snapshot generation errors
 [22m[39m[MOCK CALLED] generateSnapshot
 
 [90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mExport Functionality[2m > [22m[2mshould export snapshot as file
+[22m[39m[MOCK CALLED] generateSnapshot
+
+[33m[39m[32m·[39m[33m[39m[32m·[39m[90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mExport Functionality[2m > [22m[2mshould export snapshot as file
 [22m[39m[MOCK CALLED] exportSnapshot with format: file
 
 [90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mExport Functionality[2m > [22m[2mshould export snapshot to clipboard
 [22m[39m[MOCK CALLED] generateSnapshot
 
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mSnapshot Generation[2m > [22mshould handle snapshot generation errors[32m 114[2mms[22m[39m
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mExport Functionality[2m > [22mshould export snapshot as file[32m 96[2mms[22m[39m
-[90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mExport Functionality[2m > [22m[2mshould export snapshot to clipboard
+[33m[39m[32m·[39m[33m[39m[32m·[39m[90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mExport Functionality[2m > [22m[2mshould export snapshot to clipboard
 [22m[39m[MOCK CALLED] exportSnapshot with format: clipboard
 
 [90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mExport Functionality[2m > [22m[2mshould reset form after snapshot generation
 [22m[39m[MOCK CALLED] generateSnapshot
 
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mExport Functionality[2m > [22mshould export snapshot to clipboard[32m 101[2mms[22m[39m
-[90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mExport Functionality[2m > [22m[2mshould display snapshot size information
+[33m[39m[32m·[39m[90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mExport Functionality[2m > [22m[2mshould display snapshot size information
 [22m[39m[MOCK CALLED] generateSnapshot
 
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mExport Functionality[2m > [22mshould reset form after snapshot generation[32m 114[2mms[22m[39m
-[90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mForm Reset[2m > [22m[2mshould reset form to initial state
+[33m[39m[32m·[39m[33m[39m[32m·[39m[90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mForm Reset[2m > [22m[2mshould reset form to initial state
 [22m[39m[MOCK CALLED] generateSnapshot
 
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mExport Functionality[2m > [22mshould display snapshot size information[32m 99[2mms[22m[39m
-[90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mLoading States[2m > [22m[2mshould show loading state during snapshot generation
+[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[90mstdout[2m | test/unit/components/FeedbackForm.test.jsx[2m > [22m[2mFeedbackForm[2m > [22m[2mLoading States[2m > [22m[2mshould show loading state during snapshot generation
 [22m[39m[MOCK CALLED] generateSnapshot
 
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mForm Reset[2m > [22mshould reset form to initial state[32m 104[2mms[22m[39m
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mPrivacy Notice[2m > [22mshould display privacy and security information[32m 29[2mms[22m[39m
- [32m✓[39m test/unit/components/FeedbackForm.test.jsx[2m > [22mFeedbackForm[2m > [22mLoading States[2m > [22mshould show loading state during snapshot generation[32m 75[2mms[22m[39m
- [32m✓[39m test/components/framesync/PlaidActionForm.spec.jsx[2m > [22mPlaidActionForm[2m > [22msanity: should run this test and not hang[32m 5[2mms[22m[39m
- [32m✓[39m test/components/framesync/PlaidActionForm.spec.jsx[2m > [22mPlaidActionForm[2m > [22mshould render form elements[33m 322[2mms[22m[39m
- [32m✓[39m test/components/framesync/PlaidActionForm.spec.jsx[2m > [22mPlaidActionForm[2m > [22mshould handle form submission[32m 275[2mms[22m[39m
-[90mstdout[2m | test/app.import.test.jsx[2m > [22m[2mApp Import Tests[2m > [22m[2mshould import App component without errors
+[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[90mstdout[2m | test/app.import.test.jsx[2m > [22m[2mApp Import Tests[2m > [22m[2mshould import App component without errors
 [22m[39mWARNING: You are using the Auth Emulator, which is intended for local testing only.  Do not use with production credentials.
 Connected to Firebase Auth emulator
 Connected to Firestore emulator
 
- [32m✓[39m test/store/financialStateStore.spec.js[2m > [22mFinancial State Store[2m > [22mAccount Management[2m > [22mshould set and get account balance[32m 57[2mms[22m[39m
- [32m✓[39m test/store/financialStateStore.spec.js[2m > [22mFinancial State Store[2m > [22mAccount Management[2m > [22mshould return 0 for non-existent account[32m 6[2mms[22m[39m
- [32m✓[39m test/store/financialStateStore.spec.js[2m > [22mFinancial State Store[2m > [22mGoal Management[2m > [22mshould set and get goal[32m 3[2mms[22m[39m
- [32m✓[39m test/store/financialStateStore.spec.js[2m > [22mFinancial State Store[2m > [22mGoal Management[2m > [22mshould update goal progress[32m 2[2mms[22m[39m
- [32m✓[39m test/store/financialStateStore.spec.js[2m > [22mFinancial State Store[2m > [22mBudget Management[2m > [22mshould set and record spending[32m 2[2mms[22m[39m
- [32m✓[39m test/store/financialStateStore.spec.js[2m > [22mFinancial State Store[2m > [22mBudget Management[2m > [22mshould reset monthly budgets[32m 1[2mms[22m[39m
- [32m✓[39m test/store/financialStateStore.spec.js[2m > [22mFinancial State Store[2m > [22mPersistence[2m > [22mshould handle store operations correctly[32m 5[2mms[22m[39m
- [32m✓[39m test/app.import.test.jsx[2m > [22mApp Import Tests[2m > [22mshould import App component without errors[33m 5048[2mms[22m[39m
- [32m✓[39m test/app.import.test.jsx[2m > [22mApp Import Tests[2m > [22mshould import main App component[32m 7[2mms[22m[39m
- [32m✓[39m test/unit/services/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mInitialization[2m > [22mshould initialize successfully[32m 6[2mms[22m[39m
- [32m✓[39m test/unit/services/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mLog Creation[2m > [22mshould create and store a log entry successfully[32m 6[2mms[22m[39m
- [32m✓[39m test/unit/services/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mLog Creation[2m > [22mshould handle failed executions[32m 1[2mms[22m[39m
- [32m✓[39m test/unit/services/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mLog Creation[2m > [22mshould maintain log size limit[32m 4[2mms[22m[39m
- [32m✓[39m test/unit/services/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mLog Retrieval[2m > [22mshould retrieve all logs without filters[32m 17[2mms[22m[39m
- [32m✓[39m test/unit/services/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mLog Retrieval[2m > [22mshould filter logs by ruleId[32m 17[2mms[22m[39m
- [32m✓[39m test/unit/services/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mLog Retrieval[2m > [22mshould filter logs by status[32m 22[2mms[22m[39m
- [32m✓[39m test/unit/services/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mLog Retrieval[2m > [22mshould filter logs by date range[32m 33[2mms[22m[39m
- [32m✓[39m test/unit/services/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mLog Management[2m > [22mshould get specific log entry[32m 1[2mms[22m[39m
- [32m✓[39m test/unit/services/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mLog Management[2m > [22mshould return undefined for non-existent log[32m 0[2mms[22m[39m
- [32m✓[39m test/unit/services/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mLog Management[2m > [22mshould clear all logs[32m 0[2mms[22m[39m
- [32m✓[39m test/unit/services/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mStatistics[2m > [22mshould generate correct statistics[32m 1[2mms[22m[39m
- [32m✓[39m test/unit/services/ExecutionLogService.test.js[2m > [22mExecutionLogService[2m > [22mStatistics[2m > [22mshould handle empty logs[32m 1[2mms[22m[39m
- [32m✓[39m test/App.spec.jsx[2m > [22mApp Integration Tests[2m > [22mshould have window.matchMedia available[32m 7[2mms[22m[39m
-[90mstdout[2m | test/integration/services/ConfirmationModal.spec.js[2m > [22m[2mConfirmation Modal Integration[2m > [22m[2mshould show password prompt for high-risk actions
+[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[90mstdout[2m | test/integration/services/ConfirmationModal.spec.js[2m > [22m[2mConfirmation Modal Integration[2m > [22m[2mshould show password prompt for high-risk actions
 [22m[39mConfirmationModal test starting...
 
 [90mstdout[2m | test/integration/services/ConfirmationModal.spec.js[2m > [22m[2mConfirmation Modal Integration[2m > [22m[2mshould show password prompt for high-risk actions
@@ -294,80 +173,7 @@ High-risk action detected, waiting for user interaction...
 [90mstdout[2m | test/integration/services/ConfirmationModal.spec.js[2m > [22m[2mConfirmation Modal Integration[2m > [22m[2mshould verify requiresConfirmation function works
 [22m[39mConfirmationModal test completed
 
- [32m✓[39m test/integration/services/ConfirmationModal.spec.js[2m > [22mConfirmation Modal Integration[2m > [22mshould show password prompt for high-risk actions[32m 11[2mms[22m[39m
- [32m✓[39m test/integration/services/ConfirmationModal.spec.js[2m > [22mConfirmation Modal Integration[2m > [22mshould not show password prompt for low-risk actions[32m 3[2mms[22m[39m
- [32m✓[39m test/integration/services/ConfirmationModal.spec.js[2m > [22mConfirmation Modal Integration[2m > [22mshould handle user cancellation[32m 7[2mms[22m[39m
- [32m✓[39m test/integration/services/ConfirmationModal.spec.js[2m > [22mConfirmation Modal Integration[2m > [22mshould execute action immediately when already confirmed[32m 6[2mms[22m[39m
- [32m✓[39m test/integration/services/ConfirmationModal.spec.js[2m > [22mConfirmation Modal Integration[2m > [22mshould handle simulation failures[32m 3[2mms[22m[39m
- [32m✓[39m test/integration/services/ConfirmationModal.spec.js[2m > [22mConfirmation Modal Integration[2m > [22mshould simulate goal adjustments correctly[32m 2[2mms[22m[39m
- [32m✓[39m test/integration/services/ConfirmationModal.spec.js[2m > [22mConfirmation Modal Integration[2m > [22mshould verify requiresConfirmation function works[32m 5[2mms[22m[39m
- [32m✓[39m test/App.spec.jsx[2m > [22mApp Integration Tests[2m > [22mshould render the app without crashing[33m 492[2mms[22m[39m
- [32m✓[39m test/App.spec.jsx[2m > [22mApp Integration Tests[2m > [22mshould render basic app structure[32m 182[2mms[22m[39m
- [32m✓[39m test/App.spec.jsx[2m > [22mApp Integration Tests[2m > [22mshould render app components[32m 160[2mms[22m[39m
- [32m✓[39m test/components/Button.spec.jsx[2m > [22mButton Component[2m > [22mrenders and is visible[32m 73[2mms[22m[39m
- [32m✓[39m test/components/Button.test.jsx[2m > [22mButton Component[2m > [22mrenders button with children[32m 80[2mms[22m[39m
- [32m✓[39m test/integration/services/secureVault.spec.js[2m > [22mSecureVault[2m > [22munlock[2m > [22mshould initialize vault with new salt if none exists[32m 8[2mms[22m[39m
- [32m✓[39m test/integration/services/secureVault.spec.js[2m > [22mSecureVault[2m > [22munlock[2m > [22mshould create empty vault if no encrypted data exists[32m 6[2mms[22m[39m
- [32m✓[39m test/integration/services/secureVault.spec.js[2m > [22mSecureVault[2m > [22munlock[2m > [22mshould decrypt existing vault data[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/secureVault.spec.js[2m > [22mSecureVault[2m > [22munlock[2m > [22mshould throw error for invalid password[32m 2[2mms[22m[39m
- [32m✓[39m test/integration/services/secureVault.spec.js[2m > [22mSecureVault[2m > [22mset[2m > [22mshould store and encrypt data[32m 7[2mms[22m[39m
- [32m✓[39m test/integration/services/secureVault.spec.js[2m > [22mSecureVault[2m > [22mset[2m > [22mshould throw error when vault is locked[32m 2[2mms[22m[39m
- [32m✓[39m test/integration/services/secureVault.spec.js[2m > [22mSecureVault[2m > [22mget[2m > [22mshould retrieve stored value[32m 0[2mms[22m[39m
- [32m✓[39m test/integration/services/secureVault.spec.js[2m > [22mSecureVault[2m > [22mget[2m > [22mshould throw error when vault is locked[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/secureVault.spec.js[2m > [22mSecureVault[2m > [22mget[2m > [22mshould throw error for non-existent key[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/secureVault.spec.js[2m > [22mSecureVault[2m > [22mlock[2m > [22mshould clear vault data[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/secureVault.spec.js[2m > [22mSecureVault[2m > [22misUnlocked[2m > [22mshould return false when vault is locked[32m 0[2mms[22m[39m
- [32m✓[39m test/integration/services/secureVault.spec.js[2m > [22mSecureVault[2m > [22misUnlocked[2m > [22mshould return true when vault is unlocked[32m 0[2mms[22m[39m
- [32m✓[39m test/integration/services/ruleEngine.spec.js[2m > [22mRuleEngine Integration[2m > [22mshould evaluate rule conditions correctly[32m 11[2mms[22m[39m
- [32m✓[39m test/integration/services/ruleEngine.spec.js[2m > [22mRuleEngine Integration[2m > [22mshould execute rule actions[32m 8[2mms[22m[39m
- [32m✓[39m test/integration/services/ruleEngine.spec.js[2m > [22mRuleEngine Integration[2m > [22mshould validate rule structure[32m 4[2mms[22m[39m
- [32m✓[39m test/integration/services/ruleEngine.spec.js[2m > [22mRuleEngine Integration[2m > [22mshould find matching rules for a transaction[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/ruleEngine.spec.js[2m > [22mRuleEngine Integration[2m > [22mshould handle invalid rule structures gracefully[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/ruleEngine.spec.js[2m > [22mRuleEngine Integration[2m > [22mshould handle rule execution errors by rejecting[32m 4[2mms[22m[39m
- [32m✓[39m test/unit/services/ruleEngine.spec.js[2m > [22mruleEngine (unit)[2m > [22mshould evaluate simple greater-than rule[32m 14[2mms[22m[39m
- [32m✓[39m test/unit/services/ruleEngine.spec.js[2m > [22mruleEngine (unit)[2m > [22mshould evaluate AND conditions[32m 2[2mms[22m[39m
- [32m✓[39m test/unit/services/ruleEngine.spec.js[2m > [22mruleEngine (unit)[2m > [22mshould return false for unmet conditions[32m 2[2mms[22m[39m
- [32m✓[39m test/unit/services/ruleEngine.spec.js[2m > [22mruleEngine (unit)[2m > [22mshould handle invalid rule format gracefully[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/PermissionEnforcer.spec.js[2m > [22mPermissionEnforcer[2m > [22mcanExecuteAction[2m > [22mshould allow low-risk actions for authenticated users[32m 6[2mms[22m[39m
- [32m✓[39m test/integration/services/PermissionEnforcer.spec.js[2m > [22mPermissionEnforcer[2m > [22mcanExecuteAction[2m > [22mshould deny any action for unauthenticated users[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/PermissionEnforcer.spec.js[2m > [22mPermissionEnforcer[2m > [22mcanExecuteAction[2m > [22mshould deny actions if user lacks required permissions[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/PermissionEnforcer.spec.js[2m > [22mPermissionEnforcer[2m > [22mcanExecuteAction[2m > [22mshould allow high-risk actions after password confirmation[32m 4[2mms[22m[39m
- [32m✓[39m test/integration/services/PermissionEnforcer.spec.js[2m > [22mPermissionEnforcer[2m > [22mcanExecuteAction[2m > [22mshould handle errors gracefully[32m 3[2mms[22m[39m
- [32m✓[39m test/integration/services/PermissionEnforcer.spec.js[2m > [22mPermissionEnforcer[2m > [22mvalidateActionPayload[2m > [22mshould validate Plaid transfer payloads[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/PermissionEnforcer.spec.js[2m > [22mPermissionEnforcer[2m > [22mvalidateActionPayload[2m > [22mshould validate webhook payloads[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/PermissionEnforcer.spec.js[2m > [22mPermissionEnforcer[2m > [22mvalidateActionPayload[2m > [22mshould validate goal adjustment payloads[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/PermissionEnforcer.spec.js[2m > [22mPermissionEnforcer[2m > [22mvalidateActionPayload[2m > [22mshould validate memo payloads[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/PermissionEnforcer.spec.js[2m > [22mPermissionEnforcer[2m > [22mvalidateActionPayload[2m > [22mshould return false for unknown action types[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/syncEngine.spec.js[2m > [22mSyncEngine Integration[2m > [22mshould initialize Plaid client with correct config[32m 7[2mms[22m[39m
- [32m✓[39m test/integration/services/syncEngine.spec.js[2m > [22mSyncEngine Integration[2m > [22mshould sync transactions for an account[32m 2[2mms[22m[39m
- [32m✓[39m test/integration/services/syncEngine.spec.js[2m > [22mSyncEngine Integration[2m > [22mshould sync account balances[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/syncEngine.spec.js[2m > [22mSyncEngine Integration[2m > [22mshould handle webhook events[32m 2[2mms[22m[39m
- [32m✓[39m test/integration/services/syncEngine.spec.js[2m > [22mSyncEngine Integration[2m > [22mshould handle sync errors gracefully[32m 2[2mms[22m[39m
- [32m✓[39m test/store/useAppStore.spec.js[2m > [22museAppStore Zustand Store[2m > [22mshould have initial counter value of 0[32m 4[2mms[22m[39m
- [32m✓[39m test/store/useAppStore.spec.js[2m > [22museAppStore Zustand Store[2m > [22mshould increment the counter[32m 1[2mms[22m[39m
- [32m✓[39m test/store/useAppStore.spec.js[2m > [22museAppStore Zustand Store[2m > [22mshould reset the counter[32m 1[2mms[22m[39m
- [32m✓[39m test/store/useAppStore.spec.js[2m > [22museAppStore Zustand Store[2m > [22mshould manage accounts[32m 11[2mms[22m[39m
- [32m✓[39m test/services/basic-service.test.js[2m > [22mBasic Service Mock Validation[2m > [22mshould use mocked AuthService instead of real implementation[32m 6[2mms[22m[39m
- [32m✓[39m test/services/basic-service.test.js[2m > [22mBasic Service Mock Validation[2m > [22mshould mock async methods[32m 4[2mms[22m[39m
- [32m✓[39m test/store/useAppStore.test.js[2m > [22museAppStore Mock Validation[2m > [22mshould use mocked useAppStore instead of real implementation[32m 4[2mms[22m[39m
- [32m✓[39m test/store/useAppStore.test.js[2m > [22museAppStore Mock Validation[2m > [22mshould have mockable action functions[32m 1[2mms[22m[39m
- [32m✓[39m test/store/useAppStore.test.js[2m > [22museAppStore Mock Validation[2m > [22mshould allow calling mock actions[32m 7[2mms[22m[39m
- [32m✓[39m test/store/useAppStore.test.js[2m > [22museAppStore Mock Validation[2m > [22mshould provide realistic financial data structure[32m 2[2mms[22m[39m
- [32m✓[39m test/services/TaxService.test.js[2m > [22mTaxService Mock Validation[2m > [22mshould use mocked TaxService instead of real implementation[32m 13[2mms[22m[39m
- [32m✓[39m test/services/TaxService.test.js[2m > [22mTaxService Mock Validation[2m > [22mshould mock individual calculation methods[32m 2[2mms[22m[39m
- [32m✓[39m test/services/comprehensive-mock.test.js[2m > [22mComprehensive Mock System Validation[2m > [22mshould mock TaxService correctly[32m 9[2mms[22m[39m
- [32m✓[39m test/services/comprehensive-mock.test.js[2m > [22mComprehensive Mock System Validation[2m > [22mshould mock RetirementService correctly[32m 5[2mms[22m[39m
- [32m✓[39m test/services/comprehensive-mock.test.js[2m > [22mComprehensive Mock System Validation[2m > [22mshould mock AuthService correctly[32m 3[2mms[22m[39m
- [32m✓[39m test/integration/services/simulation.spec.js[2m > [22mSimulationService Integration[2m > [22mshould run debt vs investment simulation[32m 6[2mms[22m[39m
- [32m✓[39m test/integration/services/simulation.spec.js[2m > [22mSimulationService Integration[2m > [22mshould generate realistic scenarios[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/simulation.spec.js[2m > [22mSimulationService Integration[2m > [22mshould calculate optimal strategy[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/simulation.spec.js[2m > [22mSimulationService Integration[2m > [22mshould project future state[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/simulation.spec.js[2m > [22mSimulationService Integration[2m > [22mshould handle invalid parameters[32m 3[2mms[22m[39m
- [32m✓[39m test/integration/services/simulation.spec.js[2m > [22mSimulationService Integration[2m > [22mshould handle edge cases[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/FrameSyncIntegration.spec.js[2m > [22mFrameSync Integration[2m > [22mshould execute simple action successfully[32m 3[2mms[22m[39m
- [32m✓[39m test/integration/services/FrameSyncIntegration.spec.js[2m > [22mFrameSync Integration[2m > [22mshould handle action execution errors[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/FrameSyncIntegration.spec.js[2m > [22mFrameSync Integration[2m > [22mshould execute complex action with parameters[32m 0[2mms[22m[39m
-[90mstdout[2m | test/debug-nacl.spec.js[2m > [22m[2mNACL Mock Debug[2m > [22m[2mshould load nacl mock correctly
+[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[90mstdout[2m | test/debug-nacl.spec.js[2m > [22m[2mNACL Mock Debug[2m > [22m[2mshould load nacl mock correctly
 [22m[39mNACL object: {
   secretbox: {
     keyLength: [33m32[39m,
@@ -652,45 +458,24 @@ NACL secretbox: {
 }
 NACL secretbox.nonceLength: [33m24[39m
 
- [32m✓[39m test/debug-nacl.spec.js[2m > [22mNACL Mock Debug[2m > [22mshould load nacl mock correctly[32m 14[2mms[22m[39m
-[90mstdout[2m | test/smoke/minimal.test.js[2m > [22m[2mSmoke Test - Minimal[2m > [22m[2mshould run without setup file parse errors
+[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[90mstdout[2m | test/smoke/minimal.test.js[2m > [22m[2mSmoke Test - Minimal[2m > [22m[2mshould run without setup file parse errors
 [22m[39m✅ Vitest is running without setup file issues
 
- [32m✓[39m test/smoke/minimal.test.js[2m > [22mSmoke Test - Minimal[2m > [22mshould run without setup file parse errors[32m 7[2mms[22m[39m
- [32m✓[39m test/smoke/minimal.test.js[2m > [22mSmoke Test - Minimal[2m > [22mshould handle basic assertions[32m 3[2mms[22m[39m
- [32m✓[39m test/smoke/minimal.test.js[2m > [22mSmoke Test - Minimal[2m > [22mshould handle async operations[32m 1[2mms[22m[39m
- [32m✓[39m test/services/ExecutionLogService.test.js[2m > [22mExecutionLogService Mock Validation[2m > [22mshould use mocked ExecutionLogService instead of real implementation[32m 4[2mms[22m[39m
- [32m✓[39m test/services/ExecutionLogService.test.js[2m > [22mExecutionLogService Mock Validation[2m > [22mshould mock execution history retrieval[32m 5[2mms[22m[39m
- [32m✓[39m test/services/ExecutionLogService.test.js[2m > [22mExecutionLogService Mock Validation[2m > [22mshould mock log clearing[32m 2[2mms[22m[39m
- [32m✓[39m test/services/simple-mock.test.js[2m > [22mSimple Mock Validation[2m > [22mshould use manually injected mock[32m 4[2mms[22m[39m
- [32m✓[39m test/services/simple-mock.test.js[2m > [22mSimple Mock Validation[2m > [22mshould mock async methods[32m 1[2mms[22m[39m
-[90mstdout[2m | test/simple.test.js[2m > [22m[2mSimple Test[2m > [22m[2mshould work
+[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[90mstdout[2m | test/simple.test.js[2m > [22m[2mSimple Test[2m > [22m[2mshould work
 [22m[39mSimple test is running
 
- [32m✓[39m test/simple.test.js[2m > [22mSimple Test[2m > [22mshould work[32m 5[2mms[22m[39m
- [32m✓[39m test/services/RetirementService.test.js[2m > [22mRetirementService Mock Validation[2m > [22mshould use mocked RetirementService instead of real implementation[32m 7[2mms[22m[39m
- [32m✓[39m test/services/RetirementService.test.js[2m > [22mRetirementService Mock Validation[2m > [22mshould mock Monte Carlo simulation[32m 1[2mms[22m[39m
-[90mstdout[2m | test/unit/services/PermissionEnforcer.spec.js
+[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[90mstdout[2m | test/unit/services/PermissionEnforcer.spec.js
 [22m[39mWARNING: You are using the Auth Emulator, which is intended for local testing only.  Do not use with production credentials.
 Connected to Firebase Auth emulator
 Connected to Firestore emulator
 
- [32m✓[39m test/unit/store/uiStore.spec.js[2m > [22museUIStore Zustand Store[2m > [22mshould have initial state[32m 2[2mms[22m[39m
- [32m✓[39m test/unit/store/uiStore.spec.js[2m > [22museUIStore Zustand Store[2m > [22mshould show and hide confirmation modal[32m 1[2mms[22m[39m
- [32m✓[39m test/unit/store/uiStore.spec.js[2m > [22museUIStore Zustand Store[2m > [22mshould toggle sandbox mode[32m 0[2mms[22m[39m
- [32m✓[39m test/unit/services/PermissionEnforcer.spec.js[2m > [22mPermissionEnforcer (unit)[2m > [22mshould allow actions for users with correct permissions[32m 2[2mms[22m[39m
- [32m✓[39m test/unit/services/PermissionEnforcer.spec.js[2m > [22mPermissionEnforcer (unit)[2m > [22mshould deny actions for users without correct permissions[32m 1[2mms[22m[39m
- [32m✓[39m test/unit/services/PermissionEnforcer.spec.js[2m > [22mPermissionEnforcer (unit)[2m > [22mshould handle empty permissions gracefully[32m 2[2mms[22m[39m
- [32m✓[39m test/unit/services/PermissionEnforcer.spec.js[2m > [22mPermissionEnforcer (unit)[2m > [22mshould handle undefined user or action[32m 1[2mms[22m[39m
- [32m✓[39m test/integration/services/TriggerDispatcher.spec.js[2m > [22mTriggerDispatcher[2m > [22mshould be implemented[32m 1[2mms[22m[39m
- [32m✓[39m test/unit/services/PlaidService.test.js[2m > [22mPlaidService[2m > [22mshould have basic functionality[32m 1[2mms[22m[39m
-[90mstdout[2m | test/components/framesync/InternalActionForm.spec.jsx
+[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[90mstdout[2m | test/components/framesync/InternalActionForm.spec.jsx
 [22m[39mTEST START: InternalActionForm
 
- [32m✓[39m test/components/framesync/InternalActionForm.spec.jsx[2m > [22mInternalActionForm (triage)[2m > [22msanity: should run this test and not hang[32m 1[2mms[22m[39m
+[33m[39m[32m·[39m
 
 [2m Test Files [22m [1m[32m39 passed[39m[22m[90m (39)[39m
 [2m      Tests [22m [1m[32m216 passed[39m[22m[90m (216)[39m
-[2m   Start at [22m 23:56:12
-[2m   Duration [22m 19.85s[2m (transform 5.09s, setup 21.83s, collect 23.01s, tests 11.94s, environment 100.42s, prepare 20.18s)[22m
+[2m   Start at [22m 02:00:16
+[2m   Duration [22m 18.20s[2m (transform 3.18s, setup 17.33s, collect 16.02s, tests 9.61s, environment 103.74s, prepare 18.77s)[22m
 

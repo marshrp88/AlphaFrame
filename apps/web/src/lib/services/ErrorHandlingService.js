@@ -21,7 +21,7 @@ import * as Sentry from '@sentry/react';
 export const ERROR_CATEGORIES = {
   AUTH: 'authentication',
   ONBOARDING: 'onboarding',
-  PL AID: 'plaid',
+  PLAID: 'plaid',
   NETWORK: 'network',
   VALIDATION: 'validation',
   STORAGE: 'storage',

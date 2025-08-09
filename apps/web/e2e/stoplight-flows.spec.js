@@ -7,8 +7,7 @@ test.describe('Stoplight Green Paths', () => {
       sessionStorage.setItem('demo_user', 'true');
       localStorage.setItem('alphaframe_onboarding_complete', 'true');
     });
-    await page.goto('/dashboard');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/onboarding');
     await page.waitForTimeout(250);
     await page.waitForURL('**/dashboard');
     await expect(page).toHaveURL(/\/dashboard$/);
@@ -20,8 +19,7 @@ test.describe('Stoplight Green Paths', () => {
       localStorage.setItem('alphaframe_onboarding_complete', 'true');
       sessionStorage.setItem('demo_user', 'true');
     });
-    await page.goto('/dashboard');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/onboarding');
     await page.waitForTimeout(250);
     await page.waitForURL('**/dashboard');
     await expect(page).toHaveURL(/\/dashboard$/);
@@ -32,8 +30,7 @@ test.describe('Stoplight Green Paths', () => {
       sessionStorage.setItem('demo_user', 'true');
       localStorage.setItem('alphaframe_onboarding_complete', 'true');
     });
-    await page.goto('/dashboard');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/onboarding');
     await page.waitForTimeout(250);
     await page.waitForURL('**/dashboard');
     await expect(page).toHaveURL(/\/dashboard$/);

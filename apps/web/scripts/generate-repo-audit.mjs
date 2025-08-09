@@ -1,9 +1,4 @@
 #!/usr/bin/env node
-/*
-  generate-repo-audit.mjs
-  Reads previously generated artifacts and writes docs/repo-audit.md.
-  No runtime code is modified.
-*/
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -17,6 +12,7 @@ function main() {
   const scanRaw = read(path.join(docsDir, 'scan.json')) || '{}';
   let scan = {};
   try { scan = JSON.parse(scanRaw); } catch { scan = {}; }
+  const inventory = read(path.join(docsDir, 'repo-inventory.md'));
   const cycles = read(path.join(docsDir, 'dep-cycles.md'));
   const vitest = read(path.join(docsDir, 'tests', 'vitest-summary.txt'));
   const pw = read(path.join(docsDir, 'tests', 'playwright-summary.txt'));
@@ -35,8 +31,8 @@ function main() {
   md.push('## Executive Summary');
   md.push('');
   md.push('- Solid: central Vite/React setup, clear feature folders, extensive tests present.');
-  md.push(`- Mapped: ${routesCount} route detections, ${storesCount} Zustand store files, ${servicesCount} service files.`);
-  md.push(`- Risks: ${cycles.trim() ? 'Dependency cycles detected (see dep-cycles.md).' : 'No cycles detected or file missing.'}`);
+  md.push(- Mapped:  route detections,  Zustand store files,  service files.);
+  md.push(- Risks: );
   md.push('- Bundle: report generation deferred; config in place to emit on CI/local (see vite.config.js).');
   md.push('- Tests: vitest summary captured; Playwright needs browsers installed to run locally.');
   md.push('- Immediate focus: ensure green-path flows covered in E2E on CI; address any detected cycles; confirm route guard coverage.');
@@ -44,45 +40,45 @@ function main() {
 
   md.push('## Routing');
   md.push('');
-  md.push('- See `docs/routes.mmd` for a flat route listing derived from JSX <Route/> and router configs.');
+  md.push('- See docs/routes.mmd for a flat route listing derived from JSX <Route/> and router configs.');
   md.push('- Action: validate protected routes align with green-path policy; ensure onboarding/demo transitions are enforced.');
   md.push('');
 
   md.push('## State (Zustand)');
   md.push('');
-  md.push('- Stores detected are summarized in `docs/stores.mmd` with keys/actions.');
+  md.push('- Stores detected are summarized in docs/stores.mmd with keys/actions.');
   md.push('- Watch for boolean soup; prefer enumerated states for flows (onboarding).');
   md.push('');
 
   md.push('## Services');
   md.push('');
-  md.push('- `docs/services.mmd` shows service nodes and service→service import hints.');
+  md.push('- docs/services.mmd shows service nodes and service→service import hints.');
   md.push('- High fan-in services should be isolated behind facades and mocked by contract in tests.');
   md.push('');
 
   md.push('## Dependency Risks');
   md.push('');
   if (cycles.trim()) {
-    md.push('See `docs/dep-cycles.md` (truncated preview):');
+    md.push('See docs/dep-cycles.md (truncated preview):');
     md.push('');
-    md.push('```');
+    md.push('`');
     md.push(cycles.substring(0, 2000));
-    md.push('```');
+    md.push('`');
   } else {
     md.push('- No cycles reported or file missing.');
   }
   md.push('');
   md.push('Artifacts:');
-  if (depGraphSvg) md.push('- `docs/dep-graph.svg` (image)');
-  if (depGraphMmd) md.push('- `docs/dep-graph.mmd` (Mermaid)');
+  if (depGraphSvg) md.push('- docs/dep-graph.svg (image)');
+  if (depGraphMmd) md.push('- docs/dep-graph.mmd (Mermaid)');
   md.push('');
 
   md.push('## Bundle');
   md.push('');
   if (bundleReport) {
-    md.push('- Bundle report available at `docs/bundle/report.html`.');
+    md.push('- Bundle report available at docs/bundle/report.html.');
   } else {
-    md.push('- Visualizer configured; run with env `BUNDLE_REPORT=1` then build to generate report.');
+    md.push('- Visualizer configured; run with environment variable BUNDLE_REPORT=1 then build to generate report.');
   }
   md.push('- Consider further code-splitting if initial chunks exceed budget.');
   md.push('');
@@ -91,15 +87,15 @@ function main() {
   md.push('');
   md.push('Vitest summary (truncated):');
   md.push('');
-  md.push('```');
+  md.push('`');
   md.push((vitest || '').substring(0, 2000));
-  md.push('```');
+  md.push('`');
   md.push('');
   md.push('Playwright summary (truncated):');
   md.push('');
-  md.push('```');
+  md.push('`');
   md.push((pw || '').substring(0, 2000));
-  md.push('```');
+  md.push('`');
   md.push('');
 
   md.push('## Top 10 Fixes (Actionable)');
@@ -108,7 +104,7 @@ function main() {
   md.push('- Ensure onboarding flow FSM is enumerated and timeouts surfaced (store/UI).');
   md.push('- Mock-by-contract for external services in unit/integration tests; verify exact import paths.');
   md.push('- Add Playwright browsers in CI and run three stoplight flows deterministically.');
-  md.push('- Measure and split heavy routes/components via `React.lazy` (Dashboard/Onboarding).');
+  md.push('- Measure and split heavy routes/components via React.lazy (Dashboard/Onboarding).');
   md.push('- Emit bundle report on CI; set budgets and fail on regression.');
   md.push('- Add Sentry initialization in staging with environment tags.');
   md.push('- Apply design tokens to core components for consistent spacing/typography.');

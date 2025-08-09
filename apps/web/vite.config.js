@@ -1,26 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
-import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vitejs.dev/config/
-const enableBundleReport = process.env.BUNDLE_REPORT === '1' || process.env.BUNDLE_REPORT === 'true'
-
 export default defineConfig({
-  plugins: [
-    react(),
-    ...(enableBundleReport
-      ? [
-          visualizer({
-            filename: 'docs/bundle/report.html',
-            template: 'treemap',
-            gzipSize: true,
-            brotliSize: true,
-            emitFile: true,
-          }),
-        ]
-      : []),
-  ],
+  plugins: [react()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -47,19 +31,25 @@ export default defineConfig({
     ],
   },
   build: {
-    sourcemap: enableBundleReport ? true : false,
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('react-router')) return 'router';
-            if (id.includes('framer-motion')) return 'motion';
-            if (id.includes('date-fns') || id.includes('zod')) return 'utils';
-            if (id.includes('firebase')) return 'firebase';
-            if (id.includes('plaid') || id.includes('react-plaid-link')) return 'plaid';
-            if (id.includes('react')) return 'react-vendor';
-            return 'vendor';
-          }
+        manualChunks: {
+          vendor: [
+            'react',
+            'react-dom',
+            'zustand',
+            'framer-motion'
+          ],
+          ui: [
+            '@radix-ui/react-icons',
+            '@radix-ui/react-slot',
+            'react-hot-toast'
+          ],
+          utils: [
+            'date-fns',
+            'zod',
+            'react-router-dom'
+          ]
         }
       }
     },
