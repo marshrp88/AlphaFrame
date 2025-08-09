@@ -14,8 +14,21 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
+import * as Sentry from '@sentry/react';
 import "./index.css";
 import { config } from '@/lib/config.js';
+
+// Sentry init (staging only if DSN provided)
+if (import.meta.env.VITE_SENTRY_DSN) {
+  Sentry.init({
+    dsn: import.meta.env.VITE_SENTRY_DSN,
+    environment: import.meta.env.VITE_ENVIRONMENT || 'staging',
+    tracesSampleRate: 0.1,
+    replaysSessionSampleRate: 0.1,
+    integrations: [],
+    release: import.meta.env.VITE_RELEASE || undefined,
+  });
+}
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

@@ -31,6 +31,8 @@ import CompositeCard from "./components/ui/CompositeCard.jsx";
 import DarkModeToggle from "./components/ui/DarkModeToggle.jsx";
 import PerformanceMonitor from "./components/ui/PerformanceMonitor.jsx";
 import HelpPanel from "./components/ui/HelpPanel.jsx";
+import AppFooter from "./components/ui/AppFooter.jsx";
+import ConsentBanner from "./components/ui/ConsentBanner.jsx";
 
 // Import new page shells for Phase 1
 const DashboardPage = lazy(() => import('./pages/DashboardPage.jsx'));
@@ -352,6 +354,8 @@ const AppContent = () => {
       {/* Development Performance Monitor */}
       <PerformanceMonitor />
       <HelpPanel />
+      <AppFooter />
+      <ConsentBanner />
     </div>
   );
 };
