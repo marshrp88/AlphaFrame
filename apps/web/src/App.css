@@ -82,18 +82,9 @@
   color: var(--color-primary-600);
 }
 
-.navbar-logo-text {
-  font-family: var(--font-family-primary);
-}
+.navbar-logo-text { font-family: var(--font-family-primary); color: #111827; }
 
-.navbar-logo-version {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  font-weight: var(--font-weight-normal);
-  background: var(--color-primary-100);
-  padding: var(--spacing-1) var(--spacing-2);
-  border-radius: var(--radius-md);
-}
+.navbar-logo-version { font-size: var(--font-size-sm); color: #111827; font-weight: var(--font-weight-medium); }
 
 .navbar-actions {
   display: flex;
