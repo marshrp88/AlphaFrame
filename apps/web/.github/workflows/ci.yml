@@ -72,6 +72,15 @@ jobs:
 
     - name: Run stoplight E2E
       run: npx playwright test e2e/stoplight-flows.spec.js --reporter=dot
+
+    - name: Run a11y (axe) E2E
+      run: npx playwright test e2e/a11y-axe.spec.js --reporter=dot
+
+    - name: Run visual baselines (optional)
+      if: ${{ env.VISUAL_BASELINE == '1' }}
+      env:
+        VISUAL_BASELINE: ${{ vars.VISUAL_BASELINE || '0' }}
+      run: npx playwright test e2e/visual-baseline.spec.js --reporter=dot
       
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
