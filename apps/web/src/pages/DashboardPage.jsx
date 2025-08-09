@@ -5,6 +5,7 @@ import DemoBanner from '../components/ui/DemoBanner';
 import ResetDemoButton from '../components/ui/ResetDemoButton';
 import useAppStore from '../store/useAppStore';
 import DemoModeService from '../lib/services/DemoModeService';
+import { trackEvent } from '@/lib/services/AnalyticsService.js';
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ const DashboardPage = () => {
 
     // Demo users or completed onboarding users can access dashboard
     console.log('🔧 DashboardPage: User can access dashboard', { isDemo, onboardingComplete });
+    trackEvent('dashboard_viewed', { mode: isDemo ? 'demo' : 'auth' });
     setLoading(false);
   }, [shouldBypassOnboarding, navigate, isDemo, onboardingComplete]);
 

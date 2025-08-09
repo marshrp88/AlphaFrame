@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../core/store/authStore';
 import OnboardingFlow from '../features/onboarding/OnboardingFlow';
 import PageLayout from '../components/PageLayout';
+import { trackEvent } from '@/lib/services/AnalyticsService.js';
 import CompositeCard from '../components/ui/CompositeCard';
 import StyledButton from '../components/ui/StyledButton';
 import { CheckCircle, ArrowRight, RefreshCw, AlertTriangle } from 'lucide-react';
@@ -114,6 +115,7 @@ const OnboardingPage = () => {
     if (isDemo) {
       localStorage.setItem('alphaframe_onboarding_complete', 'true');
       sessionStorage.setItem('demo_user', 'true');
+      trackEvent('onboarding_complete', { mode: 'demo' });
       navigate('/dashboard');
       return;
     }

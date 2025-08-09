@@ -14,4 +14,14 @@ export function loadPlausibleIfConsent() {
   } catch (_) {}
 }
 
+export function trackEvent(name, props = {}) {
+  try {
+    const consent = localStorage.getItem('alphaframe_consent') === 'true';
+    if (!consent) return;
+    if (window.plausible) {
+      window.plausible(name, { props });
+    }
+  } catch (_) {}
+}
+
 
