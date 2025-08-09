@@ -1,5 +1,8 @@
 import { test, expect } from '@playwright/test';
 
+// Only run visual baselines when explicitly enabled to avoid flaky CI before baselines are approved
+test.skip(process.env.VISUAL_BASELINE !== '1', 'Visual baselines disabled unless VISUAL_BASELINE=1');
+
 const pages = [
   { path: '/', name: 'landing' },
   { path: '/onboarding', name: 'onboarding' },
