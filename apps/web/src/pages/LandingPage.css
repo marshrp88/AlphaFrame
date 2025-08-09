@@ -348,8 +348,8 @@
 
 .stat-label {
   font-size: var(--font-size-lg);
-  color: var(--color-text-secondary);
-  font-weight: var(--font-weight-medium);
+  color: #374151; /* darker for AA on light gray bg */
+  font-weight: var(--font-weight-semibold);
 }
 
 /* ===== TESTIMONIALS SECTION ===== */

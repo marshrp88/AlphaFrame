@@ -45,8 +45,8 @@ const ConsentBanner = () => {
         consent to anonymous analytics?
       </div>
       <div style={{ display: 'flex', gap: 8 }}>
-        <button onClick={decline} aria-label="Decline analytics" style={{ padding: '8px 12px', background: '#374151', color: 'white', border: 'none', borderRadius: 6 }}>Decline</button>
-        <button onClick={accept} aria-label="Accept analytics" style={{ padding: '8px 12px', background: '#10b981', color: 'white', border: 'none', borderRadius: 6 }}>Accept</button>
+        <button onClick={decline} aria-label="Decline analytics" style={{ padding: '10px 14px', background: '#374151', color: '#ffffff', border: '2px solid #ffffff', borderRadius: 6 }}>Decline</button>
+        <button onClick={accept} aria-label="Accept analytics" style={{ padding: '10px 14px', background: '#065f46', color: '#ffffff', border: '2px solid #ffffff', borderRadius: 6 }}>Accept</button>
       </div>
     </div>
   );
