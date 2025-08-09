@@ -1,3 +1,26 @@
+v2.2.0-rc1 Release Notes (Draft)
+
+Highlights
+- Stable onboarding + routing with demo fallback
+- A11y smoke green across Chromium/Firefox/WebKit
+- Performance slimming and budgets in CI
+- Legal pages + security headers
+- Consent banner, privacy-first analytics, Sentry staging
+
+Known Issues
+- Final legal text pending counsel
+- Visual baselines gated until approved
+
+Demo Script (90s)
+1) Landing → choose Demo → Onboarding completes
+2) Dashboard loads with insights; show safe interactions
+3) Error/timeout banner and recovery (simulate)
+4) Footer legal links; consent banner behavior
+
+Artifacts
+- Playwright reports (E2E + a11y)
+- Bundle report (docs/bundle/report.html)
+- Changelog updates
 # v2.2.0-rc1 Release Notes
 
 Highlights:

@@ -1,0 +1,38 @@
+name: Synthetic Uptime
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping-green-path:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Install Playwright Browsers
+        run: pnpm dlx playwright install --with-deps
+
+      - name: Serve dist and run synthetic checks
+        run: |
+          npx serve ./dist -l 5175 &
+          npx playwright test e2e/stoplight-flows.spec.js --reporter=dot
+
