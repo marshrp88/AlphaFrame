@@ -12,10 +12,10 @@
  * Conclusion: Prevents accidentally shipping a huge bundle.
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
-const DIST_DIR = path.join(__dirname, '..', 'dist', 'assets');
+const DIST_DIR = path.join(new URL('.', import.meta.url).pathname, '..', 'dist', 'assets');
 const ENTRY_LIMIT_BYTES = 1_200_000; // ~1.2MB minified (gzipped target is < 300KB)
 const VENDOR_LIMIT_BYTES = 300_000; // ~300KB minified
 
