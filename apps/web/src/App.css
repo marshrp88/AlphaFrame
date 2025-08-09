@@ -246,6 +246,7 @@
 }
 
 @media (max-width: 768px) {
+  :root { font-size: 15px; }
   .navbar-container {
     padding: var(--spacing-3);
   }
@@ -286,6 +287,7 @@
 }
 
 @media (max-width: 480px) {
+  :root { font-size: 14px; }
   .navbar-container {
     padding: var(--spacing-2);
   }
