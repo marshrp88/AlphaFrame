@@ -1,14 +1,14 @@
 
 Running 9 tests using 6 workers
 
-  ✓  3 [chromium] › e2e\a11y-axe.spec.js:6:3 › A11y smoke › Landing page has no critical/high violations (3.0s)
-  ✓  4 [chromium] › e2e\a11y-axe.spec.js:20:3 › A11y smoke › Dashboard (demo) has no critical/high violations (3.2s)
-  ✓  2 [chromium] › e2e\a11y-axe.spec.js:13:3 › A11y smoke › Onboarding page has no critical/high violations (3.3s)
-  ✓  1 [firefox] › e2e\a11y-axe.spec.js:6:3 › A11y smoke › Landing page has no critical/high violations (8.7s)
-  ✓  5 [firefox] › e2e\a11y-axe.spec.js:13:3 › A11y smoke › Onboarding page has no critical/high violations (10.5s)
-  ✓  8 [webkit] › e2e\a11y-axe.spec.js:20:3 › A11y smoke › Dashboard (demo) has no critical/high violations (7.7s)
-  ✓  7 [webkit] › e2e\a11y-axe.spec.js:6:3 › A11y smoke › Landing page has no critical/high violations (8.0s)
-  ✓  6 [firefox] › e2e\a11y-axe.spec.js:20:3 › A11y smoke › Dashboard (demo) has no critical/high violations (10.0s)
-  ✓  9 [webkit] › e2e\a11y-axe.spec.js:13:3 › A11y smoke › Onboarding page has no critical/high violations (8.0s)
+  ✓  1 [chromium] › e2e\a11y-axe.spec.js:12:3 › A11y smoke › Onboarding page has no critical/high violations (2.4s)
+  ✓  4 [chromium] › e2e\a11y-axe.spec.js:22:3 › A11y smoke › Dashboard (demo) has no critical/high violations (2.5s)
+  ✓  2 [chromium] › e2e\a11y-axe.spec.js:5:3 › A11y smoke › Landing page has no critical/high violations (3.4s)
+  ✓  3 [firefox] › e2e\a11y-axe.spec.js:22:3 › A11y smoke › Dashboard (demo) has no critical/high violations (10.0s)
+  ✓  5 [firefox] › e2e\a11y-axe.spec.js:12:3 › A11y smoke › Onboarding page has no critical/high violations (9.2s)
+  ✓  6 [firefox] › e2e\a11y-axe.spec.js:5:3 › A11y smoke › Landing page has no critical/high violations (10.7s)
+  ✓  7 [webkit] › e2e\a11y-axe.spec.js:12:3 › A11y smoke › Onboarding page has no critical/high violations (7.6s)
+  ✓  8 [webkit] › e2e\a11y-axe.spec.js:5:3 › A11y smoke › Landing page has no critical/high violations (8.9s)
+  ✓  9 [webkit] › e2e\a11y-axe.spec.js:22:3 › A11y smoke › Dashboard (demo) has no critical/high violations (7.3s)
 
-  9 passed (35.7s)
+  9 passed (38.5s)

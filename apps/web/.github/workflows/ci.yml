@@ -81,6 +81,9 @@ jobs:
       env:
         VISUAL_BASELINE: ${{ vars.VISUAL_BASELINE || '0' }}
       run: npx playwright test e2e/visual-baseline.spec.js --reporter=dot
+
+    - name: Mobile smoke (iPhone/Pixel)
+      run: npx playwright test e2e/mobile-smoke.spec.js --reporter=dot
       
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3

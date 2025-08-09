@@ -1,0 +1,420 @@
+
+Running 15 tests using 6 workers
+
+  x  1 [chromium] ΓÇ║ e2e\customer-readiness.spec.js:42:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Dashboard panels load and are interactive (10.1s)
+  x  4 [chromium] ΓÇ║ e2e\customer-readiness.spec.js:54:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Error handling shows recovery options (10.0s)
+  x  5 [chromium] ΓÇ║ e2e\customer-readiness.spec.js:8:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Landing page loads and legal links exist (10.4s)
+  x  6 [firefox] ΓÇ║ e2e\customer-readiness.spec.js:8:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Landing page loads and legal links exist (12.8s)
+  x  9 [firefox] ΓÇ║ e2e\customer-readiness.spec.js:42:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Dashboard panels load and are interactive (12.3s)
+  x  2 [chromium] ΓÇ║ e2e\customer-readiness.spec.js:16:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Onboarding flow works with FSM timeout and recovery (30.2s)
+  x  3 [chromium] ΓÇ║ e2e\customer-readiness.spec.js:33:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Demo mode completes onboarding with seeded data (30.2s)
+  x  10 [firefox] ΓÇ║ e2e\customer-readiness.spec.js:54:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Error handling shows recovery options (8.5s)
+  x  11 [webkit] ΓÇ║ e2e\customer-readiness.spec.js:8:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Landing page loads and legal links exist (9.4s)
+  x  7 [firefox] ΓÇ║ e2e\customer-readiness.spec.js:16:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Onboarding flow works with FSM timeout and recovery (30.1s)
+  x  8 [firefox] ΓÇ║ e2e\customer-readiness.spec.js:33:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Demo mode completes onboarding with seeded data (30.5s)
+  x  14 [webkit] ΓÇ║ e2e\customer-readiness.spec.js:42:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Dashboard panels load and are interactive (13.2s)
+  x  15 [webkit] ΓÇ║ e2e\customer-readiness.spec.js:54:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Error handling shows recovery options (10.4s)
+  x  12 [webkit] ΓÇ║ e2e\customer-readiness.spec.js:16:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Onboarding flow works with FSM timeout and recovery (30.2s)
+  x  13 [webkit] ΓÇ║ e2e\customer-readiness.spec.js:33:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Demo mode completes onboarding with seeded data (30.3s)
+
+
+  1) [chromium] ΓÇ║ e2e\customer-readiness.spec.js:8:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Landing page loads and legal links exist 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m
+
+    Locator: locator('footer')
+    Expected string: [32m"Terms"[39m
+    Received string: [31m"HomeDocsGuidesHelpContactLegalLoading statusΓÇªSelect a display theme:system lightdark┬⌐ 2025, Vercel Inc."[39m
+    Call log:
+    [2m  - Expect "toContainText" with timeout 5000ms[22m
+    [2m  - waiting for locator('footer')[22m
+    [2m    7 ├ù locator resolved to <footer data-variant="elevated" data-vercel-footer="true" class="footer-module__ESbTrq__footer">ΓÇª</footer>[22m
+    [2m      - unexpected value "HomeDocsGuidesHelpContactLegalLoading statusΓÇªSelect a display theme:system lightdark┬⌐ 2025, Vercel Inc."[22m
+
+
+       8 |   test('Landing page loads and legal links exist', async ({ page }) => {
+       9 |     await page.goto(base);
+    > 10 |     await expect(page.locator('footer')).toContainText('Terms');
+         |                                          ^
+      11 |     await expect(page.locator('footer')).toContainText('Privacy');
+      12 |     await expect(page.locator('footer')).toContainText('Cookies');
+      13 |     await expect(page.locator('footer')).toContainText('Accessibility');
+        at C:\Users\marsh\Desktop\AlphaFrame\apps\web\e2e\customer-readiness.spec.js:10:42
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\customer-readiness-Custome-c24a3-loads-and-legal-links-exist-chromium\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\customer-readiness-Custome-c24a3-loads-and-legal-links-exist-chromium\error-context.md
+
+  2) [chromium] ΓÇ║ e2e\customer-readiness.spec.js:16:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Onboarding flow works with FSM timeout and recovery 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: locator.isVisible: Target page, context or browser has been closed
+
+      19 |     // fallback selector if button text differs
+      20 |     const start = page.getByText(/onboarding|get started|start/i).first();
+    > 21 |     if (await start.isVisible()) await start.click();
+         |                     ^
+      22 |
+      23 |     await page.waitForTimeout(2000); // simulate interaction delay
+      24 |     await page.reload(); // simulate refresh
+        at C:\Users\marsh\Desktop\AlphaFrame\apps\web\e2e\customer-readiness.spec.js:21:21
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\customer-readiness-Custome-87d45-th-FSM-timeout-and-recovery-chromium\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\customer-readiness-Custome-87d45-th-FSM-timeout-and-recovery-chromium\error-context.md
+
+  3) [chromium] ΓÇ║ e2e\customer-readiness.spec.js:33:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Demo mode completes onboarding with seeded data 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /use demo/i }).or(getByText(/use demo/i))[22m
+
+
+      36 |     if (await getStarted.isVisible()) await getStarted.click();
+      37 |     const useDemo = page.getByRole('button', { name: /use demo/i }).or(page.getByText(/use demo/i));
+    > 38 |     await useDemo.click();
+         |                   ^
+      39 |     await expect(page.getByText(/cash flow/i)).toBeVisible();
+      40 |   });
+      41 |
+        at C:\Users\marsh\Desktop\AlphaFrame\apps\web\e2e\customer-readiness.spec.js:38:19
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\customer-readiness-Custome-2f863-onboarding-with-seeded-data-chromium\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\customer-readiness-Custome-2f863-onboarding-with-seeded-data-chromium\error-context.md
+
+  4) [chromium] ΓÇ║ e2e\customer-readiness.spec.js:42:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Dashboard panels load and are interactive 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: getByText(/cash flow/i)
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByText(/cash flow/i)[22m
+
+
+      46 |     });
+      47 |     await page.goto(`${base}/dashboard`);
+    > 48 |     await expect(page.getByText(/cash flow/i)).toBeVisible();
+         |                                                ^
+      49 |     // Interact with at least one control if available
+      50 |     const buttons = page.locator('button');
+      51 |     if (await buttons.count() > 0) await buttons.first().hover();
+        at C:\Users\marsh\Desktop\AlphaFrame\apps\web\e2e\customer-readiness.spec.js:48:48
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\customer-readiness-Custome-33ab7-ls-load-and-are-interactive-chromium\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\customer-readiness-Custome-33ab7-ls-load-and-are-interactive-chromium\error-context.md
+
+  5) [chromium] ΓÇ║ e2e\customer-readiness.spec.js:54:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Error handling shows recovery options 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: getByText(/error|issue|problem/i)
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByText(/error|issue|problem/i)[22m
+
+
+      60 |     // Accept generic error banner text
+      61 |     const err = page.getByText(/error|issue|problem/i);
+    > 62 |     await expect(err).toBeVisible();
+         |                       ^
+      63 |     await expect(page.getByText(/use demo|retry/i)).toBeVisible();
+      64 |   });
+      65 |
+        at C:\Users\marsh\Desktop\AlphaFrame\apps\web\e2e\customer-readiness.spec.js:62:23
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\customer-readiness-Custome-333dd-ling-shows-recovery-options-chromium\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\customer-readiness-Custome-333dd-ling-shows-recovery-options-chromium\error-context.md
+
+  6) [firefox] ΓÇ║ e2e\customer-readiness.spec.js:8:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Landing page loads and legal links exist 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m
+
+    Locator: locator('footer')
+    Expected string: [32m"Terms"[39m
+    Received string: [31m"HomeDocsGuidesHelpContactLegalLoading statusΓÇªSelect a display theme:system lightdark┬⌐ 2025, Vercel Inc."[39m
+    Call log:
+    [2m  - Expect "toContainText" with timeout 5000ms[22m
+    [2m  - waiting for locator('footer')[22m
+    [2m    8 ├ù locator resolved to <footer data-variant="elevated" data-vercel-footer="true" class="footer-module__ESbTrq__footer">ΓÇª</footer>[22m
+    [2m      - unexpected value "HomeDocsGuidesHelpContactLegalLoading statusΓÇªSelect a display theme:system lightdark┬⌐ 2025, Vercel Inc."[22m
+
+
+       8 |   test('Landing page loads and legal links exist', async ({ page }) => {
+       9 |     await page.goto(base);
+    > 10 |     await expect(page.locator('footer')).toContainText('Terms');
+         |                                          ^
+      11 |     await expect(page.locator('footer')).toContainText('Privacy');
+      12 |     await expect(page.locator('footer')).toContainText('Cookies');
+      13 |     await expect(page.locator('footer')).toContainText('Accessibility');
+        at C:\Users\marsh\Desktop\AlphaFrame\apps\web\e2e\customer-readiness.spec.js:10:42
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\customer-readiness-Custome-c24a3-loads-and-legal-links-exist-firefox\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\customer-readiness-Custome-c24a3-loads-and-legal-links-exist-firefox\error-context.md
+
+  7) [firefox] ΓÇ║ e2e\customer-readiness.spec.js:16:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Onboarding flow works with FSM timeout and recovery 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: locator.isVisible: Target page, context or browser has been closed
+
+      19 |     // fallback selector if button text differs
+      20 |     const start = page.getByText(/onboarding|get started|start/i).first();
+    > 21 |     if (await start.isVisible()) await start.click();
+         |                     ^
+      22 |
+      23 |     await page.waitForTimeout(2000); // simulate interaction delay
+      24 |     await page.reload(); // simulate refresh
+        at C:\Users\marsh\Desktop\AlphaFrame\apps\web\e2e\customer-readiness.spec.js:21:21
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\customer-readiness-Custome-87d45-th-FSM-timeout-and-recovery-firefox\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\customer-readiness-Custome-87d45-th-FSM-timeout-and-recovery-firefox\error-context.md
+
+  8) [firefox] ΓÇ║ e2e\customer-readiness.spec.js:33:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Demo mode completes onboarding with seeded data 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /use demo/i }).or(getByText(/use demo/i))[22m
+
+
+      36 |     if (await getStarted.isVisible()) await getStarted.click();
+      37 |     const useDemo = page.getByRole('button', { name: /use demo/i }).or(page.getByText(/use demo/i));
+    > 38 |     await useDemo.click();
+         |                   ^
+      39 |     await expect(page.getByText(/cash flow/i)).toBeVisible();
+      40 |   });
+      41 |
+        at C:\Users\marsh\Desktop\AlphaFrame\apps\web\e2e\customer-readiness.spec.js:38:19
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\customer-readiness-Custome-2f863-onboarding-with-seeded-data-firefox\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\customer-readiness-Custome-2f863-onboarding-with-seeded-data-firefox\error-context.md
+
+  9) [firefox] ΓÇ║ e2e\customer-readiness.spec.js:42:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Dashboard panels load and are interactive 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: getByText(/cash flow/i)
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByText(/cash flow/i)[22m
+
+
+      46 |     });
+      47 |     await page.goto(`${base}/dashboard`);
+    > 48 |     await expect(page.getByText(/cash flow/i)).toBeVisible();
+         |                                                ^
+      49 |     // Interact with at least one control if available
+      50 |     const buttons = page.locator('button');
+      51 |     if (await buttons.count() > 0) await buttons.first().hover();
+        at C:\Users\marsh\Desktop\AlphaFrame\apps\web\e2e\customer-readiness.spec.js:48:48
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\customer-readiness-Custome-33ab7-ls-load-and-are-interactive-firefox\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\customer-readiness-Custome-33ab7-ls-load-and-are-interactive-firefox\error-context.md
+
+  10) [firefox] ΓÇ║ e2e\customer-readiness.spec.js:54:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Error handling shows recovery options 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: getByText(/error|issue|problem/i)
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByText(/error|issue|problem/i)[22m
+
+
+      60 |     // Accept generic error banner text
+      61 |     const err = page.getByText(/error|issue|problem/i);
+    > 62 |     await expect(err).toBeVisible();
+         |                       ^
+      63 |     await expect(page.getByText(/use demo|retry/i)).toBeVisible();
+      64 |   });
+      65 |
+        at C:\Users\marsh\Desktop\AlphaFrame\apps\web\e2e\customer-readiness.spec.js:62:23
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\customer-readiness-Custome-333dd-ling-shows-recovery-options-firefox\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\customer-readiness-Custome-333dd-ling-shows-recovery-options-firefox\error-context.md
+
+  11) [webkit] ΓÇ║ e2e\customer-readiness.spec.js:8:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Landing page loads and legal links exist 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoContainText[2m([22m[32mexpected[39m[2m)[22m
+
+    Locator: locator('footer')
+    Expected string: [32m"Terms"[39m
+    Received string: [31m"HomeDocsGuidesHelpContactLegalLoading statusΓÇªSelect a display theme:system lightdark┬⌐ 2025, Vercel Inc."[39m
+    Call log:
+    [2m  - Expect "toContainText" with timeout 5000ms[22m
+    [2m  - waiting for locator('footer')[22m
+    [2m    7 ├ù locator resolved to <footer data-variant="elevated" data-vercel-footer="true" class="footer-module__ESbTrq__footer">ΓÇª</footer>[22m
+    [2m      - unexpected value "HomeDocsGuidesHelpContactLegalLoading statusΓÇªSelect a display theme:system lightdark┬⌐ 2025, Vercel Inc."[22m
+
+
+       8 |   test('Landing page loads and legal links exist', async ({ page }) => {
+       9 |     await page.goto(base);
+    > 10 |     await expect(page.locator('footer')).toContainText('Terms');
+         |                                          ^
+      11 |     await expect(page.locator('footer')).toContainText('Privacy');
+      12 |     await expect(page.locator('footer')).toContainText('Cookies');
+      13 |     await expect(page.locator('footer')).toContainText('Accessibility');
+        at C:\Users\marsh\Desktop\AlphaFrame\apps\web\e2e\customer-readiness.spec.js:10:42
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\customer-readiness-Custome-c24a3-loads-and-legal-links-exist-webkit\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\customer-readiness-Custome-c24a3-loads-and-legal-links-exist-webkit\error-context.md
+
+  12) [webkit] ΓÇ║ e2e\customer-readiness.spec.js:16:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Onboarding flow works with FSM timeout and recovery 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: locator.isVisible: Target page, context or browser has been closed
+
+      19 |     // fallback selector if button text differs
+      20 |     const start = page.getByText(/onboarding|get started|start/i).first();
+    > 21 |     if (await start.isVisible()) await start.click();
+         |                     ^
+      22 |
+      23 |     await page.waitForTimeout(2000); // simulate interaction delay
+      24 |     await page.reload(); // simulate refresh
+        at C:\Users\marsh\Desktop\AlphaFrame\apps\web\e2e\customer-readiness.spec.js:21:21
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\customer-readiness-Custome-87d45-th-FSM-timeout-and-recovery-webkit\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\customer-readiness-Custome-87d45-th-FSM-timeout-and-recovery-webkit\error-context.md
+
+  13) [webkit] ΓÇ║ e2e\customer-readiness.spec.js:33:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Demo mode completes onboarding with seeded data 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /use demo/i }).or(getByText(/use demo/i))[22m
+
+
+      36 |     if (await getStarted.isVisible()) await getStarted.click();
+      37 |     const useDemo = page.getByRole('button', { name: /use demo/i }).or(page.getByText(/use demo/i));
+    > 38 |     await useDemo.click();
+         |                   ^
+      39 |     await expect(page.getByText(/cash flow/i)).toBeVisible();
+      40 |   });
+      41 |
+        at C:\Users\marsh\Desktop\AlphaFrame\apps\web\e2e\customer-readiness.spec.js:38:19
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\customer-readiness-Custome-2f863-onboarding-with-seeded-data-webkit\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\customer-readiness-Custome-2f863-onboarding-with-seeded-data-webkit\error-context.md
+
+  14) [webkit] ΓÇ║ e2e\customer-readiness.spec.js:42:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Dashboard panels load and are interactive 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: getByText(/cash flow/i)
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByText(/cash flow/i)[22m
+
+
+      46 |     });
+      47 |     await page.goto(`${base}/dashboard`);
+    > 48 |     await expect(page.getByText(/cash flow/i)).toBeVisible();
+         |                                                ^
+      49 |     // Interact with at least one control if available
+      50 |     const buttons = page.locator('button');
+      51 |     if (await buttons.count() > 0) await buttons.first().hover();
+        at C:\Users\marsh\Desktop\AlphaFrame\apps\web\e2e\customer-readiness.spec.js:48:48
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\customer-readiness-Custome-33ab7-ls-load-and-are-interactive-webkit\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\customer-readiness-Custome-33ab7-ls-load-and-are-interactive-webkit\error-context.md
+
+  15) [webkit] ΓÇ║ e2e\customer-readiness.spec.js:54:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Error handling shows recovery options 
+
+    Error: [31mTimed out 5000ms waiting for [39m[2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m()[22m
+
+    Locator: getByText(/error|issue|problem/i)
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByText(/error|issue|problem/i)[22m
+
+
+      60 |     // Accept generic error banner text
+      61 |     const err = page.getByText(/error|issue|problem/i);
+    > 62 |     await expect(err).toBeVisible();
+         |                       ^
+      63 |     await expect(page.getByText(/use demo|retry/i)).toBeVisible();
+      64 |   });
+      65 |
+        at C:\Users\marsh\Desktop\AlphaFrame\apps\web\e2e\customer-readiness.spec.js:62:23
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\customer-readiness-Custome-333dd-ling-shows-recovery-options-webkit\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\customer-readiness-Custome-333dd-ling-shows-recovery-options-webkit\error-context.md
+
+  15 failed
+    [chromium] ΓÇ║ e2e\customer-readiness.spec.js:8:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Landing page loads and legal links exist 
+    [chromium] ΓÇ║ e2e\customer-readiness.spec.js:16:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Onboarding flow works with FSM timeout and recovery 
+    [chromium] ΓÇ║ e2e\customer-readiness.spec.js:33:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Demo mode completes onboarding with seeded data 
+    [chromium] ΓÇ║ e2e\customer-readiness.spec.js:42:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Dashboard panels load and are interactive 
+    [chromium] ΓÇ║ e2e\customer-readiness.spec.js:54:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Error handling shows recovery options 
+    [firefox] ΓÇ║ e2e\customer-readiness.spec.js:8:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Landing page loads and legal links exist 
+    [firefox] ΓÇ║ e2e\customer-readiness.spec.js:16:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Onboarding flow works with FSM timeout and recovery 
+    [firefox] ΓÇ║ e2e\customer-readiness.spec.js:33:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Demo mode completes onboarding with seeded data 
+    [firefox] ΓÇ║ e2e\customer-readiness.spec.js:42:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Dashboard panels load and are interactive 
+    [firefox] ΓÇ║ e2e\customer-readiness.spec.js:54:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Error handling shows recovery options 
+    [webkit] ΓÇ║ e2e\customer-readiness.spec.js:8:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Landing page loads and legal links exist 
+    [webkit] ΓÇ║ e2e\customer-readiness.spec.js:16:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Onboarding flow works with FSM timeout and recovery 
+    [webkit] ΓÇ║ e2e\customer-readiness.spec.js:33:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Demo mode completes onboarding with seeded data 
+    [webkit] ΓÇ║ e2e\customer-readiness.spec.js:42:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Dashboard panels load and are interactive 
+    [webkit] ΓÇ║ e2e\customer-readiness.spec.js:54:3 ΓÇ║ Customer-Readiness Verification ΓÇö AlphaFrame GA100 v2.2.0-rc1 ΓÇ║ Error handling shows recovery options 

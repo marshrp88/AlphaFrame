@@ -14,8 +14,11 @@
 
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-const DIST_DIR = path.join(new URL('.', import.meta.url).pathname, '..', 'dist', 'assets');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const DIST_DIR = path.join(__dirname, '..', 'dist', 'assets');
 const ENTRY_LIMIT_BYTES = 1_200_000; // ~1.2MB minified (gzipped target is < 300KB)
 const VENDOR_LIMIT_BYTES = 300_000; // ~300KB minified
 

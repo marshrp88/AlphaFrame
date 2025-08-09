@@ -1,0 +1,15 @@
+
+Key                       Value
+---                       -----
+Cache-Control             {no-store, max-age=0}
+Date                      {Sat, 09 Aug 2025 06:48:32 GMT}
+Server                    {Vercel}
+Set-Cookie                {_vercel_sso_nonce=20mVqAzgIKHQdfdsMMY21IHx; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite…
+Strict-Transport-Security {max-age=63072000; includeSubDomains; preload}
+X-Frame-Options           {DENY}
+X-Robots-Tag              {noindex}
+X-Vercel-Id               {iad1::wlrtq-1754722112662-a19b878cfedc}
+Content-Length            {13386}
+Content-Type              {text/html; charset=utf-8}
+
+

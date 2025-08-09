@@ -1,0 +1,25 @@
+Cannot use({ defaultBrowserType }) in a describe group, because it forces a new worker.
+Make it top-level in the test file or put in the configuration file.
+
+   at mobile-smoke.spec.js:17
+
+  15 |
+  16 | test.describe('Mobile smoke: iPhone 12', () => {
+> 17 |   test.use({ ...devices['iPhone 12'] });
+     |        ^
+  18 |
+  19 |   test('green path renders', async ({ page }) => {
+  20 |     await runGreenPath(page);
+Cannot use({ defaultBrowserType }) in a describe group, because it forces a new worker.
+Make it top-level in the test file or put in the configuration file.
+
+   at mobile-smoke.spec.js:25
+
+  23 |
+  24 | test.describe('Mobile smoke: Pixel 5', () => {
+> 25 |   test.use({ ...devices['Pixel 5'] });
+     |        ^
+  26 |
+  27 |   test('green path renders', async ({ page }) => {
+  28 |     await runGreenPath(page);
+

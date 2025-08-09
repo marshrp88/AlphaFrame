@@ -1,0 +1,20 @@
+
+Running 15 tests using 6 workers
+
+  -  1 [chromium] › e2e\visual-baseline.spec.js:21:3 › visual baseline: landing
+  -  2 [chromium] › e2e\visual-baseline.spec.js:21:3 › visual baseline: onboarding
+  -  3 [chromium] › e2e\visual-baseline.spec.js:21:3 › visual baseline: dashboard
+  -  4 [chromium] › e2e\visual-baseline.spec.js:21:3 › visual baseline: rules
+  -  5 [chromium] › e2e\visual-baseline.spec.js:21:3 › visual baseline: settings
+  -  6 [firefox] › e2e\visual-baseline.spec.js:21:3 › visual baseline: landing
+  -  7 [firefox] › e2e\visual-baseline.spec.js:21:3 › visual baseline: onboarding
+  -  8 [firefox] › e2e\visual-baseline.spec.js:21:3 › visual baseline: dashboard
+  -  9 [firefox] › e2e\visual-baseline.spec.js:21:3 › visual baseline: rules
+  -  10 [firefox] › e2e\visual-baseline.spec.js:21:3 › visual baseline: settings
+  -  11 [webkit] › e2e\visual-baseline.spec.js:21:3 › visual baseline: landing
+  -  12 [webkit] › e2e\visual-baseline.spec.js:21:3 › visual baseline: onboarding
+  -  13 [webkit] › e2e\visual-baseline.spec.js:21:3 › visual baseline: dashboard
+  -  14 [webkit] › e2e\visual-baseline.spec.js:21:3 › visual baseline: rules
+  -  15 [webkit] › e2e\visual-baseline.spec.js:21:3 › visual baseline: settings
+
+  15 skipped

@@ -1,0 +1,5 @@
+Error: Cannot find package '@axe-core/playwright' imported from C:\Users\marsh\Desktop\AlphaFrame\apps\web\e2e\a11y-axe.spec.js
+Error: No tests found.
+Make sure that arguments are regular expressions matching test files.
+You may need to escape symbols like "$" or "*" and quote the arguments.
+

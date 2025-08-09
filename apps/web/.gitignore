@@ -53,3 +53,4 @@ src/shared/ui/Icon.jsx
 src/shared/ui/ProFooter.jsx
 src/shared/ui/ProHeader.jsx
 src/shared/ui/ProPageLayout.jsx
+.vercel
