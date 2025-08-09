@@ -112,6 +112,7 @@ const DemoModeBanner = () => {
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <button
+              aria-label="Connect real account"
               onClick={handleConnectRealAccount}
               style={{
                 padding: '0.25rem 0.75rem',
@@ -139,6 +140,7 @@ const DemoModeBanner = () => {
             </button>
             
             <button
+              aria-label="Toggle demo mode"
               onClick={handleToggleDemoMode}
               style={{
                 padding: '0.25rem 0.75rem',
@@ -166,12 +168,13 @@ const DemoModeBanner = () => {
             </button>
             
             <button
+              aria-label="Dismiss demo mode banner"
               onClick={handleDismiss}
               style={{
-                padding: '0.25rem',
-                backgroundColor: 'transparent',
-                color: 'var(--color-text-secondary)',
-                border: 'none',
+                padding: '0.25rem 0.5rem',
+                backgroundColor: 'var(--color-background-secondary)',
+                color: 'var(--color-text-primary)',
+                border: '1px solid var(--color-border-primary)',
                 borderRadius: 'var(--radius-sm)',
                 cursor: 'pointer',
                 display: 'flex',

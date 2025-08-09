@@ -37,13 +37,13 @@
 
 .period-selector button {
   padding: var(--spacing-xs) var(--spacing-sm);
-  border: none;
-  background: transparent;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
   border-radius: var(--radius-sm);
   font-size: var(--font-size-sm);
   cursor: pointer;
   transition: all 0.2s ease;
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
 }
 
 .period-selector button.active {
@@ -107,7 +107,7 @@
 .metric-content .amount {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
+  color: #111827; /* ensure high contrast on white */
   margin: 0;
 }
 
@@ -183,7 +183,7 @@
 .savings-percentage {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
+  color: #111827; /* increase contrast */
   min-width: 60px;
   text-align: right;
 }

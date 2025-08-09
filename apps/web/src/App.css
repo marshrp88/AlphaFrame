@@ -84,7 +84,7 @@
 
 .navbar-logo-text { font-family: var(--font-family-primary); color: #111827; }
 
-.navbar-logo-version { font-size: var(--font-size-sm); color: #111827; font-weight: var(--font-weight-medium); }
+.navbar-logo-version { font-size: var(--font-size-sm); color: #111827; font-weight: var(--font-weight-bold); }
 
 .navbar-actions {
   display: flex;
