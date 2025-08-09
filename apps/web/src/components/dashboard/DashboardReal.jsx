@@ -156,7 +156,7 @@ export default function DashboardReal() {
           </h2>
           <div style={{ 
             fontSize: 'var(--text-4xl)', 
-            color: 'var(--color-accent)', 
+            color: '#111827',
             margin: 'var(--spacing-lg) 0', 
             fontWeight: 'var(--font-weight-bold)',
             lineHeight: 'var(--line-height-tight)'
@@ -165,7 +165,7 @@ export default function DashboardReal() {
           </div>
           <div style={{ 
             fontSize: 'var(--text-sm)', 
-            color: 'var(--color-text-tertiary)',
+            color: '#374151',
             display: 'flex',
             alignItems: 'center',
             gap: 'var(--spacing-xs)'
@@ -331,7 +331,7 @@ export default function DashboardReal() {
               </div>
               <div style={{ 
                 fontSize: 'var(--text-sm)', 
-                color: 'var(--color-text-secondary)', 
+                color: '#374151', 
                 marginBottom: 'var(--spacing-sm)',
                 display: 'flex',
                 alignItems: 'center',
@@ -364,7 +364,7 @@ export default function DashboardReal() {
           )}
           <div style={{ 
             fontSize: 'var(--text-sm)', 
-            color: 'var(--color-text-tertiary)',
+            color: '#374151',
             display: 'flex',
             alignItems: 'center',
             gap: 'var(--spacing-xs)',
