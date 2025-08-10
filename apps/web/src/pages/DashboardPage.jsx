@@ -33,10 +33,10 @@ const DashboardPage = () => {
     setLoading(false);
   }, [shouldBypassOnboarding, navigate, isDemo, onboardingComplete]);
 
-  if (loading) return <div className="dashboard-container"><h1>Financial Dashboard</h1></div>;
+  if (loading) return <div className="dashboard-container" data-testid="dashboard-root"><h1>Financial Dashboard</h1></div>;
 
   return (
-    <div className="dashboard-container" style={{ position: 'relative', minHeight: '100vh', background: 'var(--color-bg)' }}>
+    <div className="dashboard-container" data-testid="dashboard-root" style={{ position: 'relative', minHeight: '100vh', background: 'var(--color-bg)' }}>
       {isDemo && <DemoBanner />}
       {isDemo && <ResetDemoButton />}
       <DashboardReal />

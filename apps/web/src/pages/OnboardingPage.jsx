@@ -206,7 +206,9 @@ const OnboardingPage = () => {
   if (!isAuthenticated || onboardingState?.isDemoMode) {
     return (
       <PageLayout title="Onboarding" description="Let's get you set up!">
-        <OnboardingFlow onComplete={handleOnboardingComplete} initialState={onboardingState} />
+        <div data-testid="onboarding-root">
+          <OnboardingFlow onComplete={handleOnboardingComplete} initialState={onboardingState} />
+        </div>
       </PageLayout>
     );
   }

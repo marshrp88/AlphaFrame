@@ -24,11 +24,9 @@ test.describe('Customer-Readiness Verification — AlphaFrame GA100 v2.2.0-rc1',
       sessionStorage.setItem('demo_user', 'true');
       localStorage.setItem('alphaframe_onboarding_complete', 'true');
     });
-    await page.goto(base);
-    await page.waitForLoadState('domcontentloaded');
-    await page.evaluate(() => window.history.pushState({}, '', '/dashboard'));
-    await page.waitForLoadState('domcontentloaded');
-    await expect(page.locator('.navbar-container')).toBeVisible({ timeout: 15000 });
+    await page.goto(`${base}/dashboard`, { waitUntil: 'networkidle' });
+    await expect(page.getByTestId('navbar')).toBeVisible({ timeout: 15000 });
+    await expect(page.getByTestId('dashboard-root')).toBeVisible({ timeout: 15000 });
   });
 
   test('Dashboard panels load and are interactive', async ({ page }) => {
@@ -36,12 +34,9 @@ test.describe('Customer-Readiness Verification — AlphaFrame GA100 v2.2.0-rc1',
       sessionStorage.setItem('demo_user', 'true');
       localStorage.setItem('alphaframe_onboarding_complete', 'true');
     });
-    await page.goto(base);
-    await page.waitForLoadState('domcontentloaded');
-    await page.evaluate(() => window.history.pushState({}, '', '/dashboard'));
-    await page.waitForLoadState('domcontentloaded');
-    await expect(page.locator('.navbar-container')).toBeVisible({ timeout: 15000 });
-    // Interact with at least one control if available
+    await page.goto(`${base}/dashboard`, { waitUntil: 'networkidle' });
+    await expect(page.getByTestId('navbar')).toBeVisible({ timeout: 15000 });
+    await expect(page.getByTestId('dashboard-root')).toBeVisible({ timeout: 15000 });
     const buttons = page.locator('button');
     if (await buttons.count() > 0) await buttons.first().hover();
   });

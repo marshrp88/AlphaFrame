@@ -11,7 +11,7 @@ import './NavBar.css';
  */
 export default function NavBar({ items, currentPath, ...rest }) {
   return (
-    <nav className="navbar" role="navigation" aria-label="Main navigation" {...rest}>
+    <nav className="navbar" role="navigation" aria-label="Main navigation" data-testid="navbar" {...rest}>
       <ul className="navbar__list">
         {items.map((item, idx) => (
           <li key={item.to} className="navbar__item">

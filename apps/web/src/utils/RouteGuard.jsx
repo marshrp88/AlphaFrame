@@ -14,7 +14,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import useAppStore from '../store/useAppStore';
 import DemoModeService from '../lib/services/DemoModeService';
 import { useOnboardingStore } from '../store/modular/onboardingStore';
@@ -75,13 +75,14 @@ const RouteGuard = ({ children }) => {
       shouldBypass: shouldBypassOnboarding()
     });
 
-    const onboardingDone = shouldBypassOnboarding() || fsmState === 'done';
+    const onboardingDone = (isDemoMode || isDemo) ? true : (shouldBypassOnboarding() || fsmState === 'done');
     const dest = evaluateRouteDecision({
       isAuthenticated,
       isDemo: isDemoMode || isDemo,
       onboardingDone,
       path: currentPath,
     });
+    console.debug('guard decision', { path: currentPath, isAuthenticated, isDemo: isDemoMode || isDemo, fsmState, onboardingDone, dest });
     if (dest !== currentPath) {
       navigate(dest, { replace: true });
       return;
@@ -100,7 +101,7 @@ const RouteGuard = ({ children }) => {
     );
   }
 
-  return children;
+  return <Outlet />;
 };
 
 export default RouteGuard; 

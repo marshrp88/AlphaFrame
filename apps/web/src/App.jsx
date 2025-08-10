@@ -26,6 +26,7 @@ import { useAuthStore } from '@/core/store/authStore';
 
 // Import design system components
 import NavBar from "./components/ui/NavBar.jsx";
+import RouteGuard from './utils/RouteGuard.jsx';
 import StyledButton from "./components/ui/StyledButton.jsx";
 import CompositeCard from "./components/ui/CompositeCard.jsx";
 import DarkModeToggle from "./components/ui/DarkModeToggle.jsx";
@@ -326,24 +327,26 @@ const AppContent = () => {
       <main className="app-main">
         <Suspense fallback={<PageLoader />}>
           <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            {/* Protected Routes with new page shells */}
-            <Route path="/dashboard" element={<ErrorBoundary><DashboardPage /></ErrorBoundary>} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/rules" element={<RulesPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/onboarding" element={<ErrorBoundary><OnboardingPage /></ErrorBoundary>} />
-            {/* TODO [MVEP_PHASE_5]: Re-enable upgrade route when monetization is implemented */}
-            {/* <Route path="/upgrade" element={<UpgradePage />} /> */}
-            <Route path="/alphapro" element={<AlphaPro />} />
-            <Route path="/pro-planner" element={<ProPlannerPage />} />
-            <Route path="/trust" element={<TrustPage />} />
-            <Route path="/test" element={<TestMount />} />
-            {/* 404 Route */}
-            <Route path="*" element={<NotFoundPage />} />
+            <Route element={<RouteGuard />}>
+              {/* Public Routes */}
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              {/* Protected Routes with new page shells */}
+              <Route path="/dashboard" element={<ErrorBoundary><DashboardPage /></ErrorBoundary>} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/rules" element={<RulesPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/onboarding" element={<ErrorBoundary><OnboardingPage /></ErrorBoundary>} />
+              {/* TODO [MVEP_PHASE_5]: Re-enable upgrade route when monetization is implemented */}
+              {/* <Route path="/upgrade" element={<UpgradePage />} /> */}
+              <Route path="/alphapro" element={<AlphaPro />} />
+              <Route path="/pro-planner" element={<ProPlannerPage />} />
+              <Route path="/trust" element={<TrustPage />} />
+              <Route path="/test" element={<TestMount />} />
+              {/* 404 Route */}
+              <Route path="*" element={<NotFoundPage />} />
+            </Route>
           </Routes>
         </Suspense>
       </main>
