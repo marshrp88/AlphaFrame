@@ -20,16 +20,18 @@ const DashboardPage = () => {
   } = useAppStore();
 
   useEffect(() => {
-    // Check if user should be on dashboard (never redirect demo)
-    if (!isDemo && !shouldBypassOnboarding()) {
+    // Prefer immediate demo signal from storage to avoid initial store race
+    const isDemoImmediate = (typeof window !== 'undefined' && sessionStorage.getItem('demo_user') === 'true') || isDemo;
+
+    if (!isDemoImmediate && !shouldBypassOnboarding()) {
       console.log('🔧 DashboardPage: User needs onboarding, redirecting');
       navigate('/onboarding');
       return;
     }
 
     // Demo users or completed onboarding users can access dashboard
-    console.log('🔧 DashboardPage: User can access dashboard', { isDemo, onboardingComplete });
-    trackEvent('dashboard_viewed', { mode: isDemo ? 'demo' : 'auth' });
+    console.log('🔧 DashboardPage: User can access dashboard', { isDemo: isDemoImmediate, onboardingComplete });
+    trackEvent('dashboard_viewed', { mode: isDemoImmediate ? 'demo' : 'auth' });
     setLoading(false);
   }, [shouldBypassOnboarding, navigate, isDemo, onboardingComplete]);
 
