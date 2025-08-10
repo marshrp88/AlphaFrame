@@ -20,8 +20,8 @@ const DashboardPage = () => {
   } = useAppStore();
 
   useEffect(() => {
-    // Check if user should be on dashboard
-    if (!shouldBypassOnboarding()) {
+    // Check if user should be on dashboard (never redirect demo)
+    if (!isDemo && !shouldBypassOnboarding()) {
       console.log('🔧 DashboardPage: User needs onboarding, redirecting');
       navigate('/onboarding');
       return;
@@ -33,7 +33,7 @@ const DashboardPage = () => {
     setLoading(false);
   }, [shouldBypassOnboarding, navigate, isDemo, onboardingComplete]);
 
-  if (loading) return <div className="p-4">Loading dashboard...</div>;
+  if (loading) return <div className="dashboard-container"><h1>Financial Dashboard</h1></div>;
 
   return (
     <div className="dashboard-container" style={{ position: 'relative', minHeight: '100vh', background: 'var(--color-bg)' }}>

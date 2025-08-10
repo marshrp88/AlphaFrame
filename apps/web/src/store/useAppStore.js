@@ -27,6 +27,7 @@ const useAppStore = create(
       onboardingComplete: false,
       isLoading: false,
       error: null,
+      initialized: false,
 
       // Demo mode state
       isDemo: false,
@@ -63,13 +64,14 @@ const useAppStore = create(
               transactions: mockTransactions,
               rules: mockRules,
               triggeredRules: mockTriggeredRules
-            }
+            },
+            initialized: true
           });
           console.log('🔧 useAppStore: Demo mode initialized');
         } else {
           // Check onboarding status from localStorage
           const onboardingComplete = localStorage.getItem('alphaframe_onboarding_complete') === 'true';
-          set({ onboardingComplete });
+          set({ onboardingComplete, initialized: true });
         }
       },
 
