@@ -24,9 +24,10 @@ test.describe('Customer-Readiness Verification — AlphaFrame GA100 v2.2.0-rc1',
       sessionStorage.setItem('demo_user', 'true');
       localStorage.setItem('alphaframe_onboarding_complete', 'true');
     });
-    await page.goto(`${base}/dashboard`);
+    await page.goto(base);
     await page.waitForLoadState('domcontentloaded');
-    // On hosted env, assert global app shell/nav renders
+    await page.getByRole('link', { name: /dashboard/i }).click();
+    await page.waitForLoadState('domcontentloaded');
     await expect(page.locator('.navbar-container')).toBeVisible({ timeout: 15000 });
   });
 
@@ -35,7 +36,9 @@ test.describe('Customer-Readiness Verification — AlphaFrame GA100 v2.2.0-rc1',
       sessionStorage.setItem('demo_user', 'true');
       localStorage.setItem('alphaframe_onboarding_complete', 'true');
     });
-    await page.goto(`${base}/dashboard`);
+    await page.goto(base);
+    await page.waitForLoadState('domcontentloaded');
+    await page.getByRole('link', { name: /dashboard/i }).click();
     await page.waitForLoadState('domcontentloaded');
     await expect(page.locator('.navbar-container')).toBeVisible({ timeout: 15000 });
     // Interact with at least one control if available
