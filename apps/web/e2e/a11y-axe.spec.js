@@ -1,5 +1,18 @@
 import { test, expect } from '@playwright/test';
-import AxeBuilder from '@axe-core/playwright';
+// Load AxeBuilder only if available to avoid hard dependency during quick runs
+let AxeBuilder;
+
+async function getAxe(page) {
+  if (!AxeBuilder) {
+    try {
+      const mod = await import('@axe-core/playwright');
+      AxeBuilder = mod.default;
+    } catch {
+      return null;
+    }
+  }
+  return new AxeBuilder({ page });
+}
 
 // Skip if package not installed (local fallback)
 test.skip(() => {
@@ -9,7 +22,9 @@ test.skip(() => {
 test.describe('A11y smoke', () => {
   test('Landing page has no critical/high violations', async ({ page }) => {
     await page.goto('/');
-    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+    const axe = await getAxe(page);
+    if (!axe) test.skip(true, 'axe-core/playwright not installed');
+    const results = await axe.withTags(['wcag2a', 'wcag2aa']).analyze();
     const serious = results.violations.filter(v => ['critical', 'serious'].includes(v.impact));
     expect(serious, JSON.stringify(serious, null, 2)).toHaveLength(0);
   });
@@ -19,7 +34,9 @@ test.describe('A11y smoke', () => {
       sessionStorage.setItem('demo_user', 'true');
     });
     await page.goto('/onboarding');
-    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+    const axe = await getAxe(page);
+    if (!axe) test.skip(true, 'axe-core/playwright not installed');
+    const results = await axe.withTags(['wcag2a', 'wcag2aa']).analyze();
     const serious = results.violations.filter(v => ['critical', 'serious'].includes(v.impact));
     expect(serious, JSON.stringify(serious, null, 2)).toHaveLength(0);
   });
@@ -30,7 +47,9 @@ test.describe('A11y smoke', () => {
       localStorage.setItem('alphaframe_onboarding_complete', 'true');
     });
     await page.goto('/dashboard');
-    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+    const axe = await getAxe(page);
+    if (!axe) test.skip(true, 'axe-core/playwright not installed');
+    const results = await axe.withTags(['wcag2a', 'wcag2aa']).analyze();
     const serious = results.violations.filter(v => ['critical', 'serious'].includes(v.impact));
     expect(serious, JSON.stringify(serious, null, 2)).toHaveLength(0);
   });
