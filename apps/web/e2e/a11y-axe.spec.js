@@ -1,6 +1,11 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
+// Skip if package not installed (local fallback)
+test.skip(() => {
+  try { require.resolve('@axe-core/playwright'); return false; } catch { return true; }
+}, 'axe-core/playwright not installed');
+
 test.describe('A11y smoke', () => {
   test('Landing page has no critical/high violations', async ({ page }) => {
     await page.goto('/');

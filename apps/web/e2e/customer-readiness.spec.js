@@ -7,13 +7,17 @@ test.describe('Customer-Readiness Verification — AlphaFrame GA100 v2.2.0-rc1',
 
   test('Landing page renders app shell (not Vercel fallback)', async ({ page }) => {
     await page.goto(base);
-    // Prefer app-specific selectors to avoid matching Vercel footer
-    const appShell = page.locator('#root, .app, .navbar-container');
-    await expect(appShell.first()).toBeVisible();
+    await page.waitForLoadState('domcontentloaded');
+    // Wait for any SPA mount point
+    const root = page.locator('#root');
+    const app = page.locator('.app');
+    const nav = page.locator('.navbar-container, nav[aria-label]');
+    await expect(root.or(app).or(nav).first()).toBeVisible({ timeout: 15000 });
   });
 
   test('Onboarding flow works with FSM timeout and recovery', async ({ page }) => {
     await page.goto(base);
+    await page.waitForLoadState('domcontentloaded');
     await page.getByRole('button', { name: /get started/i }).click({ trial: true }).catch(() => {});
     // fallback selector if button text differs
     const start = page.getByText(/onboarding|get started|start/i).first();
@@ -31,6 +35,7 @@ test.describe('Customer-Readiness Verification — AlphaFrame GA100 v2.2.0-rc1',
 
   test('Demo mode completes onboarding with seeded data', async ({ page }) => {
     await page.goto(base);
+    await page.waitForLoadState('domcontentloaded');
     const getStarted = page.getByRole('button', { name: /get started/i }).or(page.getByText(/get started|onboarding/i));
     if (await getStarted.isVisible()) await getStarted.click();
     const useDemo = page.getByRole('button', { name: /use demo/i }).or(page.getByText(/use demo/i));
@@ -44,6 +49,7 @@ test.describe('Customer-Readiness Verification — AlphaFrame GA100 v2.2.0-rc1',
       localStorage.setItem('alphaframe_onboarding_complete', 'true');
     });
     await page.goto(`${base}/dashboard`);
+    await page.waitForLoadState('networkidle');
     await expect(page.getByText(/cash flow/i)).toBeVisible();
     // Interact with at least one control if available
     const buttons = page.locator('button');

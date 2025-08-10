@@ -1,5 +1,8 @@
 import { test, expect, devices } from '@playwright/test';
 
+// Firefox does not support isMobile contexts; skip these on Firefox
+test.skip(({ browserName }) => browserName === 'firefox', 'Firefox mobile emulation not supported');
+
 // Core green-path checks reused for mobile devices
 async function runGreenPath(page) {
   await page.addInitScript(() => {
@@ -13,20 +16,20 @@ async function runGreenPath(page) {
   await expect(page.getByText('Financial Dashboard')).toBeVisible();
 }
 
-test.describe('Mobile smoke: iPhone 12', () => {
-  test.use({ ...devices['iPhone 12'] });
-
-  test('green path renders', async ({ page }) => {
-    await runGreenPath(page);
-  });
+// iPhone 12
+test('Mobile smoke (iPhone 12) — green path renders', async ({ browser }) => {
+  const context = await browser.newContext({ ...devices['iPhone 12'] });
+  const page = await context.newPage();
+  await runGreenPath(page);
+  await context.close();
 });
 
-test.describe('Mobile smoke: Pixel 5', () => {
-  test.use({ ...devices['Pixel 5'] });
-
-  test('green path renders', async ({ page }) => {
-    await runGreenPath(page);
-  });
+// Pixel 5
+test('Mobile smoke (Pixel 5) — green path renders', async ({ browser }) => {
+  const context = await browser.newContext({ ...devices['Pixel 5'] });
+  const page = await context.newPage();
+  await runGreenPath(page);
+  await context.close();
 });
 
 
