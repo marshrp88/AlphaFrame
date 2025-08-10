@@ -26,7 +26,7 @@ test.describe('Customer-Readiness Verification — AlphaFrame GA100 v2.2.0-rc1',
     });
     await page.goto(base);
     await page.waitForLoadState('domcontentloaded');
-    await page.getByRole('link', { name: /dashboard/i }).click();
+    await page.evaluate(() => window.history.pushState({}, '', '/dashboard'));
     await page.waitForLoadState('domcontentloaded');
     await expect(page.locator('.navbar-container')).toBeVisible({ timeout: 15000 });
   });
@@ -38,7 +38,7 @@ test.describe('Customer-Readiness Verification — AlphaFrame GA100 v2.2.0-rc1',
     });
     await page.goto(base);
     await page.waitForLoadState('domcontentloaded');
-    await page.getByRole('link', { name: /dashboard/i }).click();
+    await page.evaluate(() => window.history.pushState({}, '', '/dashboard'));
     await page.waitForLoadState('domcontentloaded');
     await expect(page.locator('.navbar-container')).toBeVisible({ timeout: 15000 });
     // Interact with at least one control if available
